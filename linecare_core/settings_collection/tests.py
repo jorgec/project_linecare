@@ -47,9 +47,16 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+
     'django_extensions',
     'channels',
-    'accounts'
+
+    # utilities
+    'phonenumber_field',
+
+    'accounts',
+    'profiles',
+    'doctors'
 ]
 
 # User Model

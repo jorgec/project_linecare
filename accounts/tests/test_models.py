@@ -33,7 +33,7 @@ class TestAccount:
 
     def test_get_full_name(self):
         obj = mixer.blend('accounts.Account', first_name='Juan', last_name='Tester')
-        assert obj.get_full_name() == 'Juan Tester', "First and last names don't match!"
+        assert obj.get_full_name() == 'Tester, Juan', "First and last names don't match!"
 
     def test_get_short_name(self):
         obj = mixer.blend('accounts.Account', username='juantester')

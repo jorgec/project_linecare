@@ -14,24 +14,24 @@ Change user types based on project
 SUPERADMIN = 10401
 ADMIN = 12482
 USER = 16265
-USER_CHILD = 24749
-PROVIDER = 18359
-PROVIDER_CHILD = 12733
+USER_SUBACCOUNT = 24749
+DOCTOR = 18359
+DOCTOR_SUBACCOUNT = 12733
 
 USER_TYPE_CHOICES = (
     (SUPERADMIN, 'Super User'),
     (ADMIN, 'Admin'),
     (USER, 'User'),
-    (USER_CHILD, 'User Child'),
-    (PROVIDER, 'Provider'),
-    (PROVIDER_CHILD, 'Provider Child')
+    (USER_SUBACCOUNT, 'User SubAccount'),
+    (DOCTOR, 'Provider'),
+    (DOCTOR_SUBACCOUNT, 'Doctor SubAccount')
 )
 
 USER_TYPES_TO_TEST = (
     (USER, 'User'),
-    (USER_CHILD, 'User Child'),
-    (PROVIDER, 'Provider'),
-    (PROVIDER_CHILD, 'Provider Child')
+    (USER_SUBACCOUNT, 'User SubAccount'),
+    (DOCTOR, 'Provider'),
+    (DOCTOR_SUBACCOUNT, 'Doctor SubAccount')
 )
 
 USERNAME_REGEX = "^[a-zA-Z0-9.-]*$"
@@ -49,7 +49,7 @@ class AccountManager(BaseUserManager):
     def actives(self):
         return self.get_queryset().actives()
 
-    def create_user(self, email, username=None, password=None, user_type=USER, first_name='', last_name=''):
+    def create_user(self, email, username=None, password=None, user_type=None, first_name='', last_name=''):
         if not username:
             username = slugify(email)
         user = self.model(
@@ -116,7 +116,14 @@ class Account(AbstractBaseUser):
     # REQUIRED_FIELDS = ['username']
 
     def get_full_name(self):
-        return self.first_name + ' ' + self.last_name
+        if self.first_name != '' and self.last_name != '':
+            return '{}, {}'.format(
+                self.last_name, self.first_name
+            )
+        else:
+            if self.username is not None:
+                return self.username
+            return self.email
 
     def get_short_name(self):
         return self.username
