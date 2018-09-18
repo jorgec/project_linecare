@@ -17,7 +17,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 
-from accounts.api import ApiFacebookLogin
+from accounts.modules.api.auth import ApiFacebookLogin
 
 urlpatterns = [
     path('mHBvVWdpEY/', admin.site.urls),
