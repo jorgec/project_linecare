@@ -7,6 +7,17 @@ from django.contrib.auth import models as auth_models
 
 from phonenumber_field.modelfields import PhoneNumberField
 
+SMART = 0
+GLOBE = 1
+SUN = 2
+TNT = 3
+TM = 4
+
+MOBTEL_CARRIERS = (
+    (SMART, "Smart"),
+
+)
+
 
 class Gender(models.Model):
     name = models.CharField(max_length=32)
@@ -43,6 +54,8 @@ class BaseProfile(models.Model):
 class ProfileMobtel(models.Model):
     # Fields
     number = PhoneNumberField()
+    carrier = models.PositiveSmallIntegerField(choices=MOBTEL_CARRIERS)
+    is_primary = models.BooleanField(default=False)
 
     created = models.DateTimeField(null=False, auto_now_add=True)
     updated = models.DateTimeField(null=False, auto_now=True)
