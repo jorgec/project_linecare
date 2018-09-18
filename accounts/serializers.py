@@ -9,6 +9,7 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'username',
+            'email',
             'first_name',
             'last_name',
             'user_type',
@@ -22,6 +23,8 @@ class AccountSerializerPublic(serializers.ModelSerializer):
         model = Account
         fields = (
             'username',
+            'first_name',
+            'last_name',
             'user_type'
         )
 
