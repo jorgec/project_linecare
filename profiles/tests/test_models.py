@@ -2,6 +2,7 @@ import pytest
 from mixer.backend.django import mixer
 
 from accounts.models import Account, DOCTOR
+from profiles.models import BaseProfile
 
 pytestmark = pytest.mark.django_db
 
@@ -14,5 +15,6 @@ class TestProfile:
         user.user_type = DOCTOR
         user.save()
         assert user.user_type == DOCTOR
-        profile = mixer.blend('profiles.BaseProfile', user=user)
-        assert profile.pk is not None
+        profile = BaseProfile(user=user)
+        profile.save()
+        assert profile.pk is not None, profile.pk
