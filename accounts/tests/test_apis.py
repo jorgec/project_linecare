@@ -5,7 +5,7 @@ from django.db.models import Q
 from rest_framework.test import APIRequestFactory, force_authenticate
 from mixer.backend.django import mixer
 
-from accounts import api
+from accounts.modules.api import auth, create, retrieve, update, delete
 from accounts.models import Account, USER_TYPES_TO_TEST, SUPERADMIN, USER_TYPE_CHOICES, ADMIN
 from accounts.serializers import AccountSerializer, AccountSerializerPublic
 
@@ -24,7 +24,7 @@ class TestApiViews:
         user = mixer.blend('accounts.Account')
 
         request = factory.get('/', {'pk': user.pk})
-        response = api.ApiGetUserByPK.as_view()(request)
+        response = retrieve.ApiGetUserByPK.as_view()(request)
         assert response.status_code == 401, "Must not be accessed if not authenticated"
 
     def test_get_user_by_pk_private(self):
@@ -33,23 +33,23 @@ class TestApiViews:
 
         request = factory.get('/', {'pk': user.pk})
         force_authenticate(request, user=user)
-        response = api.ApiGetUserByPK.as_view()(request)
+        response = retrieve.ApiGetUserByPK.as_view()(request)
         assert response.status_code == 200, "Must be accessible if force_authed"
 
         request = factory.get('/')
         force_authenticate(request, user=user)
-        response = api.ApiGetUserByPK.as_view()(request)
+        response = retrieve.ApiGetUserByPK.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_get_user_by_username(self):
         user = mixer.blend('accounts.Account')
 
         request = factory.get('/', {'username': user.username})
-        response = api.ApiGetUserByUsername.as_view()(request)
+        response = retrieve.ApiGetUserByUsername.as_view()(request)
         assert response.status_code == 200, "Able to call this user by username"
 
         request = factory.get('/')
-        response = api.ApiGetUserByUsername.as_view()(request)
+        response = retrieve.ApiGetUserByUsername.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_get_users_by_user_type_public(self):
@@ -67,12 +67,12 @@ class TestApiViews:
                 }
                 users.append(u)
             request = factory.get('/', {'user_type': type[0]})
-            response = api.ApiPublicGetUsersByUserType.as_view()(request)
+            response = retrieve.ApiPublicGetUsersByUserType.as_view()(request)
             assert response.status_code == 200, "Call successful"
             assert len(response.data) == len(users), "Expected number of users, {}".format(response.data)
 
         request = factory.get('/')
-        response = api.ApiPublicGetUsersByUserType.as_view()(request)
+        response = retrieve.ApiPublicGetUsersByUserType.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_get_users_by_user_type_private(self):
@@ -93,18 +93,18 @@ class TestApiViews:
                 users.append(u)
             request = factory.get('/', {'user_type': type[0]})
             force_authenticate(request, user=requser)
-            response = api.ApiPrivateGetUsersByUserType.as_view()(request)
+            response = retrieve.ApiPrivateGetUsersByUserType.as_view()(request)
             assert response.status_code == 200, "Call successful"
             assert len(response.data) == len(users), "Expected number of users, {}".format(response.data)
 
         request = factory.get('/')
         force_authenticate(request, user=requser)
-        response = api.ApiPrivateGetUsersByUserType.as_view()(request)
+        response = retrieve.ApiPrivateGetUsersByUserType.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_get_users_by_user_type_private_no_access(self):
         request = factory.get('/', {'user_type': 1})
-        response = api.ApiPrivateGetUsersByUserType.as_view()(request)
+        response = retrieve.ApiPrivateGetUsersByUserType.as_view()(request)
         assert response.status_code == 401, "Prevent non-admins"
 
     def test_get_users_public(self):
@@ -122,7 +122,7 @@ class TestApiViews:
         serializer = AccountSerializerPublic(users, many=True)
 
         request = factory.get('/')
-        response = api.ApiPublicGetUsers.as_view()(request)
+        response = retrieve.ApiPublicGetUsers.as_view()(request)
         assert response.status_code == 200, "Call successful"
         assert serializer.data == response.data, "Users match"
         for user in response.data:
@@ -145,7 +145,7 @@ class TestApiViews:
 
         request = factory.get('/')
         force_authenticate(request, user=requser)
-        response = api.ApiPrivateGetUsers.as_view()(request)
+        response = retrieve.ApiPrivateGetUsers.as_view()(request)
         assert response.status_code == 200, "Call successful"
         assert response.data == serializer.data, "Users match"
 
@@ -158,13 +158,13 @@ class TestApiViews:
         serializer = AccountSerializerPublic(users, many=True)
 
         request = factory.get('/', {'parent': parent.id})
-        response = api.ApiGetUsersByParent.as_view()(request)
+        response = retrieve.ApiGetUsersByParent.as_view()(request)
 
         assert response.status_code == 200, "Call successful"
         assert serializer.data == response.data, "Users match"
 
         request = factory.get('/')
-        response = api.ApiGetUsersByParent.as_view()(request)
+        response = retrieve.ApiGetUsersByParent.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_remote_login(self):
@@ -180,7 +180,7 @@ class TestApiViews:
             'password': 'asdf1234'
         }), content_type='application/json')
 
-        response = api.ApiLogin.as_view()(request)
+        response = auth.ApiLogin.as_view()(request)
         assert response.status_code == 200, response.data
 
         request = factory.post('/', json.dumps({
@@ -188,7 +188,7 @@ class TestApiViews:
             'password': 'asdf1234'
         }), content_type='application/json')
 
-        response = api.ApiLogin.as_view()(request)
+        response = auth.ApiLogin.as_view()(request)
         assert response.status_code == 401, response.data
 
         request = factory.post('/', json.dumps({
@@ -196,7 +196,7 @@ class TestApiViews:
             'password': ''
         }), content_type='application/json')
 
-        response = api.ApiLogin.as_view()(request)
+        response = auth.ApiLogin.as_view()(request)
         assert response.status_code == 400, response.data
 
     def test_remote_register(self):
@@ -208,7 +208,7 @@ class TestApiViews:
             'last_name': 'Tester'
         }, format='json')
 
-        response = api.ApiRegister.as_view()(request)
+        response = auth.ApiRegister.as_view()(request)
 
         try:
             user = Account.objects.get(username='juantester')
@@ -227,7 +227,7 @@ class TestApiViews:
             'last_name': 'Tester'
         }, format='json')
 
-        response = api.ApiRegister.as_view()(request)
+        response = auth.ApiRegister.as_view()(request)
         assert response.status_code == 400, response.data
 
         # no username
@@ -239,7 +239,7 @@ class TestApiViews:
             'last_name': 'Tester'
         }, format='json')
 
-        response = api.ApiRegister.as_view()(request)
+        response = auth.ApiRegister.as_view()(request)
         assert response.status_code == 200, response.data
 
         # bad form
@@ -251,5 +251,5 @@ class TestApiViews:
             'last_name': 'Tester'
         }, format='json')
 
-        response = api.ApiRegister.as_view()(request)
+        response = auth.ApiRegister.as_view()(request)
         assert response.status_code == 400, response.data
