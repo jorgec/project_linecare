@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import models as auth_models
 
 from phonenumber_field.modelfields import PhoneNumberField
+import phonenumbers
 
 SMART = 0
 GLOBE = 1
@@ -15,7 +16,10 @@ TM = 4
 
 MOBTEL_CARRIERS = (
     (SMART, "Smart"),
-
+    (GLOBE, "Globe"),
+    (SUN, "Sun Cellular"),
+    (TNT, "Talk N Text"),
+    (TM, "Touch Mobile"),
 )
 
 
@@ -56,6 +60,7 @@ class ProfileMobtel(models.Model):
     number = PhoneNumberField()
     carrier = models.PositiveSmallIntegerField(choices=MOBTEL_CARRIERS)
     is_primary = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     created = models.DateTimeField(null=False, auto_now_add=True)
     updated = models.DateTimeField(null=False, auto_now=True)
@@ -72,3 +77,5 @@ class ProfileMobtel(models.Model):
             self.number
         )
 
+    def is_valid(self):
+        return phonenumbers.is_valid_number(self)
