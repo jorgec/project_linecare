@@ -11,15 +11,6 @@ class PublicProfileSerializer(serializers.ModelSerializer):
         )
 
 
-class PrivateProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BaseProfile
-        fields = (
-            'gender',
-            'date_of_birth',
-        )
-
-
 class PrivateMobtelSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfileMobtel
@@ -27,4 +18,16 @@ class PrivateMobtelSerializer(serializers.ModelSerializer):
             'number',
             'carrier',
             'is_primary'
+        )
+
+
+class PrivateProfileSerializer(serializers.ModelSerializer):
+    mobtels = PrivateMobtelSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = BaseProfile
+        fields = (
+            'gender',
+            'date_of_birth',
+            'mobtels'
         )

@@ -1,12 +1,13 @@
 import json
-import random
+
 import pytest
 from django.db.models import Q
-from rest_framework.test import APIRequestFactory, force_authenticate
 from mixer.backend.django import mixer
+from rest_framework.test import APIRequestFactory, force_authenticate
 
-from accounts.modules.api import auth, create, retrieve, update, delete
-from accounts.models import Account, USER_TYPES_TO_TEST, SUPERADMIN, USER_TYPE_CHOICES, ADMIN
+from accounts.constants import USER_TYPES_TO_TEST, SUPERADMIN, USER_TYPE_CHOICES, ADMIN
+from accounts.models import Account
+from accounts.modules.api import auth, retrieve
 from accounts.serializers import AccountSerializer, AccountSerializerPublic
 
 pytestmark = pytest.mark.django_db

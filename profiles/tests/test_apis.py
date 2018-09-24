@@ -15,12 +15,14 @@ import pytest
 from rest_framework.test import APIRequestFactory, force_authenticate
 from mixer.backend.django import mixer
 
-from accounts.models import Account, USER_TYPES_TO_TEST, ADMIN, SUPERADMIN
+from accounts.constants import USER_TYPES_TO_TEST
+from accounts.models import Account
 from profiles.models import BaseProfile, ProfileMobtel, Gender
 from profiles.modules.apis import retrieve
 
 pytestmark = pytest.mark.django_db
 factory = APIRequestFactory()
+
 
 class TestApiView:
     def test_get_profile_by_pk_public(self):
@@ -131,29 +133,26 @@ class TestApiView:
 
     # def test_get_profile_by_user_type_public(self):
 
-
     def test_get_profile_by_user_type_private(self):
         # create dummy user
         user = mixer.blend('accounts.Account')
-
+        users = []
         for type in USER_TYPES_TO_TEST:
-            users = []
             for i in range(5):
                 user = mixer.blend(
                     'accounts.Account',
                     user_type=type[0]
                 )
                 BaseProfile.objects.create(user=user)
-            u = {
-                'user_type': user.user_type,
-            }
-            users.append(u)
 
-        request = factory.get('/', {'user_type': type[0]})
-        force_authenticate(request, user=user)
-        response = retrieve.ApiPrivateGetProfileByUserType.as_view()(request)
-        assert response.status_code == 200, "Call successful"
-        assert len(response.data) == len(users), "Expected number of users, {}".format(response.data)
+                users.append(user)
+
+        for type in USER_TYPES_TO_TEST:
+            request = factory.get('/', {'user_type': type[0]})
+            force_authenticate(request, user=user)
+            response = retrieve.ApiPrivateGetProfileByUserType.as_view()(request)
+            assert response.status_code == 200, response.data
+            assert len(response.data) == 5, "Expecting {}, got {}".format(len(response.data), len(users))
 
     def test_get_profile_by_gender_public(self):
         # create dummy user
