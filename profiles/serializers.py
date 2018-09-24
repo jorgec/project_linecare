@@ -17,7 +17,9 @@ class PrivateMobtelSerializer(serializers.ModelSerializer):
         fields = (
             'number',
             'carrier',
-            'is_primary'
+            'is_primary',
+            'is_active',
+            'is_private'
         )
 
 

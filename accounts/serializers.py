@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.models import Account
-from profiles.serializers import PrivateProfileSerializer
+from profiles.serializers import PrivateProfileSerializer, PublicProfileSerializer
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -20,13 +20,16 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class AccountSerializerPublic(serializers.ModelSerializer):
+    base_profile = PublicProfileSerializer(read_only=True)
+
     class Meta:
         model = Account
         fields = (
             'username',
             'first_name',
             'last_name',
-            'user_type'
+            'user_type',
+            'base_profile'
         )
 
 
