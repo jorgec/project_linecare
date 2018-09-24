@@ -4,7 +4,9 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.models import Account, SUPERADMIN, ADMIN
+from accounts.constants import SUPERADMIN, ADMIN
+from accounts.models import Account
+from accounts.serializers import AccountWithProfileSerializerPrivate
 from profiles.models import BaseProfile, ProfileMobtel, Gender
 from profiles.serializers import PublicProfileSerializer, PrivateMobtelSerializer, PrivateProfileSerializer
 
@@ -22,6 +24,7 @@ class ApiPublicGetProfileByPK(APIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ApiPrivateGetProfileByPK(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -43,6 +46,7 @@ class ApiPrivateGetProfileByPK(APIView):
             return Response(user_profile, status=status.HTTP_200_OK)
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ApiPublicGetProfileByUsername(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -56,6 +60,7 @@ class ApiPublicGetProfileByUsername(APIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ApiPrivateGetProfileByUsername(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -78,6 +83,7 @@ class ApiPrivateGetProfileByUsername(APIView):
             return Response(user_profile, status=status.HTTP_200_OK)
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ApiPublicGetProfileByEmail(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -90,6 +96,7 @@ class ApiPublicGetProfileByEmail(APIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ApiPrivateGetProfileByEmail(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -112,6 +119,7 @@ class ApiPrivateGetProfileByEmail(APIView):
             return Response(user_profile, status=status.HTTP_200_OK)
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ApiPublicGetProfileByUserType(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -129,26 +137,21 @@ class ApiPublicGetProfileByUserType(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ApiPrivateGetProfileByUserType(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         user_type = request.GET.get('user_type', None)
-        if user_type:
-            users = Account.objects.filter(
-                user_type=user_type,
-            ).actives()
-            profile = users.account_profiles
-            mobtels = ProfileMobtel.objects.filter(profile=profile)
-            profile_serializer = PrivateProfileSerializer(users, many=True)
-            mobtel_serializer = PrivateMobtelSerializer(mobtels, many=True)
-            user_profile = {
-                'profile': profile_serializer.data,
-                'mobtel': mobtel_serializer.data,
-            }
 
-            return Response(user_profile, status=status.HTTP_200_OK)
-        return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+        if user_type:
+            users = Account.objects.filter(user_type=user_type)
+            serializer = AccountWithProfileSerializerPrivate(users, many=True)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ApiPublicGetProfileByGender(APIView):
     permission_classes = [permissions.AllowAny]
@@ -163,7 +166,7 @@ class ApiPublicGetProfileByGender(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
-#missing mobile number
+
 class ApiPrivateGetProfileByGender(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -173,6 +176,6 @@ class ApiPrivateGetProfileByGender(APIView):
             users = Gender.objects.filter(
                 slug=gender
             )
-            serializer = PublicProfileSerializer(users, many=True)
+            serializer = PrivateProfileSerializer(users, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)

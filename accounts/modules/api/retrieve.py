@@ -4,7 +4,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.models import Account, SUPERADMIN, ADMIN
+from accounts.constants import SUPERADMIN, ADMIN
+from accounts.models import Account
 from accounts.serializers import AccountSerializer, AccountSerializerPublic
 
 """
