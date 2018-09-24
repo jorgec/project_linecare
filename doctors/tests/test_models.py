@@ -1,7 +1,8 @@
 import pytest
 from mixer.backend.django import mixer
 
-from accounts.models import Account, DOCTOR
+from accounts.constants import DOCTOR
+from accounts.models import Account
 
 pytestmark = pytest.mark.django_db
 
