@@ -1,27 +1,10 @@
-from django.db import models
-from django_extensions.db.fields import AutoSlugField
-from django_extensions.db import fields as extension_fields
-
-from django.contrib.auth import get_user_model
-from django.contrib.auth import models as auth_models
-
-from phonenumber_field.modelfields import PhoneNumberField
 import phonenumbers
+from django.db import models
+from django_extensions.db import fields as extension_fields
+from phonenumber_field.modelfields import PhoneNumberField
 
-
-SMART = 0
-GLOBE = 1
-SUN = 2
-TNT = 3
-TM = 4
-
-MOBTEL_CARRIERS = (
-    (SMART, "Smart"),
-    (GLOBE, "Globe"),
-    (SUN, "Sun Cellular"),
-    (TNT, "Talk N Text"),
-    (TM, "Touch Mobile"),
-)
+from accounts.constants import DOCTOR, USER
+from profiles.constants import MOBTEL_CARRIERS
 
 
 class Gender(models.Model):
@@ -83,11 +66,24 @@ class BaseProfile(models.Model):
     def __str__(self):
         return self.user.get_full_name()
 
+    def get_public_numbers(self):
+        return self.profile_mobtels.filter(is_private=False, is_active=True)
+
+    def get_all_numbers(self):
+        return self.profile_mobtels.all()
+
+    def get_primary_public_number(self):
+        return self.profile_mobtels.filter(is_primary=True, is_active=True, is_private=False).first()
+
+    def get_primary_number(self):
+        return self.profile_mobtels.filter(is_primary=True, is_active=True).first()
+
 
 class ProfileMobtel(models.Model):
     # Fields
-    number = PhoneNumberField()
+    number = PhoneNumberField(unique=True)
     carrier = models.PositiveSmallIntegerField(choices=MOBTEL_CARRIERS)
+    is_private = models.BooleanField(default=True)
     is_primary = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
@@ -101,8 +97,7 @@ class ProfileMobtel(models.Model):
         ordering = ('profile', '-created')
 
     def __str__(self):
-        return '{}: {}'.format(
-            self.profile,
+        return '{}'.format(
             self.number
         )
 
