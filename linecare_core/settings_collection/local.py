@@ -95,6 +95,7 @@ INSTALLED_APPS = [
 
     'accounts',
     'profiles',
+    'albums',
     'doctors'
 ]
 
