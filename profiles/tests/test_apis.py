@@ -131,7 +131,25 @@ class TestApiView:
         response = retrieve.ApiPrivateGetProfileByEmail.as_view()(request)
         assert response.status_code == 200, "Must be accessible"
 
-    # def test_get_profile_by_user_type_public(self):
+    def test_get_profile_by_user_type_public(self):
+        # create dummy user
+        user = mixer.blend('accounts.Account')
+        users = []
+        for type in USER_TYPES_TO_TEST:
+            for i in range(5):
+                user = mixer.blend(
+                    'accounts.Account',
+                    user_type=type[0]
+                )
+                BaseProfile.objects.create(user=user)
+
+                users.append(user)
+
+        for type in USER_TYPES_TO_TEST:
+            request = factory.get('/', {'user_type': type[0]})
+            response = retrieve.ApiPublicGetProfileByUserType.as_view()(request)
+            assert response.status_code == 200, response.data
+            assert len(response.data) == 5, "Expecting {}, got {}".format(len(response.data), len(users))
 
     def test_get_profile_by_user_type_private(self):
         # create dummy user
@@ -168,4 +186,37 @@ class TestApiView:
         response = retrieve.ApiPublicGetProfileByGender.as_view()(request)
         assert response.status_code == 200, "Must be accessible"
 
-    # def test_get_profile_by_gender_private(self):
+    def test_get_profile_by_gender_private(self):
+        # create dummy user
+        user = mixer.blend('accounts.Account')
+        gender = mixer.blend('profiles.Gender')
+        profile = BaseProfile.objects.create(user=user, gender=gender)
+
+        request = factory.get('/', {'gender': profile.gender})
+        response = retrieve.ApiPrivateGetProfileByGender.as_view()(request)
+        assert response.status_code == 401, "Must not be accessed if not authenticated"
+
+        request = factory.get('/')
+        force_authenticate(request, user=user)
+        response = retrieve.ApiPrivateGetProfileByGender.as_view()(request)
+        assert response.status_code == 400, "Must fail on bad request"
+
+        request = factory.get('/', {'gender': user})
+        force_authenticate(request, user=user)
+        response = retrieve.ApiPrivateGetProfileByGender.as_view()(request)
+        assert response.status_code == 200, "Must be accessible"
+
+    def test_get_profile_album(self):
+        # create dummy user
+        user = mixer.blend('accounts.Account')
+        album = '' # Album.objects.get(user=user)
+
+        # check if album was created
+
+        request = factory.get('/', {'album': album})
+        response = retrieve.ApiPrivateGetAlbum.as_view()(request)
+        assert response.status_code == 200, "Must be accessible"
+
+    # def test_get_profile_photo(self):
+
+    # def test_get_cover_photo(self):
