@@ -75,7 +75,7 @@ class TestProfile:
         primary_number = user.base_profile().get_primary_number()
         assert str(primary_number) == '+639101234567', "Expected +639101234567, got {}".format(primary_number)
         assert user.base_profile().get_primary_public_number() is None, "Expected empty queryset, got {}".format(user.base_profile().get_primary_public_number())
-        n1.is_private = False
+        n1.is_public = True
         n1.save()
         assert str(user.base_profile().get_primary_public_number()) == '+639101234567', "Expected +639101234567, got {}".format(
             user.base_profile().get_primary_public_number())
@@ -104,7 +104,7 @@ class TestProfile:
             'carrier': SMART,
             'profile': user.base_profile(),
             'is_primary': False,
-            'is_private': False
+            'is_public': True
         })
 
         assert user.base_profile().get_public_numbers().count() == 2, "Expected 2, got {}".format(user.base_profile().get_public_numbers().count())
