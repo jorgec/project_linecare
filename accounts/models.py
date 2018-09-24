@@ -91,7 +91,7 @@ class Account(AbstractBaseUser):
 
     # REQUIRED_FIELDS = ['username']
 
-    def get_base_profile(self):
+    def base_profile(self):
         return self.account_profiles.all().first()
 
     def get_full_name(self):
