@@ -179,3 +179,17 @@ class ApiPrivateGetProfileByGender(APIView):
             serializer = PrivateProfileSerializer(users, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ApiPrivateGetAlbum(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        album = request.GET.get('album', None)
+        if album:
+            user = '' #Album.objects.filter()
+
+            serializer = ApiPrivateGetAlbum(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
+

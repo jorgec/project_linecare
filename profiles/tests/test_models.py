@@ -16,15 +16,13 @@ class TestProfile:
         user.user_type = DOCTOR
         user.save()
         assert user.user_type == DOCTOR
-        profile = BaseProfile(user=user)
-        profile.save()
+        profile = BaseProfile.objects.create(user=user)
         assert profile.pk is not None, profile.pk
 
     def test_gender(self):
         obj = mixer.blend('profiles.Gender')
         assert obj.name == str(obj), "__str__ mismatch"
 
-    # Not final
     def test_baseprofile(self):
         user = Account.objects.create_user(email='test@test.com')
         assert user.user_type is None
@@ -33,9 +31,12 @@ class TestProfile:
         user.user_type = DOCTOR
         user.save()
         assert user.user_type == DOCTOR
-        profile = BaseProfile(user=user)
-        profile.save()
-        assert profile.user.get_full_name() == str(profile)
+
+        profile = BaseProfile.objects.get(user=user)
+        assert str(user.username) == str(profile.user), "username {} must match with user profile {}".format(user.username, profile.user)
+
+        profile = user.base_profile()
+        assert profile.user.get_full_name() == str(profile), "full name: {}".format(profile.user.get_full_name())
 
     def test_duplicate_profile(self):
         user = Account.objects.create_user(email='test@test.com')
@@ -45,8 +46,6 @@ class TestProfile:
         user.user_type = DOCTOR
         user.save()
         assert user.user_type == DOCTOR
-        profile = BaseProfile.objects.create(user=user)
-        profile.save()
         profiles = BaseProfile.objects.filter(user=user)
         profile_count = len(profiles)
         assert profile_count == 1, "Should only have 1 profile, got {}".format(profile_count)
