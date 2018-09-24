@@ -209,11 +209,15 @@ class TestApiView:
     def test_get_profile_album(self):
         # create dummy user
         user = mixer.blend('accounts.Account')
-        album = '' # Album.objects.get(user=user)
+        # username-profile-photos
+        # username-cover-photos
+
+        profile_album = '{}-profile-photos'.format(user.username)
+        cover_album = '{}-cover-photos'.format(user.username)
 
         # check if album was created
 
-        request = factory.get('/', {'album': album})
+        request = factory.get('/', {'album': profile_album})
         response = retrieve.ApiPrivateGetAlbum.as_view()(request)
         assert response.status_code == 200, "Must be accessible"
 
