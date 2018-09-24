@@ -8,33 +8,8 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from rest_framework.authtoken.models import Token
 
-"""
-Change user types based on project
-"""
-SUPERADMIN = 10401
-ADMIN = 12482
-USER = 16265
-USER_SUBACCOUNT = 24749
-DOCTOR = 18359
-DOCTOR_SUBACCOUNT = 12733
-
-USER_TYPE_CHOICES = (
-    (SUPERADMIN, 'Super User'),
-    (ADMIN, 'Admin'),
-    (USER, 'User'),
-    (USER_SUBACCOUNT, 'User SubAccount'),
-    (DOCTOR, 'Provider'),
-    (DOCTOR_SUBACCOUNT, 'Doctor SubAccount')
-)
-
-USER_TYPES_TO_TEST = (
-    (USER, 'User'),
-    (USER_SUBACCOUNT, 'User SubAccount'),
-    (DOCTOR, 'Provider'),
-    (DOCTOR_SUBACCOUNT, 'Doctor SubAccount')
-)
-
-USERNAME_REGEX = "^[a-zA-Z0-9.-]*$"
+from accounts.constants import SUPERADMIN, USERNAME_REGEX, USER_TYPE_CHOICES
+from profiles.models import BaseProfile
 
 
 class AccountQuerySet(models.QuerySet):
@@ -113,7 +88,11 @@ class Account(AbstractBaseUser):
     objects = AccountManager()
 
     USERNAME_FIELD = 'email'
+
     # REQUIRED_FIELDS = ['username']
+
+    def get_base_profile(self):
+        return self.account_profiles.all().first()
 
     def get_full_name(self):
         if self.first_name != '' and self.last_name != '':
@@ -152,3 +131,9 @@ class Account(AbstractBaseUser):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+
+@receiver(post_save, sender=Account)
+def create_base_profile(sender, instance=None, created=False, **kwargs):
+    if created:
+        BaseProfile.objects.create(user=instance)

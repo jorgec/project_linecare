@@ -8,6 +8,7 @@ from django.contrib.auth import models as auth_models
 from phonenumber_field.modelfields import PhoneNumberField
 import phonenumbers
 
+
 SMART = 0
 GLOBE = 1
 SUN = 2
@@ -37,6 +38,32 @@ class Gender(models.Model):
         return self.name
 
 
+class BaseProfileQuerySet(models.QuerySet):
+    def doctors(self):
+        return self.user.filter(user_type=DOCTOR)
+
+    def users(self):
+        return self.user.filter(user_type=USER)
+
+
+class BaseProfileManager(models.Manager):
+    def get_queryset(self):
+        return BaseProfileQuerySet(self.model, using=self._db)
+
+    def doctors(self):
+        return self.get_queryset().doctors()
+
+    def users(self):
+        return self.get_queryset().users
+
+    def create(self, *args, **kwargs):
+        try:
+            user = BaseProfile.objects.get(user=kwargs['user'])
+            return user
+        except BaseProfile.DoesNotExist:
+            return super(BaseProfileManager, self).create(*args, **kwargs)
+
+
 class BaseProfile(models.Model):
     # Fields
     date_of_birth = models.DateField(default=None, blank=True, null=True)
@@ -47,6 +74,8 @@ class BaseProfile(models.Model):
     # Relationship Fields
     gender = models.ForeignKey(Gender, related_name='gender_profiles', on_delete=models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey('accounts.Account', related_name='account_profiles', on_delete=models.CASCADE)
+
+    objects = BaseProfileManager()
 
     class Meta:
         ordering = ('user', '-created')
