@@ -22,16 +22,8 @@ class PrivateMobtelSerializer(serializers.ModelSerializer):
             'is_private'
         )
 
-class PrivateAlbumSerializer(serializers.ModelSerializer):
-    class Meta:
-        # model =
-        fields = (
-
-        )
-
 class PrivateProfileSerializer(serializers.ModelSerializer):
     mobtels = PrivateMobtelSerializer(many=True, read_only=True)
-    albums = PrivateAlbumSerializer(many=True, read_only=True)
 
     class Meta:
         model = BaseProfile

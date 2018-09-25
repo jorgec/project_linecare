@@ -1,9 +1,11 @@
 import pytest
 from rest_framework.test import APIRequestFactory, force_authenticate
 from mixer.backend.django import mixer
+from rest_framework.utils import json
 
 from accounts.constants import USER_TYPES_TO_TEST
 from accounts.models import Account
+from profiles.constants import SMART
 from profiles.models import BaseProfile, ProfileMobtel, Gender
 from profiles.modules.apis import retrieve
 
@@ -12,51 +14,152 @@ factory = APIRequestFactory()
 
 
 class TestProfileApi:
-    def test_get_profile_by_pk_public(self):
-        pass
-
-    def test_get_profile_by_username_public(self):
-        # create dummy user
+    def test_get_public_profile_by_pk(self):
+        # create dummy account
         user = mixer.blend('accounts.Account')
-        profile = BaseProfile.objects.create(user=user)
+        user.base_profile().add_mobtel(**{
+            'number': '+63 910 1234567',
+            'carrier': SMART,
+            'is_public': True,
+            'is_primary': True
+        })
+
+        user.base_profile().add_mobtel(**{
+            'number': '+63 910 1234569',
+            'carrier': SMART,
+            'is_public': False,
+            'is_primary': True
+        })
+
+        n1 = user.base_profile().add_mobtel(**{
+            'number': '+63 910 1234560',
+            'carrier': SMART,
+            'is_public': True,
+            'is_primary': False,
+            'is_active': False
+        })
+
+        request = factory.get('/', {'pk': user.base_profile().pk})
+        response = retrieve.ApiPublicGetProfileByPK.as_view()(request)
+        assert response.status_code == 200, "Able to call this by profile"
+        assert 'date_of_birth' not in json.loads(response.data), "Date of birth must not be visible"
+        assert '+639101234567' in json.loads(response.data['mobtels']), "Public mobtel should be listed"
+        assert '+639101234569' not in json.loads(response.data['mobtels']), "Private mobtel should not be listed"
+        assert '+639101234560' not in json.loads(response.data['mobtels']), "Inactive mobtel should not be listed"
+
+        user.base_profile().edit_mobtel(**{
+            'pk': n1.pk,
+            'is_active': True
+        })
+        assert '+639101234560' in json.loads(response.data['mobtels']), "Public mobtel should be listed"
+
+        user.base_profile().delete_mobtel(**{'pk': n1.pk})
+        assert '+639101234560' in json.loads(response.data['mobtels']), "Deleted mobtel should not be listed"
+
+        request = factory.get('/')
+        response = retrieve.ApiPublicGetProfileByPK.as_view()(request)
+        assert response.status_code == 400, "Must fail on bad request"
+
+        request = factory.get('/', {'pk': 234634})
+        response = retrieve.ApiPublicGetProfileByPK.as_view()(request)
+        assert response.status_code == 404, "Must fail on bad request"
+
+    def test_get_public_mobtels_by_username(self):
+        # create dummy account
+        user = mixer.blend('accounts.Account')
+
+        user.base_profile().add_mobtel(**{
+            'number': '+63 910 1234567',
+            'carrier': SMART,
+            'is_public': True,
+            'is_primary': True
+        })
+
+        user.base_profile().add_mobtel(**{
+            'number': '+63 910 1234569',
+            'carrier': SMART,
+            'is_public': True,
+            'is_primary': True
+        })
+
+        n1 =user.base_profile().add_mobtel(**{
+            'number': '+63 910 1234560',
+            'carrier': SMART,
+            'is_public': True,
+            'is_primary': False,
+            'is_active': False
+        })
+
+        request = factory.get('/', {'user': user.base_profile().user})
+        response = retrieve.ApiPublicGetProfileByUsername.as_view()(request)
+        assert response.status_code == 200, "Able to call this profile"
+        assert 'date_of_birth' not in json.loads(response.data), "Date of birth must not be visible"
+        assert '+639101234567' in json.loads(response.data['mobtels']), "Public mobtel should be listed"
+        assert '+639101234569' not in json.loads(response.data['mobtels']), "Private mobtel should not be listed"
+        assert '+639101234560' not in json.loads(response.data['mobtels']), "Inactive mobtel should not be listed"
+
+        user.base_profile().edit_mobtel(**{
+            'pk': n1.profile,
+            'is_active': True
+        })
+        assert '+639101234560' in json.loads(response.data['mobtels']), "Public mobtel should be listed"
+
+        user.base_profile().delete_mobtel(**{'pk': n1.profile})
+        assert '+639101234560' in json.loads(response.data['mobtels']), "Deleted mobtel should not be listed"
 
         request = factory.get('/')
         response = retrieve.ApiPublicGetProfileByUsername.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
-        request = factory.get('/', {'username': profile.user.username})
+        request = factory.get('/', {'user:' 'qwerty'})
         response = retrieve.ApiPublicGetProfileByUsername.as_view()(request)
-        assert response.status_code == 200, "Must be accessible"
+        assert response.status_code == 404, "Must fail on bad request"
 
-    def test_get_profile_by_email_public(self):
-        # create dummy user
-        user = mixer.blend('accounts.Account')
-        profile = BaseProfile.objects.create(user=user)
 
-        request = factory.get('/')
-        response = retrieve.ApiPublicGetProfileByEmail.as_view()(request)
-        assert response.status_code == 400, "Must fail on bad request"
 
-        request = factory.get('/', {'email': profile.user.email})
-        response = retrieve.ApiPublicGetProfileByEmail.as_view()(request)
-        assert response.status_code == 200, "Must be accessible"
 
-    def test_get_profile_by_user_type_public(self):
-        # create dummy user
-        user = mixer.blend('accounts.Account')
-        users = []
-        for type in USER_TYPES_TO_TEST:
-            for i in range(5):
-                user = mixer.blend(
-                    'accounts.Account',
-                    user_type=type[0]
-                )
-                BaseProfile.objects.create(user=user)
-
-                users.append(user)
-
-        for type in USER_TYPES_TO_TEST:
-            request = factory.get('/', {'user_type': type[0]})
-            response = retrieve.ApiPublicGetProfileByUserType.as_view()(request)
-            assert response.status_code == 200, response.data
-            assert len(response.data) == 5, "Expecting {}, got {}".format(len(response.data), len(users))
+    # def test_get_profile_by_username_public(self):
+    #     # create dummy user
+    #     user = mixer.blend('accounts.Account')
+    #     profile = BaseProfile.objects.create(user=user)
+    #
+    #     request = factory.get('/')
+    #     response = retrieve.ApiPublicGetProfileByUsername.as_view()(request)
+    #     assert response.status_code == 400, "Must fail on bad request"
+    #
+    #     request = factory.get('/', {'username': profile.user.username})
+    #     response = retrieve.ApiPublicGetProfileByUsername.as_view()(request)
+    #     assert response.status_code == 200, "Must be accessible"
+    #
+    # def test_get_profile_by_email_public(self):
+    #     # create dummy user
+    #     user = mixer.blend('accounts.Account')
+    #     profile = BaseProfile.objects.create(user=user)
+    #
+    #     request = factory.get('/')
+    #     response = retrieve.ApiPublicGetProfileByEmail.as_view()(request)
+    #     assert response.status_code == 400, "Must fail on bad request"
+    #
+    #     request = factory.get('/', {'email': profile.user.email})
+    #     response = retrieve.ApiPublicGetProfileByEmail.as_view()(request)
+    #     assert response.status_code == 200, "Must be accessible"
+    #
+    # def test_get_profile_by_user_type_public(self):
+    #     # create dummy user
+    #     user = mixer.blend('accounts.Account')
+    #     users = []
+    #     for type in USER_TYPES_TO_TEST:
+    #         for i in range(5):
+    #             user = mixer.blend(
+    #                 'accounts.Account',
+    #                 user_type=type[0]
+    #             )
+    #             BaseProfile.objects.create(user=user)
+    #
+    #             users.append(user)
+    #
+    #     for type in USER_TYPES_TO_TEST:
+    #         request = factory.get('/', {'user_type': type[0]})
+    #         response = retrieve.ApiPublicGetProfileByUserType.as_view()(request)
+    #         assert response.status_code == 200, response.data
+    #         assert len(response.data) == 5, "Expecting {}, got {}".format(len(response.data), len(users))
