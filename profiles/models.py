@@ -5,10 +5,10 @@ from django.dispatch import receiver
 from django_extensions.db import fields as extension_fields
 from phonenumber_field.modelfields import PhoneNumberField
 
-from accounts.constants import DOCTOR, USER
 from albums.constants import PROFILE_PHOTO_ALBUM, COVER_PHOTO_ALBUM
 from albums.models import Album
 from profiles.constants import MOBTEL_CARRIERS
+from profiles.managers import BaseProfileManager
 
 
 class Gender(models.Model):
@@ -25,32 +25,6 @@ class Gender(models.Model):
         return self.name
 
 
-class BaseProfileQuerySet(models.QuerySet):
-    def doctors(self):
-        return self.user.filter(user_type=DOCTOR)
-
-    def users(self):
-        return self.user.filter(user_type=USER)
-
-
-class BaseProfileManager(models.Manager):
-    def get_queryset(self):
-        return BaseProfileQuerySet(self.model, using=self._db)
-
-    def doctors(self):
-        return self.get_queryset().doctors()
-
-    def users(self):
-        return self.get_queryset().users
-
-    def create(self, *args, **kwargs):
-        try:
-            user = BaseProfile.objects.get(user=kwargs['user'])
-            return user
-        except BaseProfile.DoesNotExist:
-            return super(BaseProfileManager, self).create(*args, **kwargs)
-
-
 class BaseProfile(models.Model):
     # Fields
     date_of_birth = models.DateField(default=None, blank=True, null=True)
@@ -61,7 +35,6 @@ class BaseProfile(models.Model):
     # Relationship Fields
     gender = models.ForeignKey(Gender, related_name='gender_profiles', on_delete=models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey('accounts.Account', related_name='account_profiles', on_delete=models.CASCADE)
-    # album = models.ForeignKey('albums.Album', related_name='profile_albums', on_delete=models.CASCADE)
 
     objects = BaseProfileManager()
 
@@ -71,17 +44,62 @@ class BaseProfile(models.Model):
     def __str__(self):
         return self.user.get_full_name()
 
-    def get_public_numbers(self):
+    # mobtels
+    def get_public_mobtels(self):
         return self.profile_mobtels.filter(is_public=True, is_active=True)
 
-    def get_all_numbers(self):
+    def get_all_mobtels(self):
         return self.profile_mobtels.all()
 
-    def get_primary_public_number(self):
+    def get_primary_public_mobtel(self):
         return self.profile_mobtels.filter(is_primary=True, is_active=True, is_public=True).first()
 
-    def get_primary_number(self):
+    def get_primary_mobtel(self):
         return self.profile_mobtels.filter(is_primary=True, is_active=True).first()
+
+    def add_mobtel(self, **kwargs):
+        kwargs['profile'] = self
+        ProfileMobtel.objects.create(**kwargs)
+        return True
+
+    def edit_mobtel(self, mobtel=None, **kwargs):
+        """
+        :param mobtel: Mobile number
+        :type mobtel: String
+        """
+        if not mobtel:
+            return False
+
+        try:
+            profile_mobtel = ProfileMobtel.objects.get(profile=self, number=mobtel)
+            profile_mobtel.update(**kwargs)
+            return True
+        except ProfileMobtel.DoesNotExist:
+            return False
+
+    def delete_mobtel(self, mobtel=None):
+        if not mobtel:
+            return False
+
+        try:
+            profile_mobtel = ProfileMobtel.objects.get(profile=self, number=mobtel)
+            profile_mobtel.delete()
+            return True
+        except ProfileMobtel.DoesNotExist:
+            return False
+
+    def set_as_primary_mobtel(self, mobtel=None):
+        if not mobtel:
+            return False
+
+        try:
+            profile_mobtel = ProfileMobtel.objects.get(profile=self, number=mobtel)
+            ProfileMobtel.objects.filter(profile=self).update(is_primary=False)
+            profile_mobtel.is_primary = True
+            profile_mobtel.save()
+            return True
+        except ProfileMobtel.DoesNotExist:
+            return False
 
     # Media
     def get_albums(self):
