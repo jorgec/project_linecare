@@ -9,8 +9,6 @@ class AlbumSerializer(serializers.ModelSerializer):
         fields = (
             'slug',
             'name',
-            'created',
-            'last_updated',
             'description',
             'is_public',
             'album_type'
@@ -22,8 +20,6 @@ class PhotoSerializer(serializers.ModelSerializer):
         model = models.Photo
         fields = (
             'pk',
-            'created',
-            'last_updated',
             'photo',
             'caption',
             'is_primary',

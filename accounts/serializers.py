@@ -20,8 +20,6 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class AccountSerializerPublic(serializers.ModelSerializer):
-    base_profile = PublicProfileSerializer(read_only=True)
-
     class Meta:
         model = Account
         fields = (
