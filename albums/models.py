@@ -38,7 +38,10 @@ class Album(models.Model):
         return self.name
 
     def get_primary_photo(self):
-        return self.album_photos.get(is_primary=True)
+        try:
+            return self.album_photos.get(is_primary=True)
+        except Photo.DoesNotExist:
+            return None
 
 
 class Photo(models.Model):

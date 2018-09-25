@@ -10,7 +10,7 @@ from profiles.models import BaseProfile, ProfileMobtel
 pytestmark = pytest.mark.django_db
 
 
-class TestProfile:
+class TestProfileModel:
 
     def test_user_and_profile_creation(self):
         user = Account.objects.create_user(email='test@test.com')
