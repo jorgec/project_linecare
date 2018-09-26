@@ -9,13 +9,13 @@ from accounts.constants import SUPERADMIN, ADMIN
 from accounts.models import Account
 from accounts.serializers import AccountWithProfileSerializerPrivate
 from profiles.models import BaseProfile, ProfileMobtel, Gender
-from profiles.modules.apis.return_templates import public_profile_template
+from profiles.modules.api.return_templates import public_profile_template
 from profiles.serializers import PublicProfileSerializer, PrivateMobtelSerializer, PrivateProfileSerializer
 
 
 # Public
 
-class ApiPublicGetProfileByPK(APIView):
+class ApiPublicProfileGetByPK(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
@@ -30,7 +30,7 @@ class ApiPublicGetProfileByPK(APIView):
         return Response(json.dumps(profile), status=status.HTTP_200_OK)
 
 
-class ApiPublicGetProfileByUsername(APIView):
+class ApiPublicProfileGetByUsername(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
@@ -45,7 +45,7 @@ class ApiPublicGetProfileByUsername(APIView):
         return Response(json.dumps(profile), status=status.HTTP_200_OK)
 
 
-class ApiPublicGetProfileByUserType(APIView):
+class ApiPublicProfileGetByUserType(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
