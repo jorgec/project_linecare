@@ -27,5 +27,3 @@ class BaseProfileManager(models.Manager):
             return user
         except self.model.DoesNotExist:
             return super(BaseProfileManager, self).create(*args, **kwargs)
-
-    
