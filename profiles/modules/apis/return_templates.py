@@ -1,6 +1,12 @@
 from albums.serializers import AlbumSerializer, PhotoSerializer
 from profiles.serializers import PublicMobtelSerializer
 
+def mobtel_dict_template(qs):
+    data = {}
+    for item in qs:
+        data[str(item.number)] = PublicMobtelSerializer(item).data
+    return data
+
 
 def public_profile_template(user):
 
@@ -17,7 +23,7 @@ def public_profile_template(user):
     if albums:
         _albums = AlbumSerializer(albums, many=True).data
     if mobtels:
-        _mobtels = PublicMobtelSerializer(mobtels, many=True).data
+        _mobtels = mobtel_dict_template(mobtels) # PublicMobtelSerializer(mobtels, many=True).data
     if  profile_photo:
         _profile_photo = PhotoSerializer(profile_photo).data
     if cover_photo:

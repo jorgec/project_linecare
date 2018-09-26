@@ -59,21 +59,17 @@ class BaseProfile(models.Model):
 
     def add_mobtel(self, **kwargs):
         kwargs['profile'] = self
-        ProfileMobtel.objects.create(**kwargs)
-        return True
+        return ProfileMobtel.objects.create(**kwargs)
 
-    def edit_mobtel(self, mobtel=None, **kwargs):
+    def edit_mobtel(self, mobtel, **kwargs):
         """
         :param mobtel: Mobile number
         :type mobtel: String
         """
-        if not mobtel:
-            return False
-
         try:
-            profile_mobtel = ProfileMobtel.objects.get(profile=self, number=mobtel)
+            profile_mobtel = ProfileMobtel.objects.filter(profile=self, number=mobtel)
             profile_mobtel.update(**kwargs)
-            return True
+            return profile_mobtel
         except ProfileMobtel.DoesNotExist:
             return False
 
