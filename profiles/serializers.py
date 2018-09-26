@@ -53,8 +53,29 @@ class PrivateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = BaseProfile
         fields = (
+            'first_name',
+            'last_name',
             'gender',
             'date_of_birth',
             'mobtels',
             'albums'
         )
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BaseProfile
+        fields = (
+            'first_name',
+            'last_name',
+            'gender',
+            'date_of_birth'
+        )
+
+        def update(self, instance, validated_data):
+            instance.first_name = validated_data.get('first_name', instance.first_name)
+            instance.last_name = validated_data.get('last_name', instance.last_name)
+            instance.gender = validated_data.get('gender', instance.gender)
+            instance.date_of_birth = validated_data.get('date_of_birth', instance.date_of_birth)
+            instance.save()
+            return instance

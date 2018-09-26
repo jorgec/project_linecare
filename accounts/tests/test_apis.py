@@ -205,8 +205,6 @@ class TestApiViews:
             'username': 'juantester',
             'email': 'juan@tester.com',
             'password': 'asdf1234',
-            'first_name': 'Juan',
-            'last_name': 'Tester'
         }, format='json')
 
         response = auth.ApiRegister.as_view()(request)
@@ -224,8 +222,6 @@ class TestApiViews:
             'username': 'juantester',
             'email': 'juan@tester.com',
             'password': 'asdf1234',
-            'first_name': 'Juan',
-            'last_name': 'Tester'
         }, format='json')
 
         response = auth.ApiRegister.as_view()(request)
@@ -236,8 +232,6 @@ class TestApiViews:
             'username': '',
             'email': 'juan2@tester.com',
             'password': 'asdf1234',
-            'first_name': 'Juan',
-            'last_name': 'Tester'
         }, format='json')
 
         response = auth.ApiRegister.as_view()(request)
@@ -248,8 +242,6 @@ class TestApiViews:
             'username': '',
             'email': '',
             'password': 'asdf1234',
-            'first_name': 'Juan',
-            'last_name': 'Tester'
         }, format='json')
 
         response = auth.ApiRegister.as_view()(request)

@@ -71,8 +71,6 @@ class ApiRegister(APIView):
             user = Account.objects.create_user(
                 username=serializer.data['username'],
                 email=serializer.data['email'],
-                first_name=serializer.data['first_name'],
-                last_name=serializer.data['last_name'],
                 password=serializer.data['password']
             )
 

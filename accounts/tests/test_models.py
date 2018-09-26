@@ -31,14 +31,6 @@ class TestAccount:
 
         assert result is not None, "Can't authenticate!"
 
-    def test_get_full_name(self):
-        obj = mixer.blend('accounts.Account', first_name='Juan', last_name='Tester')
-        assert obj.get_full_name() == 'Tester, Juan', "First and last names don't match!"
-
-    def test_get_short_name(self):
-        obj = mixer.blend('accounts.Account', username='juantester')
-        assert obj.get_short_name() == 'juantester', "get_short_name() error"
-
     def test_perm(self):
         obj = mixer.blend('accounts.Account')
         assert obj.has_perm(perm=None) is True, "Permission error"

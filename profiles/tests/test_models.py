@@ -38,7 +38,7 @@ class TestProfileModel:
         assert str(user.username) == str(profile.user), "username {} must match with user profile {}".format(user.username, profile.user)
 
         profile = user.base_profile()
-        assert profile.user.get_full_name() == str(profile), "full name: {}".format(profile.user.get_full_name())
+        assert profile.get_full_name() == str(profile), "full name: {}".format(profile.user.get_full_name())
 
     def test_duplicate_profile(self):
         user = Account.objects.create_user(email='test@test.com')
