@@ -11,8 +11,6 @@ class AccountSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'email',
-            'first_name',
-            'last_name',
             'user_type',
             'created',
             'parent',
@@ -24,8 +22,6 @@ class AccountSerializerPublic(serializers.ModelSerializer):
         model = Account
         fields = (
             'username',
-            'first_name',
-            'last_name',
             'user_type',
             'base_profile'
         )
@@ -40,8 +36,6 @@ class AccountRegisterSerializer(serializers.ModelSerializer):
             'username',
             'email',
             'password',
-            'first_name',
-            'last_name'
         )
 
 
@@ -59,8 +53,6 @@ class AccountWithProfileSerializerPrivate(serializers.ModelSerializer):
             'id',
             'username',
             'email',
-            'first_name',
-            'last_name',
             'user_type',
             'created',
             'parent',

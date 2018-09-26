@@ -1,16 +1,11 @@
-from django.db.models import Q
 from rest_framework import permissions, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
 
-from accounts.constants import SUPERADMIN, ADMIN
 from accounts.models import Account
-from accounts.serializers import AccountWithProfileSerializerPrivate
-from profiles.models import BaseProfile, ProfileMobtel, Gender
-from profiles.modules.api.return_templates import public_profile_template
-from profiles.serializers import PublicProfileSerializer, PrivateMobtelSerializer, PrivateProfileSerializer
+from profiles.modules.response_templates.profile import public_profile_template
 
 
 # Public
@@ -27,7 +22,7 @@ class ApiPublicProfileGetByPK(APIView):
 
         profile = public_profile_template(user)
 
-        return Response(json.dumps(profile), status=status.HTTP_200_OK)
+        return Response(profile, status=status.HTTP_200_OK)
 
 
 class ApiPublicProfileGetByUsername(APIView):
@@ -42,7 +37,7 @@ class ApiPublicProfileGetByUsername(APIView):
 
         profile = public_profile_template(user)
 
-        return Response(json.dumps(profile), status=status.HTTP_200_OK)
+        return Response(profile, status=status.HTTP_200_OK)
 
 
 class ApiPublicProfileGetByUserType(APIView):
@@ -59,4 +54,6 @@ class ApiPublicProfileGetByUserType(APIView):
             profile = public_profile_template(user)
             profiles.append(profile)
 
-        return Response(json.dumps(profiles), status=status.HTTP_200_OK)
+        return Response(profile, status=status.HTTP_200_OK)
+
+

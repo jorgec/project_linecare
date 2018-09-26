@@ -27,6 +27,9 @@ class Gender(models.Model):
 
 class BaseProfile(models.Model):
     # Fields
+    first_name = models.CharField(max_length=32, blank=True)
+    last_name = models.CharField(max_length=32, blank=True)
+
     date_of_birth = models.DateField(default=None, blank=True, null=True)
 
     created = models.DateTimeField(null=False, auto_now_add=True)
@@ -42,7 +45,18 @@ class BaseProfile(models.Model):
         ordering = ('user', '-created')
 
     def __str__(self):
-        return self.user.get_full_name()
+        return self.get_full_name()
+
+
+    def get_full_name(self):
+        if self.first_name != '' and self.last_name != '':
+            return '{}, {}'.format(
+                self.last_name, self.first_name
+            )
+        else:
+            if self.user.username is not None:
+                return self.user.username
+            return self.user.email
 
     # mobtels
     def get_public_mobtels(self):

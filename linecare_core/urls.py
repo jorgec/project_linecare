@@ -29,6 +29,8 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('rest-auth/facebook', ApiFacebookLogin.as_view(), name='api_facebook_login'),
     # /auth
+
+    path('profile/', include('profiles.urls')),
 ]
 
 if settings.DEBUG:

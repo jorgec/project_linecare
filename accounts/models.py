@@ -24,14 +24,12 @@ class AccountManager(BaseUserManager):
     def actives(self):
         return self.get_queryset().actives()
 
-    def create_user(self, email, username=None, password=None, user_type=None, first_name='', last_name=''):
+    def create_user(self, email, username=None, password=None, user_type=None):
         if not username:
             username = slugify(email)
         user = self.model(
             username=username,
             email=self.normalize_email(email),
-            first_name=first_name,
-            last_name=last_name,
             user_type=user_type
         )
 
@@ -72,8 +70,6 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
-    first_name = models.CharField(max_length=32, blank=True)
-    last_name = models.CharField(max_length=32, blank=True)
 
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=None, null=True, blank=True)
     created = models.DateTimeField(null=False, auto_now_add=True)
@@ -94,18 +90,6 @@ class Account(AbstractBaseUser):
     def base_profile(self):
         return self.account_profiles.all().first()
 
-    def get_full_name(self):
-        if self.first_name != '' and self.last_name != '':
-            return '{}, {}'.format(
-                self.last_name, self.first_name
-            )
-        else:
-            if self.username is not None:
-                return self.username
-            return self.email
-
-    def get_short_name(self):
-        return self.username
 
     def __str__(self):  # __unicode__ on Python 2
         return self.username
