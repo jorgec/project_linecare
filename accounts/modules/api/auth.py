@@ -19,6 +19,11 @@ Authentication
 
 
 class ApiLogin(APIView):
+    """
+    Login API
+    - email
+    - password
+    """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
@@ -64,18 +69,30 @@ class ApiLogin(APIView):
 
 
 class ApiRegister(APIView):
+    """
+    Register API
+        - email
+        - password
+        - username (optional)
+    """
     def post(self, request, *args, **kwargs):
         serializer = AccountRegisterSerializer(data=request.data)
+        print(request.data)
 
         if serializer.is_valid():
+            try:
+                username = serializer.data['username']
+            except KeyError:
+                username = None
             user = Account.objects.create_user(
-                username=serializer.data['username'],
+                username=username,
                 email=serializer.data['email'],
                 password=serializer.data['password']
             )
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

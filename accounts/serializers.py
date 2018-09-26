@@ -28,7 +28,7 @@ class AccountSerializerPublic(serializers.ModelSerializer):
 
 
 class AccountRegisterSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(max_length=64, allow_blank=True)
+    username = serializers.CharField(max_length=64, allow_blank=True, required=False)
 
     class Meta:
         model = Account
