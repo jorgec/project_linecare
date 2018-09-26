@@ -25,7 +25,7 @@ class TestApiViews:
         user = mixer.blend('accounts.Account')
 
         request = factory.get('/', {'pk': user.pk})
-        response = retrieve.ApiGetUserByPK.as_view()(request)
+        response = retrieve.ApiPrivateAccountGetByPK.as_view()(request)
         assert response.status_code == 401, "Must not be accessed if not authenticated"
 
     def test_get_user_by_pk_private(self):
@@ -34,23 +34,23 @@ class TestApiViews:
 
         request = factory.get('/', {'pk': user.pk})
         force_authenticate(request, user=user)
-        response = retrieve.ApiGetUserByPK.as_view()(request)
+        response = retrieve.ApiPrivateAccountGetByPK.as_view()(request)
         assert response.status_code == 200, "Must be accessible if force_authed"
 
         request = factory.get('/')
         force_authenticate(request, user=user)
-        response = retrieve.ApiGetUserByPK.as_view()(request)
+        response = retrieve.ApiPrivateAccountGetByPK.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_get_user_by_username(self):
         user = mixer.blend('accounts.Account')
 
         request = factory.get('/', {'username': user.username})
-        response = retrieve.ApiGetUserByUsername.as_view()(request)
+        response = retrieve.ApiPublicAccountGetByUsername.as_view()(request)
         assert response.status_code == 200, "Able to call this user by username"
 
         request = factory.get('/')
-        response = retrieve.ApiGetUserByUsername.as_view()(request)
+        response = retrieve.ApiPublicAccountGetByUsername.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_get_users_by_user_type_public(self):
@@ -68,12 +68,12 @@ class TestApiViews:
                 }
                 users.append(u)
             request = factory.get('/', {'user_type': type[0]})
-            response = retrieve.ApiPublicGetUsersByUserType.as_view()(request)
+            response = retrieve.ApiPublicAccountssGetByUserType.as_view()(request)
             assert response.status_code == 200, "Call successful"
             assert len(response.data) == len(users), "Expected number of users, {}".format(response.data)
 
         request = factory.get('/')
-        response = retrieve.ApiPublicGetUsersByUserType.as_view()(request)
+        response = retrieve.ApiPublicAccountssGetByUserType.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_get_users_by_user_type_private(self):
@@ -94,18 +94,18 @@ class TestApiViews:
                 users.append(u)
             request = factory.get('/', {'user_type': type[0]})
             force_authenticate(request, user=requser)
-            response = retrieve.ApiPrivateGetUsersByUserType.as_view()(request)
+            response = retrieve.ApiPrivateAccountsGetByUserType.as_view()(request)
             assert response.status_code == 200, "Call successful"
             assert len(response.data) == len(users), "Expected number of users, {}".format(response.data)
 
         request = factory.get('/')
         force_authenticate(request, user=requser)
-        response = retrieve.ApiPrivateGetUsersByUserType.as_view()(request)
+        response = retrieve.ApiPrivateAccountsGetByUserType.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_get_users_by_user_type_private_no_access(self):
         request = factory.get('/', {'user_type': 1})
-        response = retrieve.ApiPrivateGetUsersByUserType.as_view()(request)
+        response = retrieve.ApiPrivateAccountsGetByUserType.as_view()(request)
         assert response.status_code == 401, "Prevent non-admins"
 
     def test_get_users_public(self):
@@ -123,7 +123,7 @@ class TestApiViews:
         serializer = AccountSerializerPublic(users, many=True)
 
         request = factory.get('/')
-        response = retrieve.ApiPublicGetUsers.as_view()(request)
+        response = retrieve.ApiPublicAccountsGetAll.as_view()(request)
         assert response.status_code == 200, "Call successful"
         assert serializer.data == response.data, "Users match"
         for user in response.data:
@@ -146,7 +146,7 @@ class TestApiViews:
 
         request = factory.get('/')
         force_authenticate(request, user=requser)
-        response = retrieve.ApiPrivateGetUsers.as_view()(request)
+        response = retrieve.ApiAdminAccountsGetAll.as_view()(request)
         assert response.status_code == 200, "Call successful"
         assert response.data == serializer.data, "Users match"
 
@@ -159,13 +159,13 @@ class TestApiViews:
         serializer = AccountSerializerPublic(users, many=True)
 
         request = factory.get('/', {'parent': parent.id})
-        response = retrieve.ApiGetUsersByParent.as_view()(request)
+        response = retrieve.ApiPublicAccountsGetByParent.as_view()(request)
 
         assert response.status_code == 200, "Call successful"
         assert serializer.data == response.data, "Users match"
 
         request = factory.get('/')
-        response = retrieve.ApiGetUsersByParent.as_view()(request)
+        response = retrieve.ApiPublicAccountsGetByParent.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_remote_login(self):

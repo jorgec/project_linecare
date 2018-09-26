@@ -7,7 +7,7 @@ from accounts.constants import USER_TYPES_TO_TEST
 from accounts.models import Account
 from profiles.constants import SMART
 from profiles.models import BaseProfile, ProfileMobtel, Gender
-from profiles.modules.apis import retrieve
+from profiles.modules.api import retrieve
 
 pytestmark = pytest.mark.django_db
 factory = APIRequestFactory()
@@ -40,7 +40,7 @@ class TestProfileApi:
         })
 
         request = factory.get('/', {'pk': user.base_profile().pk})
-        response = retrieve.ApiPublicGetProfileByPK.as_view()(request)
+        response = retrieve.ApiPublicProfileGetByPK.as_view()(request)
         assert response.status_code == 200, "Able to call this by profile"
         assert 'date_of_birth' not in json.loads(response.data), "Date of birth must not be visible"
         assert '+639101234567' in json.loads(response.data['mobtels']), "Public mobtel should be listed"
@@ -57,11 +57,11 @@ class TestProfileApi:
         assert '+639101234560' in json.loads(response.data['mobtels']), "Deleted mobtel should not be listed"
 
         request = factory.get('/')
-        response = retrieve.ApiPublicGetProfileByPK.as_view()(request)
+        response = retrieve.ApiPublicProfileGetByPK.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
         request = factory.get('/', {'pk': 234634})
-        response = retrieve.ApiPublicGetProfileByPK.as_view()(request)
+        response = retrieve.ApiPublicProfileGetByPK.as_view()(request)
         assert response.status_code == 404, "Must fail on bad request"
 
     def test_get_public_mobtels_by_username(self):
@@ -91,7 +91,7 @@ class TestProfileApi:
         })
 
         request = factory.get('/', {'username': user.username})
-        response = retrieve.ApiPublicGetProfileByUsername.as_view()(request)
+        response = retrieve.ApiPublicProfileGetByUsername.as_view()(request)
         data = json.loads(response.data)
         assert response.status_code == 200, "Able to call this profile"
         assert 'date_of_birth' not in data, "Date of birth must not be visible"
@@ -104,7 +104,7 @@ class TestProfileApi:
                                             'number': '+63 987 9876543'
                                         })
         request = factory.get('/', {'username': user.username})
-        response = retrieve.ApiPublicGetProfileByUsername.as_view()(request)
+        response = retrieve.ApiPublicProfileGetByUsername.as_view()(request)
         data = json.loads(response.data)
         assert '+639101234560' not in data['mobtels'], "Old number should be gone"
         assert '+639879876543' in data['mobtels'], "Public mobtel should be listed"

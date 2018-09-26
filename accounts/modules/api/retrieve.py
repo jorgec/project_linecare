@@ -23,7 +23,7 @@ Retrieval
 """
 
 
-class ApiGetUserByPK(APIView):
+class ApiPrivateAccountGetByPK(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -38,7 +38,7 @@ class ApiGetUserByPK(APIView):
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiGetUserByUsername(APIView):
+class ApiPublicAccountGetByUsername(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
@@ -53,7 +53,7 @@ class ApiGetUserByUsername(APIView):
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiGetUserByEmail(APIView):
+class ApiPrivateAccountGetByEmail(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -67,7 +67,7 @@ class ApiGetUserByEmail(APIView):
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiPublicGetUsersByUserType(APIView):
+class ApiPublicAccountssGetByUserType(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
@@ -86,7 +86,7 @@ class ApiPublicGetUsersByUserType(APIView):
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiPrivateGetUsersByUserType(APIView):
+class ApiPrivateAccountsGetByUserType(APIView):
     permission_classes = [permissions.IsAdminUser]
 
     def get(self, request, *args, **kwargs):
@@ -103,7 +103,7 @@ class ApiPrivateGetUsersByUserType(APIView):
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiPublicGetUsers(APIView):
+class ApiPublicAccountsGetAll(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
@@ -116,7 +116,7 @@ class ApiPublicGetUsers(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ApiPrivateGetUsers(APIView):
+class ApiAdminAccountsGetAll(APIView):
     permission_classes = [permissions.IsAdminUser]
 
     def get(self, request, *args, **kwargs):
@@ -127,7 +127,7 @@ class ApiPrivateGetUsers(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ApiGetUsersByParent(APIView):
+class ApiPublicAccountsGetByParent(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
