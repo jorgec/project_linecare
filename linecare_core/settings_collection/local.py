@@ -36,6 +36,9 @@ INTERNAL_IPS = [
     # Vagrant
     '192.168.33.70',
 
+    # Local
+    '192.168.10.245',
+
     # VirtualBox Adapters
     '192.168.30.1',
     '192.168.33.1',
@@ -86,6 +89,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'rest_framework_swagger',
+    'corsheaders',
 
     'django_extensions',
     'channels',
@@ -113,6 +118,7 @@ LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -198,6 +204,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication'
     )
 }
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    '192.168.10.61:3000',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/

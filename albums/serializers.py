@@ -7,6 +7,7 @@ class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Album
         fields = (
+            'pk',
             'slug',
             'name',
             'description',
@@ -24,4 +25,12 @@ class PhotoSerializer(serializers.ModelSerializer):
             'caption',
             'is_primary',
             'is_public',
+        )
+
+class PhotoUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Photo
+        fields = (
+            'photo',
+            'caption'
         )
