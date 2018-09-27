@@ -33,6 +33,7 @@ urlpatterns = [
     # /auth
 
     path('profile/', include('profiles.urls')),
+    path('album/', include('albums.urls')),
 ]
 
 if settings.DEBUG:

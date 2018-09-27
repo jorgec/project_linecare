@@ -32,5 +32,20 @@ class PhotoUploadSerializer(serializers.ModelSerializer):
         model = models.Photo
         fields = (
             'photo',
-            'caption'
+            'caption',
+            'album'
+        )
+
+class AlbumWithPhotosSerializer(serializers.ModelSerializer):
+    photos = PhotoSerializer(many=True, read_only=True)
+    class Meta:
+        model = models.Album
+        fields = (
+            'pk',
+            'slug',
+            'name',
+            'description',
+            'is_public',
+            'album_type',
+            'photos'
         )
