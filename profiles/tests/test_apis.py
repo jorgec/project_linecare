@@ -4,9 +4,7 @@ from mixer.backend.django import mixer
 from rest_framework.utils import json
 
 from accounts.constants import USER_TYPES_TO_TEST
-from accounts.models import Account
 from profiles.constants import SMART, GLOBE
-from profiles.models import BaseProfile, ProfileMobtel, Gender
 from profiles.modules.api import retrieve
 
 pytestmark = pytest.mark.django_db
@@ -130,7 +128,7 @@ class TestProfileApi:
         response = retrieve.ApiPublicProfileGetByUserType.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request 400"
 
-        request = factory.get('/', {'user_type': 16266})
+        request = factory.get('/', {'user_type': 12345})
         response = retrieve.ApiPublicProfileGetByUserType.as_view()(request)
         assert response.status_code == 404, "Must fail on bad request"
 
@@ -167,7 +165,13 @@ class TestProfileApi:
         assert '+639101234567' in response.data['mobtels'], "Public mobtel should be listed"
         assert '+639101234568' in response.data['mobtels'], "Private mobtel should be listed"
         assert '+639101234569' in response.data['mobtels'], "Inactive mobtel should be listed"
-        assert len(response.data['mobtels']) == 3, "Expected number of mobtels {}".format(len(response.data['mobtels']))
+        assert len(response.data['mobtels']) == 3, "Expected number of mobtels 3. got {}".format(len(response.data['mobtels']))
+
+        user.base_profile().add_mobtel(**{
+            'number': '+63 910 1234560',
+            'carrier': SMART,
+            'is_public': True
+        })
 
         user.base_profile().edit_mobtel('+639101234569', **{
             'number': '+63 910 1234563',
@@ -179,6 +183,7 @@ class TestProfileApi:
         response = retrieve.ApiPrivateProfileGetByPK.as_view()(request)
         assert '+639101234569' not in response.data['mobtels'], "Old number should be gone"
         assert '+639101234563' in response.data['mobtels'], "Public mobtel should be listed"
+        assert len(response.data['mobtels']) == 4, "Expected number of mobtels 4. got {}".format(len(response.data['mobtels']))
 
         user.base_profile().delete_mobtel('+639101234563')
         request = factory.get('/', {'pk': user.pk})
@@ -228,7 +233,13 @@ class TestProfileApi:
         assert '+639101234567' in response.data['mobtels'], "Public mobtel should be listed"
         assert '+639101234568' in response.data['mobtels'], "Private mobtel should be listed"
         assert '+639101234569' in response.data['mobtels'], "Inactive mobtel should be listed"
-        assert len(response.data['mobtels']) == 3, "Expected number of mobtels {}".format(len(response.data['mobtels']))
+        assert len(response.data['mobtels']) == 3, "Expected number of mobtels 3. got {}".format(len(response.data['mobtels']))
+
+        user.base_profile().add_mobtel(**{
+            'number': '+63 910 1234560',
+            'carrier': SMART,
+            'is_public': True
+        })
 
         user.base_profile().edit_mobtel('+639101234569', **{
             'number': '+63 910 1234563',
@@ -240,6 +251,7 @@ class TestProfileApi:
         response = retrieve.ApiPrivateProfileGetByUsername.as_view()(request)
         assert '+639101234569' not in response.data['mobtels'], "Old number should be gone"
         assert '+639101234563' in response.data['mobtels'], "Public mobtel should be listed"
+        assert len(response.data['mobtels']) == 4, "Expected number of motels 4. got {}".format(len(response.data['mobtels']))
 
         user.base_profile().delete_mobtel('+639101234563')
         request = factory.get('/', {'username': user.username})

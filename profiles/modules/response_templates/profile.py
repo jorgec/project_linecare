@@ -7,8 +7,6 @@ from profiles.modules.response_templates.mobtel import mobtel_dict_template, pri
 
 def public_profile_template(user, as_json=False):
     profile = user.base_profile()
-    albums = profile.get_albums()
-    _albums = ''
     mobtels = profile.get_public_mobtels()
     _mobtels = ''
     profile_photo = profile.get_profile_photo()
@@ -16,8 +14,6 @@ def public_profile_template(user, as_json=False):
     cover_photo = profile.get_cover_photo()
     _cover_photo = ''
 
-    if albums:
-        _albums = AlbumSerializer(albums, many=True).data
     if mobtels:
         _mobtels = mobtel_dict_template(mobtels)
     if profile_photo:
@@ -33,7 +29,6 @@ def public_profile_template(user, as_json=False):
         'gender': profile.gender,
         'profile_photo': _profile_photo,
         'cover_photo': _cover_photo,
-        'albums': _albums,
         'mobtels': _mobtels
     }
 
@@ -68,10 +63,6 @@ def update_template(**kwargs):
 
 def private_profile_template(user, as_json=False):
     profile = user.base_profile()
-    albums = profile.get_albums()
-    _albums = ''
-    private_albums = profile.get_private_albums()
-    _private_albums = ''
     mobtels =profile.get_all_mobtels()
     _mobtels = ''
     profile_photo = profile.get_profile_photo()
@@ -79,10 +70,6 @@ def private_profile_template(user, as_json=False):
     cover_photo = profile.get_cover_photo()
     _cover_photo = ''
 
-    if albums:
-        _albums = AlbumSerializer(albums, many=True).data
-    if private_albums:
-        _private_albums = AlbumSerializer(private_albums, many=True).data
     if mobtels:
         _mobtels = private_mobtel_dict_template(mobtels)
     if profile_photo:
@@ -99,8 +86,6 @@ def private_profile_template(user, as_json=False):
         'date_of_birth': profile.date_of_birth,
         'profile_photo': _profile_photo,
         'cover_photo': _cover_photo,
-        'albums': _albums,
-        'private_albums': _private_albums,
         'mobtels': _mobtels
     }
 
