@@ -5,7 +5,7 @@ from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from accounts.models import Account
-from profiles.modules.response_templates.profile import public_profile_template
+from profiles.modules.response_templates.profile import public_profile_template, private_profile_template
 
 
 # Public
@@ -56,4 +56,30 @@ class ApiPublicProfileGetByUserType(APIView):
 
         return Response(profile, status=status.HTTP_200_OK)
 
+class ApiPrivateProfileGetByPK(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get(self, request, *args, **kwargs):
+        pk = request.GET.get('pk', None)
+        if not pk:
+            return Response('KeyError', status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(Account, pk=pk)
+
+        profile = private_profile_template(user)
+
+        return Response(profile, status=status.HTTP_200_OK)
+
+class ApiPrivateProfileGetByUsername(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        username = request.GET.get('username', None)
+        if not username:
+            return Response('KeyError', status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(Account, username=username)
+
+        profile = private_profile_template(user)
+
+        return Response(profile, status=status.HTTP_200_OK)

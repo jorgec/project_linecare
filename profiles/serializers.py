@@ -21,7 +21,6 @@ class PublicMobtelSerializer(serializers.ModelSerializer):
             'carrier'
         )
 
-
 class PublicProfileSerializer(serializers.Serializer):
     mobtels = PublicMobtelSerializer(many=True, read_only=True)
     albums = AlbumSerializer(many=True, read_only=True)
@@ -40,26 +39,21 @@ class PrivateMobtelSerializer(serializers.ModelSerializer):
         fields = (
             'number',
             'carrier',
+            'is_public',
             'is_primary',
-            'is_active',
-            'is_private'
+            'is_active'
         )
-
 
 class PrivateProfileSerializer(serializers.ModelSerializer):
     mobtels = PrivateMobtelSerializer(many=True, read_only=True)
     albums = AlbumSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = BaseProfile
-        fields = (
-            'first_name',
-            'last_name',
-            'gender',
-            'date_of_birth',
-            'mobtels',
-            'albums'
-        )
+    profile_photo = PhotoSerializer(read_only=True)
+    cover_photo = PhotoSerializer(read_only=True)
+    username = serializers.CharField(max_length=32)
+    first_name = serializers.CharField(max_length=32)
+    last_name = serializers.CharField(max_length=32)
+    gender = GenderSerializer(read_only=True)
+    user_type = serializers.IntegerField()
 
 
 class ProfileSerializer(serializers.ModelSerializer):
