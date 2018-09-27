@@ -9,6 +9,8 @@ from rest_framework.views import APIView
 from accounts.models import Account
 from accounts.serializers import AccountSerializer, LoginSerializer, AccountRegisterSerializer
 
+from django.utils.translation import gettext as _
+
 """
 ========================================================================================
 Authentication
@@ -41,7 +43,7 @@ class ApiLogin(APIView):
                 generate additional return values here
                 """
                 retval = {
-                    'message': 'Login Successful',
+                    'message': _('Login Successful'),
                     'user': AccountSerializer(user).data,
                     'token': Token.objects.get(user=user).key,
                     'status_code': status.HTTP_200_OK
@@ -92,7 +94,6 @@ class ApiRegister(APIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

@@ -11,7 +11,7 @@ def photo_upload_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "{}.{}".format(uuid.uuid4(), ext)
     return 'uploads/{}/{}/{}'.format(
-        instance.profile.user.pk,
+        instance.album.profile.user.pk,
         instance.album.slug,
         filename
     )
@@ -23,7 +23,7 @@ class Album(models.Model):
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=500, blank=True, null=True)
     is_public = models.BooleanField(default=True)
     album_type = models.PositiveIntegerField(choices=GENERIC_ALBUM_CHOICES, default=GENERIC_ALBUM)
 
@@ -37,18 +37,34 @@ class Album(models.Model):
     def __str__(self):
         return self.name
 
+    # auth
+    def verify_ownership(self, user):
+        return user == self.profile.user
+
+    # utils
+    def toggle_privacy(self):
+        if self.is_public:
+            self.is_public = False
+        else:
+            self.is_public = True
+        self.save()
+        return self
+
     def get_primary_photo(self):
         try:
             return self.album_photos.get(is_primary=True)
         except Photo.DoesNotExist:
             return None
 
+    def get_public_photos(self):
+        return self.album_photos.filter(is_public=True)
+
 
 class Photo(models.Model):
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    photo = models.ImageField(upload_to=photo_upload_path)
+    photo = models.ImageField(upload_to=photo_upload_path, max_length=512)
     caption = models.TextField(max_length=500)
     is_primary = models.BooleanField(default=False)
     is_public = models.BooleanField(default=True)
@@ -66,5 +82,16 @@ class Photo(models.Model):
         photos_in_album = Photo.objects.filter(album=self.album)
         photos_in_album.update(is_primary=False)
         self.is_primary = True
-        self, is_public = True
+        self.is_public = True
         self.save()
+        return self
+
+    def toggle_privacy(self):
+        if self.is_primary:
+            return False
+        if self.is_public:
+            self.is_public = False
+        else:
+            self.is_public = True
+        self.save()
+        return self
