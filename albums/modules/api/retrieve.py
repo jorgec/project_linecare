@@ -35,9 +35,20 @@ class ApiPublicAlbumGetByPK(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
-        album = get_object_or_404(Album, pk=request.GET.get('album', None))
+        album = get_object_or_404(Album, pk=request.GET.get('album', None), is_public=True)
         photos = album.get_public_photos()
-
         obj = album_with_photos_template(album, photos)
-
         return Response(obj, status=status.HTTP_200_OK)
+
+
+class ApiPrivateAlbumGetAlbums(APIView):
+    """
+    Get albums of currently logged in user
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        profile = request.user.base_profile()
+        albums = profile.get_albums()
+        serializer = AlbumSerializer(albums, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -36,6 +36,7 @@ class ApiPrivateAlbumPostUploadPhoto(APIView):
 
         if serializer.is_valid():
             photo = serializer.save()
+            photo.set_primary_photo()
 
             response_data = save_template(**{
                 'as_json': False,

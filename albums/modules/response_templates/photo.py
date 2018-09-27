@@ -1,6 +1,8 @@
 from rest_framework.status import HTTP_200_OK
 from rest_framework.utils import json
 
+from albums.serializers import PhotoSerializer
+
 
 def save_template(**kwargs):
     as_json = kwargs['as_json']
@@ -10,7 +12,7 @@ def save_template(**kwargs):
 
     if status == HTTP_200_OK:
         message = 'Save successful'
-        data = result
+        data = PhotoSerializer(result).data
     else:
         message = result
         data = request.data
