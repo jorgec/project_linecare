@@ -41,6 +41,8 @@ class TestProfileApi:
         response = retrieve.ApiPublicProfileGetByPK.as_view()(request)
         assert response.status_code == 200, "Able to call this by profile"
         assert 'date_of_birth' not in response.data['mobtels'], "Date of birth must not be visible"
+        assert 'profile_photo' in response.data, "Profile photo must be visible"
+        assert 'cover_photo' in response.data, "Cover photo must be visible"
         assert '+639101234567' in response.data['mobtels'], "Public mobtel should be listed"
         assert '+639101234569' not in response.data['mobtels'], "Private mobtel should not be listed"
         assert '+639101234560' not in response.data['mobtels'], "Inactive mobtel should not be listed"
@@ -83,6 +85,8 @@ class TestProfileApi:
         response = retrieve.ApiPublicProfileGetByUsername.as_view()(request)
         assert response.status_code == 200, "Able to call this profile"
         assert 'date_of_birth' not in response.data, "Date of birth must not be visible"
+        assert 'profile_photo' in response.data, "Profile photo must be visible"
+        assert 'cover_photo' in response.data, "Cover photo must be visible"
         assert '+639101234567' in response.data['mobtels'], "Public mobtel should be listed"
         assert '+639101234569' not in response.data['mobtels'], "Private mobtel should not be listed"
         assert '+639101234560' not in response.data['mobtels'], "Inactive mobtel should not be listed"
@@ -181,6 +185,8 @@ class TestProfileApi:
         request = factory.get('/', {'pk': user.pk})
         force_authenticate(request, user=user)
         response = retrieve.ApiPrivateProfileGetByPK.as_view()(request)
+        assert 'profile_photo' in response.data, "Profile photo must be visible"
+        assert 'cover_photo' in response.data, "Cover photo must be visible"
         assert '+639101234569' not in response.data['mobtels'], "Old number should be gone"
         assert '+639101234563' in response.data['mobtels'], "Public mobtel should be listed"
         assert len(response.data['mobtels']) == 4, "Expected number of mobtels 4. got {}".format(len(response.data['mobtels']))
@@ -190,6 +196,9 @@ class TestProfileApi:
         force_authenticate(request, user=user)
         response = retrieve.ApiPrivateProfileGetByPK.as_view()(request)
         assert '+639101234563' not in response.data['mobtels'], "Deleted mobtel should not be listed"
+
+        user.base_profile().set_as_primary_mobtel('+639101234560')
+        assert '+639101234560' == str(user.base_profile().get_primary_mobtel()), "Mobtel must be primary. got"
 
         request = factory.get('/', {'pk': user.pk})
         response = retrieve.ApiPrivateProfileGetByPK.as_view()(request)
@@ -220,8 +229,6 @@ class TestProfileApi:
         user.base_profile().add_mobtel(**{
             'number': '+63 910 1234569',
             'carrier': SMART,
-            'is_public': True,
-            'is_primary': False,
             'is_active': False
         })
 
@@ -230,6 +237,8 @@ class TestProfileApi:
         response = retrieve.ApiPrivateProfileGetByUsername.as_view()(request)
         assert response.status_code == 200, "Able to call this profile"
         assert 'date_of_birth' in response.data, "Date of birth must be visible"
+        assert 'profile_photo' in response.data, "Profile photo must be visible"
+        assert 'cover_photo' in response.data, "Cover photo must be visible"
         assert '+639101234567' in response.data['mobtels'], "Public mobtel should be listed"
         assert '+639101234568' in response.data['mobtels'], "Private mobtel should be listed"
         assert '+639101234569' in response.data['mobtels'], "Inactive mobtel should be listed"
@@ -238,12 +247,11 @@ class TestProfileApi:
         user.base_profile().add_mobtel(**{
             'number': '+63 910 1234560',
             'carrier': SMART,
-            'is_public': True
+            'is_primary': False
         })
 
         user.base_profile().edit_mobtel('+639101234569', **{
             'number': '+63 910 1234563',
-            'is_public': True,
             'carrier': GLOBE
         })
         request = factory.get('/', {'username': user.username})
@@ -253,11 +261,19 @@ class TestProfileApi:
         assert '+639101234563' in response.data['mobtels'], "Public mobtel should be listed"
         assert len(response.data['mobtels']) == 4, "Expected number of motels 4. got {}".format(len(response.data['mobtels']))
 
+        # test mobtel delete function
         user.base_profile().delete_mobtel('+639101234563')
         request = factory.get('/', {'username': user.username})
         force_authenticate(request, user=user)
         response = retrieve.ApiPrivateProfileGetByUsername.as_view()(request)
         assert '+639101234563' not in response.data['mobtels'], "Deleted mobtel should not be listed"
+
+        # test primary public mobtel
+        assert '+639101234567' == str(user.base_profile().get_primary_public_mobtel()), "Public primary mobtel should be visible."
+
+        # test primary mobtel
+        user.base_profile().set_as_primary_mobtel('+639101234560')
+        assert '+639101234560' == str(user.base_profile().get_primary_mobtel()), "Primary mobtel should be visible."
 
         request = factory.get('/', {'username': user.username})
         response = retrieve.ApiPrivateProfileGetByUsername.as_view()(request)
