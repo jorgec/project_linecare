@@ -89,15 +89,16 @@ class ApiPrivateProfileGetByPK(APIView):
     """
     permission_classes = [permissions.IsAuthenticated]
 
+    def get(self, request, *args, **kwargs):
+        pk = request.GET.get('pk', None)
+        if not pk:
+            return Response('KeyError', status.HTTP_400_BAD_REQUEST)
 
         user = get_object_or_404(Account, pk=pk)
 
         profile = private_profile_template(user)
 
         return Response(profile, status=status.HTTP_200_OK)
-
-class ApiPrivateProfileGetByPK(APIView):
-    permission_classes = [permissions.IsAuthenticated]
 
 class ApiPrivateProfileGetByUsername(APIView):
     """
