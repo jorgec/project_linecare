@@ -3,7 +3,8 @@ from rest_framework import status, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from doctors.models import DoctorProfile
+from accounts.models import Account
+from doctors.modules.response_templates.profile import private_doctor_profile_template
 
 
 class ApiPrivateDoctorProfileGetByPK(APIView):
@@ -15,12 +16,11 @@ class ApiPrivateDoctorProfileGetByPK(APIView):
 
     def get(self, request, *args, **kwargs):
         pk = request.GET.get('pk', None)
-
         if not pk:
             return Response('KeyError', status.HTTP_400_BAD_REQUEST)
 
-        user = get_object_or_404(DoctorProfile, pk=pk)
+        user = get_object_or_404(Account, pk=pk)
 
-        doctor = '' #template
+        doctor = private_doctor_profile_template(user)
 
         return Response(doctor, status=status.HTTP_200_OK)

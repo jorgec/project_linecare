@@ -8,7 +8,8 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from rest_framework.authtoken.models import Token
 
-from accounts.constants import SUPERADMIN, USERNAME_REGEX, USER_TYPE_CHOICES
+from accounts.constants import SUPERADMIN, USERNAME_REGEX, USER_TYPE_CHOICES, DOCTOR
+from doctors.models import DoctorProfile
 from profiles.models import BaseProfile
 
 
@@ -121,3 +122,6 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 def create_base_profile(sender, instance=None, created=False, **kwargs):
     if created:
         BaseProfile.objects.create(user=instance)
+        if instance.user_type == DOCTOR:
+            DoctorProfile.objects.create(profile=instance.base_profile())
+

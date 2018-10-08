@@ -28,16 +28,23 @@ class Specialty(models.Model):
     def __str__(self):
         return self.name
 
+class Insurance(models.Model):
+    # Fields
+    name = models.CharField(max_length=255)
+    slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now_add=True, editable=False)
+
 
 class DoctorProfile(models.Model):
     # Fields
-    license_number = models.CharField(max_length=12, null=False, unique=True)
-    year_started = models.IntegerField(max_length=4)
+    license_number = models.CharField(max_length=12, null=True, unique=True)
+    year_started = models.IntegerField(null=True)
 
     # Relationship Fields
     profile = models.ForeignKey('profiles.BaseProfile', on_delete=models.CASCADE, related_name='profile_doctor')
     medical_subject = models.ForeignKey(MedicalSubject, on_delete=models.SET_NULL, blank=True, null=True )
-    insurance = models.ForeignKey('Insurance', on_delete=models.SET_NULL(), blank=True, null=True)
+    insurance = models.ForeignKey(Insurance, on_delete=models.SET_NULL, blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -46,8 +53,15 @@ class DoctorProfile(models.Model):
         ordering = ('-created',)
         unique_together = ('license_number', 'profile')
 
-    def __str__(self):
-        return self.license_number
+    def __unicode__(self):
+        return u'%s' % self.pk
+
+    def get_absolute_url(self):
+        return reverse('doctors_doctorprofile_detail', args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse('doctors_doctorprofile_update', args=(self.pk,))
+
 
 class DoctorSpecialty(models.Model):
     # Fields

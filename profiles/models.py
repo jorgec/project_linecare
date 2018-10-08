@@ -58,6 +58,9 @@ class BaseProfile(models.Model):
                 return self.user.username
             return self.user.email
 
+    def get_doctor_profile(self):
+        return self.profile_doctor.all().first()
+
     # mobtels
     def get_public_mobtels(self):
         return self.profile_mobtels.filter(is_public=True, is_active=True)
