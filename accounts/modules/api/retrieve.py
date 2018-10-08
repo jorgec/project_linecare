@@ -67,7 +67,7 @@ class ApiPrivateAccountGetByEmail(APIView):
         return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiPublicAccountssGetByUserType(APIView):
+class ApiPublicAccountsGetByUserType(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):

@@ -15,7 +15,7 @@ urlpatterns = [
     # Many
     path('api/public/get_users/by_parent', retrieve.ApiPublicAccountsGetByParent.as_view(),
          name='api_public_get_users_by_parent'),
-    path('api/public/get_users/by_type', retrieve.ApiPublicAccountssGetByUserType.as_view(),
+    path('api/public/get_users/by_type', retrieve.ApiPublicAccountsGetByUserType.as_view(),
          name='api_public_get_users_by_user_type'),
     path('api/private/get_users/by_type', retrieve.ApiPrivateAccountsGetByUserType.as_view(),
          name='api_private_get_users_by_user_type'),

@@ -68,12 +68,12 @@ class TestApiViews:
                 }
                 users.append(u)
             request = factory.get('/', {'user_type': type[0]})
-            response = retrieve.ApiPublicAccountssGetByUserType.as_view()(request)
+            response = retrieve.ApiPublicAccountsGetByUserType.as_view()(request)
             assert response.status_code == 200, "Call successful"
             assert len(response.data) == len(users), "Expected number of users, {}".format(response.data)
 
         request = factory.get('/')
-        response = retrieve.ApiPublicAccountssGetByUserType.as_view()(request)
+        response = retrieve.ApiPublicAccountsGetByUserType.as_view()(request)
         assert response.status_code == 400, "Must fail on bad request"
 
     def test_get_users_by_user_type_private(self):
