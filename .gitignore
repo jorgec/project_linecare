@@ -79,3 +79,5 @@ profiles/migrations/
 doctors/migrations/
 
 node_modules/
+
+daphne\.sh
