@@ -40,7 +40,7 @@ class TestProfileApi:
         request = factory.get('/', {'pk': user.pk})
         response = retrieve.ApiPublicProfileGetByPK.as_view()(request)
         assert response.status_code == 200, "Able to call this by profile"
-        assert 'date_of_birth' not in response.data['mobtels'], "Date of birth must not be visible"
+        assert 'date_of_birth' not in response.data, "Date of birth must not be visible"
         assert 'profile_photo' in response.data, "Profile photo must be visible"
         assert 'cover_photo' in response.data, "Cover photo must be visible"
         assert '+639101234567' in response.data['mobtels'], "Public mobtel should be listed"
