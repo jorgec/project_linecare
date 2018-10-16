@@ -4,6 +4,7 @@ import pytest
 from django.db.models import Q
 from mixer.backend.django import mixer
 from rest_framework.test import APIRequestFactory, force_authenticate
+from rest_framework.authtoken.models import Token
 
 from accounts.constants import USER_TYPES_TO_TEST, SUPERADMIN, USER_TYPE_CHOICES, ADMIN
 from accounts.models import Account
@@ -19,6 +20,29 @@ class TestApiViews:
     def test_init(self):
         user = mixer.blend('accounts.Account')
         assert user.pk == 1, "Should have a user"
+
+    def test_get_user_by_token_public(self):
+        # create dummy user
+        user = mixer.blend('accounts.Account')
+        token = Token.objects.get(user_id=user.pk)
+
+        request = factory.get('/', {'token': token.key})
+        response = retrieve.ApiPublicAccountGetByToken.as_view()(request)
+        assert response.status_code == 200, "Must be accessible"
+
+    def test_get_user_by_token_private(self):
+        # create dummy user
+        user = mixer.blend('accounts.Account')
+        token = Token.objects.get(user_id=user.pk)
+
+        request = factory.get('/', {'token': token.key})
+        force_authenticate(request, user=user)
+        response = retrieve.ApiPrivateAccountGetByToken.as_view()(request)
+        assert response.status_code == 200, "Must be accessible"
+
+        request = factory.get('/', {'token': token.key})
+        response = retrieve.ApiPrivateAccountGetByToken.as_view()(request)
+        assert response.status_code == 401, "Must no be accessed if not authenticated"
 
     def test_get_user_by_pk_public(self):
         # create dummy user

@@ -3,6 +3,7 @@ from rest_framework import status, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 
 from accounts.constants import SUPERADMIN, ADMIN
 from accounts.models import Account
@@ -22,6 +23,34 @@ Retrieval
     - all (public/private)
 """
 
+class ApiPrivateAccountGetByToken(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        token = request.GET.get('token', None)
+
+        if token:
+            token = get_object_or_404(Token, key=token)
+            user = get_object_or_404(Account, pk=token.user_id)
+            serializer = AccountSerializer(user)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ApiPublicAccountGetByToken(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        token = request.GET.get('token', None)
+
+        if token:
+            token = get_object_or_404(Token, key=token)
+            user = get_object_or_404(Account, pk=token.user_id)
+
+            serializer = AccountSerializerPublic(user)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
 class ApiPrivateAccountGetByPK(APIView):
     permission_classes = [permissions.IsAuthenticated]
