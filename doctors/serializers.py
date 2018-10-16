@@ -26,7 +26,7 @@ class InsuranceSerializer(serializers.ModelSerializer):
             'slug'
         }
 
-class DoctorProfileSerializer(serializers.Serializer):
+class PrivateDoctorSerializer(serializers.Serializer):
     license_number = serializers.CharField(max_length=12)
     year_started = serializers.IntegerField()
     medical_subject = MedicalSubjectSerializer(read_only=True)

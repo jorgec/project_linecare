@@ -38,12 +38,12 @@ class Insurance(models.Model):
 
 class DoctorProfile(models.Model):
     # Fields
-    license_number = models.CharField(max_length=12, null=True, unique=True)
+    license_number = models.CharField(max_length=12, blank=True)
     year_started = models.IntegerField(null=True)
 
     # Relationship Fields
     profile = models.ForeignKey('profiles.BaseProfile', on_delete=models.CASCADE, related_name='profile_doctor')
-    medical_subject = models.ForeignKey(MedicalSubject, on_delete=models.SET_NULL, blank=True, null=True )
+    medical_subject = models.ForeignKey(MedicalSubject, related_name='medical_subject_doctor', on_delete=models.SET_NULL, blank=True, null=True )
     insurance = models.ForeignKey(Insurance, on_delete=models.SET_NULL, blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -62,6 +62,8 @@ class DoctorProfile(models.Model):
     def get_update_url(self):
         return reverse('doctors_doctorprofile_update', args=(self.pk,))
 
+    def get_doctor_specialties(self):
+        return self.doctor_specialty.all()
 
 class DoctorSpecialty(models.Model):
     # Fields
