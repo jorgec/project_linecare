@@ -7,7 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from albums.constants import PROFILE_PHOTO_ALBUM, COVER_PHOTO_ALBUM
 from albums.models import Album
-from profiles.constants import MOBTEL_CARRIERS
+from profiles.constants import PHONE_NAME_CHOICES, PHONE_CARRIERS
 from profiles.managers import BaseProfileManager
 
 
@@ -61,57 +61,57 @@ class BaseProfile(models.Model):
     def get_doctor_profile(self):
         return self.profile_doctor.all().first()
 
-    # mobtels
-    def get_public_mobtels(self):
-        return self.profile_mobtels.filter(is_public=True, is_active=True)
+    # phones
+    def get_public_phones(self):
+        return self.profile_phones.filter(is_public=True, is_active=True)
 
-    def get_all_mobtels(self):
-        return self.profile_mobtels.all()
+    def get_all_phones(self):
+        return self.profile_phones.all()
 
-    def get_primary_public_mobtel(self):
-        return self.profile_mobtels.filter(is_primary=True, is_active=True, is_public=True).first()
+    def get_primary_public_phone(self):
+        return self.profile_phones.filter(is_primary=True, is_active=True, is_public=True).first()
 
-    def get_primary_mobtel(self):
-        return self.profile_mobtels.filter(is_primary=True, is_active=True).first()
+    def get_primary_phone(self):
+        return self.profile_phones.filter(is_primary=True, is_active=True).first()
 
-    def add_mobtel(self, **kwargs):
+    def add_phone(self, **kwargs):
         kwargs['profile'] = self
-        return ProfileMobtel.objects.create(**kwargs)
+        return ProfilePhone.objects.create(**kwargs)
 
-    def edit_mobtel(self, mobtel, **kwargs):
+    def edit_phone(self, phone, **kwargs):
         """
-        :param mobtel: Mobile number
-        :type mobtel: String
+        :param phone: Mobile number
+        :type phone: String
         """
         try:
-            profile_mobtel = ProfileMobtel.objects.filter(profile=self, number=mobtel)
-            profile_mobtel.update(**kwargs)
-            return profile_mobtel
-        except ProfileMobtel.DoesNotExist:
+            profile_phone = ProfilePhone.objects.filter(profile=self, number=phone)
+            profile_phone.update(**kwargs)
+            return profile_phone
+        except ProfilePhone.DoesNotExist:
             return False
 
-    def delete_mobtel(self, mobtel=None):
-        if not mobtel:
-            return False
-
-        try:
-            profile_mobtel = ProfileMobtel.objects.get(profile=self, number=mobtel)
-            profile_mobtel.delete()
-            return True
-        except ProfileMobtel.DoesNotExist:
-            return False
-
-    def set_as_primary_mobtel(self, mobtel=None):
-        if not mobtel:
+    def delete_phone(self, phone=None):
+        if not phone:
             return False
 
         try:
-            profile_mobtel = ProfileMobtel.objects.get(profile=self, number=mobtel)
-            ProfileMobtel.objects.filter(profile=self).update(is_primary=False)
-            profile_mobtel.is_primary = True
-            profile_mobtel.save()
+            profile_phone = ProfilePhone.objects.get(profile=self, number=phone)
+            profile_phone.delete()
             return True
-        except ProfileMobtel.DoesNotExist:
+        except ProfilePhone.DoesNotExist:
+            return False
+
+    def set_as_primary_phone(self, phone=None):
+        if not phone:
+            return False
+
+        try:
+            profile_phone = ProfilePhone.objects.get(profile=self, number=phone)
+            ProfilePhone.objects.filter(profile=self).update(is_primary=False)
+            profile_phone.is_primary = True
+            profile_phone.save()
+            return True
+        except ProfilePhone.DoesNotExist:
             return False
 
     # Media
@@ -151,10 +151,11 @@ class BaseProfile(models.Model):
         return None
 
 
-class ProfileMobtel(models.Model):
+class ProfilePhone(models.Model):
     # Fields
+    name = models.CharField(max_length=20, choices=PHONE_NAME_CHOICES, default='Mobile', blank=True, null=True)
+    carrier = models.PositiveSmallIntegerField(choices=PHONE_CARRIERS, blank=True, null=True)
     number = PhoneNumberField(unique=True)
-    carrier = models.PositiveSmallIntegerField(choices=MOBTEL_CARRIERS)
     is_public = models.BooleanField(default=False)
     is_primary = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -163,7 +164,7 @@ class ProfileMobtel(models.Model):
     updated = models.DateTimeField(null=False, auto_now=True)
 
     # Relationship Fields
-    profile = models.ForeignKey(BaseProfile, related_name='profile_mobtels', on_delete=models.CASCADE)
+    profile = models.ForeignKey(BaseProfile, related_name='profile_phones', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('profile', '-created')

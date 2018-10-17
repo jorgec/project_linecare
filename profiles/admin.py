@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from profiles.models import BaseProfile, ProfileMobtel
+from profiles.models import BaseProfile, ProfilePhone
 
 
 class BaseProfileAdmin(admin.ModelAdmin):
@@ -12,10 +12,10 @@ class BaseProfileAdmin(admin.ModelAdmin):
 admin.site.register(BaseProfile, BaseProfileAdmin)
 
 
-class ProfileMobtelAdmin(admin.ModelAdmin):
+class ProfilePhoneAdmin(admin.ModelAdmin):
     list_display = ('number', 'profile', 'carrier', 'is_public', 'is_active')
     list_filter = ('profile', 'carrier', 'is_public', 'is_active')
     search_fields = ('profile', 'carrier')
 
 
-admin.site.register(ProfileMobtel, ProfileMobtelAdmin)
+admin.site.register(ProfilePhone, ProfilePhoneAdmin)
