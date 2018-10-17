@@ -101,7 +101,7 @@ INSTALLED_APPS = [
     'accounts',
     'profiles',
     'albums',
-    # 'doctors'
+    'doctors'
 ]
 
 # User Model
