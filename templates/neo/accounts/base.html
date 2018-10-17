@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Linecare &mdash; {{ page_title }}</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+        crossorigin="anonymous">
+    <!--build:css css/styles.min.css-->
+    <link rel="stylesheet" href="{% static 'neo/css/styles.min.css' %}">
+    <!--endbuild-->
+
+    {% block header_css %} {% endblock %}
+    {% block header_js %} {% endblock %}
+
+</head>
+
+<body>
+
+    {% include 'neo/accounts/common/header.html' %}
+    {% block content %}{% endblock %}
+    {% include 'neo/accounts/common/footer.html' %}
+
+    <script src="{% static 'neo/js/main.min.js' %}"></script>
+    {% block scripts %} {% endblock %}
+
+</body>
+
+</html>
