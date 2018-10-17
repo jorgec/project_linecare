@@ -85,7 +85,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
-    
+
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
@@ -97,6 +97,7 @@ INSTALLED_APPS = [
 
     # utilities
     'phonenumber_field',
+    'crispy_forms',
 
     'accounts',
     'profiles',
@@ -135,7 +136,9 @@ ROOT_URLCONF = 'linecare_core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            '/home/ubuntu/linecare/linecare_core/templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -231,7 +234,11 @@ LANGUAGES = (
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
+
+STATIC_URL = 'http://192.168.10.245/static/'
 STATIC_ROOT = '/var/www/html/static/'
 
 MEDIA_URL = 'http://192.168.10.245/media/'
