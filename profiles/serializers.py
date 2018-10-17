@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from albums.serializers import AlbumSerializer, PhotoSerializer
-from profiles.models import BaseProfile, ProfileMobtel, Gender
+from profiles.models import BaseProfile, ProfilePhone, Gender
 
 
 class GenderSerializer(serializers.ModelSerializer):
@@ -13,16 +13,16 @@ class GenderSerializer(serializers.ModelSerializer):
         )
 
 
-class PublicMobtelSerializer(serializers.ModelSerializer):
+class PublicPhoneSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProfileMobtel
+        model = ProfilePhone
         fields = (
             'number',
             'carrier'
         )
 
 class PublicProfileSerializer(serializers.Serializer):
-    mobtels = PublicMobtelSerializer(many=True, read_only=True)
+    phones = PublicPhoneSerializer(many=True, read_only=True)
     albums = AlbumSerializer(many=True, read_only=True)
     profile_photo = PhotoSerializer(read_only=True)
     cover_photo = PhotoSerializer(read_only=True)
@@ -33,9 +33,9 @@ class PublicProfileSerializer(serializers.Serializer):
     user_type = serializers.IntegerField()
 
 
-class PrivateMobtelSerializer(serializers.ModelSerializer):
+class PrivatePhoneSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProfileMobtel
+        model = ProfilePhone
         fields = (
             'number',
             'carrier',
@@ -45,7 +45,7 @@ class PrivateMobtelSerializer(serializers.ModelSerializer):
         )
 
 class PrivateProfileSerializer(serializers.ModelSerializer):
-    mobtels = PrivateMobtelSerializer(many=True, read_only=True)
+    phones = PrivatePhoneSerializer(many=True, read_only=True)
     albums = AlbumSerializer(many=True, read_only=True)
     profile_photo = PhotoSerializer(read_only=True)
     cover_photo = PhotoSerializer(read_only=True)

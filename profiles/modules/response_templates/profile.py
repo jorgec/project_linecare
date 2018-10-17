@@ -2,20 +2,20 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.utils import json
 
 from albums.serializers import AlbumSerializer, PhotoSerializer
-from profiles.modules.response_templates.mobtel import mobtel_dict_template, private_mobtel_dict_template
+from profiles.modules.response_templates.phone import phone_dict_template, private_phone_dict_template
 
 
 def public_profile_template(user, as_json=False):
     profile = user.base_profile()
-    mobtels = profile.get_public_mobtels()
-    _mobtels = ''
+    phones = profile.get_public_phones()
+    _phones = ''
     profile_photo = profile.get_profile_photo()
     _profile_photo = ''
     cover_photo = profile.get_cover_photo()
     _cover_photo = ''
 
-    if mobtels:
-        _mobtels = mobtel_dict_template(mobtels)
+    if phones:
+        _phones = phone_dict_template(phones)
     if profile_photo:
         _profile_photo = PhotoSerializer(profile_photo).data
     if cover_photo:
@@ -29,7 +29,7 @@ def public_profile_template(user, as_json=False):
         'gender': profile.gender,
         'profile_photo': _profile_photo,
         'cover_photo': _cover_photo,
-        'mobtels': _mobtels
+        'phones': _phones
     }
 
     if as_json:
@@ -63,15 +63,15 @@ def update_template(**kwargs):
 
 def private_profile_template(user, as_json=False):
     profile = user.base_profile()
-    mobtels =profile.get_all_mobtels()
-    _mobtels = ''
+    phones =profile.get_all_phones()
+    _phones = ''
     profile_photo = profile.get_profile_photo()
     _profile_photo = ''
     cover_photo = profile.get_cover_photo()
     _cover_photo = ''
 
-    if mobtels:
-        _mobtels = private_mobtel_dict_template(mobtels)
+    if phones:
+        _phones = private_phone_dict_template(phones)
     if profile_photo:
         _profile_photo = PhotoSerializer(profile_photo).data
     if cover_photo:
@@ -86,7 +86,7 @@ def private_profile_template(user, as_json=False):
         'date_of_birth': profile.date_of_birth,
         'profile_photo': _profile_photo,
         'cover_photo': _cover_photo,
-        'mobtels': _mobtels
+        'phones': _phones
     }
 
     if as_json:
