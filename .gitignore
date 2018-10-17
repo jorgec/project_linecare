@@ -82,5 +82,3 @@ albums/migrations/
 node_modules/
 
 daphne\.sh
-
-serve\.sh
