@@ -1,6 +1,7 @@
 from django.urls import path
 
 from accounts.modules.api import auth, retrieve
+from .modules.views import auth as auth_views
 
 urlpatterns = [
     # API
@@ -25,4 +26,12 @@ urlpatterns = [
     # Authentication
     path('api/login', auth.ApiLogin.as_view(), name='api_login'),
     path('api/register', auth.ApiRegister.as_view(), name='api_register')
+]
+
+
+# Views
+urlpatterns += [
+    path('register', auth_views.AccountRegistrationView.as_view(), name='accounts_register'),
+    path('login', auth_views.AccountLoginView.as_view(), name='accounts_login'),
+    path('logout', auth_views.AccountLogoutView.as_view(), name='accounts_logout'),
 ]
