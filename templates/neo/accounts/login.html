@@ -1,6 +1,8 @@
 {% extends 'neo/accounts/base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load socialaccount %}
+{% providers_media_js %}
 
 {% block header_css %}
 {% endblock %}
@@ -32,8 +34,8 @@
         </div>
 
         <button class="btn btn-primary btn-block" type="submit">Sign in</button>
-        <button class="btn btn-light btn-block" type="submit"><i class="fab fa-facebook-f"></i>Sign in with
-            Facebook</button>
+        <a class="btn btn-light btn-block" href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="fab fa-facebook-f"></i>Sign in with
+            Facebook</a>
         <button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign in with Google</button>
     </form>
 </div>

@@ -84,3 +84,5 @@ node_modules/
 daphne\.sh
 
 linecare-react
+
+uploads/

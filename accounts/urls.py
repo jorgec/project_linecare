@@ -2,6 +2,7 @@ from django.urls import path
 
 from accounts.modules.api import auth, retrieve
 from .modules.views import auth as auth_views
+from .modules.views import postlogin as postlogin_views
 
 urlpatterns = [
     # API
@@ -34,4 +35,6 @@ urlpatterns += [
     path('register', auth_views.AccountRegistrationView.as_view(), name='accounts_register'),
     path('login', auth_views.AccountLoginView.as_view(), name='accounts_login'),
     path('logout', auth_views.AccountLogoutView.as_view(), name='accounts_logout'),
+
+    path('postlogin', postlogin_views.PostLoginInitialView.as_view(), name='accounts_postlogin'),
 ]

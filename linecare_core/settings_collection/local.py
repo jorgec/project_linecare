@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -114,7 +115,31 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/accounts/postlogin'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile', 'user_friends'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': lambda request: 'en_US',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.12',
+    }
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
@@ -211,6 +236,9 @@ REST_FRAMEWORK = {
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
     '192.168.10.61:3000',
+    '192.168.10.245',
+    '192.168.33.111',
+    'linecare.local'
 )
 
 # Internationalization
@@ -218,7 +246,7 @@ CORS_ORIGIN_WHITELIST = (
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Manila'
 
 USE_I18N = True
 
@@ -238,8 +266,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
 
-STATIC_URL = 'http://192.168.10.245/static/'
+STATIC_URL = 'https://192.168.10.245/static/'
 STATIC_ROOT = '/var/www/html/static/'
 
-MEDIA_URL = 'http://192.168.10.245/media/'
+MEDIA_URL = 'https://192.168.10.245/media/'
 MEDIA_ROOT = '/var/www/html/media/'
+TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)

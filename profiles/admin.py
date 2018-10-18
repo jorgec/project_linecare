@@ -5,9 +5,10 @@ from profiles.models import BaseProfile, ProfilePhone
 
 
 class BaseProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'first_name', 'last_name')
+    list_display = ('created', 'user', 'first_name', 'last_name')
     list_filter = ('gender',)
     search_fields = ('first_name', 'last_name', 'user')
+    ordering = ('-created',)
 
 admin.site.register(BaseProfile, BaseProfileAdmin)
 
