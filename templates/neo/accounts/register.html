@@ -9,9 +9,9 @@
 
 {% block content %}
 {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-        {{ message|safe }}
-    </div>
+<div class="alert alert-{{ message.tags }}">
+    {{ message|safe }}
+</div>
 {% endfor %}
 
 <div class="solo-card">
@@ -23,17 +23,17 @@
         </div>
 
         <div class="form-label-group">
-            <img src="{% static 'neo/images/close-envelope-green.png' %}" alt="" class="img-envelop">
+            <img src="{% static 'neo/images/close-envelope-green.png' %}" alt="Envelop Icon" class="img-envelop">
             <input type="email" id="email" class="form-control" placeholder="Email address" name="email" required>
         </div>
 
         <div class="form-label-group">
-            <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="" class="img-padlock">
+            <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="Lock Icon" class="img-padlock">
             <input type="password" id="password" class="form-control" placeholder="Password" name="password" required>
         </div>
 
         <div class="form-label-group">
-            <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="" class="img-padlock-1">
+            <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="Lock Icon" class="img-padlock-1">
             <input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password" name="confirm_password"
                 required>
         </div>
