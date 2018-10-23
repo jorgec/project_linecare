@@ -86,3 +86,9 @@ daphne\.sh
 linecare-react
 
 uploads/
+
+appglobals/migrations/
+
+datesdim/migrations/
+
+locations/migrations/
