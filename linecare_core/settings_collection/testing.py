@@ -89,6 +89,12 @@ INSTALLED_APPS = [
 
     # utilities
     'phonenumber_field',
+    'crispy_forms',
+
+    'locations',
+    'datesdim',
+    'appglobals',
+
 
     'accounts',
     'profiles',
@@ -223,8 +229,13 @@ LANGUAGES = (
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
+
+STATIC_URL = 'https://linecare.pdpi.tech/static/'
 STATIC_ROOT = '/var/www/html/static/'
 
-MEDIA_URL = 'http://192.168.10.220/media/'
+MEDIA_URL = 'https://linecare.pdpi.tech/media/'
 MEDIA_ROOT = '/var/www/html/media/'
