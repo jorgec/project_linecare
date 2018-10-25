@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Linecare Static</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+        crossorigin="anonymous">
+    <!--build:css css/styles.min.css-->
+    <link rel="stylesheet" href="../css/styles.css">
+    <!--endbuild-->
+
+</head>
+
+<body>
+
+    <!-- Language Nav -->
+    <div class="language-nav__container">
+        <div class="container">
+            <div class="language-nav__items">
+                <img src="../images/001-philippines.png" alt="PH Icon">
+                <a id="dropdownMenuButton" data-toggle="dropdown" href="#"><i class="fas fa-caret-down"></i></a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">
+                        <img src="../images/001-philippines.png" alt="PH Icon">
+                        Tagalog
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <img src="../images/002-united-states.png" alt="PH Icon">
+                        English
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a href="/" class="navbar-brand"><img src="../images/LineCare-Logo-022.png" alt="Logo"></a>
+            <div class="profile__container">
+                <div class="profile__notif">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="profile__photo">
+                    <img src="../images/profile-dummy.png" alt="Profile">
+                </div>
+                <div class="profile__name">
+                    Jake
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sub Navigation -->
+    <div class="container">
+        <div class="sub-nav__container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Schedule</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Reception Status</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Statistics</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Settings</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="settings__container">
+            <div class="row">
+                <div class="col-lg-3 col-sm-12">
+                    <div class="settings__sidenav">
+                        <h5 class="h5">Settings</h5>
+                        <a href="./EditInfo.html">Basic Information</a>
+                        <a href="./EditEmail.html">Edit Email</a>
+                        <a class="active" href="#top">Edit Phone Numbers</a>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-sm-12">
+                    <div class="settings__wrapper">
+                        <div class="settings__label">
+                            <h5 class="h5">Contact Number</h5>
+                            <a href="javascript:void(0)"><i class="fas fa-plus"></i></a>
+                        </div>
+                        <div class="settings__edit-phone">
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-12">
+
+                                    <input type="number" id="edit-phone" name=edit-phone placeholder="+63 912 345 6789">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-lg-3"></div>
+                <div class="col-lg-9 col-sm-12 mt-4">
+                    <div class="settings__btns">
+                        <button class="btn btn-primary" type="submit">Save</button>
+                        <button class="btn btn-light" type="submit">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--build:js js/main.min.js -->
+    <script src="../js/lib/jquery.js"></script>
+    <script src="../js/lib/popper.js"></script>
+    <script src="../js/lib/bootstrap.js"></script>
+    <script src="../js/lib/datepicker.js"></script>
+    <script src="../js/main.js"></script>
+    <!-- endbuild -->
+
+</body>
+
+</html>
