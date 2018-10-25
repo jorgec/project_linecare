@@ -272,3 +272,5 @@ STATIC_ROOT = '/var/www/html/static/'
 MEDIA_URL = 'https://192.168.10.245/media/'
 MEDIA_ROOT = '/var/www/html/media/'
 TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

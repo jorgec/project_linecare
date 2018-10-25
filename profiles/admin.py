@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from profiles.models import BaseProfile, ProfilePhone
+from profiles.models import BaseProfile, ProfilePhone, Gender
 
 
 class BaseProfileAdmin(admin.ModelAdmin):
@@ -20,3 +20,10 @@ class ProfilePhoneAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ProfilePhone, ProfilePhoneAdmin)
+
+
+class GenderAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
+admin.site.register(Gender, GenderAdmin)

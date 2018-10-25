@@ -43,7 +43,9 @@ class AccountRegistrationView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, "Account created! Please fill up your profile.", extra_tags="success")
-                return HttpResponseRedirect(reverse('accounts_register'))
+                profile = user.base_profile()
+                if profile.is_fresh:
+                    return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
             else:
                 messages.error(request, "Unable to authenticate your account", extra_tags="danger")
                 return HttpResponseRedirect(reverse('accounts_register'))
@@ -78,6 +80,9 @@ class AccountLoginView(View):
             login(request, user)
             messages.success(request, "Welcome to LineCare!", extra_tags="success")
 
+            profile = user.base_profile()
+            if profile.is_fresh:
+                return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
 
         else:
             messages.error(request, "Unable to authenticate your account", extra_tags="danger")

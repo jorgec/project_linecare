@@ -1,0 +1,17 @@
+{% load static %}
+<div class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a href="/" class="navbar-brand"><img src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
+        <div class="profile__container">
+            <div class="profile__notif">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="profile__photo">
+                <img src="{% static 'neo/images/profile-dummy.png' %}" alt="{{ request.user.base_profile }}">
+            </div>
+            <div class="profile__name">
+                {{ request.user.base_profile }}
+            </div>
+        </div>
+    </div>
+</div>

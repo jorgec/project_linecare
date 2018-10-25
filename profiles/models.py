@@ -12,7 +12,7 @@ from profiles.managers import BaseProfileManager
 
 
 class Gender(models.Model):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, unique=True)
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
 
     created = models.DateTimeField(null=False, auto_now_add=True)
@@ -27,8 +27,9 @@ class Gender(models.Model):
 
 class BaseProfile(models.Model):
     # Fields
-    first_name = models.CharField(max_length=32, blank=True)
-    last_name = models.CharField(max_length=32, blank=True)
+    first_name = models.CharField(max_length=32, blank=True, null=True)
+    middle_name = models.CharField(max_length=32, blank=True, null=True)
+    last_name = models.CharField(max_length=32, blank=True, null=True)
 
     date_of_birth = models.DateField(default=None, blank=True, null=True)
 
