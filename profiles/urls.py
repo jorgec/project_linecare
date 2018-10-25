@@ -29,5 +29,8 @@ urlpatterns = [
 # views
 
 urlpatterns += [
+    # settings
     path('settings/basic', view_settings.ProfileSettingsBasicInfoView.as_view(), name='profile_settings_basic_info_view'),
+    path('settings/email', view_settings.ProfileSettingsEmailView.as_view(), name='profile_settings_email_view'),
+    path('settings/password', view_settings.ProfileSettingsPasswordView.as_view(), name='profile_settings_password_view'),
 ]

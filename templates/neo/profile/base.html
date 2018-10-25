@@ -21,7 +21,7 @@
 
     {% include 'neo/profile/common/nav__top.html' %}
     {% include 'neo/profile/common/nav__main.html' %}
-    {% include 'neo/profile/common/nav__submain.html' %}
+    {% block nav_submain %}{% endblock %}
 
     <div class="container">
         {% block content %}{% endblock %}

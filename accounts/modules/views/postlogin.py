@@ -65,7 +65,7 @@ class PostLoginInitialView(LoginRequiredMixin, View):
                         )
                 profile.is_fresh = False
                 profile.save()
-                return HttpResponseRedirect(reverse('profile_first_time'))
+                return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
 
             except SocialAccount.DoesNotExist:
                 pass

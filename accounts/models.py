@@ -53,6 +53,7 @@ class Account(AbstractBaseUser):
     def base_profile(self):
         return self.account_profiles.all().first()
 
+
     def __str__(self):  # __unicode__ on Python 2
         return self.username
 

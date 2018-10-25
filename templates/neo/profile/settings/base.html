@@ -7,13 +7,17 @@
 {% block header_js %}
 {% endblock %}
 
+{% block nav_submain %}
+    {% include 'neo/profile/common/nav__submain.html' %}
+{% endblock %}
+
 {% block content %}
 <div class="settings__container">
     <div class="row">
         <div class="col-lg-3 col-sm-12">
             <div class="settings__sidenav">
                 <h5 class="h5">Settings</h5>
-                {% include 'neo/profile/common/nav__side.html' %}
+                {% include 'neo/profile/settings/common/nav__side.html' %}
             </div>
         </div>
         <div class="col-lg-9 col-sm-12">
