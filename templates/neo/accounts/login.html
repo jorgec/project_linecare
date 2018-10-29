@@ -10,39 +10,45 @@
 {% endblock %}
 
 {% block content %}
-<div class="solo-card">
-    <form class="form-signin">
-        <div class="text-center mb-4">
-            <h3 class="h3">Sign in</h3>
+
+<div class="signin-page__container">
+
+    <div class="row">
+        <div class="signin-page__banner col-lg-8 col-sm-12">
+
         </div>
 
-        <div class="form-label-group">
-            <img class="img-envelop" src="{% static 'neo/images/close-envelope-green.png' %}" alt="Envelop Icon">
-            <input type="email" id="email" class="form-control" placeholder="Email address" name="email" required
-                autofocus>
-        </div>
+        <form class="signin-page__form col-lg-4 col-sm-12">
+            <div class="text-center mb-4">
+                <h3 class="h3">Sign in</h3>
+            </div>
 
-        <div class="form-label-group">
-            <img class="img-padlock" src="{% static 'neo/images/002-padlock-green.png' %}" alt="Lock Icon">
-            <input type="password" id="password" class="form-control" placeholder="Password" name="password" required>
-        </div>
+            <div class="form-label-group">
+                <img class="img-envelop" src="{% static 'neo/images/close-envelope-green.png' %}" alt="Email">
+                <input type="email" id="email" class="form-control" placeholder="Email address" name="email" required
+                    autofocus>
+            </div>
 
-        <div class="checkbox mb-1">
-            <label>
-                <input type="checkbox" value="remember-me"> <span class="small">Remember me</span>
-            </label>
-        </div>
+            <div class="form-label-group">
+                <img class="img-padlock" src="{% static 'neo/images/002-padlock-green.png' %}" alt="Password">
+                <input type="password" id="password" class="form-control" placeholder="Password" name="password"
+                    required>
+            </div>
 
-        <button class="btn btn-primary btn-block" type="submit">Sign in</button>
-        <a class="btn btn-light btn-block" href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="fab fa-facebook-f"></i>Sign in with
-            Facebook</a>
-        <button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign in with Google</button>
-    </form>
-</div>
+            <div class="checkbox mb-1">
+                <label>
+                    <input type="checkbox" value="remember-me"> <span class="small">Remember me</span>
+                </label>
+            </div>
 
-<div class="call-to-action__container">
-    <p class="text-center">New to Linecare?</p>
-    <a class="btn btn-light btn-block" href="{% url 'accounts_register' %}">Sign up</a>
+            <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+            <a class="btn btn-light btn-block" href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="fab fa-facebook-f"></i>Sign
+                in with
+                Facebook</a>
+            <button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign in with Google</button>
+        </form>
+    </div>
+
 </div>
 {% endblock %}
 
