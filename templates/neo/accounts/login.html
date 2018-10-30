@@ -18,10 +18,17 @@
 
         </div>
 
-        <form class="signin-page__form col-lg-4 col-sm-12">
+        <form class="signin-page__form col-lg-4 col-sm-12" method="post">
+            {% csrf_token %}
             <div class="text-center mb-4">
                 <h3 class="h3">Sign in</h3>
             </div>
+
+            {% if messages %}
+                {% for m in messages %}
+                    <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+                {% endfor %}
+            {% endif %}
 
             <div class="form-label-group">
                 <img class="img-envelop" src="{% static 'neo/images/close-envelope-green.png' %}" alt="Email">
@@ -35,13 +42,12 @@
                     required>
             </div>
 
-            <div class="checkbox mb-1">
-                <label>
-                    <input type="checkbox" value="remember-me"> <span class="small">Remember me</span>
-                </label>
-            </div>
-
             <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+
+            <p class="my-3">
+                Don't have an account? <a href="{% url 'accounts_register' %}">Register your email</a>, or:
+            </p>
+
             <a class="btn btn-light btn-block" href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="fab fa-facebook-f"></i>Sign
                 in with
                 Facebook</a>

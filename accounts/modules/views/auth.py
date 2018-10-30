@@ -44,6 +44,9 @@ class AccountRegistrationView(View):
                 login(request, user)
                 messages.success(request, "Account created! Please fill up your profile.", extra_tags="success")
                 profile = user.base_profile()
+
+                request.session['login_origin'] = 'internal'
+
                 if profile.is_fresh:
                     return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
             else:
@@ -75,7 +78,7 @@ class AccountLoginView(View):
         if user is not None:
             if not user.is_active:
                 messages.error(request, "User account is not active", extra_tags="danger")
-                return HttpResponseRedirect(reverse('accounts_login_view'))
+                return HttpResponseRedirect(reverse('accounts_login'))
 
             login(request, user)
             messages.success(request, "Welcome to LineCare!", extra_tags="success")
@@ -85,8 +88,8 @@ class AccountLoginView(View):
                 return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
 
         else:
-            messages.error(request, "Unable to authenticate your account", extra_tags="danger")
-            return HttpResponseRedirect(reverse('accounts_login_view'))
+            messages.error(request, "Invalid credentials", extra_tags="danger")
+            return HttpResponseRedirect(reverse('accounts_login'))
 
 
 class AccountLogoutView(View):

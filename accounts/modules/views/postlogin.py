@@ -18,54 +18,61 @@ class PostLoginInitialView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         profile = request.user.base_profile()
 
+        login_origin = request.session.get('login_origin', None)
+
         if profile.is_fresh:
 
-            # Facebook login
-            try:
-                facebook = SocialAccount.objects.get(user=request.user, provider='facebook')
-                data = facebook.extra_data
-                profile.first_name = data['first_name']
-                profile.last_name = data['last_name']
+            if login_origin:
+                if login_origin == 'internal':
+                    pass
+            else:
 
-                if not data['picture']['data']['is_silhouette']:
+                # Facebook login
+                try:
+                    facebook = SocialAccount.objects.get(user=request.user, provider='facebook')
+                    data = facebook.extra_data
+                    profile.first_name = data['first_name']
+                    profile.last_name = data['last_name']
 
-                    photo = requests .get(data['picture']['data']['url'], allow_redirects=True)
-                    if photo.status_code == 200:
-                        album = profile.get_profile_album()
-                        type = photo.headers['Content-Type']
+                    if not data['picture']['data']['is_silhouette']:
 
-                        filename = '{}.{}'.format(
-                            uuid.uuid4(),
-                            FILE_EXTENSIONS[type]
-                        )
-                        upload_path = '{}uploads/{}/{}'.format(
-                            settings.MEDIA_ROOT,
-                            request.user.pk,
-                            album.slug,
-                        )
+                        photo = requests .get(data['picture']['data']['url'], allow_redirects=True)
+                        if photo.status_code == 200:
+                            album = profile.get_profile_album()
+                            type = photo.headers['Content-Type']
 
-                        if not os.path.exists(upload_path):
-                            os.makedirs(upload_path)
+                            filename = '{}.{}'.format(
+                                uuid.uuid4(),
+                                FILE_EXTENSIONS[type]
+                            )
+                            upload_path = '{}uploads/{}/{}'.format(
+                                settings.MEDIA_ROOT,
+                                request.user.pk,
+                                album.slug,
+                            )
 
-                        upload_file = '{}/{}'.format(upload_path, filename)
-                        open(upload_file, 'wb').write(photo.content)
+                            if not os.path.exists(upload_path):
+                                os.makedirs(upload_path)
 
-                        object_path = 'uploads/{}/{}/{}'.format(
-                            request.user.pk,
-                            album.slug,
-                            filename
-                        )
+                            upload_file = '{}/{}'.format(upload_path, filename)
+                            open(upload_file, 'wb').write(photo.content)
 
-                        profile_photo = Photo.objects.create(
-                            photo=object_path,
-                            caption='Facebook Profile Photo',
-                            is_primary=True,
-                            is_public=True,
-                            album=album
-                        )
-                profile.is_fresh = False
-                profile.save()
-                return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
+                            object_path = 'uploads/{}/{}/{}'.format(
+                                request.user.pk,
+                                album.slug,
+                                filename
+                            )
 
-            except SocialAccount.DoesNotExist:
-                pass
+                            profile_photo = Photo.objects.create(
+                                photo=object_path,
+                                caption='Facebook Profile Photo',
+                                is_primary=True,
+                                is_public=True,
+                                album=album
+                            )
+                    profile.is_fresh = False
+                    profile.save()
+                    return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
+
+                except SocialAccount.DoesNotExist:
+                    pass
