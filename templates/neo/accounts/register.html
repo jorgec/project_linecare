@@ -16,45 +16,51 @@
 </div>
 {% endfor %}
 
-<div class="solo-card">
-    <form class="form-signup" method="post">
-        {% csrf_token %}
+<div class="signup-page__container">
 
-        <div class="text-center mb-4">
-            <h3 class="h3">Sign up</h3>
+    <div class="row">
+        <div class="signup-page__banner col-lg-8 col-sm-12">
+
         </div>
+        <form class="signup-page__form col-lg-4 col-sm-12">
+            <div class="text-center mb-4">
+                <h3 class="h3">Sign up</h3>
+            </div>
 
-        <div class="form-label-group">
-            <img src="{% static 'neo/images/close-envelope-green.png' %}" alt="Envelop Icon" class="img-envelop">
-            <input type="email" id="email" class="form-control" placeholder="Email address" name="email" required>
-        </div>
+            <div class="form-label-group">
+                <img src="{% static 'neo/images/close-envelope-green.png' %}" alt="Envelop Icon" class="img-envelop">
+                <input type="email" id="email" class="form-control" placeholder="Email address" name="email" required>
+            </div>
 
-        <div class="form-label-group">
-            <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="Lock Icon" class="img-padlock">
-            <input type="password" id="password" class="form-control" placeholder="Password" name="password" required>
-        </div>
+            <div class="form-label-group">
+                <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="Lock Icon" class="img-padlock">
+                <input type="password" id="password" class="form-control" placeholder="Password" name="password"
+                    required>
+            </div>
 
-        <div class="form-label-group">
-            <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="Lock Icon" class="img-padlock-1">
-            <input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password" name="confirm_password"
-                required>
-        </div>
+            <div class="form-label-group">
+                <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="Lock Icon" class="img-padlock-1">
+                <input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password" name="confirm_password"
+                    required>
+            </div>
 
-        <div class="checkbox mb-1">
-            <label>
-                <input type="checkbox" value="remember-me"> <span class="small">Yes, I understand and agree to the
-                    LineCare Terms of Services including the <a href="#">User Agreement</a> and <a href="#">Privacy
-                        Policy</a>.</span>
-            </label>
-        </div>
+            <div class="checkbox mb-1">
+                <label>
+                    <input type="checkbox" value="remember-me"> <span class="small">Yes, I understand and agree to
+                        the
+                        LineCare Terms of Services including the <a href="#">User Agreement</a> and <a href="#">Privacy
+                            Policy</a>.</span>
+                </label>
+            </div>
 
+            <button class="btn btn-primary btn-block" type="submit">Sign up</button>
+            <a class="btn btn-light btn-block" href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="fab fa-facebook-f"></i>Sign
+                up with
+                Facebook</a>
+            <button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign up with Google</button>
+        </form>
+    </div>
 
-
-        <button class="btn btn-primary btn-block" type="submit">Sign up</button>
-        <a class="btn btn-light btn-block" href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="fab fa-facebook-f"></i>Sign up with
-            Facebook</a>
-        <button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign up with Google</button>
-    </form>
 </div>
 
 {% endblock %}
