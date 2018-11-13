@@ -25,7 +25,8 @@ SECRET_KEY = 's90mk9&2pim-kzyo41abc5+igybj3ltzz84on0a_&def3!$b%*'
 DEBUG = True
 
 SITE_ID = 1
-SITE_URL = 'https://192.168.10.245'
+# SITE_URL = 'https://192.168.10.245'
+SITE_URL = 'https://192.168.33.110'
 
 ALLOWED_HOSTS = ['*']
 
@@ -102,11 +103,13 @@ INSTALLED_APPS = [
     # utilities
     'phonenumber_field',
     'crispy_forms',
+    'datesdim',
+    'appglobals',
 
     'accounts',
     'profiles',
     'albums',
-    'doctors',
+    'doctor_profiles',
     'biometrics'
 ]
 
