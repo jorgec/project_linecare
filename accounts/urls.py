@@ -32,9 +32,9 @@ urlpatterns = [
 
 # Views
 urlpatterns += [
-    path('register', auth_views.AccountRegistrationView.as_view(), name='accounts_register'),
-    path('login', auth_views.AccountLoginView.as_view(), name='accounts_login'),
-    path('logout', auth_views.AccountLogoutView.as_view(), name='accounts_logout'),
+    path('register/', auth_views.AccountRegistrationView.as_view(), name='accounts_register'),
+    path('login/', auth_views.AccountLoginView.as_view(), name='accounts_login'),
+    path('logout/', auth_views.AccountLogoutView.as_view(), name='accounts_logout'),
 
     path('postlogin', postlogin_views.PostLoginInitialView.as_view(), name='accounts_postlogin'),
 ]
