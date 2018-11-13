@@ -57,6 +57,16 @@ class BaseProfile(models.Model):
                f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Date of Birth</span><span class='kv-value'>{self.date_of_birth}</p>"
         return html
 
+    def get_name(self):
+        if self.first_name != '' and self.last_name != '':
+            return '{}, {}'.format(
+                self.first_name, self.last_name
+            )
+        else:
+            if self.user.username is not None:
+                return self.user.username
+            return self.user.email
+
     def get_full_name(self):
         if self.first_name != '' and self.last_name != '':
             return '{}, {}'.format(

@@ -92,3 +92,5 @@ appglobals/migrations/
 datesdim/migrations/
 
 locations/migrations/
+
+doctor_profiles/migrations/

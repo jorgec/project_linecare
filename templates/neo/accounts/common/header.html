@@ -2,18 +2,7 @@
 <div class="language-nav__container">
     <div class="container">
         <div class="language-nav__items">
-            <div id="google_translate_element"></div>
-            <script type="text/javascript">
-                function googleTranslateElementInit() {
-                    new google.translate.TranslateElement({
-                        pageLanguage: 'en',
-                        includedLanguages: 'ceb,tl',
-                        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
-                    }, 'google_translate_element');
-                }
-            </script>
-            <script type="text/javascript"
-                    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 
         </div>
     </div>
@@ -26,6 +15,22 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <ul class="navbar-nav collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+            <li class="nav-item">
+                <div id="google_translate_element"></div>
+                    <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                            new google.translate.TranslateElement({
+                                pageLanguage: 'en',
+                                includedLanguages: 'ceb,tl',
+                                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                            }, 'google_translate_element');
+                        }
+                    </script>
+                    <script type="text/javascript"
+                            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+            </li>
             <li class="nav-item active">
                 <a class="nav-link " href="{% url 'accounts_register' %}">Sign up</a>
             </li>
