@@ -1,6 +1,7 @@
 from django.contrib.auth.models import (
     AbstractBaseUser
 )
+from django.contrib.postgres.fields import JSONField
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models.signals import post_save
@@ -38,6 +39,9 @@ class Account(AbstractBaseUser):
     created = models.DateTimeField(null=False, auto_now_add=True)
     updated = models.DateTimeField(null=False, auto_now=True)
 
+    # NonRelational data
+    user_settings = JSONField(default=list)
+
     # Relationship Fields
     parent = models.ForeignKey("self", null=True, blank=True, related_name="account_children", on_delete=models.CASCADE)
 
@@ -56,6 +60,10 @@ class Account(AbstractBaseUser):
 
     def __str__(self):  # __unicode__ on Python 2
         return self.username
+
+    def settings_set_primary_profile(self):
+        settings = self.user_settings
+
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"

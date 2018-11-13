@@ -52,3 +52,18 @@ class ApiPrivateAlbumGetAlbums(APIView):
         albums = profile.get_albums()
         serializer = AlbumSerializer(albums, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivateGetProfilePhotos(APIView):
+    """
+    Get profile photo album of currently logged in user
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        profile = request.user.base_profile()
+        album = profile.get_profile_album()
+        if album:
+            serializer = PhotoSerializer(album.album_photos.all(), many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(None, status=status.HTTP_404_NOT_FOUND)

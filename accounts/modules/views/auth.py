@@ -34,6 +34,29 @@ class AccountRegistrationView(View):
                 password=password,
             )
 
+            primary_profile = request.POST.get('primary_profile')
+
+            if primary_profile == "1":
+                # doctor profile
+
+                """
+                todo create doctor profile
+                """
+
+                account.user_settings = {
+                    'primary_profile': {
+                        'type': 'doctor',
+                        'pk': None # doctor profile pk
+                    }
+                }
+            elif primary_profile == "2":
+                # patient profile
+                pass
+            elif primary_profile == "3":
+                # receptionist profile
+                pass
+
+            account.save()
             context = {
                 'page_title': 'Welcome to LineCare!',
                 'form': form

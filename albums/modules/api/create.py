@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 from albums.models import Album
 from albums.modules.response_templates.photo import save_template
-from albums.serializers import PhotoUploadSerializer
+from albums.serializers import PhotoUploadSerializer, PhotoSerializer
 
 
 class ApiPrivateAlbumPostUploadPhoto(APIView):
@@ -16,7 +16,7 @@ class ApiPrivateAlbumPostUploadPhoto(APIView):
     photo: file
     caption: string
     """
-    parser_classes = [parsers.MultiPartParser]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
@@ -30,26 +30,27 @@ class ApiPrivateAlbumPostUploadPhoto(APIView):
         serializer = PhotoUploadSerializer(data={
             'photo': request.data['photo'],
             'caption': request.data['caption'],
-            'album': album.pk
         })
 
 
         if serializer.is_valid():
             photo = serializer.save()
+            photo.album = album
+            photo.save()
             photo.set_primary_photo()
 
             response_data = save_template(**{
                 'as_json': False,
                 'status': status.HTTP_200_OK,
-                'request': request.data,
-                'result': PhotoUploadSerializer(photo).data
+                'request': request,
+                'result': PhotoSerializer(photo).data
             })
             return Response(response_data, status=status.HTTP_200_OK)
         else:
             response_data = save_template(**{
                 'as_json': False,
                 'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                'request': request.data,
+                'request': request,
                 'result': serializer.errors
             })
             return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -1,6 +1,7 @@
 from . import models
 
 from rest_framework import serializers
+from drf_extra_fields.fields import Base64ImageField
 
 
 class AlbumSerializer(serializers.ModelSerializer):
@@ -18,6 +19,7 @@ class AlbumSerializer(serializers.ModelSerializer):
 
 class AlbumUpdateSerializer(serializers.ModelSerializer):
     description = serializers.CharField(max_length=500, allow_blank=True, required=False)
+
     class Meta:
         model = models.Album
         fields = (
@@ -43,7 +45,9 @@ class PhotoSerializer(serializers.ModelSerializer):
             'caption',
             'is_primary',
             'is_public',
+            'album'
         )
+
 
 class PhotoUpdateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -59,13 +63,19 @@ class PhotoUpdateSerializer(serializers.ModelSerializer):
 
 
 class PhotoUploadSerializer(serializers.ModelSerializer):
+    photo = Base64ImageField()
+
     class Meta:
         model = models.Photo
         fields = (
             'photo',
             'caption',
-            'album'
         )
+
+        def create(self, validated_data):
+            photo = validated_data.pop('photo')
+
+            return models.Photo.objects.create(photo=photo)
 
 
 class AlbumWithPhotosSerializer(serializers.ModelSerializer):

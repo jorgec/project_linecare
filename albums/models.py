@@ -1,18 +1,17 @@
 import uuid
 
+from django.conf import settings
 from django.db import models as models
 from django.urls import reverse
 from django_extensions.db import fields as extension_fields
 
-from albums.constants import GENERIC_ALBUM_CHOICES, GENERIC_ALBUM
+from albums.constants import GENERIC_ALBUM_CHOICES, GENERIC_ALBUM, PROFILE_PHOTO_ALBUM, COVER_PHOTO_ALBUM
 
 
 def photo_upload_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "{}.{}".format(uuid.uuid4(), ext)
-    return 'uploads/{}/{}/{}'.format(
-        instance.album.profile.user.pk,
-        instance.album.slug,
+    return 'uploads/profile_photos/{}'.format(
         filename
     )
 
@@ -54,10 +53,18 @@ class Album(models.Model):
         try:
             return self.album_photos.get(is_primary=True)
         except Photo.DoesNotExist:
-            return None
+            return self.get_null_photo()
 
     def get_public_photos(self):
         return self.album_photos.filter(is_public=True)
+
+    def get_null_photo(self):
+        if self.album_type == PROFILE_PHOTO_ALBUM:
+            return f"{settings.STATIC_URL}neo/images/profile-dummy.png"
+        elif self.album_type == COVER_PHOTO_ALBUM:
+            return f"{settings.STATIC_URL}neo/images/bg-01-01.jpg"
+        else:
+            return f"{settings.STATIC_URL}neo/images/colors-png/darkgray-1.png"
 
 
 class Photo(models.Model):
@@ -65,12 +72,12 @@ class Photo(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     photo = models.ImageField(upload_to=photo_upload_path, max_length=512)
-    caption = models.TextField(max_length=500)
+    caption = models.TextField(max_length=500, default='')
     is_primary = models.BooleanField(default=False)
     is_public = models.BooleanField(default=True)
 
     # Relationship Fields
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='album_photos')
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='album_photos', null=True, blank=True)
 
     class Meta:
         ordering = ('-is_primary', '-created',)

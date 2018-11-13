@@ -1,4 +1,6 @@
 import calendar
+import datetime
+import re
 
 import arrow
 from arrow.parser import ParserError
@@ -43,10 +45,20 @@ class DateDimQuerySet(models.QuerySet):
             day__lte=31
         )
 
+    def days_in_month(self, *, month, year):
+        return self.filter(
+            month=month,
+            year=year
+        )
+
 
 class DateDimManager(models.Manager):
     def get_queryset(self):
         return DateDimQuerySet(self.model, using=self._db)
+
+    def today(self):
+        day = arrow.utcnow().to(settings.TIME_ZONE)
+        return self.parse_get(day.format('YYYY-MM-DD'))
 
     def q1(self):
         return self.get_queryset().q1()
@@ -65,6 +77,9 @@ class DateDimManager(models.Manager):
 
     def xmas(self):
         return self.get_queryset().xmas()
+
+    def days_in_month(self, *, month, year):
+        return self.get_queryset().days_in_month(month=month, year=year)
 
     def create(self, *args, **kwargs):
         try:
@@ -92,10 +107,10 @@ class DateDimManager(models.Manager):
             d.save(using=self._db)
             return d
 
-    def parse(self, str):
+    def parse(self, s: str):
         try:
-            date = arrow.get(str)
-        except ParserError:
+            date = datetime.datetime.strptime(s, "%Y-%m-%d")
+        except ValueError:
             return False
         return {
             'year': date.year,
@@ -124,3 +139,73 @@ class DateDimManager(models.Manager):
             num_days = calendar.monthrange(year, month[0])[1]
             for day in range(1, num_days + 1):
                 self.create(year=year, month=month[0], day=day)
+
+
+class TimeDimManager(models.Manager):
+    def parse(self, t):
+        """
+        Try to parse string (HH:MM) or datetime
+        :param t:
+        :type t:
+        :return:
+        :rtype:
+        """
+        if type(t) == str:
+            pattern = re.compile('^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$')
+            match = pattern.match(t)
+            if match:
+                hour, min = [int(t) for t in match.group().split(":")]
+                try:
+                    t = self.get(
+                        hour=hour,
+                        minute=min
+                    )
+                    return t
+                except self.model.DoesNotExist:
+                    return False
+            return False
+        elif type(t) == datetime.datetime:
+            try:
+                t = self.get(
+                    hour=t.hour,
+                    minute=t.minute
+                )
+                return t
+            except self.model.DoesNotExist:
+                return False
+        else:
+            return False
+
+    def create(self, *args, **kwargs):
+        try:
+            t = self.model.objects.get(
+                hour=kwargs['hour'],
+                minute=kwargs['minute']
+            )
+            return t
+        except self.model.DoesNotExist:
+            if kwargs['hour'] < 24 and kwargs['minute'] < 60:
+                super(TimeDimManager, self).create(*args, **kwargs)
+            else:
+                return False
+
+            t = self.model.objects.get(
+                hour=kwargs['hour'],
+                minute=kwargs['minute']
+            )
+
+            if t.hour > 0:
+                t.minutes_since = t.hour * t.minute
+            else:
+                t.minutes_since = t.minute
+
+            t.save(using=self.db)
+            return t
+
+    def preload_times(self):
+        for hour in range(0, 24):
+            for minute in range(0, 60):
+                self.create(
+                    hour=hour,
+                    minute=minute
+                )

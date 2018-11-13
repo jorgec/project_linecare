@@ -12,7 +12,7 @@ def save_template(**kwargs):
 
     if status == HTTP_200_OK:
         message = 'Save successful'
-        data = PhotoSerializer(result).data
+        data = result
     else:
         message = result
         data = request.data

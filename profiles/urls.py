@@ -2,7 +2,8 @@ from django.urls import path
 from .modules.api import retrieve as api_retrieve
 from .modules.api import update as api_update
 
-from .modules.views import settings as view_settings
+from .modules.views import settings as settings_view
+from .modules.views import home as home_view
 
 urlpatterns = [
     # Retrieve
@@ -29,8 +30,13 @@ urlpatterns = [
 # views
 
 urlpatterns += [
+    # home
+    path('home', home_view.BaseProfileHomeView.as_view(), name='base_profile_home_view'),
+
     # settings
-    path('settings/basic', view_settings.ProfileSettingsBasicInfoView.as_view(), name='profile_settings_basic_info_view'),
-    path('settings/email', view_settings.ProfileSettingsEmailView.as_view(), name='profile_settings_email_view'),
-    path('settings/password', view_settings.ProfileSettingsPasswordView.as_view(), name='profile_settings_password_view'),
+    path('settings/basic', settings_view.ProfileSettingsBasicInfoView.as_view(), name='profile_settings_basic_info_view'),
+    path('settings/email', settings_view.ProfileSettingsEmailView.as_view(), name='profile_settings_email_view'),
+    path('settings/password', settings_view.ProfileSettingsPasswordView.as_view(), name='profile_settings_password_view'),
+    path('settings/biometrics/create', settings_view.BiometricsCreateView.as_view(), name='profile_settings_biometrics_create'),
+    path('settings/biometrics/update', settings_view.BiometricsUpdateView.as_view(), name='profile_settings_biometrics_update'),
 ]

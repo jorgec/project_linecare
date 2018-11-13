@@ -7,10 +7,16 @@
                 <i class="fas fa-bell"></i>
             </div>
             <div class="profile__photo">
-                <img src="{% static 'neo/images/profile-dummy.png' %}" alt="{{ request.user.base_profile }}">
+                <img src="{{ request.user.base_profile.get_profile_photo }}" alt="{{ request.user.base_profile }}">
             </div>
             <div class="profile__name">
-                {{ request.user.base_profile }}
+
+                <a id="dropdownMenuButton2" data-toggle="dropdown" href="#">{{ request.user.base_profile }} <i class="fas fa-caret-down"></i></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+
+                    <hr>
+                    <a class="dropdown-item" href="{% url 'accounts_logout' %}">Logout</a>
+                </div>
             </div>
         </div>
     </div>

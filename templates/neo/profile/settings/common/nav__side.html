@@ -1,4 +1,5 @@
 {% load static %}
 <a {% if sublocation == 'basic'%}class="active"{% endif %} href="{% url 'profile_settings_basic_info_view' %}">Basic Information</a>
+<a {% if sublocation == 'biometrics'%}class="active"{% endif %} href="{% url 'profile_settings_biometrics_create' %}">Biometrics</a>
 <a {% if sublocation == 'email'%}class="active"{% endif %} href="{% url 'profile_settings_email_view' %}">Email</a>
 <a {% if sublocation == 'password'%}class="active"{% endif %} href="{% url 'profile_settings_password_view' %}">Password</a>

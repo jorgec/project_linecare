@@ -20,13 +20,13 @@
 
     <div class="row">
         <div class="signup-page__banner col-lg-8 col-sm-12">
-
+            <div class="solo-card solo-card-md noshadow">
+                asdgasdg
+            </div>
         </div>
         <form class="signup-page__form col-lg-4 col-sm-12" method="post">
             {% csrf_token %}
-            <div class="text-center mb-4">
-                <h3 class="h3">Sign up</h3>
-            </div>
+
 
             <div class="form-label-group">
                 <img src="{% static 'neo/images/close-envelope-green.png' %}" alt="Email" class="img-envelop">
@@ -45,6 +45,18 @@
                     required>
             </div>
 
+            <div class="form-label-group">
+                <label for="primary_profile">Select your primary profile</label>
+                <select name="primary_profile" id="primary_profile" class="form-control">
+                    <option value="0">Not now, I'll decide later</option>
+                    <option value="1">Auto-create my Doctor Profile</option>
+                    <option value="2">Auto-create my Patient/User Profile</option>
+                    <option value="3">Auto-create my Receptionist Profile</option>
+                </select>
+                <br>
+                <small>Note: You can activate any/all of the profiles above later if you want</small>
+            </div>
+
             <div class="mb-1">
                 <span class="small">By creating an account, you agree to the Terms and Conditions of the <a href="#">User
                         Agreement</a>
@@ -56,7 +68,7 @@
             <a class="btn btn-light btn-block" href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="fab fa-facebook-f"></i>Sign
                 up with
                 Facebook</a>
-            <button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign up with Google</button>
+            <!--<button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign up with Google</button>-->
         </form>
     </div>
 

@@ -25,6 +25,7 @@ SECRET_KEY = 's90mk9&2pim-kzyo41abc5+igybj3ltzz84on0a_&def3!$b%*'
 DEBUG = True
 
 SITE_ID = 1
+SITE_URL = 'https://192.168.10.245'
 
 ALLOWED_HOSTS = ['*']
 
@@ -38,6 +39,7 @@ INTERNAL_IPS = [
 
     # Local
     '192.168.10.245',
+    '192.168.10.189,'
 
     # VirtualBox Adapters
     '192.168.30.1',
@@ -78,6 +80,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
 
     'debug_toolbar',
 
@@ -103,7 +106,8 @@ INSTALLED_APPS = [
     'accounts',
     'profiles',
     'albums',
-    'doctors'
+    'doctors',
+    'biometrics'
 ]
 
 # User Model
@@ -231,6 +235,13 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication'
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny'
     )
 }
 CORS_ALLOW_CREDENTIALS = True
@@ -238,7 +249,9 @@ CORS_ORIGIN_WHITELIST = (
     '192.168.10.61:3000',
     '192.168.10.245',
     '192.168.33.111',
-    'linecare.local'
+    'linecare.local',
+    '192.168.10.189',
+    '192.168.33.1',
 )
 
 # Internationalization
@@ -266,10 +279,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
 
-STATIC_URL = 'https://192.168.10.245/static/'
+STATIC_URL = f'{SITE_URL}/static/'
 STATIC_ROOT = '/var/www/html/static/'
 
-MEDIA_URL = 'https://192.168.10.245/media/'
+MEDIA_URL = f'{SITE_URL}/media/'
 MEDIA_ROOT = '/var/www/html/media/'
 TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)
 

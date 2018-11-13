@@ -1,4 +1,5 @@
 import phonenumbers
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -50,6 +51,11 @@ class BaseProfile(models.Model):
     def __str__(self):
         return self.get_full_name()
 
+    def as_html(self):
+        html = f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Full Name</span><span class='kv-value'>{self.get_full_name()}</p>" \
+               f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Sex</span><span class='kv-value'>{self.gender}</p>" \
+               f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Date of Birth</span><span class='kv-value'>{self.date_of_birth}</p>"
+        return html
 
     def get_full_name(self):
         if self.first_name != '' and self.last_name != '':
@@ -60,9 +66,6 @@ class BaseProfile(models.Model):
             if self.user.username is not None:
                 return self.user.username
             return self.user.email
-
-    def get_doctor_profile(self):
-        return self.profile_doctor.all().first()
 
     # phones
     def get_public_phones(self):
@@ -143,15 +146,18 @@ class BaseProfile(models.Model):
 
     def get_profile_photo(self):
         album = self.get_profile_album()
-        if album:
-            return album.get_primary_photo()
-        return None
+        return album.get_primary_photo()
 
     def get_cover_photo(self):
         album = self.get_cover_album()
-        if album:
-            return album.get_primary_photo()
-        return None
+        return album.get_primary_photo()
+
+    # Biometrics
+    def get_biometrics(self):
+        try:
+            return self.user.user_biometrics
+        except ObjectDoesNotExist:
+            return None
 
 
 class ProfilePhone(models.Model):

@@ -21,6 +21,9 @@ urlpatterns = [
     path('api/private/albums/all',
          retrieve.ApiPrivateAlbumGetAlbums.as_view(),
          name='api_private_albums_all'),
+    path('api/private/profile_photos/all',
+         retrieve.ApiPrivateGetProfilePhotos.as_view(),
+         name='api_private_profile_photos_all'),
 
     # albums update, private
     path('api/private/album/toggle_privacy',
