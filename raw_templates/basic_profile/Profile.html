@@ -72,25 +72,24 @@
       <div class="user-profile__container">
         <div class="user-profile__cover">
           <div class="user-profile__cover-edit">
-            <a href="javascript:void(0)"
+            <a
+              id="edit-cover-photo"
+              href="javascript:void(0)"
+              data-toggle="modal"
+              data-target="#editCoverPicture"
               ><i class="fas fa-edit"></i><span>Edit Cover Photo</span></a
             >
           </div>
         </div>
         <div class="user-profile__profile-photo">
-          <div class="image-wrapper">
-            <a
-              href="javascript:void(0)"
-              data-toggle="modal"
-              data-target="#editProfilePicture"
-              ><i class="fas fa-camera fa-fw"></i
-            ></a>
+          <div
+            class="image-wrapper"
+            data-toggle="modal"
+            data-target="#editProfilePicture"
+          >
+            <a href="javascript:void(0)"><i class="fas fa-camera fa-fw"></i></a>
           </div>
-          <img
-            class="rounded-circle img-thumbnail "
-            src="../images/profile-dummy.png"
-            alt=""
-          />
+          <div class="profile-photo"></div>
         </div>
 
         <div class="user-profile__wrapper col-lg-12">
@@ -246,6 +245,51 @@
       </div>
     </div>
 
+    <div
+      class="modal fade"
+      id="editCoverPicture"
+      role="dialog"
+      aria-labelledby="editCoverPictureLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="edit-cover-picture__container">
+              <div class="edit-cover-picture__label">
+                <h5 class="h5">Edit Cover Photo</h5>
+              </div>
+              <div class="edit-cover-picture__upload">
+                <input
+                  id="coverUpload"
+                  type="file"
+                  accept="image/*"
+                  onchange="previewCoverFile()"
+                />
+                <a href="javascript:void(0)" id="coverUpload_link"
+                  ><i class="fas fa-cloud-upload-alt"></i
+                ></a>
+                <img id="cover-image-preview" src="" />
+                <h6>Click to upload a picture</h6>
+                <div id="cover-upload-div"></div>
+              </div>
+              <div class="row" id="CoverList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <footer class="container">
       <hr />
       <p class="text-center">&copy; linecare Co., Ltd.</p>
@@ -257,6 +301,7 @@
     <script src="../js/lib/bootstrap.js"></script>
     <!-- <script src="../js/main.js"></script> -->
     <!-- endbuild -->
+
     <script type="text/javascript">
       var photoEndpoint = "https://jsonplaceholder.typicode.com/photos";
       var list = document.getElementById("profileList");
@@ -269,13 +314,6 @@
         "../images/cover.jpg",
         "../images/user-green.png"
       ];
-
-      $(function() {
-        $("#upload_link").on("click", function(e) {
-          e.preventDefault();
-          $("#upload:hidden").trigger("click");
-        });
-      });
 
       images.map(function(image) {
         var html =
@@ -325,8 +363,10 @@
         $(x).remove();
       }
 
-      function handleClick(x) {
-        currentProfile.src = x;
+      function handleClick(newProfile) {
+        var currentProfile = document.querySelector(".profile-photo");
+
+        currentProfile.style.backgroundImage = "url(" + newProfile + ")";
       }
 
       function setAsProfile(x) {
@@ -335,21 +375,103 @@
         x.addEventListener("click", handleClick(newProfile));
       }
 
-      previewFile();
-
-      $.get(photoEndpoint, function(data, status) {
-        if (status !== "success") {
-          console.log("Looks like there was a problem. Status Code: " + status);
-          return;
-        }
-        data.map(function(thumbnail) {
-          var html =
-            '<div class="col-lg-3">\n                                                    <a onclick="setAsProfile(this)" href="javascript:void(0)"\n                                                      ><img\n                                                        class="img-fluid img-thumbnail"\n                                                        src="' +
-            thumbnail.thumbnailUrl +
-            '"\n                                                        alt=""\n                                                    /></a>\n </div>';
-          list.insertAdjacentHTML("beforeend", html);
+      $(function() {
+        $("#upload_link").on("click", function(e) {
+          e.preventDefault();
+          $("#upload:hidden").trigger("click");
         });
       });
+
+      $(function() {
+        $("#coverUpload_link").on("click", function(e) {
+          e.preventDefault();
+          $("#coverUpload:hidden").trigger("click");
+        });
+      });
+
+      // $.get(photoEndpoint, function(data, status) {
+      //   if (status !== "success") {
+      //     console.log("Looks like there was a problem. Status Code: " + status);
+      //     return;
+      //   }
+      //   data.map(function(thumbnail) {
+      //     var html =
+      //       '<div class="col-lg-3">\n<a onclick="setAsProfile(this)" href="javascript:void(0)"\n><img\nclass="img-fluid img-thumbnail"\n src="' +
+      //       thumbnail.thumbnailUrl +
+      //       '"\nalt=""\n /></a>\n </div>';
+      //     list.insertAdjacentHTML("beforeend", html);
+      //   });
+      // });
+
+      // BACKGROUND COVER -----------------------------------------------------------
+      var coverImageList = document.getElementById("CoverList");
+
+      // TODO: Empty this variable later
+      var coverPhotos = [
+        "../images/cover.jpg",
+        "../images/bg-01.png",
+        "../images/bg-01-01.jpg"
+      ];
+
+      coverPhotos.map(function(image) {
+        var html =
+          '<div class="col-lg-3"><a onclick="setAsCover(this)" href="javascript:void(0)"><img class="img-fluid img-thumbnail" src="' +
+          image +
+          '" alt="" /></a> </div>';
+        coverImageList.insertAdjacentHTML("beforeend", html);
+      });
+
+      function handleCoverClick(newCover) {
+        var currentCover = document.querySelector(".user-profile__cover");
+
+        currentCover.style.backgroundImage = "url(" + newCover + ")";
+      }
+
+      function setAsCover(x) {
+        var newCover = x.children[0].src;
+
+        x.addEventListener("click", handleCoverClick(newCover));
+      }
+
+      function previewCoverFile() {
+        var preview = document.getElementById("cover-image-preview");
+        var file = document.getElementById("coverUpload").files[0];
+        var button = document.getElementById("cover-upload-div");
+        var reader = new FileReader();
+
+        reader.onloadend = function() {
+          coverPhotos.push(reader.result);
+
+          preview.src = reader.result;
+        };
+
+        if (file) {
+          var htmlButton =
+            '<a id="upload-btn" href="javascript:void(0)" onclick="uploadCover(this)" class="btn btn-primary">Upload</a>';
+          button.insertAdjacentHTML("beforeend", htmlButton);
+          reader.readAsDataURL(file);
+        } else {
+          preview.src = "";
+        }
+      }
+
+      function uploadCover(x) {
+        var input = document.getElementById("coverUpload");
+        var url = coverPhotos.slice(-1)[0];
+        var preview = document.getElementById("cover-image-preview");
+        if (input.value === "") {
+          return;
+        } else {
+          var html =
+            '<div class="col-lg-3"><a onclick="setAsCover(this)" href="javascript:void(0)"><img class="img-fluid img-thumbnail" src="' +
+            url +
+            '" alt=""/></a></div>';
+          coverImageList.insertAdjacentHTML("beforeend", html);
+        }
+        preview.src = "";
+        input.value = "";
+        $(x).remove();
+      }
     </script>
   </body>
 </html>
