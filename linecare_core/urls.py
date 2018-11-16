@@ -34,6 +34,7 @@ urlpatterns = [
 
     path('profile/', include('profiles.urls')),
     path('album/', include('albums.urls')),
+    path('doctor/', include('doctor_profiles.urls')),
 ]
 
 if settings.DEBUG:

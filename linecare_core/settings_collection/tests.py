@@ -53,11 +53,15 @@ INSTALLED_APPS = [
 
     # utilities
     'phonenumber_field',
+    'crispy_forms',
+    'datesdim',
+    'appglobals',
 
     'accounts',
     'profiles',
     'albums',
-    'doctors'
+    'doctor_profiles',
+    'biometrics'
 ]
 
 # User Model
@@ -108,8 +112,12 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'linecare_test',
+        'USER': 'linecare_user',
+        'PASSWORD': 'asdf1234',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
