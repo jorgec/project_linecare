@@ -1,0 +1,134 @@
+{% extends 'neo/doctor_profiles/settings/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+<div class="career__header"><h5 class="h5">Career</h5></div>
+<div class="career__wrapper">
+    <div class="career__medical-degree bg-gray">
+        <div class="flex">
+            <select id="medical-degree-options">
+                <option disabled selected hidden>Medical Degree</option>
+
+            </select>
+            <a href="javascript:void(0)" class="btn btn-primary" data-toggle="modal" data-target="#addMedicalDegree">Add</a>
+        </div>
+        <div class="medical-degree-list">
+
+        </div>
+        <div class="medical-degree-saveCont">
+            <a id="saveBtn" href="javascript:void(0)" class="btn btn-primary mt-4" >Save</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addMedicalDegree" role="dialog"
+        aria-labelledby="addMedicalDegreeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6>Add Medical Degree</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="medical-degree-input" autofocus/>
+            </div>
+            <div class="modal-footer">
+                <a onclick="addToMedicalDegree()" id="MDBtn" href="javascript:void(0)" class="btn btn-primary btn-block" >
+                    Add
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+
+    var MDArr = [
+        {id: 1, name: "Test-1", slug: "test-slug-1", abbreviation: "T1"},
+        {id: 2, name: "Test-2", slug: "test-slug-2", abbreviation: "T2"},
+        {id: 3, name: "Test-3", slug: "test-slug-3", abbreviation: "T3"},
+        {id: 4, name: "Test-4", slug: "test-slug-4", abbreviation: "T4"},
+        {id: 5, name: "Test-5", slug: "test-slug-5", abbreviation: "T5"}
+    ];
+
+    var currentMDList = [];
+
+    var MDOptions = document.querySelector("#medical-degree-options");
+    var MDInput = document.querySelector("#medical-degree-input");
+    var MDAddBtn = document.querySelector("#MDBtn");
+    var MDHtmlList = document.querySelector(".medical-degree-list");
+    var MDSaveBtn = document.querySelector("#saveBtn");
+
+    // Populate options
+    MDArr.map(function (option) {
+        var id = option.id,
+            name = option.name;
+
+        var html = "<option value=" + id + ">" + name + "</option>";
+        MDOptions.insertAdjacentHTML("beforeend", html);
+    });
+
+    function addToMedicalDegree() {
+        // Take the input value
+        var val = MDInput.value;
+
+        // Return if user tried to enter nothing
+        if (!val) {
+            return;
+        }
+
+        // Take the first two letter of the input value
+        var abbr = val[0] + val[1];
+
+        // Push input value to Medical Degree array
+        MDArr.push({
+            id: 6,
+            name: val,
+            slug: val + "-slug-6",
+            abbreviation: abbr
+        });
+
+        // Add new option to Medical Degree options
+        var html = '<option value="6">' + val + "</option>";
+        MDOptions.insertAdjacentHTML("beforeend", html);
+
+        // Reset input
+        MDInput.value = "";
+        // Close the modal after adding
+        $(function () {
+            $("#addMedicalDegree").modal("toggle");
+        });
+    }
+
+    // Save selected option
+    MDSaveBtn.addEventListener("click", function () {
+        // Get the selected option
+        var selected = MDOptions.options[MDOptions.selectedIndex].text;
+
+        currentMDList.push(selected);
+        var html =
+            '<div class="item">' +
+            selected +
+            '<span><i class="fas fa-times"></i></span></div>';
+        if (
+            MDOptions.options[MDOptions.selectedIndex] === MDOptions.options[0]
+        ) {
+            return;
+        } else {
+            MDHtmlList.insertAdjacentHTML("beforeend", html);
+            $("select").prop("selectedIndex", 0);
+        }
+    });
+</script>
+{% endblock %}
