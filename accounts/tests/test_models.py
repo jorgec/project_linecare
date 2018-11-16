@@ -8,7 +8,7 @@ pytestmark = pytest.mark.django_db
 class TestAccount:
     def test_init(self):
         obj = mixer.blend('accounts.Account')
-        assert obj.pk == 1, "Should save an instance"
+        assert obj.pk is not None, "Should save an instance"
 
     def test_str(self):
         obj = mixer.blend('accounts.Account')
