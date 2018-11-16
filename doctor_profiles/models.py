@@ -17,6 +17,11 @@ class Specialization(models.Model):
     metadata = JSONField(default=dict, null=True, blank=True)
     abbreviation = models.CharField(max_length=30)
 
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
+
     # Relationship Fields
     parent = models.ForeignKey(
         'doctor_profiles.Specialization',
@@ -24,7 +29,7 @@ class Specialization(models.Model):
     )
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ('name',)
 
     def __str__(self):
         return f"{self.name}"
@@ -42,8 +47,13 @@ class InsuranceProvider(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, null=True, blank=True)
 
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
+
     class Meta:
-        ordering = ('-created',)
+        ordering = ('name',)
 
     def __str__(self):
         return f"{self.name}"
@@ -60,15 +70,15 @@ class DoctorProfile(models.Model):
     metadata = JSONField(default=dict, null=True, blank=True)
 
     # Relationship Fields
-    base_profile = models.OneToOneField('profiles.BaseProfile', related_name='doctor_profile', on_delete=models.CASCADE)
+    user = models.OneToOneField('accounts.Account', related_name='doctorprofile', on_delete=models.CASCADE, null=True)
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ('user',)
 
     def __str__(self):
-        degrees = ", ".join([a.abbreviation for a in self.get_degrees()])
-        fellowships = ", ".join([a.abbreviation for a in self.get_fellowships()])
-        diplomates = ", ".join([a.abbreviation for a in self.get_diplomates()])
+        degrees = ", ".join([a.degree.abbreviation for a in self.get_degrees()])
+        fellowships = ", ".join([a.get_abbreviation() for a in self.get_fellowships()])
+        diplomates = ", ".join([a.get_abbreviation() for a in self.get_diplomates()])
 
         title = f"Dr. {self.base_profile.get_name()} {degrees} {fellowships} {diplomates}"
 
@@ -96,8 +106,13 @@ class MedicalDegree(models.Model):
     abbreviation = models.CharField(max_length=30)
     metadata = JSONField(default=dict, null=True, blank=True)
 
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
+
     class Meta:
-        ordering = ('-created',)
+        ordering = ('name',)
 
     def __str__(self):
         return f"{self.name}"
@@ -115,8 +130,13 @@ class MedicalAssociation(models.Model):
     abbreviation = models.CharField(max_length=30)
     metadata = JSONField(default=dict, null=True, blank=True)
 
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
+
     class Meta:
-        ordering = ('-created',)
+        ordering = ('name',)
 
     def __str__(self):
         return f"{self.name}"
@@ -131,6 +151,11 @@ class DoctorSpecialization(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     year_attained = models.PositiveSmallIntegerField(blank=True, null=True)
     place_of_residency = models.CharField(max_length=120)
+
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
 
     # Relationship Fields
     doctor = models.ForeignKey(
@@ -158,6 +183,11 @@ class DoctorInsurance(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     expiry = models.ForeignKey('datesdim.DateDim', on_delete=models.CASCADE, related_name='insurance_expirations')
     identifier = models.CharField(max_length=120)
+
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
 
     # Relationship Fields
     doctor = models.ForeignKey(
@@ -188,10 +218,15 @@ class DoctorDegree(models.Model):
     metadata = JSONField(default=dict, null=True, blank=True)
     license_number = models.CharField(max_length=60)
 
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
+
     # Relationship Fields
     doctor = models.ForeignKey(
         'doctor_profiles.DoctorProfile',
-        on_delete=models.CASCADE, related_name="doctor_degrees"
+        on_delete=models.CASCADE, related_name="doctor_degrees",
     )
     degree = models.ForeignKey(
         'doctor_profiles.MedicalDegree',
@@ -215,6 +250,11 @@ class DoctorAssociation(models.Model):
     level = models.CharField(max_length=30, choices=(('Diplomate', 'Diplomate'), ('Fellow', 'Fellow')))
     year_attained = models.PositiveSmallIntegerField()
 
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
+
     # Relationship Fields
     doctor = models.ForeignKey(
         'doctor_profiles.DoctorProfile',
@@ -229,4 +269,7 @@ class DoctorAssociation(models.Model):
         ordering = ('-created',)
 
     def __str__(self):
-        return f"{self.doctor}, {self.association.abbreviation}"
+        return self.get_abbreviation()
+
+    def get_abbreviation(self):
+        return f"{self.level[0]}{self.association.abbreviation}"
