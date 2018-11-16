@@ -15,9 +15,7 @@ class TestProfileModel:
     def test_user_and_profile_creation(self):
         user = Account.objects.create_user(email='test@test.com')
         assert user.user_type is None
-        user.user_type = DOCTOR
         user.save()
-        assert user.user_type == DOCTOR
         profile = BaseProfile.objects.create(user=user)
         assert profile.pk is not None, profile.pk
 
@@ -30,9 +28,7 @@ class TestProfileModel:
         assert user.user_type is None
         user.last_name = 'Tester'
         user.first_name = 'Juan'
-        user.user_type = DOCTOR
         user.save()
-        assert user.user_type == DOCTOR
 
         profile = BaseProfile.objects.get(user=user)
         assert str(user.username) == str(profile.user), "username {} must match with user profile {}".format(user.username, profile.user)
@@ -45,9 +41,7 @@ class TestProfileModel:
         assert user.user_type is None
         user.last_name = 'Tester'
         user.first_name = 'Juan'
-        user.user_type = DOCTOR
         user.save()
-        assert user.user_type == DOCTOR
         profiles = BaseProfile.objects.filter(user=user)
         profile_count = len(profiles)
         assert profile_count == 1, "Should only have 1 profile, got {}".format(profile_count)
