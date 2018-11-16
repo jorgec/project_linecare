@@ -12,6 +12,7 @@ from accounts.constants import USERNAME_REGEX, USER_TYPE_CHOICES
 from accounts.managers import AccountManager
 from profiles.models import BaseProfile
 
+from django.apps import apps
 
 class Account(AbstractBaseUser):
     username = models.CharField(
@@ -53,15 +54,9 @@ class Account(AbstractBaseUser):
 
     # REQUIRED_FIELDS = ['username']
 
-    def base_profile(self):
-        return self.account_profiles.all().first()
-
 
     def __str__(self):  # __unicode__ on Python 2
         return self.username
-
-    def settings_set_primary_profile(self):
-        settings = self.user_settings
 
 
     def has_perm(self, perm, obj=None):
@@ -79,6 +74,33 @@ class Account(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+    """
+    Profile Functions
+    """
+    def base_profile(self):
+        return self.account_profiles.all().first()
+
+    def settings_set_primary_profile(self):
+        # TODO
+        settings = self.user_settings
+
+
+    def doctor_profile(self):
+        DoctorProfile = apps.get_model('doctor_profiles.DoctorProfile')
+        try:
+            return DoctorProfile.objects.get(
+                user=self
+            )
+        except DoctorProfile.DoesNotExist:
+            return False
+
+    def create_doctor_profile(self):
+        DoctorProfile = apps.get_model('doctor_profiles.DoctorProfile')
+        profile = DoctorProfile.objects.create(
+            user=self
+        )
+        return profile
 
 
 @receiver(post_save, sender=Account)

@@ -39,16 +39,24 @@ class AccountRegistrationView(View):
             if primary_profile == "1":
                 # doctor profile
 
-                """
-                todo create doctor profile
-                """
+                profile = account.create_doctor_profile()
 
                 account.user_settings = {
                     'primary_profile': {
                         'type': 'doctor',
-                        'pk': None # doctor profile pk
+                        'pk': profile.pk
+                    },
+                    'doctor_progress': {
+                        'medical_degree': None,
+                        'insurance': None,
+                        'specialization': None,
+                        'association': None
                     }
                 }
+                """
+                TODO:
+                next=doctor_profile
+                """
             elif primary_profile == "2":
                 # patient profile
                 pass
@@ -70,6 +78,10 @@ class AccountRegistrationView(View):
 
                 request.session['login_origin'] = 'internal'
 
+                """
+                TODO:
+                next_url
+                """
                 if profile.is_fresh:
                     return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
             else:
