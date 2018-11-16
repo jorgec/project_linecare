@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Linecare Static</title>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+      integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+      crossorigin="anonymous"
+    />
+    <!-- build:css css/styles.min.css -->
+    <link rel="stylesheet" href="../css/styles.css" />
+    <!-- endbuild -->
+  </head>
+
+  <body>
+    <!-- Language Nav -->
+    <div class="language-nav__container">
+      <div class="container">
+        <div class="language-nav__items">
+          <img src="../images/001-philippines.png" alt="PH Icon" />
+          <a id="dropdownMenuButton" data-toggle="dropdown" href="#"
+            ><i class="fas fa-caret-down"></i
+          ></a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">
+              <img src="../images/001-philippines.png" alt="PH Icon" /> Tagalog
+            </a>
+            <a class="dropdown-item" href="#">
+              <img src="../images/002-united-states.png" alt="PH Icon" />
+              English
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a href="/" class="navbar-brand"
+          ><img src="../images/LineCare-Logo-022.png" alt="Logo"
+        /></a>
+        <div class="profile__container">
+          <div class="profile__notif"><i class="fas fa-bell"></i></div>
+          <div class="profile__photo">
+            <img src="../images/profile-dummy.png" alt="Profile" />
+          </div>
+          <div class="profile__name">Jake</div>
+        </div>
+      </div>
+    </div>
+    <!-- Sub Navigation -->
+    <div class="container">
+      <div class="sub-nav__container">
+        <ul class="nav justify-content-center">
+          <li class="nav-item"><a class="nav-link" href="#">Schedule</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Reception Status</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#">Statistics</a></li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Settings</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="settings__container">
+        <div class="row">
+          <div class="col-lg-3 col-sm-12">
+            <div class="settings__sidenav">
+              <h5 class="h5">Settings</h5>
+              <a class="active" href="#">Career</a>
+            </div>
+          </div>
+          <div class="col-lg-9 col-sm-12">
+            <div class="career__container">
+              <div class="career__header"><h5 class="h5">Career</h5></div>
+              <div class="career__wrapper">
+                <div class="career__medical-degree bg-gray">
+                  <div class="flex">
+                    <select id="medical-degree-options">
+                      <option disabled selected hidden>Medical Degree</option>
+                      <!--
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                      -->
+                    </select>
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-primary"
+                      data-toggle="modal"
+                      data-target="#addMedicalDegree"
+                      >Add</a
+                    >
+                  </div>
+                  <div class="medical-degree-list">
+                    <!-- List of Medical Degree  goes here -->
+                  </div>
+                  <div class="medical-degree-saveCont">
+                    <a
+                      id="saveBtn"
+                      href="javascript:void(0)"
+                      class="btn btn-primary mt-4"
+                      >Save</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="addMedicalDegree"
+      role="dialog"
+      aria-labelledby="addMedicalDegreeLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6>Add Medical Degree</h6>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <input type="text" id="medical-degree-input" autofocus />
+          </div>
+          <div class="modal-footer">
+            <a
+              onclick="addToMedicalDegree()"
+              id="MDBtn"
+              href="javascript:void(0)"
+              class="btn btn-primary btn-block"
+            >
+              Add
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var MDArr = [
+        { id: 1, name: "Test-1", slug: "test-slug-1", abbreviation: "T1" },
+        { id: 2, name: "Test-2", slug: "test-slug-2", abbreviation: "T2" },
+        { id: 3, name: "Test-3", slug: "test-slug-3", abbreviation: "T3" },
+        { id: 4, name: "Test-4", slug: "test-slug-4", abbreviation: "T4" },
+        { id: 5, name: "Test-5", slug: "test-slug-5", abbreviation: "T5" }
+      ];
+
+      var currentMDList = [];
+
+      var MDOptions = document.querySelector("#medical-degree-options");
+      var MDInput = document.querySelector("#medical-degree-input");
+      var MDAddBtn = document.querySelector("#MDBtn");
+      var MDHtmlList = document.querySelector(".medical-degree-list");
+      var MDSaveBtn = document.querySelector("#saveBtn");
+
+      // $.get(endpoint, function(data, status) {
+      //   if (status !== "success") {
+      //     console.log("Looks like there was a problem. Status Code: " + status);
+      //     return;
+      //   }
+      //   data.map(function(thumbnail) {
+      //     var html =
+      // '<div class="item">' +
+      // name +
+      // '<span><i class="fas fa-times"></i></span></div>';
+      //     list.insertAdjacentHTML("beforeend", html);
+      //   });
+      // });
+
+      // Populate options
+      MDArr.map(function(option) {
+        var id = option.id,
+          name = option.name;
+
+        var html = "<option value=" + id + ">" + name + "</option>";
+        MDOptions.insertAdjacentHTML("beforeend", html);
+      });
+
+      function addToMedicalDegree() {
+        // Take the input value
+        var val = MDInput.value;
+
+        // Return if user tried to enter nothing
+        if (!val) {
+          return;
+        }
+
+        // Take the first two letter of the input value
+        var abbr = val[0] + val[1];
+
+        // Push input value to Medical Degree array
+        MDArr.push({
+          id: 6,
+          name: val,
+          slug: val + "-slug-6",
+          abbreviation: abbr
+        });
+
+        // Add new option to Medical Degree options
+        var html = '<option value="6">' + val + "</option>";
+        MDOptions.insertAdjacentHTML("beforeend", html);
+
+        // Reset input
+        MDInput.value = "";
+        // Close the modal after adding
+        $(function() {
+          $("#addMedicalDegree").modal("toggle");
+        });
+      }
+
+      // Save selected option
+      MDSaveBtn.addEventListener("click", function() {
+        // Get the selected option
+        var selected = MDOptions.options[MDOptions.selectedIndex].text;
+
+        currentMDList.push(selected);
+        var html =
+          '<div class="item">' +
+          selected +
+          '<span><i class="fas fa-times"></i></span></div>';
+        if (
+          MDOptions.options[MDOptions.selectedIndex] === MDOptions.options[0]
+        ) {
+          return;
+        } else {
+          MDHtmlList.insertAdjacentHTML("beforeend", html);
+          $("select").prop("selectedIndex", 0);
+        }
+      });
+    </script>
+
+    <!-- build:js js/main.min.js -->
+    <script src="../js/lib/jquery.js"></script>
+    <script src="../js/lib/popper.js"></script>
+    <script src="../js/lib/bootstrap.js"></script>
+    <script src="../js/lib/datepicker.js"></script>
+    <script src="../js/main.js"></script>
+    <!-- endbuild -->
+  </body>
+</html>
