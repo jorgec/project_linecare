@@ -48,7 +48,13 @@ class DoctorInsuranceForm(forms.ModelForm):
 class DoctorDegreeForm(forms.ModelForm):
     class Meta:
         model = DoctorDegree
-        fields = ['year_attained', 'school', 'metadata', 'license_number', 'doctor', 'degree']
+        fields = ['year_attained', 'school', 'license_number', 'doctor', 'degree']
+
+
+class DoctorDegreeEditForm(forms.ModelForm):
+    class Meta:
+        model = DoctorDegree
+        fields = ['year_attained', 'school', 'license_number']
 
 
 class DoctorDegreeCreateForm(forms.ModelForm):

@@ -1,0 +1,22 @@
+{% extends 'neo/doctor_profiles/settings/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+<div class="career__header"><h5 class="h5">Career</h5></div>
+<div class="career__wrapper">
+    {% include 'neo/doctor_profiles/settings/sections/medical_degree.html' %}
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include 'neo/doctor_profiles/settings/sections/medical_degree.js.html' %}
+{% endblock %}

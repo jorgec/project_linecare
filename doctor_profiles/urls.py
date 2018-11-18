@@ -10,9 +10,9 @@ urlpatterns = [
          home_views.DoctorProfileHomeView.as_view(),
          name='doctor_profile_home'),
 
-    path('settings',
-         setting_views.DoctorProfileCareerSettingsView.as_view(),
-         name='doctor_profile_career_settings'),
+    path('settings/medical_degree',
+         setting_views.DoctorProfileMedicalDegreeSettingsView.as_view(),
+         name='doctor_profile_settings_medical_degree'),
 ]
 
 version = 'api/v1'

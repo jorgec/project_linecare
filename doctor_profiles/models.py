@@ -1,6 +1,10 @@
+import arrow
 from django.contrib.postgres.fields import JSONField
 from django.db import models as models
+from django.db.models import Model
 from django_extensions.db import fields as extension_fields
+
+from doctor_profiles.managers import DoctorDegreeManager
 
 
 class Specialization(models.Model):
@@ -80,7 +84,7 @@ class DoctorProfile(models.Model):
         fellowships = ", ".join([a.get_abbreviation() for a in self.get_fellowships()])
         diplomates = ", ".join([a.get_abbreviation() for a in self.get_diplomates()])
 
-        title = f"Dr. {self.base_profile.get_name()} {degrees} {fellowships} {diplomates}"
+        title = f"Dr. {self.user.base_profile().get_name()} {degrees} {fellowships} {diplomates}"
 
         return title
 
@@ -93,14 +97,23 @@ class DoctorProfile(models.Model):
     def get_diplomates(self):
         return self.doctor_associations.filter(level='Diplomate')
 
+    def settings_progress(self):
+        progress = self.user.user_settings['doctor_progress']
+        max = len(progress)
+        total = 0
+        for key, value in progress.items():
+            if value is not None:
+                total = total + 1
+        return total / max
+
 
 class MedicalDegree(models.Model):
     """
     List of medical degrees
     """
     # Fields
-    name = models.CharField(max_length=255)
-    slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
+    name = models.CharField(max_length=255, unique=True)
+    slug = extension_fields.AutoSlugField(populate_from='name', blank=True, unique=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     abbreviation = models.CharField(max_length=30)
@@ -223,6 +236,8 @@ class DoctorDegree(models.Model):
     """
     is_approved = models.BooleanField(default=True)
 
+    objects = DoctorDegreeManager()
+
     # Relationship Fields
     doctor = models.ForeignKey(
         'doctor_profiles.DoctorProfile',
@@ -234,10 +249,20 @@ class DoctorDegree(models.Model):
     )
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ('degree',)
+        unique_together = ('doctor', 'degree')
 
     def __str__(self):
         return f"{self.doctor}, {self.degree.abbreviation}"
+
+    def save(self, *args, **kwargs):
+        current_year = arrow.utcnow().year
+        min_year = current_year - 70
+
+        if self.year_attained < min_year or self.year_attained > current_year:
+            raise ValueError('Dubious year attained')
+
+        return super(DoctorDegree, self).save(*args, **kwargs)
 
 
 class DoctorAssociation(models.Model):

@@ -1,0 +1,279 @@
+{% load static %}
+<script type="text/javascript" src="{% static 'neo/js/formHelpers.jquery.js' %}"></script>
+<script type="text/javascript">
+
+    var MedicalDegreeArray = [];
+    var currentMedicalDegreeList = [];
+    var MDOptions = document.querySelector("#medical_degree_options");
+    var MDInput = document.querySelector("#medical-degree-input");
+    var MDAddBtn = document.querySelector("#MDBtn");
+    var medicalDegreeHTMLList = document.querySelector("#medical-degree-list");
+    var MDSaveBtn = document.querySelector("#saveBtn");
+
+    var medicalDegreeFormFields = [
+        {
+            id: "medical_degree_options",
+            value: null,
+            default: "",
+            field_name: "degree.name"
+        },
+        {
+            id: "doctor_degree_school",
+            value: null,
+            default: "",
+            field_name: "school",
+        },
+        {
+            id: "doctor_degree_year_attained",
+            value: null,
+            default: "",
+            field_name: "year_attained",
+        },
+        {
+            id: "doctor_degree_license",
+            value: null,
+            default: "",
+            field_name: "license_number",
+        },
+        {
+            id: "doctor_degree_id",
+            value: null,
+            default: "",
+            field_name: "pk",
+        },
+    ];
+
+
+    // startup
+    loadMedicalDegreeArray();
+    loadDoctorDegrees();
+
+    /**************************************************************************
+     * Events
+     **************************************************************************/
+    $("#btnDoctorDegreeAdd").click(function(e){
+        e.preventDefault();
+        addDoctorDegree();
+    });
+
+    $("#btnMedicalDegreeAdd").click(function(e){
+        e.preventDefault();
+        addToMedicalDegree();
+    });
+
+    $("#btnDoctorDegreeReset").click(function(e){
+        e.preventDefault();
+        resetForm(medicalDegreeFormFields);
+    });
+
+    $("#btnConfirmEditDoctorDegree").click(function(e){
+        e.preventDefault();
+        editDoctorDegree();
+
+    });
+
+
+    /**************************************************************************
+     * Functions
+     **************************************************************************/
+
+    function loadMedicalDegreeArray(){
+        var url = "{% url 'api_public_get_medical_degrees' %}";
+        $.get(url, function(response){
+            MedicalDegreeArray = response;
+            populateMedicalDegreeArray();
+        });
+    }
+
+    function loadDoctorDegrees(){
+        var url = "{% url 'api_public_doctor_degrees' %}?user={{ request.user.pk }}";
+        $.get(url, function(response){
+            currentMedicalDegreeList = response;
+            populateDoctorDegrees();
+        });
+    }
+
+    function loadDoctorDegree(degree){
+        var url = "{% url 'api_private_doctor_degree_detail' %}?degree=" + degree;
+        $.get(url).done(function(response){
+            loadFormData(medicalDegreeFormFields, response);
+            $("#edit_medical_degree_options").html(response.degree.name);
+            $("#editDoctorDegree").modal('show');
+
+        }).fail(function(jqXHR, textStatus, errorThrown){
+            console.log(jqXHR);
+        });
+    }
+
+    function deleteDoctorDegree(degree) {
+        if (degree) {
+            var url = "{% url 'api_private_doctor_degree_delete' %}?degree=" + degree;
+            $("#confirmDoctorDegreeDelete").modal('show');
+            $("#btnConfirmDeleteDoctorDegree").click(function (ev) {
+                ev.preventDefault();
+                $("#confirmDoctorDegreeDelete").modal('hide');
+                var postData = {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                };
+                var post = $.post(url, postData)
+                    .done(function (response) {
+                        $.notify({
+                            message: response
+                        }, {
+                            type: 'success'
+                        });
+                        loadDoctorDegrees();
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        Object.keys(jqXHR.responseJSON).forEach(function (k) {
+                            $.notify({
+                                message: jqXHR.responseJSON[k]
+                            }, {
+                                type: 'danger'
+                            });
+                        });
+                    });
+            });
+        }
+    }
+
+    function populateMedicalDegreeArray(){
+        // Populate options
+        $("#medical_degree_options").find('option').remove().end();
+        MedicalDegreeArray.map(function (option) {
+            var id = option.id,
+                name = option.name;
+            var html = "<option value=" + id + ">" + name + "</option>";
+            MDOptions.insertAdjacentHTML("beforeend", html);
+        });
+    }
+
+    function populateDoctorDegrees(){
+        $("#medical-degree-list").find('li').remove().end();
+        var deleteURL = '';
+        var user = {{ request.user.id }};
+        for(var key in currentMedicalDegreeList){
+            var degreeId = currentMedicalDegreeList[key].pk;
+            var description = '<strong>' + currentMedicalDegreeList[key].degree.name + '</strong><br>' +
+                                currentMedicalDegreeList[key].school + ' (' + currentMedicalDegreeList[key].year_attained + ')<br>' +
+                                '<code>' + currentMedicalDegreeList[key].license_number + '</code>';
+            var html =
+            '<li class="list-group-item">' +
+                '<a class="float-right doctorDegreeEdit btn-sm btn-warning" href="#!" data-degree="' + degreeId +'">' +
+                    '<i class="fas fa-edit"></i>' +
+                '</a>' +
+                '<a class="float-right doctorDegreeDelete btn-sm btn-danger" href="#!" data-degree="' + degreeId +'">' +
+                    '<i class="fas fa-times"></i>' +
+                '</a>' +
+                description +
+            '</li>';
+            medicalDegreeHTMLList.insertAdjacentHTML("beforeend", html);
+        }
+        $(".doctorDegreeEdit").click(function(e){
+            e.preventDefault();
+            var degree = $(this).attr("data-degree");
+            loadDoctorDegree(degree);
+
+        });
+        $(".doctorDegreeDelete").click(function(e){
+            e.preventDefault();
+            var degree = $(this).attr("data-degree");
+            deleteDoctorDegree(degree);
+
+        });
+    }
+
+    function addToMedicalDegree() {
+        var postData = {
+            name: $("#medical_degree_name").val(),
+            abbreviation: $("#medical_degree_abbreviation").val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+        var url = "{% url 'api_private_create_medical_degree' %}";
+        var post = $.post(url, postData)
+            .done(function (response) {
+                $("#addMedicalDegree").modal('hide');
+                $.notify({
+                    message: response.name + " added"
+                },{
+                    type: 'success'
+                });
+                loadMedicalDegreeArray();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown){
+
+                Object.keys(jqXHR.responseJSON).forEach(function(k){
+                    $.notify({
+                        message: jqXHR.responseJSON[k]
+                    },{
+                        type: 'danger'
+                    });
+                });
+            });
+    }
+
+    function editDoctorDegree(){
+        var postData = {
+            school: $("#edit_doctor_degree_school").val(),
+            year_attained: $("#edit_doctor_degree_year_attained").val(),
+            license_number: $("#edit_doctor_degree_license").val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+        var degreeId = $("#edit_doctor_degree_id").val();
+        url = "{% url 'api_private_doctor_degree_edit' %}?degree=" + degreeId;
+
+        var post = $.post(url, postData)
+            .done(function(response){
+                $.notify({
+                    message: "Degree updated"
+                },{
+                    type: 'success'
+                });
+                resetForm(medicalDegreeFormFields, "edit_");
+                loadDoctorDegrees();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown){
+                Object.keys(jqXHR.responseJSON).forEach(function(k){
+                    $.notify({
+                        message: jqXHR.responseJSON[k]
+                    },{
+                        type: 'danger'
+                    });
+
+                });
+            })
+        $("#editDoctorDegree").modal('hide');
+    }
+
+    function addDoctorDegree(){
+        var postData = {
+            school: $("#doctor_degree_school").val(),
+            year_attained: $("#doctor_degree_year_attained").val(),
+            license_number: $("#doctor_degree_license").val(),
+            degree: $("#medical_degree_options").val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+        url = "{% url 'api_private_doctor_degree_add' %}?user={{ request.user.pk }}";
+
+        var post = $.post(url, postData)
+            .done(function(response){
+                $.notify({
+                    message: "Degree added"
+                },{
+                    type: 'success'
+                });
+                resetForm(medicalDegreeFormFields);
+                loadDoctorDegrees();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown){
+                Object.keys(jqXHR.responseJSON).forEach(function(k){
+                    $.notify({
+                        message: jqXHR.responseJSON[k]
+                    },{
+                        type: 'danger'
+                    });
+
+                });
+            })
+    }
+</script>

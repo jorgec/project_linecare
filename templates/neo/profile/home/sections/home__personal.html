@@ -9,14 +9,14 @@
             </div>
         </div>
     </div>
+
     <div class="user-profile__profile-photo">
-        <div class="image-wrapper">
-            <a href="javascript:void(0)" data-toggle="modal" data-target="#editProfilePicture">
-                <i class="fas fa-camera fa-fw"></i>
-            </a>
+        <div class="image-wrapper" data-toggle="modal" data-target="#editProfilePicture">
+            <a href="javascript:void(0)"><i class="fas fa-camera fa-fw"></i></a>
         </div>
-        <img class="rounded-circle img-thumbnail" src="{{ profile.get_profile_photo }}" alt="{{ profile }}">
+        <div class="profile-photo" style="background-image: url({{ profile.get_profile_photo }})"></div>
     </div>
+
 
     <div class="user-profile__wrapper col-lg-12">
         <div class="user-profile__edit-btn">
