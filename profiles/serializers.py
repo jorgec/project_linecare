@@ -73,3 +73,12 @@ class ProfileSerializer(serializers.ModelSerializer):
             instance.date_of_birth = validated_data.get('date_of_birth', instance.date_of_birth)
             instance.save()
             return instance
+
+
+class PublicBaseProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BaseProfile
+        fields = (
+            'first_name',
+            'last_name',
+        )

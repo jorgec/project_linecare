@@ -34,7 +34,9 @@ class ProfileSettingsBasicInfoView(LoginRequiredMixin, View):
         form = ProfileUpdateForm(request.POST, instance=profile)
 
         if form.is_valid():
-            form.save()
+            profile = form.save(commit=False)
+            profile.is_fresh = False
+            profile.save()
             messages.success(request, 'Profile updated!', extra_tags='success')
             return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
         else:

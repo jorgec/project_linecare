@@ -59,7 +59,7 @@ class BaseProfile(models.Model):
 
     def get_name(self):
         if self.first_name != '' and self.last_name != '':
-            return '{}, {}'.format(
+            return '{} {}'.format(
                 self.first_name, self.last_name
             )
         else:

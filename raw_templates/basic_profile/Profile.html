@@ -1,477 +1,473 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Profile</title>
     <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
-      integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
-      crossorigin="anonymous"
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+            integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+            crossorigin="anonymous"
     />
     <!-- build:css css/styles.min.css -->
-    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/styles.css"/>
     <!-- endbuild -->
-  </head>
+</head>
 
-  <body>
-    <div class="language-nav__container">
-      <div class="container">
+<body>
+<div class="language-nav__container">
+    <div class="container">
         <div class="language-nav__items">
-          <img src="../images/001-philippines.png" alt="PH Icon" />
-          <a id="dropdownMenuButton" data-toggle="dropdown" href="#"
+            <img src="../images/001-philippines.png" alt="PH Icon"/>
+            <a id="dropdownMenuButton" data-toggle="dropdown" href="#"
             ><i class="fas fa-caret-down"></i
-          ></a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">
-              <img src="../images/001-philippines.png" alt="PH Icon" /> Tagalog
-            </a>
-            <a class="dropdown-item" href="#">
-              <img src="../images/002-united-states.png" alt="PH Icon" />
-              English
-            </a>
-          </div>
+            ></a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">
+                    <img src="../images/001-philippines.png" alt="PH Icon"/> Tagalog
+                </a>
+                <a class="dropdown-item" href="#">
+                    <img src="../images/002-united-states.png" alt="PH Icon"/>
+                    English
+                </a>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <div class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container">
+<div class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
         <a href="/" class="navbar-brand"
-          ><img src="../images/LineCare-Logo-022.png" alt="Logo"
+        ><img src="../images/LineCare-Logo-022.png" alt="Logo"
         /></a>
         <div class="profile__container">
-          <div class="profile__notif"><i class="fas fa-bell"></i></div>
-          <div class="profile__photo">
-            <img src="../images/profile-dummy.png" alt="Profile" />
-          </div>
-          <div class="profile__name">
-            Jake
-            <a id="dropdownMenuButton2" data-toggle="dropdown" href="#"
-              ><i class="fas fa-caret-down"></i
-            ></a>
-            <div
-              class="dropdown-menu dropdown-menu-right"
-              aria-labelledby="dropdownMenu2"
-            >
-              <a href="#" class="dropdown-item">Schedule</a>
-              <a href="#" class="dropdown-item">Reception Status</a>
-              <a href="#" class="dropdown-item">Statistics</a>
-              <a href="#" class="dropdown-item">Settings</a>
-              <hr />
-              <a class="dropdown-item">Logout</a>
+            <div class="profile__notif"><i class="fas fa-bell"></i></div>
+            <div class="profile__photo">
+                <img src="../images/profile-dummy.png" alt="Profile"/>
             </div>
-          </div>
+            <div class="profile__name">
+                Jake
+                <a id="dropdownMenuButton2" data-toggle="dropdown" href="#"
+                ><i class="fas fa-caret-down"></i
+                ></a>
+                <div
+                        class="dropdown-menu dropdown-menu-right"
+                        aria-labelledby="dropdownMenu2"
+                >
+                    <a href="#" class="dropdown-item">Schedule</a>
+                    <a href="#" class="dropdown-item">Reception Status</a>
+                    <a href="#" class="dropdown-item">Statistics</a>
+                    <a href="#" class="dropdown-item">Settings</a>
+                    <hr/>
+                    <a class="dropdown-item">Logout</a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <div class="container">
-      <div class="user-profile__container">
+<div class="container">
+    <div class="user-profile__container">
         <div class="user-profile__cover">
-          <div class="user-profile__cover-edit">
-            <a
-              id="edit-cover-photo"
-              href="javascript:void(0)"
-              data-toggle="modal"
-              data-target="#editCoverPicture"
-              ><i class="fas fa-edit"></i><span>Edit Cover Photo</span></a
-            >
-          </div>
+            <div class="user-profile__cover-edit">
+                <a
+                        id="edit-cover-photo"
+                        href="javascript:void(0)"
+                        data-toggle="modal"
+                        data-target="#editCoverPicture"
+                ><i class="fas fa-edit"></i><span>Edit Cover Photo</span></a
+                >
+            </div>
         </div>
         <div class="user-profile__profile-photo">
-          <div
-            class="image-wrapper"
-            data-toggle="modal"
-            data-target="#editProfilePicture"
-          >
-            <a href="javascript:void(0)"><i class="fas fa-camera fa-fw"></i></a>
-          </div>
-          <div class="profile-photo"></div>
+            <div class="image-wrapper" data-toggle="modal" data-target="#editProfilePicture">
+                <a href="javascript:void(0)"><i class="fas fa-camera fa-fw"></i></a>
+            </div>
+            <div class="profile-photo"></div>
         </div>
 
         <div class="user-profile__wrapper col-lg-12">
-          <div class="user-profile__edit-btn">
-            <a href="#" class="btn btn-light rounded-circle"
-              ><i class="fas fa-pen fa-fw"></i
-            ></a>
-          </div>
-          <div class="user-profile__name">
-            <div class="user-profile__flex">
-              <h4>Jake Lee</h4>
-              <h4>M</h4>
+            <div class="user-profile__edit-btn">
+                <a href="#" class="btn btn-light rounded-circle"
+                ><i class="fas fa-pen fa-fw"></i
+                ></a>
             </div>
-            <p>Sitio Lawis, Brgy. Baybay, Roxas City, Capiz</p>
-            <p>Region VI - Western Visayas</p>
-          </div>
-          <div class="user-profile__buttons">
-            <a href="javascript:void(0)" class="btn btn-primary"
-              >Create a Doctor Profile</a
-            >
-          </div>
-          <div class="user-profile__socials">
-            <a href="#top"><i class="fab fa-facebook-f fa-fw"></i></a>
-            <a href="#top"><i class="fab fa-twitter fa-fw"></i></a>
-          </div>
-          <hr />
-          <div class="user-profile__information">
-            <h6>Personal Information</h6>
-            <div class="row">
-              <div class="col-lg-6 col-sm-12">
-                <p>Name: Jake Laurence Lee</p>
-                <p>Sex: Male</p>
-                <p>Birthdate: December 25, 1987</p>
-                <p>Contact: 0945 234 3432</p>
-                <p>Address: Sitio Lawis, Brgy. Baybay, Roxas City</p>
-              </div>
-              <div class="col-lg-6 col-sm-12">
-                <p>Height: 5'10</p>
-                <p>Weight: 80kg</p>
-                <p>Blood type: A+</p>
-                <p>Religion: Roman Catholic</p>
-              </div>
+            <div class="user-profile__name">
+                <div class="user-profile__flex">
+                    <h4>Jake Lee</h4>
+                    <h4>M</h4>
+                </div>
+                <p>Sitio Lawis, Brgy. Baybay, Roxas City, Capiz</p>
+                <p>Region VI - Western Visayas</p>
             </div>
-          </div>
+            <div class="user-profile__buttons">
+                <a href="javascript:void(0)" class="btn btn-primary"
+                >Create a Doctor Profile</a
+                >
+            </div>
+            <div class="user-profile__socials">
+                <a href="#top"><i class="fab fa-facebook-f fa-fw"></i></a>
+                <a href="#top"><i class="fab fa-twitter fa-fw"></i></a>
+            </div>
+            <hr/>
+            <div class="user-profile__information">
+                <h6>Personal Information</h6>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <p>Name: Jake Laurence Lee</p>
+                        <p>Sex: Male</p>
+                        <p>Birthdate: December 25, 1987</p>
+                        <p>Contact: 0945 234 3432</p>
+                        <p>Address: Sitio Lawis, Brgy. Baybay, Roxas City</p>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <p>Height: 5'10</p>
+                        <p>Weight: 80kg</p>
+                        <p>Blood type: A+</p>
+                        <p>Religion: Roman Catholic</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <div class="container">
-      <div class="user-family__container">
+<div class="container">
+    <div class="user-family__container">
         <div class="user-family__flex">
-          <h6>Family Information</h6>
-          <div class="buttons">
-            <a href="#" class="btn btn-light rounded-circle"
-              ><i class="fas fa-plus fa-fw"></i
-            ></a>
-            <a href="#" class="btn btn-light rounded-circle"
-              ><i class="fas fa-pen fa-fw"></i
-            ></a>
-          </div>
+            <h6>Family Information</h6>
+            <div class="buttons">
+                <a href="#" class="btn btn-light rounded-circle"
+                ><i class="fas fa-plus fa-fw"></i
+                ></a>
+                <a href="#" class="btn btn-light rounded-circle"
+                ><i class="fas fa-pen fa-fw"></i
+                ></a>
+            </div>
         </div>
         <div class="user-family__information">
-          <div class="row">
-            <div class="col-lg-2">
-              <img
-                class="img-fluid"
-                src="../images/profile-dummy.png"
-                alt="Profile"
-              />
+            <div class="row">
+                <div class="col-lg-2">
+                    <img
+                            class="img-fluid"
+                            src="../images/profile-dummy.png"
+                            alt="Profile"
+                    />
+                </div>
+                <div class="col-lg-5">
+                    <p>Name: Jake Laurence Lee</p>
+                    <p>Sex: Male</p>
+                    <p>Birthdate: December 25, 1987</p>
+                    <p>Contact: 0945 234 3432</p>
+                    <p>Address: Sitio Lawis, Brgy. Baybay, Roxas City</p>
+                </div>
+                <div class="col-lg-5">
+                    <p>Height: 5'10</p>
+                    <p>Weight: 80kg</p>
+                    <p>Blood type: A+</p>
+                    <p>Religion: Roman Catholic</p>
+                </div>
             </div>
-            <div class="col-lg-5">
-              <p>Name: Jake Laurence Lee</p>
-              <p>Sex: Male</p>
-              <p>Birthdate: December 25, 1987</p>
-              <p>Contact: 0945 234 3432</p>
-              <p>Address: Sitio Lawis, Brgy. Baybay, Roxas City</p>
+            <div class="row">
+                <div class="col-lg-2">
+                    <img
+                            class="img-fluid"
+                            src="../images/profile-dummy.png"
+                            alt="Profile"
+                    />
+                </div>
+                <div class="col-lg-5">
+                    <p>Name: Jake Laurence Lee</p>
+                    <p>Sex: Male</p>
+                    <p>Birthdate: December 25, 1987</p>
+                    <p>Contact: 0945 234 3432</p>
+                    <p>Address: Sitio Lawis, Brgy. Baybay, Roxas City</p>
+                </div>
+                <div class="col-lg-5">
+                    <p>Height: 5'10</p>
+                    <p>Weight: 80kg</p>
+                    <p>Blood type: A+</p>
+                    <p>Religion: Roman Catholic</p>
+                </div>
             </div>
-            <div class="col-lg-5">
-              <p>Height: 5'10</p>
-              <p>Weight: 80kg</p>
-              <p>Blood type: A+</p>
-              <p>Religion: Roman Catholic</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-2">
-              <img
-                class="img-fluid"
-                src="../images/profile-dummy.png"
-                alt="Profile"
-              />
-            </div>
-            <div class="col-lg-5">
-              <p>Name: Jake Laurence Lee</p>
-              <p>Sex: Male</p>
-              <p>Birthdate: December 25, 1987</p>
-              <p>Contact: 0945 234 3432</p>
-              <p>Address: Sitio Lawis, Brgy. Baybay, Roxas City</p>
-            </div>
-            <div class="col-lg-5">
-              <p>Height: 5'10</p>
-              <p>Weight: 80kg</p>
-              <p>Blood type: A+</p>
-              <p>Religion: Roman Catholic</p>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <div
-      class="modal fade"
-      id="editProfilePicture"
-      role="dialog"
-      aria-labelledby="editProfilePictureLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+<div
+        class="modal fade"
+        id="editProfilePicture"
+        role="dialog"
+        aria-labelledby="editProfilePictureLabel"
+        aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="edit-profile-picture__container">
-              <div class="edit-profile-picture__label">
-                <h5 class="h5">Edit Profile Photo</h5>
-              </div>
-              <div class="edit-profile-picture__upload">
-                <input
-                  id="upload"
-                  type="file"
-                  accept="image/*"
-                  onchange="previewFile()"
-                />
-                <a href="javascript:void(0)" id="upload_link"
-                  ><i class="fas fa-cloud-upload-alt"></i
-                ></a>
-                <img id="image-preview" src="" />
-                <h6>Click to upload a picture</h6>
-                <div id="upload-div"></div>
-              </div>
-              <div class="row" id="profileList"></div>
+            <div class="modal-header">
+                <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-          </div>
+            <div class="modal-body">
+                <div class="edit-profile-picture__container">
+                    <div class="edit-profile-picture__label">
+                        <h5 class="h5">Edit Profile Photo</h5>
+                    </div>
+                    <div class="edit-profile-picture__upload">
+                        <input
+                                id="upload"
+                                type="file"
+                                accept="image/*"
+                                onchange="previewFile()"
+                        />
+                        <a href="javascript:void(0)" id="upload_link"
+                        ><i class="fas fa-cloud-upload-alt"></i
+                        ></a>
+                        <img id="image-preview" src=""/>
+                        <h6>Click to upload a picture</h6>
+                        <div id="upload-div"></div>
+                    </div>
+                    <div class="row" id="profileList"></div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <div
-      class="modal fade"
-      id="editCoverPicture"
-      role="dialog"
-      aria-labelledby="editCoverPictureLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+<div
+        class="modal fade"
+        id="editCoverPicture"
+        role="dialog"
+        aria-labelledby="editCoverPictureLabel"
+        aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="edit-cover-picture__container">
-              <div class="edit-cover-picture__label">
-                <h5 class="h5">Edit Cover Photo</h5>
-              </div>
-              <div class="edit-cover-picture__upload">
-                <input
-                  id="coverUpload"
-                  type="file"
-                  accept="image/*"
-                  onchange="previewCoverFile()"
-                />
-                <a href="javascript:void(0)" id="coverUpload_link"
-                  ><i class="fas fa-cloud-upload-alt"></i
-                ></a>
-                <img id="cover-image-preview" src="" />
-                <h6>Click to upload a picture</h6>
-                <div id="cover-upload-div"></div>
-              </div>
-              <div class="row" id="CoverList"></div>
+            <div class="modal-header">
+                <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-          </div>
+            <div class="modal-body">
+                <div class="edit-cover-picture__container">
+                    <div class="edit-cover-picture__label">
+                        <h5 class="h5">Edit Cover Photo</h5>
+                    </div>
+                    <div class="edit-cover-picture__upload">
+                        <input
+                                id="coverUpload"
+                                type="file"
+                                accept="image/*"
+                                onchange="previewCoverFile()"
+                        />
+                        <a href="javascript:void(0)" id="coverUpload_link"
+                        ><i class="fas fa-cloud-upload-alt"></i
+                        ></a>
+                        <img id="cover-image-preview" src=""/>
+                        <h6>Click to upload a picture</h6>
+                        <div id="cover-upload-div"></div>
+                    </div>
+                    <div class="row" id="CoverList"></div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <footer class="container">
-      <hr />
-      <p class="text-center">&copy; linecare Co., Ltd.</p>
-    </footer>
+<footer class="container">
+    <hr/>
+    <p class="text-center">&copy; linecare Co., Ltd.</p>
+</footer>
 
-    <!-- build:js js/main.min.js -->
-    <script src="../js/lib/jquery.js"></script>
-    <script src="../js/lib/popper.js"></script>
-    <script src="../js/lib/bootstrap.js"></script>
-    <!-- <script src="../js/main.js"></script> -->
-    <!-- endbuild -->
+<!-- build:js js/main.min.js -->
+<script src="../js/lib/jquery.js"></script>
+<script src="../js/lib/popper.js"></script>
+<script src="../js/lib/bootstrap.js"></script>
+<!-- <script src="../js/main.js"></script> -->
+<!-- endbuild -->
 
-    <script type="text/javascript">
-      var photoEndpoint = "https://jsonplaceholder.typicode.com/photos";
-      var list = document.getElementById("profileList");
-      var currentProfile = document.querySelector(
+<script type="text/javascript">
+    var photoEndpoint = "https://jsonplaceholder.typicode.com/photos";
+    var list = document.getElementById("profileList");
+    var currentProfile = document.querySelector(
         ".user-profile__profile-photo"
-      ).children[1];
+    ).children[1];
 
-      var images = [
+    var images = [
         "../images/profile-dummy.png",
         "../images/cover.jpg",
         "../images/user-green.png"
-      ];
+    ];
 
-      images.map(function(image) {
+    images.map(function (image) {
         var html =
-          '<div class="col-lg-3"><a onclick="setAsProfile(this)" href="javascript:void(0)"><img class="img-fluid img-thumbnail" src="' +
-          image +
-          '" alt="" /></a> </div>';
+            '<div class="col-lg-3"><a onclick="setAsProfile(this)" href="javascript:void(0)"><img class="img-fluid img-thumbnail" src="' +
+            image +
+            '" alt="" /></a> </div>';
         list.insertAdjacentHTML("beforeend", html);
-      });
+    });
 
-      function previewFile() {
+    function previewFile() {
         var preview = document.getElementById("image-preview");
         var file = document.querySelector("input[type=file]").files[0];
         var button = document.getElementById("upload-div");
         var reader = new FileReader();
 
-        reader.onloadend = function() {
-          images.push(reader.result);
+        reader.onloadend = function () {
+            images.push(reader.result);
 
-          preview.src = reader.result;
+            preview.src = reader.result;
         };
 
         if (file) {
-          var htmlButton =
-            '<a id="upload-btn" href="javascript:void(0)" onclick="uploadPhoto(this)" class="btn btn-primary">Upload</a>';
-          button.insertAdjacentHTML("beforeend", htmlButton);
-          reader.readAsDataURL(file);
+            var htmlButton =
+                '<a id="upload-btn" href="javascript:void(0)" onclick="uploadPhoto(this)" class="btn btn-primary">Upload</a>';
+            button.insertAdjacentHTML("beforeend", htmlButton);
+            reader.readAsDataURL(file);
         } else {
-          preview.src = "";
+            preview.src = "";
         }
-      }
+    }
 
-      function uploadPhoto(x) {
+    function uploadPhoto(x) {
         var input = document.getElementById("upload");
         var url = images.slice(-1)[0];
         var preview = document.getElementById("image-preview");
         if (input.value === "") {
-          return;
+            return;
         } else {
-          var html =
-            '<div class="col-lg-3"><a onclick="setAsProfile(this)" href="javascript:void(0)"><img class="img-fluid img-thumbnail" src="' +
-            url +
-            '" alt=""/></a></div>';
-          list.insertAdjacentHTML("beforeend", html);
+            var html =
+                '<div class="col-lg-3"><a onclick="setAsProfile(this)" href="javascript:void(0)"><img class="img-fluid img-thumbnail" src="' +
+                url +
+                '" alt=""/></a></div>';
+            list.insertAdjacentHTML("beforeend", html);
         }
         preview.src = "";
         input.value = "";
         $(x).remove();
-      }
+    }
 
-      function handleClick(newProfile) {
+    function handleClick(newProfile) {
         var currentProfile = document.querySelector(".profile-photo");
 
         currentProfile.style.backgroundImage = "url(" + newProfile + ")";
-      }
+    }
 
-      function setAsProfile(x) {
+    function setAsProfile(x) {
         var newProfile = x.children[0].src;
 
         x.addEventListener("click", handleClick(newProfile));
-      }
+    }
 
-      $(function() {
-        $("#upload_link").on("click", function(e) {
-          e.preventDefault();
-          $("#upload:hidden").trigger("click");
+    $(function () {
+        $("#upload_link").on("click", function (e) {
+            e.preventDefault();
+            $("#upload:hidden").trigger("click");
         });
-      });
+    });
 
-      $(function() {
-        $("#coverUpload_link").on("click", function(e) {
-          e.preventDefault();
-          $("#coverUpload:hidden").trigger("click");
+    $(function () {
+        $("#coverUpload_link").on("click", function (e) {
+            e.preventDefault();
+            $("#coverUpload:hidden").trigger("click");
         });
-      });
+    });
 
-      // $.get(photoEndpoint, function(data, status) {
-      //   if (status !== "success") {
-      //     console.log("Looks like there was a problem. Status Code: " + status);
-      //     return;
-      //   }
-      //   data.map(function(thumbnail) {
-      //     var html =
-      //       '<div class="col-lg-3">\n<a onclick="setAsProfile(this)" href="javascript:void(0)"\n><img\nclass="img-fluid img-thumbnail"\n src="' +
-      //       thumbnail.thumbnailUrl +
-      //       '"\nalt=""\n /></a>\n </div>';
-      //     list.insertAdjacentHTML("beforeend", html);
-      //   });
-      // });
+    // $.get(photoEndpoint, function(data, status) {
+    //   if (status !== "success") {
+    //     console.log("Looks like there was a problem. Status Code: " + status);
+    //     return;
+    //   }
+    //   data.map(function(thumbnail) {
+    //     var html =
+    //       '<div class="col-lg-3">\n<a onclick="setAsProfile(this)" href="javascript:void(0)"\n><img\nclass="img-fluid img-thumbnail"\n src="' +
+    //       thumbnail.thumbnailUrl +
+    //       '"\nalt=""\n /></a>\n </div>';
+    //     list.insertAdjacentHTML("beforeend", html);
+    //   });
+    // });
 
-      // BACKGROUND COVER -----------------------------------------------------------
-      var coverImageList = document.getElementById("CoverList");
+    // BACKGROUND COVER -----------------------------------------------------------
+    var coverImageList = document.getElementById("CoverList");
 
-      // TODO: Empty this variable later
-      var coverPhotos = [
+    // TODO: Empty this variable later
+    var coverPhotos = [
         "../images/cover.jpg",
         "../images/bg-01.png",
         "../images/bg-01-01.jpg"
-      ];
+    ];
 
-      coverPhotos.map(function(image) {
+    coverPhotos.map(function (image) {
         var html =
-          '<div class="col-lg-3"><a onclick="setAsCover(this)" href="javascript:void(0)"><img class="img-fluid img-thumbnail" src="' +
-          image +
-          '" alt="" /></a> </div>';
+            '<div class="col-lg-3"><a onclick="setAsCover(this)" href="javascript:void(0)"><img class="img-fluid img-thumbnail" src="' +
+            image +
+            '" alt="" /></a> </div>';
         coverImageList.insertAdjacentHTML("beforeend", html);
-      });
+    });
 
-      function handleCoverClick(newCover) {
+    function handleCoverClick(newCover) {
         var currentCover = document.querySelector(".user-profile__cover");
 
         currentCover.style.backgroundImage = "url(" + newCover + ")";
-      }
+    }
 
-      function setAsCover(x) {
+    function setAsCover(x) {
         var newCover = x.children[0].src;
 
         x.addEventListener("click", handleCoverClick(newCover));
-      }
+    }
 
-      function previewCoverFile() {
+    function previewCoverFile() {
         var preview = document.getElementById("cover-image-preview");
         var file = document.getElementById("coverUpload").files[0];
         var button = document.getElementById("cover-upload-div");
         var reader = new FileReader();
 
-        reader.onloadend = function() {
-          coverPhotos.push(reader.result);
+        reader.onloadend = function () {
+            coverPhotos.push(reader.result);
 
-          preview.src = reader.result;
+            preview.src = reader.result;
         };
 
         if (file) {
-          var htmlButton =
-            '<a id="upload-btn" href="javascript:void(0)" onclick="uploadCover(this)" class="btn btn-primary">Upload</a>';
-          button.insertAdjacentHTML("beforeend", htmlButton);
-          reader.readAsDataURL(file);
+            var htmlButton =
+                '<a id="upload-btn" href="javascript:void(0)" onclick="uploadCover(this)" class="btn btn-primary">Upload</a>';
+            button.insertAdjacentHTML("beforeend", htmlButton);
+            reader.readAsDataURL(file);
         } else {
-          preview.src = "";
+            preview.src = "";
         }
-      }
+    }
 
-      function uploadCover(x) {
+    function uploadCover(x) {
         var input = document.getElementById("coverUpload");
         var url = coverPhotos.slice(-1)[0];
         var preview = document.getElementById("cover-image-preview");
         if (input.value === "") {
-          return;
+            return;
         } else {
-          var html =
-            '<div class="col-lg-3"><a onclick="setAsCover(this)" href="javascript:void(0)"><img class="img-fluid img-thumbnail" src="' +
-            url +
-            '" alt=""/></a></div>';
-          coverImageList.insertAdjacentHTML("beforeend", html);
+            var html =
+                '<div class="col-lg-3"><a onclick="setAsCover(this)" href="javascript:void(0)"><img class="img-fluid img-thumbnail" src="' +
+                url +
+                '" alt=""/></a></div>';
+            coverImageList.insertAdjacentHTML("beforeend", html);
         }
         preview.src = "";
         input.value = "";
         $(x).remove();
-      }
-    </script>
-  </body>
+    }
+</script>
+</body>
 </html>
