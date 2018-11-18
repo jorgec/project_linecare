@@ -4,6 +4,7 @@ from .modules.views import home as home_views
 from .modules.views import settings as setting_views
 
 from .modules.api import medical_degree_api
+from .modules.api import specializations_api
 
 urlpatterns = [
     path('home',
@@ -51,4 +52,19 @@ urlpatterns += [
     path(f'{version}/private/doctor_degree/delete',
          medical_degree_api.ApiPrivateDoctorDegreeDelete.as_view(),
          name='api_private_doctor_degree_delete'),
+    
+    #############################################################################
+    # Specialization
+    #############################################################################
+    path(f'{version}/public/specializations',
+         specializations_api.ApiPublicSpecializationList.as_view(),
+         name='api_public_get_specializations'),
+
+    path(f'{version}/public/specialization',
+         specializations_api.ApiPublicSpecializationDetail.as_view(),
+         name='api_public_get_specialization'),
+
+    path(f'{version}/private/specialization/create',
+         specializations_api.ApiPrivateSpecializationCreate.as_view(),
+         name='api_private_create_specialization'),
 ]

@@ -61,7 +61,7 @@ class ApiPublicMedicalDegreeList(APIView):
 class ApiPublicMedicalDegreeDetail(APIView):
     """
     Get specific Medical Degree
-    ?pk=n or ?slug=s
+    ?pk=pk or ?slug=slug
     """
     permission_classes = [permissions.AllowAny]
 
@@ -70,12 +70,12 @@ class ApiPublicMedicalDegreeDetail(APIView):
         slug = request.GET.get('slug', None)
         if pk is not None:
             try:
-                medical_degree = MedicalDegree.objects.get(pk=pk)
+                medical_degree = MedicalDegree.objects.get(pk=pk, is_approved=True)
             except MedicalDegree.DoesNotExist:
                 medical_degree = None
         elif slug is not None:
             try:
-                medical_degree = MedicalDegree.objects.get(slug=slug)
+                medical_degree = MedicalDegree.objects.get(slug=slug, is_approved=True)
             except MedicalDegree.DoesNotExist:
                 medical_degree = None
         else:

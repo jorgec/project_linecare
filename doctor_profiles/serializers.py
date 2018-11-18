@@ -17,6 +17,15 @@ class SpecializationSerializer(serializers.ModelSerializer):
         )
 
 
+class SpecializationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Specialization
+        fields = (
+            'name',
+            'abbreviation'
+        )
+
+
 class InsuranceProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.InsuranceProvider
@@ -138,6 +147,7 @@ class DoctorDegreePublicSerializer(serializers.ModelSerializer):
             'degree',
         )
 
+
 class DoctorDegreeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DoctorDegree
@@ -152,7 +162,7 @@ class DoctorDegreeCreateSerializer(serializers.ModelSerializer):
                 "error_messages": {
                     "blank": "School is required",
                 }
-             },
+            },
             "year_attained": {
                 "error_messages": {
                     "blank": "Year Attained is required",

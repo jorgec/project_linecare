@@ -1,0 +1,195 @@
+{% load static %}
+<script type="text/javascript" src="{% static 'neo/js/formHelpers.jquery.js' %}"></script>
+<script type="text/javascript">
+
+    var specializationList = [];
+    var doctorSpecializationList = [];
+    var specializationOptions = document.querySelector("#specialization_options");
+    var specializationHTMLList = document.querySelector("#specialization_list");
+
+    var specializationFormFields = [
+        {
+            id: "specialization_options",
+            value: null,
+            default: "",
+            field_name: "specialization.name"
+        },
+        {
+            id: "doctor_specialization_place_of_residency",
+            value: null,
+            default: "",
+            field_name: "place_of_residency",
+        },
+        {
+            id: "doctor_specialization_year_attained",
+            value: null,
+            default: "",
+            field_name: "year_attained",
+        },
+        {
+            id: "doctor_specialization_license",
+            value: null,
+            default: "",
+            field_name: "license_number",
+        },
+        {
+            id: "doctor_specialization_id",
+            value: null,
+            default: "",
+            field_name: "pk",
+        },
+    ];
+
+
+    // startup
+    loadSpecializationList();
+    loadDoctorSpecializationList();
+
+    /**************************************************************************
+     * Events
+     **************************************************************************/
+    $("#btnDoctorSpecializationAdd").click(function(e){
+        e.preventDefault();
+        addDoctorSpecialization();
+    });
+
+    $("#btnSpecializationAdd").click(function(e){
+        e.preventDefault();
+        addSpecialization();
+    });
+
+    $("#btnDoctorSpecializationReset").click(function(e){
+        e.preventDefault();
+        resetForm(specializationFormFields);
+    });
+
+    $("#btnConfirmEditDoctorSpecialization").click(function(e){
+        e.preventDefault();
+        editDoctorSpecialization();
+
+    });
+
+    $("#specialization_list").on('click', '.doctorSpecializationEdit', function(e){
+        e.preventDefault();
+        var specialization = $(this).attr("data-specialization");
+        loadDoctorSpecializationDetail(specialization);
+    }).on('click', '.doctorSpecializationDelete', function(e){
+        e.preventDefault();
+        var specialization = $(this).attr("data-specialization");
+        deleteDoctorSpecialization(specialization);
+    });
+
+
+    /**************************************************************************
+     * Functions
+     **************************************************************************/
+
+    function loadSpecializationList(){
+        var url = "{% url 'api_public_get_specializations' %}";
+        $.get(url, function(response){
+            specializationList = response;
+            populateSpecializationList();
+        });
+    }
+
+    function loadDoctorSpecializationList(){
+        var url = "{% url 'api_public_doctor_specializations' %}?user={{ request.user.pk }}";
+        $.get(url, function(response){
+            doctorSpecializationList = response;
+            populateDoctorSpecializationList();
+        });
+    }
+
+    function loadDoctorSpecializationDetail(specialization){
+        var url = "{% url 'api_private_doctor_specialization_detail' %}?specialization=" + specialization;
+        $.get(url).done(function(response){
+            loadFormData(specializationFormFields, response);
+            $("#edit_specialization_options").html(response.specialization.name);
+            $("#editDoctorSpecialization").modal('show');
+
+        }).fail(function(jqXHR, textStatus, errorThrown){
+            console.log(jqXHR);
+        });
+    }
+
+    function deleteDoctorSpecialization(specialization) {
+        var url = "{% url 'api_private_doctor_specialization_delete' %}?specialization=" + specialization;
+        $("#confirmDoctorSpecializationDelete").modal('show');
+        $("#btnConfirmDeleteDoctorSpecialization").click(function (e) {
+            e.preventDefault();
+            var postData = {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            };
+            postForm(url, postData, onSuccess=[loadDoctorSpecializationList], onFail=[], failSilently=true);
+            $("#confirmDoctorSpecializationDelete").modal('hide');
+        });
+    }
+
+    function populateSpecializationList(){
+        // Populate options
+        $("#specialization_options").find('option').remove().end();
+        specializationList.map(function (option) {
+            var id = option.id;
+            var name = option.name;
+            var html = "<option value=" + id + ">" + name + "</option>";
+            specializationOptions.insertAdjacentHTML("beforeend", html);
+        });
+    }
+
+    function populateDoctorSpecializationList(){
+        $("#specialization_list").find('li').remove().end();
+        for(var key in doctorSpecializationList){
+            var specializationId = doctorSpecializationList[key].pk;
+            var description = '<strong>' + doctorSpecializationList[key].specialization.name + '</strong><br>' +
+                                doctorSpecializationList[key].place_of_residency + ' (' + doctorSpecializationList[key].year_attained + ')<br>' +
+                                '<code>' + doctorSpecializationList[key].license_number + '</code>';
+            var html =
+            '<li class="list-group-item">' +
+                '<a class="float-right doctorSpecializationEdit btn-sm btn-warning" href="#!" data-specialization="' + specializationId +'">' +
+                    '<i class="fas fa-edit"></i>' +
+                '</a>' +
+                '<a class="float-right doctorSpecializationDelete btn-sm btn-danger" href="#!" data-specialization="' + specializationId +'">' +
+                    '<i class="fas fa-times"></i>' +
+                '</a>' +
+                description +
+            '</li>';
+            specializationHTMLList.insertAdjacentHTML("beforeend", html);
+        }
+    }
+
+    function addSpecialization() {
+        var postData = {
+            name: $("#specialization_name").val(),
+            abbreviation: $("#specialization_abbreviation").val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+        var url = "{% url 'api_private_create_specialization' %}";
+        postForm(url, postData, onSuccess=[loadSpecializationList]);
+        $("#addSpecialization").modal('hide');
+    }
+
+    function editDoctorSpecialization(){
+        var postData = {
+            place_of_residency: $("#edit_doctor_specialization_place_of_residency").val(),
+            year_attained: $("#edit_doctor_specialization_year_attained").val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+        var specializationId = $("#edit_doctor_specialization_id").val();
+        url = "{% url 'api_private_doctor_specialization_edit' %}?specialization=" + specializationId;
+
+        postForm(url, postData, onSuccess=[loadDoctorSpecializationList]);
+        resetForm(specializationFormFields, "edit_");
+        $("#editDoctorSpecialization").modal('hide');
+    }
+
+    function addDoctorSpecialization(){
+        var postData = {
+            place_of_residency: $("#doctor_specialization_place_of_residency").val(),
+            year_attained: $("#doctor_specialization_year_attained").val(),
+            specialization: $("#specialization_options").val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+        url = "{% url 'api_private_doctor_specialization_add' %}?user={{ request.user.pk }}";
+        postForm(url, postData, onSuccess=[loadDoctorSpecializationList, function(){resetForm(specializationFormFields)}]);
+    }
+</script>
