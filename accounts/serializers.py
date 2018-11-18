@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.models import Account
-from profiles.serializers import PrivateProfileSerializer, PublicProfileSerializer, PublicBaseProfileSerializer
+from profiles.serializers import PrivateProfileSerializer, PublicBaseProfileSerializer
 
 
 class AccountSerializer(serializers.ModelSerializer):

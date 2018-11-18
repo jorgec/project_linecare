@@ -42,6 +42,10 @@ class Account(AbstractBaseUser):
     # NonRelational data
     user_settings = JSONField(default=list)
 
+    # unused
+    first_name = models.CharField(max_length=60, null=True, blank=True)
+    last_name = models.CharField(max_length=60, null=True, blank=True)
+
     # Relationship Fields
     parent = models.ForeignKey("self", null=True, blank=True, related_name="account_children", on_delete=models.CASCADE)
 
