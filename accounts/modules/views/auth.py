@@ -105,11 +105,10 @@ class AccountLoginView(View):
         return render(request, 'neo/accounts/login.html', context)
 
     def post(self, request, *args, **kwargs):
-        email = request.POST.get('username', None)
+        email = request.POST.get('email', None)
         password = request.POST.get('password', None)
 
         user = authenticate(email=email, password=password)
-
         if user is not None:
             if not user.is_active:
                 messages.error(request, "User account is not active", extra_tags="danger")
@@ -121,7 +120,19 @@ class AccountLoginView(View):
             profile = user.base_profile()
             if profile.is_fresh:
                 return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
-
+            else:
+                primary_profile = user.user_settings.get('primary_profile')
+                if primary_profile:
+                    if primary_profile['type'] == 'doctor':
+                        return HttpResponseRedirect(reverse('doctor_profile_home'))
+                    elif primary_profile['type'] == 'patient':
+                        pass
+                    elif primary_profile['type'] == 'receptionist':
+                        pass
+                    else:
+                        return HttpResponseRedirect(reverse('base_profile_home_view'))
+                else:
+                    return HttpResponseRedirect(reverse('base_profile_home_view'))
         else:
             messages.error(request, "Invalid credentials", extra_tags="danger")
             return HttpResponseRedirect(reverse('accounts_login'))
