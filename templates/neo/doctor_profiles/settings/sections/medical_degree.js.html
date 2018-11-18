@@ -2,13 +2,10 @@
 <script type="text/javascript" src="{% static 'neo/js/formHelpers.jquery.js' %}"></script>
 <script type="text/javascript">
 
-    var MedicalDegreeArray = [];
-    var currentMedicalDegreeList = [];
-    var MDOptions = document.querySelector("#medical_degree_options");
-    var MDInput = document.querySelector("#medical-degree-input");
-    var MDAddBtn = document.querySelector("#MDBtn");
-    var medicalDegreeHTMLList = document.querySelector("#medical-degree-list");
-    var MDSaveBtn = document.querySelector("#saveBtn");
+    var medicalDegreeList = [];
+    var doctorDegreeList = [];
+    var medicalDegreeOptions = document.querySelector("#medical_degree_options");
+    var medicalDegreeHTMLList = document.querySelector("#medical_degree_list");
 
     var medicalDegreeFormFields = [
         {
@@ -45,8 +42,8 @@
 
 
     // startup
-    loadMedicalDegreeArray();
-    loadDoctorDegrees();
+    loadMedicalDegreeList();
+    loadDoctorDegreeList();
 
     /**************************************************************************
      * Events
@@ -58,7 +55,7 @@
 
     $("#btnMedicalDegreeAdd").click(function(e){
         e.preventDefault();
-        addToMedicalDegree();
+        addMedicalDegree();
     });
 
     $("#btnDoctorDegreeReset").click(function(e){
@@ -72,28 +69,38 @@
 
     });
 
+    $("#medical_degree_list").on('click', '.doctorDegreeEdit', function(e){
+        e.preventDefault();
+        var degree = $(this).attr("data-degree");
+        loadDoctorDegreeDetail(degree);
+    }).on('click', '.doctorDegreeDelete', function(e){
+        e.preventDefault();
+        var degree = $(this).attr("data-degree");
+        deleteDoctorDegree(degree);
+    });
+
 
     /**************************************************************************
      * Functions
      **************************************************************************/
 
-    function loadMedicalDegreeArray(){
+    function loadMedicalDegreeList(){
         var url = "{% url 'api_public_get_medical_degrees' %}";
         $.get(url, function(response){
-            MedicalDegreeArray = response;
-            populateMedicalDegreeArray();
+            medicalDegreeList = response;
+            populateMedicalDegreeList();
         });
     }
 
-    function loadDoctorDegrees(){
+    function loadDoctorDegreeList(){
         var url = "{% url 'api_public_doctor_degrees' %}?user={{ request.user.pk }}";
         $.get(url, function(response){
-            currentMedicalDegreeList = response;
-            populateDoctorDegrees();
+            doctorDegreeList = response;
+            populateDoctorDegreeList();
         });
     }
 
-    function loadDoctorDegree(degree){
+    function loadDoctorDegreeDetail(degree){
         var url = "{% url 'api_private_doctor_degree_detail' %}?degree=" + degree;
         $.get(url).done(function(response){
             loadFormData(medicalDegreeFormFields, response);
@@ -106,57 +113,36 @@
     }
 
     function deleteDoctorDegree(degree) {
-        if (degree) {
-            var url = "{% url 'api_private_doctor_degree_delete' %}?degree=" + degree;
-            $("#confirmDoctorDegreeDelete").modal('show');
-            $("#btnConfirmDeleteDoctorDegree").click(function (ev) {
-                ev.preventDefault();
-                $("#confirmDoctorDegreeDelete").modal('hide');
-                var postData = {
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                };
-                var post = $.post(url, postData)
-                    .done(function (response) {
-                        $.notify({
-                            message: response
-                        }, {
-                            type: 'success'
-                        });
-                        loadDoctorDegrees();
-                    })
-                    .fail(function (jqXHR, textStatus, errorThrown) {
-                        Object.keys(jqXHR.responseJSON).forEach(function (k) {
-                            $.notify({
-                                message: jqXHR.responseJSON[k]
-                            }, {
-                                type: 'danger'
-                            });
-                        });
-                    });
-            });
-        }
-    }
-
-    function populateMedicalDegreeArray(){
-        // Populate options
-        $("#medical_degree_options").find('option').remove().end();
-        MedicalDegreeArray.map(function (option) {
-            var id = option.id,
-                name = option.name;
-            var html = "<option value=" + id + ">" + name + "</option>";
-            MDOptions.insertAdjacentHTML("beforeend", html);
+        var url = "{% url 'api_private_doctor_degree_delete' %}?degree=" + degree;
+        $("#confirmDoctorDegreeDelete").modal('show');
+        $("#btnConfirmDeleteDoctorDegree").click(function (e) {
+            e.preventDefault();
+            var postData = {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            };
+            postForm(url, postData, onSuccess=[loadDoctorDegreeList], onFail=[], failSilently=true);
+            $("#confirmDoctorDegreeDelete").modal('hide');
         });
     }
 
-    function populateDoctorDegrees(){
-        $("#medical-degree-list").find('li').remove().end();
-        var deleteURL = '';
-        var user = {{ request.user.id }};
-        for(var key in currentMedicalDegreeList){
-            var degreeId = currentMedicalDegreeList[key].pk;
-            var description = '<strong>' + currentMedicalDegreeList[key].degree.name + '</strong><br>' +
-                                currentMedicalDegreeList[key].school + ' (' + currentMedicalDegreeList[key].year_attained + ')<br>' +
-                                '<code>' + currentMedicalDegreeList[key].license_number + '</code>';
+    function populateMedicalDegreeList(){
+        // Populate options
+        $("#medical_degree_options").find('option').remove().end();
+        medicalDegreeList.map(function (option) {
+            var id = option.id;
+            var name = option.name;
+            var html = "<option value=" + id + ">" + name + "</option>";
+            medicalDegreeOptions.insertAdjacentHTML("beforeend", html);
+        });
+    }
+
+    function populateDoctorDegreeList(){
+        $("#medical_degree_list").find('li').remove().end();
+        for(var key in doctorDegreeList){
+            var degreeId = doctorDegreeList[key].pk;
+            var description = '<strong>' + doctorDegreeList[key].degree.name + '</strong><br>' +
+                                doctorDegreeList[key].school + ' (' + doctorDegreeList[key].year_attained + ')<br>' +
+                                '<code>' + doctorDegreeList[key].license_number + '</code>';
             var html =
             '<li class="list-group-item">' +
                 '<a class="float-right doctorDegreeEdit btn-sm btn-warning" href="#!" data-degree="' + degreeId +'">' +
@@ -169,47 +155,17 @@
             '</li>';
             medicalDegreeHTMLList.insertAdjacentHTML("beforeend", html);
         }
-        $(".doctorDegreeEdit").click(function(e){
-            e.preventDefault();
-            var degree = $(this).attr("data-degree");
-            loadDoctorDegree(degree);
-
-        });
-        $(".doctorDegreeDelete").click(function(e){
-            e.preventDefault();
-            var degree = $(this).attr("data-degree");
-            deleteDoctorDegree(degree);
-
-        });
     }
 
-    function addToMedicalDegree() {
+    function addMedicalDegree() {
         var postData = {
             name: $("#medical_degree_name").val(),
             abbreviation: $("#medical_degree_abbreviation").val(),
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
         var url = "{% url 'api_private_create_medical_degree' %}";
-        var post = $.post(url, postData)
-            .done(function (response) {
-                $("#addMedicalDegree").modal('hide');
-                $.notify({
-                    message: response.name + " added"
-                },{
-                    type: 'success'
-                });
-                loadMedicalDegreeArray();
-            })
-            .fail(function(jqXHR, textStatus, errorThrown){
-
-                Object.keys(jqXHR.responseJSON).forEach(function(k){
-                    $.notify({
-                        message: jqXHR.responseJSON[k]
-                    },{
-                        type: 'danger'
-                    });
-                });
-            });
+        postForm(url, postData, onSuccess=[loadMedicalDegreeList]);
+        $("#addMedicalDegree").modal('hide');
     }
 
     function editDoctorDegree(){
@@ -222,26 +178,8 @@
         var degreeId = $("#edit_doctor_degree_id").val();
         url = "{% url 'api_private_doctor_degree_edit' %}?degree=" + degreeId;
 
-        var post = $.post(url, postData)
-            .done(function(response){
-                $.notify({
-                    message: "Degree updated"
-                },{
-                    type: 'success'
-                });
-                resetForm(medicalDegreeFormFields, "edit_");
-                loadDoctorDegrees();
-            })
-            .fail(function(jqXHR, textStatus, errorThrown){
-                Object.keys(jqXHR.responseJSON).forEach(function(k){
-                    $.notify({
-                        message: jqXHR.responseJSON[k]
-                    },{
-                        type: 'danger'
-                    });
-
-                });
-            })
+        postForm(url, postData, onSuccess=[loadDoctorDegreeList]);
+        resetForm(medicalDegreeFormFields, "edit_");
         $("#editDoctorDegree").modal('hide');
     }
 
@@ -254,26 +192,6 @@
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
         url = "{% url 'api_private_doctor_degree_add' %}?user={{ request.user.pk }}";
-
-        var post = $.post(url, postData)
-            .done(function(response){
-                $.notify({
-                    message: "Degree added"
-                },{
-                    type: 'success'
-                });
-                resetForm(medicalDegreeFormFields);
-                loadDoctorDegrees();
-            })
-            .fail(function(jqXHR, textStatus, errorThrown){
-                Object.keys(jqXHR.responseJSON).forEach(function(k){
-                    $.notify({
-                        message: jqXHR.responseJSON[k]
-                    },{
-                        type: 'danger'
-                    });
-
-                });
-            })
+        postForm(url, postData, onSuccess=[loadDoctorDegreeList, function(){resetForm(medicalDegreeFormFields)}]);
     }
 </script>

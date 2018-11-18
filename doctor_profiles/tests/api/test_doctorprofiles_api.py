@@ -37,7 +37,7 @@ class TestDoctorProfileApi:
         }), content_type='application/json')
         force_authenticate(request, user=self.user)
 
-        response = md.ApiPrivateMedicalDegreeAdd.as_view()(request)
+        response = md.ApiPrivateMedicalDegreeCreate.as_view()(request)
 
         assert response.status_code == 200, response.data
 

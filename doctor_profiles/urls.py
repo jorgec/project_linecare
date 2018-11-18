@@ -22,28 +22,28 @@ urlpatterns += [
     # Medical Degrees
     #############################################################################
     path(f'{version}/public/medical_degrees',
-         medical_degree_api.ApiPublicGetMedicalDegrees.as_view(),
+         medical_degree_api.ApiPublicMedicalDegreeList.as_view(),
          name='api_public_get_medical_degrees'),
 
     path(f'{version}/public/medical_degree',
-         medical_degree_api.ApiPublicGetMedicalDegree.as_view(),
+         medical_degree_api.ApiPublicMedicalDegreeDetail.as_view(),
          name='api_public_get_medical_degree'),
 
     path(f'{version}/private/medical_degree/create',
-         medical_degree_api.ApiPrivateMedicalDegreeAdd.as_view(),
+         medical_degree_api.ApiPrivateMedicalDegreeCreate.as_view(),
          name='api_private_create_medical_degree'),
 
     #############################################################################
     # Doctor Degrees
     #############################################################################
     path(f'{version}/public/doctor_degrees',
-         medical_degree_api.ApiPublicGetDoctorDegrees.as_view(),
+         medical_degree_api.ApiPublicDoctorDegreeList.as_view(),
          name='api_public_doctor_degrees'),
     path(f'{version}/private/doctor_degree/detail',
          medical_degree_api.ApiPrivateDoctorDegreeDetail.as_view(),
          name='api_private_doctor_degree_detail'),
     path(f'{version}/private/doctor_degree/add',
-         medical_degree_api.ApiPrivateDoctorDegreeAdd.as_view(),
+         medical_degree_api.ApiPrivateDoctorDegreeCreate.as_view(),
          name='api_private_doctor_degree_add'),
     path(f'{version}/private/doctor_degree/edit',
          medical_degree_api.ApiPrivateDoctorDegreeEdit.as_view(),

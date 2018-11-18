@@ -39,3 +39,34 @@ function loadFormData(formFields, response, prefix="edit_"){
         $("#" + prefix + formFields[fieldItem].id).val(field_value);
     }
 }
+
+function postForm(url, postData, onSuccess=[], onFail=[], failSilently=false){
+    console.log(failSilently);
+    $.post(url, postData)
+        .done(function (response) {
+            $.notify({
+                message: "Success"
+            }, {
+                type: 'success'
+            });
+            for(var i in onSuccess){
+                onSuccess[i]();
+            }
+            return true;
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            if(!failSilently) {
+                Object.keys(jqXHR.responseJSON).forEach(function (k) {
+                    $.notify({
+                        message: jqXHR.responseJSON[k]
+                    }, {
+                        type: 'danger'
+                    });
+                });
+            }
+            for(var i in onFail){
+                onFail[i]();
+            }
+            return false;
+        });
+}

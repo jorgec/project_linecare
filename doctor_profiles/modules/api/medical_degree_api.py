@@ -1,17 +1,31 @@
+"""
+- MedicalDegree
+--- ApiPublicMedicalDegreeList
+--- ApiPublicMedicalDegreeDetail
+--- ApiPrivateMedicalDegreeCreate
+
+- DoctorDegree
+--- ApiPublicDoctorDegreeList
+--- ApiPublicDoctorDegreeDetail
+--- ApiPrivateDoctorDegreeDetail
+--- ApiPrivateDoctorDegreeCreate
+--- ApiPrivateDoctorDegreeEdit
+--- ApiPrivateDoctorDegreeDelete
+"""
+
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status
 from rest_framework.response import Response
-from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from accounts.models import Account
 from doctor_profiles.models import MedicalDegree, DoctorDegree
 from doctor_profiles.serializers import MedicalDegreeCreateSerializer, MedicalDegreeSerializer, DoctorDegreeSerializer, \
-    DoctorDegreeCreateSerializer, DoctorDegreeEditSerializer
+    DoctorDegreeCreateSerializer, DoctorDegreeEditSerializer, DoctorDegreePublicSerializer
 
 
-class ApiPrivateMedicalDegreeAdd(APIView):
+class ApiPrivateMedicalDegreeCreate(APIView):
     """
     Create Medical Degree
     Requires doctor profile
@@ -31,21 +45,7 @@ class ApiPrivateMedicalDegreeAdd(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiPublicMedicalDegreeDetail(APIView):
-    """
-    Medical Degree detail
-    ?pk=n
-    """
-
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request, *args, **kwargs):
-        medical_degree = get_object_or_404(MedicalDegree, pk=request.GET.get('pk', None))
-        serializer = MedicalDegreeSerializer(medical_degree)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class ApiPublicGetMedicalDegrees(APIView):
+class ApiPublicMedicalDegreeList(APIView):
     """
     Get list of all approved Medical Degrees
     """
@@ -58,7 +58,7 @@ class ApiPublicGetMedicalDegrees(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ApiPublicGetMedicalDegree(APIView):
+class ApiPublicMedicalDegreeDetail(APIView):
     """
     Get specific Medical Degree
     ?pk=n or ?slug=s
@@ -91,7 +91,7 @@ class ApiPublicGetMedicalDegree(APIView):
 """ Doctor Degree """
 
 
-class ApiPublicGetDoctorDegrees(APIView):
+class ApiPublicDoctorDegreeList(APIView):
     """
     Get Medical Degrees of doctor profile
     ?user=n
@@ -108,7 +108,7 @@ class ApiPublicGetDoctorDegrees(APIView):
             return Response("User does not have a Doctor profile", status=status.HTTP_404_NOT_FOUND)
 
 
-class ApiPrivateDoctorDegreeAdd(APIView):
+class ApiPrivateDoctorDegreeCreate(APIView):
     """
     Add Medical Degree to doctor profile
     ?user=n
@@ -197,10 +197,25 @@ class ApiPrivateDoctorDegreeDetail(APIView):
     Detail of Medical Degree of doctor profile
     ?degree=pk
     """
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         doctor_degree = get_object_or_404(DoctorDegree, pk=request.GET.get('degree', None),
                                           doctor=request.user.doctorprofile)
 
         serializer = DoctorDegreeSerializer(doctor_degree)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPublicDoctorDegreeDetail(APIView):
+    """
+    Public details of Medical Degree
+    ?degree=pk
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        doctor_degree = get_object_or_404(DoctorDegree, pk=request.GET.get('degree', None))
+
+        serializer = DoctorDegreePublicSerializer(doctor_degree)
         return Response(serializer.data, status=status.HTTP_200_OK)

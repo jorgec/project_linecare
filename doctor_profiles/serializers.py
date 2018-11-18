@@ -123,6 +123,21 @@ class DoctorDegreeSerializer(serializers.ModelSerializer):
         )
 
 
+class DoctorDegreePublicSerializer(serializers.ModelSerializer):
+    degree = MedicalDegreeSerializer()
+    doctor = DoctorProfileSerializer()
+
+    class Meta:
+        model = models.DoctorDegree
+        fields = (
+            'pk',
+            'year_attained',
+            'school',
+            'license_number',
+            'doctor',
+            'degree',
+        )
+
 class DoctorDegreeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DoctorDegree
