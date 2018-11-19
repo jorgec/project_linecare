@@ -25,6 +25,7 @@ SECRET_KEY = 's90mk9&2pim-kzyo41abc5+igybj3ltzz84on0a_&def3!$b%*'
 DEBUG = True
 
 SITE_ID = 1
+SITE_URL = 'https://192.168.10.220'
 
 ALLOWED_HOSTS = ['*']
 
@@ -90,16 +91,14 @@ INSTALLED_APPS = [
     # utilities
     'phonenumber_field',
     'crispy_forms',
-
-    'locations',
     'datesdim',
     'appglobals',
-
 
     'accounts',
     'profiles',
     'albums',
-    'doctors'
+    'doctor_profiles',
+    'biometrics'
 ]
 
 # User Model
@@ -112,6 +111,30 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
 LOGIN_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile', 'user_friends'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': lambda request: 'en_US',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.12',
+    }
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
@@ -133,7 +156,7 @@ ROOT_URLCONF = 'linecare_core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/home/vagrant/project_linecare/templates'],
+        'DIRS': ['/home/linecare/project_linecare/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -201,11 +224,23 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication'
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
     )
 }
+
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
     '192.168.10.61:3000',
+    '192.168.10.245',
+    '192.168.10.115',
+    '192.168.10.189',
+    '192.168.33.110',
 )
 
 # Internationalization
@@ -229,13 +264,15 @@ LANGUAGES = (
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
 
-STATIC_URL = 'https://linecare.pdpi.tech/static/'
+STATIC_URL = f'{SITE_URL}/static/'
 STATIC_ROOT = '/var/www/html/static/'
 
-MEDIA_URL = 'https://linecare.pdpi.tech/media/'
+MEDIA_URL = f'{SITE_URL}/media/'
 MEDIA_ROOT = '/var/www/html/media/'
+TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
