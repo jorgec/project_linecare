@@ -169,7 +169,7 @@ class DoctorSpecializationCreateSerializer(serializers.ModelSerializer):
         }
 
 
-class DoctorSpecializationEditSerializer(serializers.ModelSerializer):
+class DoctorSpecializationUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DoctorSpecialization
         fields = (
@@ -254,7 +254,7 @@ class DoctorDegreeCreateSerializer(serializers.ModelSerializer):
         }
 
 
-class DoctorDegreeEditSerializer(serializers.ModelSerializer):
+class DoctorDegreeUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DoctorDegree
         fields = (

@@ -54,31 +54,31 @@ urlpatterns += [
     #############################################################################
     path(f'{version}/public/medical_degrees',
          medical_degree_api.ApiPublicMedicalDegreeList.as_view(),
-         name='api_public_get_medical_degrees'),
+         name='api_public_medical_degree_list'),
 
     path(f'{version}/public/medical_degree',
          medical_degree_api.ApiPublicMedicalDegreeDetail.as_view(),
-         name='api_public_get_medical_degree'),
+         name='api_public_medical_degree_detail'),
 
     path(f'{version}/private/medical_degree/create',
          medical_degree_api.ApiPrivateMedicalDegreeCreate.as_view(),
-         name='api_private_create_medical_degree'),
+         name='api_private_medical_degree_create'),
 
     #############################################################################
     # Doctor Degrees
     #############################################################################
     path(f'{version}/public/doctor_degrees',
          medical_degree_api.ApiPublicDoctorDegreeList.as_view(),
-         name='api_public_doctor_degrees'),
+         name='api_public_doctor_degree_list'),
     path(f'{version}/private/doctor_degree/detail',
          medical_degree_api.ApiPrivateDoctorDegreeDetail.as_view(),
          name='api_private_doctor_degree_detail'),
-    path(f'{version}/private/doctor_degree/add',
+    path(f'{version}/private/doctor_degree/create',
          medical_degree_api.ApiPrivateDoctorDegreeCreate.as_view(),
-         name='api_private_doctor_degree_add'),
-    path(f'{version}/private/doctor_degree/edit',
-         medical_degree_api.ApiPrivateDoctorDegreeEdit.as_view(),
-         name='api_private_doctor_degree_edit'),
+         name='api_private_doctor_degree_create'),
+    path(f'{version}/private/doctor_degree/update',
+         medical_degree_api.ApiPrivateDoctorDegreeUpdate.as_view(),
+         name='api_private_doctor_degree_update'),
     path(f'{version}/private/doctor_degree/delete',
          medical_degree_api.ApiPrivateDoctorDegreeDelete.as_view(),
          name='api_private_doctor_degree_delete'),
@@ -88,31 +88,31 @@ urlpatterns += [
     #############################################################################
     path(f'{version}/public/specializations',
          specializations_api.ApiPublicSpecializationList.as_view(),
-         name='api_public_get_specializations'),
+         name='api_public_specialization_list'),
 
     path(f'{version}/public/specialization',
          specializations_api.ApiPublicSpecializationDetail.as_view(),
-         name='api_public_get_specialization'),
+         name='api_public_specialization_detail'),
 
     path(f'{version}/private/specialization/create',
          specializations_api.ApiPrivateSpecializationCreate.as_view(),
-         name='api_private_create_specialization'),
+         name='api_private_specialization_create'),
 
     #############################################################################
     # Doctor Specializations
     #############################################################################
     path(f'{version}/public/doctor_specializations',
          specializations_api.ApiPublicDoctorSpecializationList.as_view(),
-         name='api_public_doctor_specializations'),
+         name='api_public_doctor_specialization_list'),
     path(f'{version}/private/doctor_specialization/detail',
          specializations_api.ApiPrivateDoctorSpecializationDetail.as_view(),
          name='api_private_doctor_specialization_detail'),
-    path(f'{version}/private/doctor_specialization/add',
+    path(f'{version}/private/doctor_specialization/create',
          specializations_api.ApiPrivateDoctorSpecializationCreate.as_view(),
-         name='api_private_doctor_specialization_add'),
-    path(f'{version}/private/doctor_specialization/edit',
-         specializations_api.ApiPrivateDoctorSpecializationEdit.as_view(),
-         name='api_private_doctor_specialization_edit'),
+         name='api_private_doctor_specialization_create'),
+    path(f'{version}/private/doctor_specialization/update',
+         specializations_api.ApiPrivateDoctorSpecializationUpdate.as_view(),
+         name='api_private_doctor_specialization_update'),
     path(f'{version}/private/doctor_specialization/delete',
          specializations_api.ApiPrivateDoctorSpecializationDelete.as_view(),
          name='api_private_doctor_specialization_delete'),

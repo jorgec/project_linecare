@@ -9,7 +9,7 @@
 --- ApiPublicDoctorDegreeDetail
 --- ApiPrivateDoctorDegreeDetail
 --- ApiPrivateDoctorDegreeCreate
---- ApiPrivateDoctorDegreeEdit
+--- ApiPrivateDoctorDegreeUpdate
 --- ApiPrivateDoctorDegreeDelete
 """
 
@@ -22,7 +22,7 @@ from rest_framework.views import APIView
 from accounts.models import Account
 from doctor_profiles.models import MedicalDegree, DoctorDegree
 from doctor_profiles.serializers import MedicalDegreeCreateSerializer, MedicalDegreeSerializer, DoctorDegreeSerializer, \
-    DoctorDegreeCreateSerializer, DoctorDegreeEditSerializer, DoctorDegreePublicSerializer
+    DoctorDegreeCreateSerializer, DoctorDegreeUpdateSerializer, DoctorDegreePublicSerializer
 
 
 class ApiPrivateMedicalDegreeCreate(APIView):
@@ -112,7 +112,7 @@ class ApiPublicDoctorDegreeList(APIView):
 
 class ApiPrivateDoctorDegreeCreate(APIView):
     """
-    Add Medical Degree to doctor profile
+    Create Medical Degree to doctor profile
     ?user=n
     """
     permission_classes = [permissions.IsAuthenticated]
@@ -155,9 +155,9 @@ class ApiPrivateDoctorDegreeCreate(APIView):
             return Response("User does not have a Doctor profile", status=status.HTTP_404_NOT_FOUND)
 
 
-class ApiPrivateDoctorDegreeEdit(APIView):
+class ApiPrivateDoctorDegreeUpdate(APIView):
     """
-    Edits Medical Degree of doctor profile
+    Updates Medical Degree of doctor profile
     ?degree=id
     """
     permission_classes = [permissions.IsAuthenticated]
@@ -166,7 +166,7 @@ class ApiPrivateDoctorDegreeEdit(APIView):
         doctor_degree = get_object_or_404(DoctorDegree, id=request.GET.get('degree', None),
                                           doctor=request.user.doctorprofile)
 
-        serializer = DoctorDegreeEditSerializer(data=request.data)
+        serializer = DoctorDegreeUpdateSerializer(data=request.data)
 
         if serializer.is_valid():
             doctor_degree.school = serializer.validated_data['school']

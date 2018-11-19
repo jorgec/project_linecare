@@ -9,8 +9,8 @@
 --- ApiPublicDoctorSpecializationDetail - done
 --- ApiPrivateDoctorSpecializationDetail - done
 --- ApiPrivateDoctorSpecializationCreate - done
---- ApiPrivateDoctorSpecializationEdit
---- ApiPrivateDoctorSpecializationDelete
+--- ApiPrivateDoctorSpecializationUpdate - done
+--- ApiPrivateDoctorSpecializationDelete - done
 """
 from django.db import IntegrityError
 from rest_framework import permissions, status
@@ -22,7 +22,7 @@ from accounts.models import Account
 from doctor_profiles.models import Specialization, DoctorSpecialization
 from doctor_profiles.serializers import SpecializationSerializer, SpecializationCreateSerializer, \
     DoctorSpecializationSerializer, DoctorSpecializationPublicSerializer, DoctorSpecializationCreateSerializer, \
-    DoctorSpecializationEditSerializer
+    DoctorSpecializationUpdateSerializer
 
 
 class ApiPublicSpecializationList(APIView):
@@ -178,9 +178,9 @@ class ApiPrivateDoctorSpecializationCreate(APIView):
             return Response("User does not have a Doctor profile", status=status.HTTP_404_NOT_FOUND)
 
 
-class ApiPrivateDoctorSpecializationEdit(APIView):
+class ApiPrivateDoctorSpecializationUpdate(APIView):
     """
-    Edits Medical Specialization of doctor profile
+    Updates Medical Specialization of doctor profile
     ?specialization=id
     """
     permission_classes = [permissions.IsAuthenticated]
@@ -189,7 +189,7 @@ class ApiPrivateDoctorSpecializationEdit(APIView):
         doctor_specialization = get_object_or_404(DoctorSpecialization, id=request.GET.get('specialization', None),
                                                   doctor=request.user.doctorprofile)
 
-        serializer = DoctorSpecializationEditSerializer(data=request.data)
+        serializer = DoctorSpecializationUpdateSerializer(data=request.data)
 
         if serializer.is_valid():
             doctor_specialization.place_of_residency = serializer.validated_data['place_of_residency']

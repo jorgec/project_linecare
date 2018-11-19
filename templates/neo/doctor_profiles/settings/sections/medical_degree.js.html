@@ -85,7 +85,7 @@
      **************************************************************************/
 
     function loadMedicalDegreeList(){
-        var url = "{% url 'api_public_get_medical_degrees' %}";
+        var url = "{% url 'api_public_medical_degree_list' %}";
         $.get(url, function(response){
             medicalDegreeList = response;
             populateMedicalDegreeList();
@@ -93,7 +93,7 @@
     }
 
     function loadDoctorDegreeList(){
-        var url = "{% url 'api_public_doctor_degrees' %}?user={{ request.user.id }}";
+        var url = "{% url 'api_public_doctor_degree_list' %}?user={{ request.user.id }}";
         $.get(url, function(response){
             doctorDegreeList = response;
             populateDoctorDegreeList();
@@ -163,7 +163,7 @@
             abbreviation: $("#medical_degree_abbreviation").val(),
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
-        var url = "{% url 'api_private_create_medical_degree' %}";
+        var url = "{% url 'api_private_medical_degree_create' %}";
         postForm(url, postData, onSuccess=[loadMedicalDegreeList]);
         $("#addMedicalDegree").modal('hide');
     }
@@ -176,7 +176,7 @@
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
         var degreeId = $("#edit_doctor_degree_id").val();
-        url = "{% url 'api_private_doctor_degree_edit' %}?degree=" + degreeId;
+        url = "{% url 'api_private_doctor_degree_update' %}?degree=" + degreeId;
 
         postForm(url, postData, onSuccess=[loadDoctorDegreeList]);
         resetForm(medicalDegreeFormFields, "edit_");
@@ -191,7 +191,7 @@
             degree: $("#medical_degree_options").val(),
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
-        url = "{% url 'api_private_doctor_degree_add' %}?user={{ request.user.id }}";
+        url = "{% url 'api_private_doctor_degree_create' %}?user={{ request.user.id }}";
         postForm(url, postData, onSuccess=[
             loadDoctorDegreeList,
             function(){resetForm(medicalDegreeFormFields)},

@@ -79,7 +79,7 @@
      **************************************************************************/
 
     function loadSpecializationList(){
-        var url = "{% url 'api_public_get_specializations' %}";
+        var url = "{% url 'api_public_specialization_list' %}";
         $.get(url, function(response){
             specializationList = response;
             populateSpecializationList();
@@ -87,7 +87,7 @@
     }
 
     function loadDoctorSpecializationList(){
-        var url = "{% url 'api_public_doctor_specializations' %}?user={{ request.user.pk }}";
+        var url = "{% url 'api_public_doctor_specialization_list' %}?user={{ request.user.pk }}";
         $.get(url, function(response){
             doctorSpecializationList = response;
             populateDoctorSpecializationList();
@@ -156,7 +156,7 @@
             abbreviation: $("#specialization_abbreviation").val(),
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
-        var url = "{% url 'api_private_create_specialization' %}";
+        var url = "{% url 'api_private_specialization_create' %}";
         postForm(url, postData, onSuccess=[loadSpecializationList]);
         $("#addSpecialization").modal('hide');
     }
@@ -168,7 +168,7 @@
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
         var specializationId = $("#edit_doctor_specialization_id").val();
-        url = "{% url 'api_private_doctor_specialization_edit' %}?specialization=" + specializationId;
+        url = "{% url 'api_private_doctor_specialization_update' %}?specialization=" + specializationId;
 
         postForm(url, postData, onSuccess=[loadDoctorSpecializationList]);
         resetForm(specializationFormFields, "edit_");
@@ -182,7 +182,7 @@
             specialization: $("#specialization_options").val(),
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
-        url = "{% url 'api_private_doctor_specialization_add' %}?user={{ request.user.pk }}";
+        url = "{% url 'api_private_doctor_specialization_create' %}?user={{ request.user.pk }}";
         postForm(url, postData, onSuccess=[
             loadDoctorSpecializationList,
             function(){resetForm(specializationFormFields)},
