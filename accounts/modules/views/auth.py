@@ -35,7 +35,7 @@ class AccountRegistrationView(View):
             )
 
             primary_profile = request.POST.get('primary_profile')
-
+            next_url = ''
             if primary_profile == "1":
                 # doctor profile
 
@@ -53,10 +53,7 @@ class AccountRegistrationView(View):
                         'association': None
                     }
                 }
-                """
-                TODO:
-                next=doctor_profile
-                """
+                next_url = reverse('doctor_profile_home')
             elif primary_profile == "2":
                 # patient profile
                 pass
@@ -78,12 +75,7 @@ class AccountRegistrationView(View):
 
                 request.session['login_origin'] = 'internal'
 
-                """
-                TODO:
-                next_url
-                """
-                if profile.is_fresh:
-                    return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
+                return HttpResponseRedirect(f"{reverse('profile_settings_basic_info_view')}?next={next_url}")
             else:
                 messages.error(request, "Unable to authenticate your account", extra_tags="danger")
                 return HttpResponseRedirect(reverse('accounts_register'))
