@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from accounts.serializers import AccountSerializer, AccountSerializerPublic
+from accounts.serializers import AccountSerializerPublic
 from doctor_profiles import models
 
 
@@ -8,11 +8,21 @@ class SpecializationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Specialization
         fields = (
+            'id',
             'slug',
             'name',
             'created',
             'last_updated',
             'metadata',
+            'abbreviation',
+        )
+
+class SpecializationPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Specialization
+        fields = (
+            'slug',
+            'name',
             'abbreviation',
         )
 
@@ -44,11 +54,21 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DoctorProfile
         fields = (
-            'pk',
+            'id',
             'created',
             'last_updated',
             'metadata',
             'user'
+        )
+
+
+class DoctorProfilePublicSerializer(serializers.ModelSerializer):
+    user = AccountSerializerPublic()
+
+    class Meta:
+        model = models.DoctorProfile
+        fields = (
+            'user',
         )
 
 
@@ -66,6 +86,15 @@ class MedicalDegreeSerializer(serializers.ModelSerializer):
             'is_approved',
         )
 
+class MedicalDegreePublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MedicalDegree
+        fields = (
+            'id',
+            'slug',
+            'name',
+            'abbreviation',
+        )
 
 class MedicalDegreeCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -90,12 +119,60 @@ class MedicalAssociationSerializer(serializers.ModelSerializer):
 
 
 class DoctorSpecializationSerializer(serializers.ModelSerializer):
+    doctor = DoctorProfileSerializer()
+    specialization = SpecializationSerializer()
     class Meta:
         model = models.DoctorSpecialization
         fields = (
-            'pk',
+            'id',
             'created',
             'last_updated',
+            'year_attained',
+            'place_of_residency',
+            'doctor',
+            'specialization'
+        )
+
+class DoctorSpecializationPublicSerializer(serializers.ModelSerializer):
+    doctor = DoctorProfilePublicSerializer()
+    specialization = SpecializationPublicSerializer()
+    class Meta:
+        model = models.DoctorSpecialization
+        fields = (
+            'id',
+            'year_attained',
+            'place_of_residency',
+            'doctor',
+            'specialization'
+        )
+
+class DoctorSpecializationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DoctorSpecialization
+        fields = (
+            'year_attained',
+            'place_of_residency',
+            'specialization'
+        )
+        extra_kwargs = {
+            "place_of_residency": {
+                "error_messages": {
+                    "blank": "Place of Residency is required",
+                }
+            },
+            "year_attained": {
+                "error_messages": {
+                    "blank": "Year Attained is required",
+                    "invalid": "Year Attained must be a year",
+                }
+            },
+        }
+
+
+class DoctorSpecializationEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DoctorSpecialization
+        fields = (
             'year_attained',
             'place_of_residency',
         )
@@ -105,7 +182,7 @@ class DoctorInsuranceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DoctorInsurance
         fields = (
-            'pk',
+            'id',
             'created',
             'last_updated',
             'expiry',
@@ -120,7 +197,7 @@ class DoctorDegreeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DoctorDegree
         fields = (
-            'pk',
+            'id',
             'created',
             'last_updated',
             'year_attained',
@@ -133,13 +210,13 @@ class DoctorDegreeSerializer(serializers.ModelSerializer):
 
 
 class DoctorDegreePublicSerializer(serializers.ModelSerializer):
-    degree = MedicalDegreeSerializer()
-    doctor = DoctorProfileSerializer()
+    degree = MedicalDegreePublicSerializer()
+    doctor = DoctorProfilePublicSerializer()
 
     class Meta:
         model = models.DoctorDegree
         fields = (
-            'pk',
+            'id',
             'year_attained',
             'school',
             'license_number',
@@ -191,7 +268,7 @@ class DoctorAssociationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DoctorAssociation
         fields = (
-            'pk',
+            'id',
             'created',
             'last_updated',
             'level',

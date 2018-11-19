@@ -1,0 +1,28 @@
+{% extends 'neo/doctor_profiles/settings/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+<div class="career__header"><h5 class="h5">{{ page_title }}</h5></div>
+<div class="career__wrapper">
+    <div id="profile-progress-detail-snippet"></div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
+{% block home_scripts %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        loadProfileProgressDetail($("#profile-progress-detail-snippet"));
+    });
+</script>
+{% endblock %}

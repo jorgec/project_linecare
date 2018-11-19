@@ -36,7 +36,7 @@
             id: "doctor_degree_id",
             value: null,
             default: "",
-            field_name: "pk",
+            field_name: "id",
         },
     ];
 
@@ -93,7 +93,7 @@
     }
 
     function loadDoctorDegreeList(){
-        var url = "{% url 'api_public_doctor_degrees' %}?user={{ request.user.pk }}";
+        var url = "{% url 'api_public_doctor_degrees' %}?user={{ request.user.id }}";
         $.get(url, function(response){
             doctorDegreeList = response;
             populateDoctorDegreeList();
@@ -120,7 +120,7 @@
             var postData = {
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             };
-            postForm(url, postData, onSuccess=[loadDoctorDegreeList], onFail=[], failSilently=true);
+            postForm(url, postData, onSuccess=[loadDoctorDegreeList, function(){loadProfileProgress($("#profile-progress-snippet"))}], onFail=[], failSilently=true);
             $("#confirmDoctorDegreeDelete").modal('hide');
         });
     }
@@ -139,7 +139,7 @@
     function populateDoctorDegreeList(){
         $("#medical_degree_list").find('li').remove().end();
         for(var key in doctorDegreeList){
-            var degreeId = doctorDegreeList[key].pk;
+            var degreeId = doctorDegreeList[key].id;
             var description = '<strong>' + doctorDegreeList[key].degree.name + '</strong><br>' +
                                 doctorDegreeList[key].school + ' (' + doctorDegreeList[key].year_attained + ')<br>' +
                                 '<code>' + doctorDegreeList[key].license_number + '</code>';
@@ -191,7 +191,11 @@
             degree: $("#medical_degree_options").val(),
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
-        url = "{% url 'api_private_doctor_degree_add' %}?user={{ request.user.pk }}";
-        postForm(url, postData, onSuccess=[loadDoctorDegreeList, function(){resetForm(medicalDegreeFormFields)}]);
+        url = "{% url 'api_private_doctor_degree_add' %}?user={{ request.user.id }}";
+        postForm(url, postData, onSuccess=[
+            loadDoctorDegreeList,
+            function(){resetForm(medicalDegreeFormFields)},
+            function(){loadProfileProgress($("#profile-progress-snippet"))}
+            ]);
     }
 </script>

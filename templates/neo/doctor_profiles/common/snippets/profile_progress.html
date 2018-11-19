@@ -1,0 +1,11 @@
+{% if request.user.doctorprofile.settings_progress.progress_int < 100 %}
+<div class="container my-2">
+    <div class="card-body">
+        <p class="lead">Hey, {{ request.user.base_profile.get_casual_name }}! Please take the time to complete your <a href="{% url 'doctor_profile_settings_home' %}">Doctor Profile</a>:</p>
+
+        <div class="progress mb-2">
+            <div class="progress-bar bg-info" role="progressbar" aria-valuenow="{{ request.user.doctorprofile.settings_progress.progress_int }}" style="width: {{ request.user.doctorprofile.settings_progress.progress_pct }}" aria-valuemin="0" aria-valuemax="100">{{ request.user.doctorprofile.settings_progress.progress_pct }}</div>
+        </div>
+    </div>
+</div>
+{% endif %}

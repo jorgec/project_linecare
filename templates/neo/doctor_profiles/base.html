@@ -21,7 +21,9 @@
 
     {% include 'neo/profile/common/nav__top.html' %}
     {% include 'neo/profile/common/nav__main.html' %}
-    {% block nav_submain %}{% endblock %}
+    {% block nav_submain %}
+        {% include 'neo/doctor_profiles/common/nav__submain.html' %}
+    {% endblock %}
 
     <div class="container">
         {% block content %}{% endblock %}
@@ -31,10 +33,18 @@
 
     <script src="{% static 'neo/js/main.min.js' %}"></script>
     {% block scripts %}
-
-
+    {% endblock %}
+    {% block base_scripts %}
+    {% endblock %}
+    {% block home_scripts %}
     {% endblock %}
 
+    <script src="{% static 'neo/js/snippetProfileProgress.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            loadProfileProgress($("#profile-progress-snippet"));
+        });
+    </script>
 
 </body>
 

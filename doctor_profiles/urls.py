@@ -3,19 +3,49 @@ from django.urls import path
 from .modules.views import home as home_views
 from .modules.views import settings as setting_views
 
+from .modules.views import snippets
+
 from .modules.api import medical_degree_api
 from .modules.api import specializations_api
 
+#############################################################################
+# Views
+#############################################################################
 urlpatterns = [
     path('home',
          home_views.DoctorProfileHomeView.as_view(),
          name='doctor_profile_home'),
 
+    #############################################################################
+    # Settings
+    #############################################################################
+    path('settings',
+         setting_views.DoctorProfileSettingsHomeView.as_view(),
+         name='doctor_profile_settings_home'),
     path('settings/medical_degree',
          setting_views.DoctorProfileMedicalDegreeSettingsView.as_view(),
          name='doctor_profile_settings_medical_degree'),
+    path('settings/specialization',
+         setting_views.DoctorProfileSpecializationSettingsView.as_view(),
+         name='doctor_profile_settings_specialization'),
 ]
 
+#############################################################################
+# Snippets
+#############################################################################
+urlpatterns += [
+    path('snippets/profile_progress',
+         snippets.DoctorProfileProgressSnippet.as_view(),
+         name='doctor_snippets_profile_progress'),
+    path('snippets/profile_progress_detail',
+         snippets.DoctorProfileProgressDetailSnippet.as_view(),
+         name='doctor_snippets_profile_progress'),
+]
+
+
+#############################################################################
+# API
+#############################################################################
 version = 'api/v1'
 
 urlpatterns += [
@@ -52,7 +82,7 @@ urlpatterns += [
     path(f'{version}/private/doctor_degree/delete',
          medical_degree_api.ApiPrivateDoctorDegreeDelete.as_view(),
          name='api_private_doctor_degree_delete'),
-    
+
     #############################################################################
     # Specialization
     #############################################################################
@@ -67,4 +97,23 @@ urlpatterns += [
     path(f'{version}/private/specialization/create',
          specializations_api.ApiPrivateSpecializationCreate.as_view(),
          name='api_private_create_specialization'),
+
+    #############################################################################
+    # Doctor Specializations
+    #############################################################################
+    path(f'{version}/public/doctor_specializations',
+         specializations_api.ApiPublicDoctorSpecializationList.as_view(),
+         name='api_public_doctor_specializations'),
+    path(f'{version}/private/doctor_specialization/detail',
+         specializations_api.ApiPrivateDoctorSpecializationDetail.as_view(),
+         name='api_private_doctor_specialization_detail'),
+    path(f'{version}/private/doctor_specialization/add',
+         specializations_api.ApiPrivateDoctorSpecializationCreate.as_view(),
+         name='api_private_doctor_specialization_add'),
+    path(f'{version}/private/doctor_specialization/edit',
+         specializations_api.ApiPrivateDoctorSpecializationEdit.as_view(),
+         name='api_private_doctor_specialization_edit'),
+    path(f'{version}/private/doctor_specialization/delete',
+         specializations_api.ApiPrivateDoctorSpecializationDelete.as_view(),
+         name='api_private_doctor_specialization_delete'),
 ]

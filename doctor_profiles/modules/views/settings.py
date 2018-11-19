@@ -2,21 +2,50 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
 from django.views import View
 
-from doctor_profiles.forms import MedicalDegreeForm, DoctorDegreeEditForm
+from doctor_profiles.forms import MedicalDegreeForm, DoctorDegreeEditForm, SpecializationForm
+
+
+class DoctorProfileSettingsHomeView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        context = {
+            'page_title': 'Doctor Settings',
+            'location': 'doctor_profile_settings',
+            'sublocation': 'home',
+        }
+
+        return render(request, 'neo/doctor_profiles/settings/home.html', context)
+
+    def test_func(self):
+        return self.request.user.doctor_profile()
 
 
 class DoctorProfileMedicalDegreeSettingsView(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
         context = {
-            'page_title': 'Career Settings',
-            'location': 'doctor_profile_career',
+            'page_title': 'Medical Degree',
+            'location': 'doctor_profile_settings',
             'sublocation': 'degree',
             'medical_degree_form': MedicalDegreeForm,
-            'doctor_degree_edit_form': DoctorDegreeEditForm
 
         }
 
-        return render(request, 'neo/doctor_profiles/settings/career.html', context)
+        return render(request, 'neo/doctor_profiles/settings/medical_degree.html', context)
+
+    def test_func(self):
+        return self.request.user.doctor_profile()
+
+
+class DoctorProfileSpecializationSettingsView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        context = {
+            'page_title': 'Specialization',
+            'location': 'doctor_profile_settings',
+            'sublocation': 'specialization',
+            'specialization_form': SpecializationForm,
+
+        }
+
+        return render(request, 'neo/doctor_profiles/settings/specialization.html', context)
 
     def test_func(self):
         return self.request.user.doctor_profile()

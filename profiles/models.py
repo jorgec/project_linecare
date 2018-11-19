@@ -57,6 +57,11 @@ class BaseProfile(models.Model):
                f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Date of Birth</span><span class='kv-value'>{self.date_of_birth}</p>"
         return html
 
+    def get_casual_name(self):
+        if self.first_name != '':
+            return self.first_name
+        return 'friend'
+
     def get_name(self):
         if self.first_name != '' and self.last_name != '':
             return '{} {}'.format(

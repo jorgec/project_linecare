@@ -2,6 +2,8 @@ import arrow
 from django.contrib.postgres.fields import JSONField
 from django.db import models as models
 from django.db.models import Model
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 from django_extensions.db import fields as extension_fields
 
 from doctor_profiles.managers import DoctorDegreeManager
@@ -29,7 +31,8 @@ class Specialization(models.Model):
     # Relationship Fields
     parent = models.ForeignKey(
         'doctor_profiles.Specialization',
-        on_delete=models.CASCADE, related_name="subspecs"
+        on_delete=models.CASCADE, related_name="subspecs",
+        null=True, blank=True
     )
 
     class Meta:
@@ -89,22 +92,36 @@ class DoctorProfile(models.Model):
         return title
 
     def get_degrees(self):
-        return self.doctor_degrees.all()
+        return self.doctor_degrees.filter(degree__is_approved=True)
+
+    def get_specializations(self):
+        return self.doctor_specializations.filter(specialization__parent__isnull=True, specialization__is_approved=True)
 
     def get_fellowships(self):
-        return self.doctor_associations.filter(level='Fellow')
+        return self.doctor_associations.filter(level='Fellow', association__is_approved=True)
 
     def get_diplomates(self):
-        return self.doctor_associations.filter(level='Diplomate')
+        return self.doctor_associations.filter(level='Diplomate', association__is_approved=True)
 
     def settings_progress(self):
-        progress = self.user.user_settings['doctor_progress']
-        max = len(progress)
-        total = 0
-        for key, value in progress.items():
-            if value is not None:
-                total = total + 1
-        return total / max
+        progress = self.user.user_settings.get('doctor_progress', None)
+        retval = {
+            'progress': 0.0,
+            'progress_pct': '0%',
+            'progress_int': 0,
+            'items': {}
+        }
+        if progress:
+            max = len(progress)
+            total = 0
+            for key, value in progress.items():
+                if value is not None:
+                    total = total + 1
+            retval['progress'] = total / max
+            retval['progress_pct'] = f'{round((total/max)*100)}%'
+            retval['progress_int'] = round((total / max) * 100)
+            retval['items'] = progress
+        return retval
 
 
 class MedicalDegree(models.Model):
@@ -182,9 +199,19 @@ class DoctorSpecialization(models.Model):
 
     class Meta:
         ordering = ('-created',)
+        unique_together = ('doctor', 'specialization')
 
     def __str__(self):
         return f"{self.doctor}, {self.specialization.abbreviation}"
+
+    def save(self, *args, **kwargs):
+        current_year = arrow.utcnow().year
+        min_year = current_year - 70
+
+        if self.year_attained < min_year or self.year_attained > current_year:
+            raise ValueError('Dubious year attained')
+
+        return super(DoctorSpecialization, self).save(*args, **kwargs)
 
 
 class DoctorInsurance(models.Model):
@@ -298,3 +325,52 @@ class DoctorAssociation(models.Model):
 
     def get_abbreviation(self):
         return f"{self.level[0]}{self.association.abbreviation}"
+
+
+"""
+Signals
+"""
+
+
+@receiver(post_save, sender=DoctorDegree)
+def doctor_degree_on_save(sender, instance, created=False, **kwargs):
+    progress = instance.doctor.user.user_settings.get('doctor_progress', None)
+    if progress:
+        progress['medical_degree'] = DoctorDegree.objects.filter(doctor=instance.doctor,
+                                                                 degree__is_approved=True).count()
+        instance.doctor.user.user_settings['doctor_progress'] = progress
+        instance.doctor.user.save()
+
+
+@receiver(post_delete, sender=DoctorDegree)
+def doctor_degree_on_delete(sender, instance, created=False, **kwargs):
+    progress = instance.doctor.user.user_settings.get('doctor_progress', None)
+    if progress:
+        progress['medical_degree'] = DoctorDegree.objects.filter(doctor=instance.doctor,
+                                                                 degree__is_approved=True).count()
+        if progress['medical_degree'] == 0:
+            progress['medical_degree'] = None
+        instance.doctor.user.user_settings['doctor_progress'] = progress
+        instance.doctor.user.save()
+
+
+@receiver(post_save, sender=DoctorSpecialization)
+def doctor_specialization_on_save(sender, instance, created=False, **kwargs):
+    progress = instance.doctor.user.user_settings.get('doctor_progress', None)
+    if progress:
+        progress['specialization'] = DoctorSpecialization.objects.filter(doctor=instance.doctor,
+                                                                         specialization__is_approved=True).count()
+        instance.doctor.user.user_settings['doctor_progress'] = progress
+        instance.doctor.user.save()
+
+
+@receiver(post_delete, sender=DoctorSpecialization)
+def doctor_specialization_on_delete(sender, instance, created=False, **kwargs):
+    progress = instance.doctor.user.user_settings.get('doctor_progress', None)
+    if progress:
+        progress['specialization'] = DoctorSpecialization.objects.filter(doctor=instance.doctor,
+                                                                         specialization__is_approved=True).count()
+        if progress['specialization'] == 0:
+            progress['specialization'] = None
+        instance.doctor.user.user_settings['doctor_progress'] = progress
+        instance.doctor.user.save()

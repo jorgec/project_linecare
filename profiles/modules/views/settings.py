@@ -18,6 +18,7 @@ class ProfileSettingsBasicInfoView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         profile = request.user.base_profile()
         form = ProfileUpdateForm(instance=profile)
+        next_url = request.GET.get('next', None)
 
         context = {
             'page_title': 'Update Basic Info',
@@ -32,13 +33,17 @@ class ProfileSettingsBasicInfoView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         profile = request.user.base_profile()
         form = ProfileUpdateForm(request.POST, instance=profile)
+        next_url = request.GET.get('next', None)
 
         if form.is_valid():
             profile = form.save(commit=False)
             profile.is_fresh = False
             profile.save()
             messages.success(request, 'Profile updated!', extra_tags='success')
-            return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
+            if next_url:
+                return HttpResponseRedirect(next_url)
+            else:
+                return HttpResponseRedirect(reverse('profile_settings_basic_info_view'))
         else:
             context = {
                 'page_title': 'Update Basic Info',

@@ -9,10 +9,17 @@
 
 {% block subcontent %}
 
-{{ profile.settings_progress }}
+<div id="profile-progress-detail-snippet"></div>
+
 
 {% endblock %}
 
-{% block scripts %}
-
+{% block home_scripts %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        {% if request.user.doctorprofile.settings_progress.progress_int < 50 %}
+            loadProfileProgressDetail($("#profile-progress-detail-snippet"));
+        {% endif %}
+    });
+</script>
 {% endblock %}

@@ -39,5 +39,5 @@ class TestDoctorProfileApi:
 
         response = md.ApiPrivateMedicalDegreeCreate.as_view()(request)
 
-        assert response.status_code == 200, response.data
+        assert response.status_code == 201, f"Response: {response.data}; Code: {response.status_code}"
 

@@ -61,16 +61,16 @@ class ApiPublicMedicalDegreeList(APIView):
 class ApiPublicMedicalDegreeDetail(APIView):
     """
     Get specific Medical Degree
-    ?pk=pk or ?slug=slug
+    ?id=id or ?slug=slug
     """
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
-        pk = request.GET.get('pk', None)
+        id = request.GET.get('id', None)
         slug = request.GET.get('slug', None)
-        if pk is not None:
+        if id is not None:
             try:
-                medical_degree = MedicalDegree.objects.get(pk=pk, is_approved=True)
+                medical_degree = MedicalDegree.objects.get(id=id, is_approved=True)
             except MedicalDegree.DoesNotExist:
                 medical_degree = None
         elif slug is not None:
@@ -88,7 +88,9 @@ class ApiPublicMedicalDegreeDetail(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-""" Doctor Degree """
+################################################################################
+# Doctor Degree
+################################################################################
 
 
 class ApiPublicDoctorDegreeList(APIView):
@@ -99,7 +101,7 @@ class ApiPublicDoctorDegreeList(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
-        user = get_object_or_404(Account, pk=request.GET.get('user', None))
+        user = get_object_or_404(Account, id=request.GET.get('user', None))
         if user.doctor_profile():
             degrees = user.doctor_profile().get_degrees()
             serializer = DoctorDegreeSerializer(degrees, many=True)
@@ -116,7 +118,7 @@ class ApiPrivateDoctorDegreeCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        user = get_object_or_404(Account, pk=request.GET.get('user', None))
+        user = get_object_or_404(Account, id=request.GET.get('user', None))
         if user.doctor_profile():
             serializer = DoctorDegreeCreateSerializer(data=request.data)
 
@@ -156,12 +158,12 @@ class ApiPrivateDoctorDegreeCreate(APIView):
 class ApiPrivateDoctorDegreeEdit(APIView):
     """
     Edits Medical Degree of doctor profile
-    ?degree=pk
+    ?degree=id
     """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        doctor_degree = get_object_or_404(DoctorDegree, pk=request.GET.get('degree', None),
+        doctor_degree = get_object_or_404(DoctorDegree, id=request.GET.get('degree', None),
                                           doctor=request.user.doctorprofile)
 
         serializer = DoctorDegreeEditSerializer(data=request.data)
@@ -180,12 +182,12 @@ class ApiPrivateDoctorDegreeEdit(APIView):
 class ApiPrivateDoctorDegreeDelete(APIView):
     """
     Deletes Medical Degree of doctor profile
-    ?degree=pk
+    ?degree=id
     """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        doctor_degree = get_object_or_404(DoctorDegree, pk=request.GET.get('degree', None),
+        doctor_degree = get_object_or_404(DoctorDegree, id=request.GET.get('degree', None),
                                           doctor=request.user.doctorprofile)
 
         doctor_degree.delete()
@@ -195,12 +197,12 @@ class ApiPrivateDoctorDegreeDelete(APIView):
 class ApiPrivateDoctorDegreeDetail(APIView):
     """
     Detail of Medical Degree of doctor profile
-    ?degree=pk
+    ?degree=id
     """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        doctor_degree = get_object_or_404(DoctorDegree, pk=request.GET.get('degree', None),
+        doctor_degree = get_object_or_404(DoctorDegree, id=request.GET.get('degree', None),
                                           doctor=request.user.doctorprofile)
 
         serializer = DoctorDegreeSerializer(doctor_degree)
@@ -210,12 +212,12 @@ class ApiPrivateDoctorDegreeDetail(APIView):
 class ApiPublicDoctorDegreeDetail(APIView):
     """
     Public details of Medical Degree
-    ?degree=pk
+    ?degree=id
     """
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
-        doctor_degree = get_object_or_404(DoctorDegree, pk=request.GET.get('degree', None))
+        doctor_degree = get_object_or_404(DoctorDegree, id=request.GET.get('degree', None))
 
         serializer = DoctorDegreePublicSerializer(doctor_degree)
         return Response(serializer.data, status=status.HTTP_200_OK)

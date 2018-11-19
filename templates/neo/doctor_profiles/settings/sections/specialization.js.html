@@ -27,16 +27,10 @@
             field_name: "year_attained",
         },
         {
-            id: "doctor_specialization_license",
-            value: null,
-            default: "",
-            field_name: "license_number",
-        },
-        {
             id: "doctor_specialization_id",
             value: null,
             default: "",
-            field_name: "pk",
+            field_name: "id",
         },
     ];
 
@@ -120,7 +114,7 @@
             var postData = {
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             };
-            postForm(url, postData, onSuccess=[loadDoctorSpecializationList], onFail=[], failSilently=true);
+            postForm(url, postData, onSuccess=[loadDoctorSpecializationList, function(){loadProfileProgress($("#profile-progress-snippet"))}], onFail=[], failSilently=true);
             $("#confirmDoctorSpecializationDelete").modal('hide');
         });
     }
@@ -139,10 +133,9 @@
     function populateDoctorSpecializationList(){
         $("#specialization_list").find('li').remove().end();
         for(var key in doctorSpecializationList){
-            var specializationId = doctorSpecializationList[key].pk;
+            var specializationId = doctorSpecializationList[key].id;
             var description = '<strong>' + doctorSpecializationList[key].specialization.name + '</strong><br>' +
-                                doctorSpecializationList[key].place_of_residency + ' (' + doctorSpecializationList[key].year_attained + ')<br>' +
-                                '<code>' + doctorSpecializationList[key].license_number + '</code>';
+                                doctorSpecializationList[key].place_of_residency + ' (' + doctorSpecializationList[key].year_attained + ')';
             var html =
             '<li class="list-group-item">' +
                 '<a class="float-right doctorSpecializationEdit btn-sm btn-warning" href="#!" data-specialization="' + specializationId +'">' +
@@ -190,6 +183,10 @@
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
         url = "{% url 'api_private_doctor_specialization_add' %}?user={{ request.user.pk }}";
-        postForm(url, postData, onSuccess=[loadDoctorSpecializationList, function(){resetForm(specializationFormFields)}]);
+        postForm(url, postData, onSuccess=[
+            loadDoctorSpecializationList,
+            function(){resetForm(specializationFormFields)},
+            function(){loadProfileProgress($("#profile-progress-snippet"))}
+        ]);
     }
 </script>
