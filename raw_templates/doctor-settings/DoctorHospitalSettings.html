@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Linecare Static</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+        crossorigin="anonymous">
+    <!--build:css css/styles.min.css-->
+    <link rel="stylesheet" href="../css/styles.css">
+    <!--endbuild-->
+
+</head>
+
+<body>
+    <!-- Language Nav -->
+    <div class="language-nav__container">
+        <div class="container">
+            <div class="language-nav__items">
+                <img src="../images/001-philippines.png" alt="PH Icon">
+                <a id="dropdownMenuButton" data-toggle="dropdown" href="#"><i class="fas fa-caret-down"></i></a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">
+                        <img src="../images/001-philippines.png" alt="PH Icon">
+                        Tagalog
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <img src="../images/002-united-states.png" alt="PH Icon">
+                        English
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a href="/" class="navbar-brand"><img src="../images/LineCare-Logo-022.png" alt="Logo"></a>
+            <div class="profile__container">
+                <div class="profile__notif">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="profile__photo">
+                    <img src="../images/profile-dummy.png" alt="Profile">
+                </div>
+                <div class="profile__name">
+                    Jake
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sub Navigation -->
+    <div class="container">
+        <div class="sub-nav__container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Schedule</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Reception Status</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Statistics</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Settings</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="settings__container">
+            <div class="row">
+                <div class="col-lg-3 col-sm-12">
+                    <div class="settings__sidenav">
+                        <h5 class="h5">Settings</h5>
+                        <a class="active" href="#">Hospital/Clinics</a>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-sm-12">
+                    <div class="settings__wrapper">
+                        <div class="settings__label">
+                            <h5 class="h5">Hospital / Clinics</h5>
+                        </div>
+                        <div class="hospital-list__container">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="hospital-list__item-wrapper">
+                                        <div class="hospital-list__item">
+                                            <h6 class="h6">Capiz Doctors Hospital</h6>
+                                            <p>1554 Tonyo Aguinaldo, Brgy Lawaan Roxas City, Capiz, Philippines</p>
+                                            <p>02-245-4021</p>
+                                        </div>
+                                        <div class="hospital-list__buttons">
+                                            <a class="rounded-circle" href="javascript:void(0)"><i class="fas fa-pen fa-fw"></i></a>
+                                            <a class="rounded-circle" href="javascript:void(0)"><i class="fas fa-times fa-fw"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="hospital-list__item-wrapper">
+                                        <div class="hospital-list__item">
+                                            <h6 class="h6">Capiz Doctors Hospital</h6>
+                                            <p>1554 Tonyo Aguinaldo, Brgy Lawaan Roxas City, Capiz, Philippines</p>
+                                            <p>02-245-4021</p>
+                                        </div>
+                                        <div class="hospital-list__buttons">
+                                            <a class="rounded-circle" href="javascript:void(0)"><i class="fas fa-pen fa-fw"></i></a>
+                                            <a class="rounded-circle" href="javascript:void(0)"><i class="fas fa-times fa-fw"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="add-hospital__container">
+                                <div class="add-hospital__add">
+                                    <a data-toggle="modal" data-target="#searchHospitalModal" class="rounded-circle"
+                                        href="javascript:void(0)"><i class="fas fa-plus fa-fw"></i></a>
+                                </div>
+                                <div class="add-hospital__label">
+                                    <h6 class="h6">Add Hospital / Clinic</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="searchHospitalModal" role="dialog" aria-labelledby="searchHospitalModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="h6 text-center">Search Hospital / Clinic</h6>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="search-hospital__input">
+                                <input type="text">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="search-hospital__not-found">
+                                <p>We couldn't find the hospital/clinic.</p>
+                                <p>Would you like to register your hospital/clinic?</p>
+                                <a data-toggle="modal" data-target="#addhospitalModal" href="javascript:void(0)">click
+                                    here.</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addhospitalModal" role="dialog" aria-labelledby="addhospitalModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h5>Add Hospital</h5>
+                            <label for="add-hospital-name">Name of Hospital *</label>
+                            <input type="text" name="add-hospital-name" id="add-hospital-name">
+
+                            <label for="add-hospital-number">Phone Number *</label>
+                            <input type="text" name="add-hospital-number" id="add-hospital-number">
+
+                            <label for="add-hospital-address">Address *</label>
+                            <input type="text" id="add-hospital-address" name="add-hospital-address">
+
+                            <label for="add-hospital-operation-hours">Hospital Operation Hours *</label>
+                            <div class="flex">
+                                <label for="monday">
+                                    <input type="checkbox" id="monday" name="monday">Mon</label>
+                                <label for="tuesday">
+                                    <input type="checkbox" id="tuesday" name="tuesday">Tue</label>
+                                <label for="wednesday">
+                                    <input type="checkbox" id="wednesday" name="wednesday">Wed</label>
+                                <label for="thursday">
+                                    <input type="checkbox" id="thursday" name="thursday">Thu</label>
+                                <label for="friday">
+                                    <input type="checkbox" id="friday" name="friday">Fri</label>
+                                <label for="saturday">
+                                    <input type="checkbox" id="saturday" name="saturday">Sat</label>
+                                <label for="sunday">
+                                    <input type="checkbox" id="sunday" name="sunday">Sun</label>
+                            </div>
+
+                            <label for="add-hospital-map-location">Location in the map *</label>
+                            <input type="text" id="add-hospital-map-location" name="add-hospital-map-location">
+                            <button type="button" class="btn btn-primary">Save</button>
+                        </div>
+                        <div class="col-lg-6">
+                            <div id="map"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--build:js js/main.min.js -->
+    <script src="../js/lib/jquery.js"></script>
+    <script src="../js/lib/popper.js"></script>
+    <script src="../js/lib/bootstrap.js"></script>
+    <script src="../js/main.js"></script>
+    <!-- endbuild -->
+
+
+</body>
+
+</html>
