@@ -46,12 +46,7 @@ class AccountRegistrationView(View):
                         'type': 'doctor',
                         'pk': profile.pk
                     },
-                    'doctor_progress': {
-                        'medical_degree': None,
-                        'insurance': None,
-                        'specialization': None,
-                        'association': None
-                    }
+
                 }
                 next_url = reverse('doctor_profile_home')
             elif primary_profile == "2":
