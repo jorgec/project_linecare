@@ -56,7 +56,7 @@ class DoctorProfileAssociationSettingsView(LoginRequiredMixin, UserPassesTestMix
         context = {
             'page_title': 'Association',
             'location': 'doctor_profile_settings',
-            'sublocation': 'association',
+            'sublocation': 'associations',
 
         }
 

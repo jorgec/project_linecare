@@ -2,7 +2,8 @@ from django.contrib import admin
 
 # Register your models here.
 from doctor_profiles.models import Specialization, InsuranceProvider, MedicalDegree, MedicalAssociation, DoctorProfile, \
-    DoctorDegree
+    DoctorDegree, MedicalInstitution, MedicalInstitutionType, MedicalInstitutionLocation, \
+    MedicalInstitutionLocationVote, MedicalInstitutionPhone, MedicalInstitutionPhoneVote
 
 
 class SpecializationAdmin(admin.ModelAdmin):
@@ -48,3 +49,10 @@ class DoctorDegreeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DoctorDegree, DoctorDegreeAdmin)
+
+admin.site.register(MedicalInstitution)
+admin.site.register(MedicalInstitutionType)
+admin.site.register(MedicalInstitutionLocation)
+admin.site.register(MedicalInstitutionLocationVote)
+admin.site.register(MedicalInstitutionPhone)
+admin.site.register(MedicalInstitutionPhoneVote)
