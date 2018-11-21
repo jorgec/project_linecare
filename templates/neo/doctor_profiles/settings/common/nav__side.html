@@ -1,10 +1,10 @@
 {% load static %}
 <a {% if sublocation == 'home' %}class="active"{% endif %} href="{% url 'doctor_profile_settings_home' %}">Home</a>
+<hr>
 <a {% if sublocation == 'degree'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_medical_degree' %}">Medical Degree</a>
 <a {% if sublocation == 'specialization'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_specialization' %}">Specializations</a>
 <a {% if sublocation == 'subspecialization'%}class="active"{% endif %} href="">Sub Specializations</a>
-<a {% if sublocation == 'associations'%}class="active"{% endif %} href="">Medical Association</a>
-<a {% if sublocation == 'insurance'%}class="active"{% endif %} href="">Insurance Providers</a>
+<a {% if sublocation == 'associations'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_association' %}">Medical Association</a>
+<a {% if sublocation == 'insurance'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_insurance' %}">Insurance Providers</a>
 <hr class="hr">
-<a {% if sublocation == 'hospital'%}class="active"{% endif %} href="">Hospital Linkages</a>
-<a {% if sublocation == 'clinic'%}class="active"{% endif %} href="">Clinics</a>
+<a {% if sublocation == 'institution'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_medical_institution' %}">Medical Institution Linkages</a>

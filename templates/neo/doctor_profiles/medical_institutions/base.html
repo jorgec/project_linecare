@@ -1,0 +1,32 @@
+{% extends 'neo/doctor_profiles/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block content %}
+<div class="settings__container">
+    <div class="row">
+        <div class="col-lg-3 col-sm-12">
+            <div class="settings__sidenav">
+                <h5 class="h5">Settings</h5>
+                {% include 'neo/doctor_profiles/medical_institutions/common/nav__side.html' %}
+            </div>
+        </div>
+        <div class="col-lg-9 col-sm-12">
+            <div class="career__container">
+                {% block subcontent %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block base_scripts %}
+
+{% endblock %}

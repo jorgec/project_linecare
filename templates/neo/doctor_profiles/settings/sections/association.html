@@ -13,17 +13,18 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="doctor_specialization_place_of_residency" class="col-4 col-form-label">Place of Residency</label>
+        <label for="doctor_association_level" class="col-4 col-form-label">Level</label>
         <div class="col-8">
-            <input id="doctor_specialization_place_of_residency" name="specialization_place_of_residency" type="text"
-                   class="form-control here"
-                   required="required">
+            <select id="doctor_association_level" name="doctor_association_level" class="custom-select form-control" required="required">
+                <option value="Diplomate">Diplomate</option>
+                <option value="Fellow">Fellow</option>
+            </select>
         </div>
     </div>
     <div class="form-group row">
-        <label for="doctor_specialization_year_attained" class="col-4 col-form-label">Year Attained</label>
+        <label for="doctor_association_year_attained" class="col-4 col-form-label">Year Attained</label>
         <div class="col-8">
-            <input id="doctor_specialization_year_attained" name="specialization_year_attained" type="number"
+            <input id="doctor_association_year_attained" name="association_year_attained" type="number"
                    required="required"
                    class="form-control here">
         </div>
@@ -70,24 +71,25 @@
                 </button>
             </div>
             <div class="modal-body">
+
                 <div class="form-group row">
-                    <label for="edit_doctor_specialization_place_of_residency" class="col-4 col-form-label">Place of
-                        Residency</label>
+                    <label for="edit_doctor_association_level" class="col-4 col-form-label">Level</label>
                     <div class="col-8">
-                        <input id="edit_doctor_specialization_place_of_residency"
-                               name="specialization_place_of_residency" type="text" class="form-control here"
-                               required="required">
+                        <select id="edit_doctor_association_level" name="edit_doctor_association_level" class="custom-select form-control" required="required">
+                            <option value="Diplomate">Diplomate</option>
+                            <option value="Fellow">Fellow</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="edit_doctor_specialization_year_attained" class="col-4 col-form-label">Year
-                        Attained</label>
+                    <label for="edit_doctor_association_year_attained" class="col-4 col-form-label">Year Attained</label>
                     <div class="col-8">
-                        <input id="edit_doctor_specialization_year_attained" name="specialization_year_attained"
-                               type="number" required="required"
+                        <input id="edit_doctor_association_year_attained" name="edit_association_year_attained" type="number"
+                               required="required"
                                class="form-control here">
                     </div>
                 </div>
+
 
                 <input type="hidden" name="related_entity_id" id="edit_related_entity_id" value="">
             </div>
@@ -111,23 +113,23 @@
             <form method="post" id="baseEntityCreateForm">
                 {% csrf_token %}
                 <div class="modal-body">
-                    <div id="div_specialization_name" class="form-group">
-                        <label for="specialization_name" class="col-form-label  requiredField">
+                    <div id="div_association_name" class="form-group">
+                        <label for="medical_association_name" class="col-form-label  requiredField">
                             Name<span class="asteriskField">*</span>
                         </label>
                         <div class="">
-                            <input type="text" name="specialization_name" maxlength="255"
-                                   class="textinput textInput form-control" required="" id="specialization_name">
+                            <input type="text" name="medical_association_name" maxlength="255"
+                                   class="textinput textInput form-control" required="" id="medical_association_name">
                         </div>
                     </div>
-                    <div id="div_specialization_abbreviation" class="form-group">
-                        <label for="specialization_abbreviation" class="col-form-label  requiredField">
+                    <div id="div_association_abbreviation" class="form-group">
+                        <label for="medical_association_abbreviation" class="col-form-label  requiredField">
                             Abbreviation<span class="asteriskField">*</span>
                         </label>
                         <div class="">
-                            <input type="text" name="specialization_abbreviation" maxlength="30"
+                            <input type="text" name="medical_association_abbreviation" maxlength="30"
                                    class="textinput textInput form-control" required=""
-                                   id="specialization_abbreviation">
+                                   id="medical_association_abbreviation">
                         </div>
                     </div>
 

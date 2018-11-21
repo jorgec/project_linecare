@@ -22,7 +22,8 @@ from rest_framework.views import APIView
 from accounts.models import Account
 from doctor_profiles.models import MedicalDegree, DoctorDegree
 from doctor_profiles.serializers import MedicalDegreeCreateSerializer, MedicalDegreeSerializer, DoctorDegreeSerializer, \
-    DoctorDegreeCreateSerializer, DoctorDegreeUpdateSerializer, DoctorDegreePublicSerializer
+    DoctorDegreeCreateSerializer, DoctorDegreeUpdateSerializer, DoctorDegreePublicSerializer, \
+    MedicalDegreePublicSerializer
 
 
 class ApiPrivateMedicalDegreeCreate(APIView):
@@ -53,7 +54,7 @@ class ApiPublicMedicalDegreeList(APIView):
 
     def get(self, request, *args, **kwargs):
         medical_degrees = MedicalDegree.objects.filter(is_approved=True)
-        serializer = MedicalDegreeSerializer(medical_degrees, many=True)
+        serializer = MedicalDegreePublicSerializer(medical_degrees, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -82,7 +83,7 @@ class ApiPublicMedicalDegreeDetail(APIView):
             medical_degree = None
 
         if medical_degree is not None:
-            serializer = MedicalDegreeSerializer(medical_degree)
+            serializer = MedicalDegreePublicSerializer(medical_degree)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -118,7 +119,7 @@ class ApiPrivateDoctorDegreeCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        user = get_object_or_404(Account, id=request.GET.get('user', None))
+        user = request.user
         if user.doctor_profile():
             serializer = DoctorDegreeCreateSerializer(data=request.data)
 

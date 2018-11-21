@@ -4,10 +4,10 @@
 
     var model = {
         baseEntity: {
-            displayName: 'Specialization',
-            displayNamePlural: 'Specializations',
+            displayName: 'Medical Association',
+            displayNamePlural: 'Medical Associations',
             objectList: {
-                url: "{% url 'api_public_specialization_list' %}",
+                url: "{% url 'api_public_medical_association_list' %}",
                 listElementId: "#entity_options",
                 querySelector: document.querySelector("#entity_options"),
                 keyValuePair: {
@@ -17,47 +17,47 @@
                 data: []
             },
             objectCreate: {
-                url: "{% url 'api_private_specialization_create' %}",
-                modalElementId: "#modalSpecializationCreate",
+                url: "{% url 'api_private_medical_association_create' %}",
+                modalElementId: "#modalMedicalAssociationCreate",
                 fields: [
                     {
                         fieldName: "name",
                         default: "",
-                        elementId: "#specialization_name"
+                        elementId: "#medical_association_name"
                     }, {
                         fieldName: "abbreviation",
                         default: "",
-                        elementId: "#specialization_abbreviation"
+                        elementId: "#medical_association_abbreviation"
                     }
                 ],
             }
         },
         relatedEntity: {
-            displayName: 'Doctor Specialization',
-            displayNamePlural: 'Doctor Specializations',
+            displayName: 'Doctor Association',
+            displayNamePlural: 'Doctor Associations',
             objectList: {
-                url: "{% url 'api_public_doctor_specialization_list' %}?user={{ request.user.pk }}",
+                url: "{% url 'api_public_doctor_association_list' %}?user={{ request.user.pk }}",
                 listElementId: "#related_entity_list",
                 querySelector: document.querySelector("#related_entity_list"),
                 data: [],
             },
             objectDetail: {
-                url: "{% url 'api_private_doctor_specialization_detail' %}?specialization=",
+                url: "{% url 'api_private_doctor_association_detail' %}?association=",
                 fields: [
                     {
                         elementId: "#entity_options",
                         value: null,
                         default: "",
-                        fieldName: "specialization.name"
+                        fieldName: "association.name"
                     },
                     {
-                        elementId: "#doctor_specialization_place_of_residency",
+                        elementId: "#doctor_association_level",
                         value: null,
                         default: "",
-                        fieldName: "place_of_residency",
+                        fieldName: "level",
                     },
                     {
-                        elementId: "#doctor_specialization_year_attained",
+                        elementId: "#doctor_association_year_attained",
                         value: null,
                         default: "",
                         fieldName: "year_attained",
@@ -71,14 +71,14 @@
                 ]
             },
             objectUpdate: {
-                url: "{% url 'api_private_doctor_specialization_update' %}?specialization=",
+                url: "{% url 'api_private_doctor_association_update' %}?association=",
                 fields: [
                     {
-                        elementId: "#edit_doctor_specialization_place_of_residency",
-                        fieldName: "place_of_residency"
+                        elementId: "#edit_doctor_association_level",
+                        fieldName: "level"
                     },
                     {
-                        elementId: "#edit_doctor_specialization_year_attained",
+                        elementId: "#edit_doctor_association_year_attained",
                         fieldName: "year_attained"
                     },
                     {
@@ -88,24 +88,24 @@
                 ]
             },
             objectCreate: {
-                url: "{% url 'api_private_doctor_specialization_create' %}",
+                url: "{% url 'api_private_doctor_association_create' %}",
                 fields: [
                     {
-                        elementId: "#doctor_specialization_place_of_residency",
-                        fieldName: "place_of_residency"
+                        elementId: "#doctor_association_level",
+                        fieldName: "level"
                     },
                     {
-                        elementId: "#doctor_specialization_year_attained",
+                        elementId: "#doctor_association_year_attained",
                         fieldName: "year_attained"
                     },
                     {
                         elementId: "#entity_options",
-                        fieldName: "specialization"
+                        fieldName: "association"
                     }
                 ]
             },
             objectDelete: {
-                url: "{% url 'api_private_doctor_specialization_delete' %}?specialization=",
+                url: "{% url 'api_private_doctor_association_delete' %}?association=",
             }
         }
     };
@@ -212,8 +212,8 @@
             /**
              * Edit this part
              */
-            var description = '<strong>' + model.relatedEntity.objectList.data[key]["specialization"]["name"] + '</strong><br>' +
-                                model.relatedEntity.objectList.data[key].place_of_residency + ' (' + model.relatedEntity.objectList.data[key].year_attained + ')';
+            var description = '<strong>' + model.relatedEntity.objectList.data[key]["association"]["name"] + '</strong><br>' +
+                                model.relatedEntity.objectList.data[key].level + ' (' + model.relatedEntity.objectList.data[key].year_attained + ')';
             /**
              * /end
              */

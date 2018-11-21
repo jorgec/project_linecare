@@ -49,3 +49,35 @@ class DoctorProfileSpecializationSettingsView(LoginRequiredMixin, UserPassesTest
 
     def test_func(self):
         return self.request.user.doctor_profile()
+
+
+class DoctorProfileAssociationSettingsView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        context = {
+            'page_title': 'Association',
+            'location': 'doctor_profile_settings',
+            'sublocation': 'association',
+
+        }
+
+        return render(request, 'neo/doctor_profiles/settings/association.html', context)
+
+    def test_func(self):
+        return self.request.user.doctor_profile()
+
+
+class DoctorProfileInsuranceSettingsView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        context = {
+            'page_title': 'Insurance',
+            'location': 'doctor_profile_settings',
+            'sublocation': 'insurance',
+
+        }
+
+        return render(request, 'neo/doctor_profiles/settings/insurance.html', context)
+
+    def test_func(self):
+        return self.request.user.doctor_profile()
+
+

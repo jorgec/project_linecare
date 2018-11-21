@@ -22,7 +22,7 @@ from accounts.models import Account
 from doctor_profiles.models import Specialization, DoctorSpecialization
 from doctor_profiles.serializers import SpecializationSerializer, SpecializationCreateSerializer, \
     DoctorSpecializationSerializer, DoctorSpecializationPublicSerializer, DoctorSpecializationCreateSerializer, \
-    DoctorSpecializationUpdateSerializer
+    DoctorSpecializationUpdateSerializer, SpecializationPublicSerializer
 
 
 class ApiPublicSpecializationList(APIView):
@@ -33,7 +33,7 @@ class ApiPublicSpecializationList(APIView):
 
     def get(self, request, *args, **kwargs):
         specializations = Specialization.objects.filter(is_approved=True, parent__isnull=True)
-        serializer = SpecializationSerializer(specializations, many=True)
+        serializer = SpecializationPublicSerializer(specializations, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -62,7 +62,7 @@ class ApiPublicSpecializationDetail(APIView):
             specialization = None
 
         if specialization is not None:
-            serializer = SpecializationSerializer(specialization)
+            serializer = SpecializationPublicSerializer(specialization)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -147,7 +147,7 @@ class ApiPrivateDoctorSpecializationCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        user = get_object_or_404(Account, id=request.GET.get('user', None))
+        user = request.user
         if user.doctor_profile():
             serializer = DoctorSpecializationCreateSerializer(data=request.data)
 

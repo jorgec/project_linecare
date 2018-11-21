@@ -1,13 +1,22 @@
 {% load static %}
 <script type="text/javascript" src="{% static 'neo/js/formHelpers.jquery.js' %}"></script>
 <script type="text/javascript">
+    $('#doctor_insurance_expiry').datepicker({
+        date: new Date(),
+        format: 'yyyy-mm-dd'
+    });
+
+    $('#edit_doctor_insurance_expiry').datepicker({
+        date: new Date(),
+        format: 'yyyy-mm-dd'
+    });
 
     var model = {
         baseEntity: {
-            displayName: 'Specialization',
-            displayNamePlural: 'Specializations',
+            displayName: 'Insurance Provider',
+            displayNamePlural: 'Insurance Providers',
             objectList: {
-                url: "{% url 'api_public_specialization_list' %}",
+                url: "{% url 'api_public_insurance_provider_list' %}",
                 listElementId: "#entity_options",
                 querySelector: document.querySelector("#entity_options"),
                 keyValuePair: {
@@ -17,50 +26,40 @@
                 data: []
             },
             objectCreate: {
-                url: "{% url 'api_private_specialization_create' %}",
-                modalElementId: "#modalSpecializationCreate",
+                url: "{% url 'api_private_insurance_provider_create' %}",
+                modalElementId: "#modalMedicalInsuranceCreate",
                 fields: [
                     {
                         fieldName: "name",
                         default: "",
-                        elementId: "#specialization_name"
-                    }, {
-                        fieldName: "abbreviation",
-                        default: "",
-                        elementId: "#specialization_abbreviation"
-                    }
+                        elementId: "#insurance_provider_name"
+                    }, 
                 ],
             }
         },
         relatedEntity: {
-            displayName: 'Doctor Specialization',
-            displayNamePlural: 'Doctor Specializations',
+            displayName: 'Doctor Insurance Provider',
+            displayNamePlural: 'Doctor Insurance Providers',
             objectList: {
-                url: "{% url 'api_public_doctor_specialization_list' %}?user={{ request.user.pk }}",
+                url: "{% url 'api_public_doctor_insurance_list' %}?user={{ request.user.pk }}",
                 listElementId: "#related_entity_list",
                 querySelector: document.querySelector("#related_entity_list"),
                 data: [],
             },
             objectDetail: {
-                url: "{% url 'api_private_doctor_specialization_detail' %}?specialization=",
+                url: "{% url 'api_private_doctor_insurance_detail' %}?insurance=",
                 fields: [
                     {
                         elementId: "#entity_options",
                         value: null,
                         default: "",
-                        fieldName: "specialization.name"
+                        fieldName: "insurance.name"
                     },
                     {
-                        elementId: "#doctor_specialization_place_of_residency",
+                        elementId: "#doctor_insurance_identifier",
                         value: null,
                         default: "",
-                        fieldName: "place_of_residency",
-                    },
-                    {
-                        elementId: "#doctor_specialization_year_attained",
-                        value: null,
-                        default: "",
-                        fieldName: "year_attained",
+                        fieldName: "identifier",
                     },
                     {
                         elementId: "#related_entity_id",
@@ -71,15 +70,11 @@
                 ]
             },
             objectUpdate: {
-                url: "{% url 'api_private_doctor_specialization_update' %}?specialization=",
+                url: "{% url 'api_private_doctor_insurance_update' %}?insurance=",
                 fields: [
                     {
-                        elementId: "#edit_doctor_specialization_place_of_residency",
-                        fieldName: "place_of_residency"
-                    },
-                    {
-                        elementId: "#edit_doctor_specialization_year_attained",
-                        fieldName: "year_attained"
+                        elementId: "#edit_doctor_insurance_identifier",
+                        fieldName: "identifier"
                     },
                     {
                         elementId: "#edit_related_entity_id",
@@ -88,24 +83,20 @@
                 ]
             },
             objectCreate: {
-                url: "{% url 'api_private_doctor_specialization_create' %}",
+                url: "{% url 'api_private_doctor_insurance_create' %}",
                 fields: [
                     {
-                        elementId: "#doctor_specialization_place_of_residency",
-                        fieldName: "place_of_residency"
-                    },
-                    {
-                        elementId: "#doctor_specialization_year_attained",
-                        fieldName: "year_attained"
+                        elementId: "#doctor_insurance_identifier",
+                        fieldName: "identifier"
                     },
                     {
                         elementId: "#entity_options",
-                        fieldName: "specialization"
+                        fieldName: "insurance"
                     }
                 ]
             },
             objectDelete: {
-                url: "{% url 'api_private_doctor_specialization_delete' %}?specialization=",
+                url: "{% url 'api_private_doctor_insurance_delete' %}?insurance=",
             }
         }
     };
@@ -191,6 +182,7 @@
         }
 
         postForm(model.baseEntity.objectCreate.url, postData, onSuccess=[loadBaseEntity]);
+        resetForm(model.baseEntity.objectCreate.fields);
         $("#modalEntityCreate").modal('hide');
     }
 
@@ -212,8 +204,8 @@
             /**
              * Edit this part
              */
-            var description = '<strong>' + model.relatedEntity.objectList.data[key]["specialization"]["name"] + '</strong><br>' +
-                                model.relatedEntity.objectList.data[key].place_of_residency + ' (' + model.relatedEntity.objectList.data[key].year_attained + ')';
+            var description = '<strong>' + model.relatedEntity.objectList.data[key]["insurance"]["name"] + '</strong><br>' +
+                                model.relatedEntity.objectList.data[key].identifier;
             /**
              * /end
              */

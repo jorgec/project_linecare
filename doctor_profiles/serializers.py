@@ -17,10 +17,12 @@ class SpecializationSerializer(serializers.ModelSerializer):
             'abbreviation',
         )
 
+
 class SpecializationPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Specialization
         fields = (
+            'id',
             'slug',
             'name',
             'abbreviation',
@@ -40,11 +42,31 @@ class InsuranceProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.InsuranceProvider
         fields = (
+            'id',
             'slug',
             'name',
             'created',
             'last_updated',
             'metadata',
+            'is_approved'
+        )
+
+
+class InsuranceProviderCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.InsuranceProvider
+        fields = (
+            'name',
+        )
+
+
+class InsuranceProviderPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.InsuranceProvider
+        fields = (
+            'id',
+            'slug',
+            'name',
         )
 
 
@@ -68,6 +90,7 @@ class DoctorProfilePublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DoctorProfile
         fields = (
+            'id',
             'user',
         )
 
@@ -86,6 +109,7 @@ class MedicalDegreeSerializer(serializers.ModelSerializer):
             'is_approved',
         )
 
+
 class MedicalDegreePublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.MedicalDegree
@@ -95,6 +119,7 @@ class MedicalDegreePublicSerializer(serializers.ModelSerializer):
             'name',
             'abbreviation',
         )
+
 
 class MedicalDegreeCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -109,6 +134,7 @@ class MedicalAssociationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.MedicalAssociation
         fields = (
+            'id',
             'slug',
             'name',
             'created',
@@ -118,9 +144,83 @@ class MedicalAssociationSerializer(serializers.ModelSerializer):
         )
 
 
+class MedicalAssociationPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MedicalAssociation
+        fields = (
+            'id',
+            'slug',
+            'name',
+            'abbreviation',
+        )
+
+
+class MedicalAssociationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MedicalAssociation
+        fields = (
+            'name',
+            'abbreviation'
+        )
+
+
+class DoctorAssociationSerializer(serializers.ModelSerializer):
+    doctor = DoctorProfileSerializer()
+    association = MedicalAssociationSerializer()
+
+    class Meta:
+        model = models.DoctorAssociation
+        fields = (
+            'id',
+            'created',
+            'last_updated',
+            'level',
+            'year_attained',
+            'doctor',
+            'association'
+        )
+
+
+class DoctorAssociationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DoctorAssociation
+        fields = (
+            'level',
+            'year_attained',
+            'association'
+        )
+
+
+class DoctorAssociationUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DoctorAssociation
+        fields = (
+            'level',
+            'year_attained',
+        )
+
+
+class DoctorAssociationPublicSerializer(serializers.ModelSerializer):
+    doctor = DoctorProfilePublicSerializer()
+    association = MedicalAssociationPublicSerializer()
+
+    class Meta:
+        model = models.DoctorAssociation
+        fields = (
+            'id',
+            'created',
+            'last_updated',
+            'level',
+            'year_attained',
+            'doctor',
+            'association'
+        )
+
+
 class DoctorSpecializationSerializer(serializers.ModelSerializer):
     doctor = DoctorProfileSerializer()
     specialization = SpecializationSerializer()
+
     class Meta:
         model = models.DoctorSpecialization
         fields = (
@@ -133,9 +233,11 @@ class DoctorSpecializationSerializer(serializers.ModelSerializer):
             'specialization'
         )
 
+
 class DoctorSpecializationPublicSerializer(serializers.ModelSerializer):
     doctor = DoctorProfilePublicSerializer()
     specialization = SpecializationPublicSerializer()
+
     class Meta:
         model = models.DoctorSpecialization
         fields = (
@@ -145,6 +247,7 @@ class DoctorSpecializationPublicSerializer(serializers.ModelSerializer):
             'doctor',
             'specialization'
         )
+
 
 class DoctorSpecializationCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -175,18 +278,6 @@ class DoctorSpecializationUpdateSerializer(serializers.ModelSerializer):
         fields = (
             'year_attained',
             'place_of_residency',
-        )
-
-
-class DoctorInsuranceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.DoctorInsurance
-        fields = (
-            'id',
-            'created',
-            'last_updated',
-            'expiry',
-            'identifier',
         )
 
 
@@ -264,13 +355,49 @@ class DoctorDegreeUpdateSerializer(serializers.ModelSerializer):
         )
 
 
-class DoctorAssociationSerializer(serializers.ModelSerializer):
+class DoctorInsuranceSerializer(serializers.ModelSerializer):
+    doctor = DoctorProfileSerializer()
+    insurance = InsuranceProviderSerializer()
+
     class Meta:
-        model = models.DoctorAssociation
+        model = models.DoctorInsurance
         fields = (
             'id',
             'created',
             'last_updated',
-            'level',
-            'year_attained',
+            'identifier',
+            'is_approved',
+            'doctor',
+            'insurance'
+        )
+
+
+class DoctorInsurancePublicSerializer(serializers.ModelSerializer):
+    doctor = DoctorProfilePublicSerializer()
+    insurance = InsuranceProviderPublicSerializer()
+
+    class Meta:
+        model = models.DoctorInsurance
+        fields = (
+            'id',
+            'identifier',
+            'doctor',
+            'insurance'
+        )
+
+
+class DoctorInsuranceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DoctorInsurance
+        fields = (
+            'identifier',
+            'insurance'
+        )
+
+
+class DoctorInsuranceUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DoctorInsurance
+        fields = (
+            'identifier',
         )

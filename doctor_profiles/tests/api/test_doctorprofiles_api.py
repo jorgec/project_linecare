@@ -8,7 +8,7 @@ pytestmark = pytest.mark.django_db
 factory = APIRequestFactory()
 client = APIClient()
 
-from doctor_profiles.modules.api import medical_degree_api as md
+from doctor_profiles.modules.api import medical_degrees_api as md
 
 
 class TestDoctorProfileApi:
