@@ -8,9 +8,9 @@
             state: default state
         }
  */
-function resetForm(formFields, prefix="") {
+function resetForm(formFields) {
     for (var key in formFields) {
-        var control = $("#" + prefix + formFields[key].id);
+        var control = $(formFields[key].elementId);
         if (formFields[key].state) {
             control.attr(formFields[key].state, formFields[key].state)
         }
@@ -18,27 +18,27 @@ function resetForm(formFields, prefix="") {
     }
 }
 
-function loadFormData(formFields, response, prefix="edit_"){
+function loadFormData(formFields, response){
     for(fieldItem in formFields){
-        var target = $("#" + prefix + formFields[fieldItem].id);
-        var target_name = prefix + formFields[fieldItem].id;
-        var field = formFields[fieldItem].field_name;
-        var field_value = null;
+        var target = $(formFields[fieldItem].elementId);
+        var field = formFields[fieldItem].fieldName;
+        var fieldValue = null;
         if (field.includes(".")) {
             var parts = field.split(".");
-            var parts_len = parts.length;
+            var partsLen = parts.length;
 
-            if(parts_len == 2){
-                field_value = response[parts[0]][parts[1]];
-            }else if(parts_len == 3){
-                field_value = response[parts[0]][parts[1]][parts[2]];
-            }else if(parts_len == 4){
-                field_value = response[parts[0]][parts[1]][parts[2]][parts[3]];
+            if(partsLen == 2){
+                fieldValue = response[parts[0]][parts[1]];
+            }else if(partsLen == 3){
+                fieldValue = response[parts[0]][parts[1]][parts[2]];
+            }else if(partsLen == 4){
+                fieldValue = response[parts[0]][parts[1]][parts[2]][parts[3]];
             }
         }else{
-            field_value = response[field];
+            fieldValue = response[field];
         }
-        target.val(field_value);
+        target.val(fieldValue);
+        console.log(target.val());
     }
 }
 
