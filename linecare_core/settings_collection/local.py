@@ -110,7 +110,8 @@ INSTALLED_APPS = [
     'profiles',
     'albums',
     'doctor_profiles',
-    'biometrics'
+    'biometrics',
+    'locations'
 ]
 
 # User Model
