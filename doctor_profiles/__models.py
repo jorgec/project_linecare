@@ -6,6 +6,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django_extensions.db import fields as extension_fields
 
+from datesdim.models import DateDim
 from doctor_profiles.managers import DoctorDegreeManager
 
 
@@ -16,12 +17,12 @@ class Specialization(models.Model):
     """
 
     # Fields
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, null=True, blank=True)
-    abbreviation = models.CharField(max_length=30)
+    abbreviation = models.CharField(max_length=30, unique=True)
 
     """
     admin
@@ -42,13 +43,61 @@ class Specialization(models.Model):
         return f"{self.name}"
 
 
+class MedicalDegree(models.Model):
+    """
+    List of medical degrees
+    """
+    # Fields
+    name = models.CharField(max_length=255, unique=True)
+    slug = extension_fields.AutoSlugField(populate_from='name', blank=True, unique=True)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    abbreviation = models.CharField(max_length=30, unique=True)
+    metadata = JSONField(default=dict, null=True, blank=True)
+
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class MedicalAssociation(models.Model):
+    """
+    Medical Associations that confer specializations
+    """
+    # Fields
+    name = models.CharField(max_length=255, unique=True)
+    slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    abbreviation = models.CharField(max_length=30, unique=True)
+    metadata = JSONField(default=dict, null=True, blank=True)
+
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class InsuranceProvider(models.Model):
     """
     List of Insurance Providers
     """
 
     # Fields
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -76,6 +125,11 @@ class DoctorProfile(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, null=True, blank=True)
 
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
+
     # Relationship Fields
     user = models.OneToOneField('accounts.Account', related_name='doctorprofile', on_delete=models.CASCADE, null=True)
 
@@ -94,8 +148,14 @@ class DoctorProfile(models.Model):
     def get_degrees(self):
         return self.doctor_degrees.filter(degree__is_approved=True)
 
+    def get_insurance_providers(self):
+        return self.doctor_insurance.filter(is_approved=True)
+
     def get_specializations(self):
         return self.doctor_specializations.filter(specialization__parent__isnull=True, specialization__is_approved=True)
+
+    def get_associations(self):
+        return self.doctor_associations.filter(association__is_approved=True)
 
     def get_fellowships(self):
         return self.doctor_associations.filter(level='Fellow', association__is_approved=True)
@@ -122,54 +182,6 @@ class DoctorProfile(models.Model):
             retval['progress_int'] = round((total / max) * 100)
             retval['items'] = progress
         return retval
-
-
-class MedicalDegree(models.Model):
-    """
-    List of medical degrees
-    """
-    # Fields
-    name = models.CharField(max_length=255, unique=True)
-    slug = extension_fields.AutoSlugField(populate_from='name', blank=True, unique=True)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    abbreviation = models.CharField(max_length=30)
-    metadata = JSONField(default=dict, null=True, blank=True)
-
-    """
-    admin
-    """
-    is_approved = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ('name',)
-
-    def __str__(self):
-        return f"{self.name}"
-
-
-class MedicalAssociation(models.Model):
-    """
-    Medical Associations that confer specializations
-    """
-    # Fields
-    name = models.CharField(max_length=255)
-    slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    abbreviation = models.CharField(max_length=30)
-    metadata = JSONField(default=dict, null=True, blank=True)
-
-    """
-    admin
-    """
-    is_approved = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ('name',)
-
-    def __str__(self):
-        return f"{self.name}"
 
 
 class DoctorSpecialization(models.Model):
@@ -221,7 +233,6 @@ class DoctorInsurance(models.Model):
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    expiry = models.ForeignKey('datesdim.DateDim', on_delete=models.CASCADE, related_name='insurance_expirations')
     identifier = models.CharField(max_length=120)
 
     """
@@ -241,9 +252,15 @@ class DoctorInsurance(models.Model):
 
     class Meta:
         ordering = ('-created',)
+        unique_together = ('doctor', 'insurance')
 
     def __str__(self):
         return f"{self.insurance} ({self.doctor})"
+
+    def save(self, *args, **kwargs):
+        today = DateDim.objects.today()
+
+        return super(DoctorInsurance, self).save(*args, **kwargs)
 
 
 class DoctorDegree(models.Model):
@@ -319,6 +336,7 @@ class DoctorAssociation(models.Model):
 
     class Meta:
         ordering = ('-created',)
+        unique_together = ('doctor', 'association', 'level')
 
     def __str__(self):
         return self.get_abbreviation()
@@ -372,5 +390,49 @@ def doctor_specialization_on_delete(sender, instance, created=False, **kwargs):
                                                                          specialization__is_approved=True).count()
         if progress['specialization'] == 0:
             progress['specialization'] = None
+        instance.doctor.user.user_settings['doctor_progress'] = progress
+        instance.doctor.user.save()
+
+
+@receiver(post_save, sender=DoctorAssociation)
+def doctor_association_on_save(sender, instance, created=False, **kwargs):
+    progress = instance.doctor.user.user_settings.get('doctor_progress', None)
+    if progress:
+        progress['association'] = DoctorAssociation.objects.filter(doctor=instance.doctor,
+                                                                           association__is_approved=True).count()
+        instance.doctor.user.user_settings['doctor_progress'] = progress
+        instance.doctor.user.save()
+
+
+@receiver(post_delete, sender=DoctorAssociation)
+def doctor_association_on_delete(sender, instance, created=False, **kwargs):
+    progress = instance.doctor.user.user_settings.get('doctor_progress', None)
+    if progress:
+        progress['association'] = DoctorAssociation.objects.filter(doctor=instance.doctor,
+                                                                           association__is_approved=True).count()
+        if progress['association'] == 0:
+            progress['association'] = None
+        instance.doctor.user.user_settings['doctor_progress'] = progress
+        instance.doctor.user.save()
+
+
+@receiver(post_save, sender=DoctorInsurance)
+def doctor_insurance_on_save(sender, instance, created=False, **kwargs):
+    progress = instance.doctor.user.user_settings.get('doctor_progress', None)
+    if progress:
+        progress['insurance'] = DoctorInsurance.objects.filter(doctor=instance.doctor,
+                                                                       insurance__is_approved=True).count()
+        instance.doctor.user.user_settings['doctor_progress'] = progress
+        instance.doctor.user.save()
+
+
+@receiver(post_delete, sender=DoctorInsurance)
+def doctor_insurance_on_delete(sender, instance, created=False, **kwargs):
+    progress = instance.doctor.user.user_settings.get('doctor_progress', None)
+    if progress:
+        progress['insurance'] = DoctorInsurance.objects.filter(doctor=instance.doctor,
+                                                               insurance__is_approved=True).count()
+        if progress['insurance'] == 0:
+            progress['insurance'] = None
         instance.doctor.user.user_settings['doctor_progress'] = progress
         instance.doctor.user.save()
