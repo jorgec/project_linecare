@@ -94,7 +94,8 @@ class Account(AbstractBaseUser):
         DoctorProfile = apps.get_model('doctor_profiles.DoctorProfile')
         try:
             return DoctorProfile.objects.get(
-                user=self
+                user=self,
+                is_approved=True
             )
         except DoctorProfile.DoesNotExist:
             return False
