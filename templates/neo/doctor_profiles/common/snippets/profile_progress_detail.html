@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="card col-sm-6 col-md-3">
+    <div class="card col-sm-6 col-md-4">
         <div class="card-body">
             <h4 class="text-center">
                 {{ request.user.doctorprofile.settings_progress.items.medical_degree }}
@@ -9,7 +9,7 @@
             </p>
         </div>
     </div>
-    <div class="card col-sm-6 col-md-3">
+    <div class="card col-sm-6 col-md-4">
         <div class="card-body">
             <h4 class="text-center">
                 {{ request.user.doctorprofile.settings_progress.items.specialization }}
@@ -19,7 +19,7 @@
             </p>
         </div>
     </div>
-    <div class="card col-sm-6 col-md-3">
+    <div class="card col-sm-6 col-md-4">
         <div class="card-body">
             <h4 class="text-center">
                 {{ request.user.doctorprofile.settings_progress.items.association }}
@@ -29,13 +29,23 @@
             </p>
         </div>
     </div>
-    <div class="card col-sm-6 col-md-3">
+    <div class="card col-sm-6 col-md-4">
         <div class="card-body">
             <h4 class="text-center">
                 {{ request.user.doctorprofile.settings_progress.items.insurance }}
             </h4>
             <p class="text-center">
                 <a href="{% url 'doctor_profile_settings_insurance' %}">Affiliated Insurance Providers</a>
+            </p>
+        </div>
+    </div>
+    <div class="card col-sm-6 col-md-4">
+        <div class="card-body">
+            <h4 class="text-center">
+                {{ request.user.doctorprofile.settings_progress.items.institution }}
+            </h4>
+            <p class="text-center">
+                <a href="">Affiliated Institutions</a>
             </p>
         </div>
     </div>
