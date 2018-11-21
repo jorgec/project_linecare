@@ -1,18 +1,14 @@
 SMART = 0
 GLOBE = 1
 SUN = 2
-TNT = 3
-TM = 4
 PLDT = 5
 OTHER = 6
 
 PHONE_CARRIERS = (
     (PLDT, "PLDT"),
-    (SMART, "Smart"),
-    (GLOBE, "Globe"),
+    (SMART, "Smart/Talk N Text"),
+    (GLOBE, "Globe/Touch Mobile"),
     (SUN, "Sun Cellular"),
-    (TNT, "Talk N Text"),
-    (TM, "Touch Mobile"),
     (OTHER, "Other")
 )
 
@@ -22,3 +18,16 @@ PHONE_NAME_CHOICES = (
     ('Home', 'Home'),
     ('Work', 'Work'),
 )
+
+
+MOBILE_CARRIER_PREFIXES = {
+    SMART: [
+        907, 908, 909, 910, 912, 918, 919, 920, 921, 928, 929, 930, 938, 939, 989
+    ],
+    GLOBE: [
+        905, 906, 915, 916, 917, 925, 926, 927, 935, 936, 937, 996, 997
+    ],
+    SUN: [
+        922, 923, 932, 933
+    ]
+}
