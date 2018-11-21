@@ -19,6 +19,9 @@ class Specialization(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, null=True, blank=True)
     abbreviation = models.CharField(max_length=30, unique=True)
+    practitioner_title = models.CharField(max_length=100, null=True, blank=True)
+    practitioner_title_plural = models.CharField(max_length=105, null=True, blank=True)
+
 
     practitioner_title = models.CharField(max_length=60, blank=True, null=True)
     practitioner_title_plural = models.CharField(max_length=64, blank=True, null=True)

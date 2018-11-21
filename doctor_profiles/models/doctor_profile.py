@@ -50,8 +50,22 @@ class DoctorProfile(models.Model):
     def get_diplomates(self):
         return self.doctor_associations.filter(level='Diplomate', association__is_approved=True)
 
-    def settings_progress(self):
-        progress = self.user.user_settings.get('doctor_progress', None)
+    def initialize_progress_metadata(self):
+        self.metadata = {
+            'doctor_progress': {
+                'medical_degree': self.doctor_degrees.count(),
+                'insurance': self.doctor_insurance.count(),
+                'specialization': self.doctor_specializations.count(),
+                'association': self.doctor_associations.count(),
+                'institution': None
+            }
+        }
+        self.save()
+        print(self.metadata)
+        return self.metadata.get('doctor_progress')
+
+    def calculate_settings_progress(self):
+        progress = self.initialize_progress_metadata()
         retval = {
             'progress': 0.0,
             'progress_pct': '0%',
@@ -69,3 +83,6 @@ class DoctorProfile(models.Model):
             retval['progress_int'] = round((total / max) * 100)
             retval['items'] = progress
         return retval
+
+    def settings_progress(self):
+        return self.calculate_settings_progress()

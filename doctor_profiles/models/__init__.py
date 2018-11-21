@@ -3,3 +3,6 @@ from .doctor_profile import DoctorProfile
 from .insurance import InsuranceProvider, DoctorInsurance
 from .medical_degree import MedicalDegree, DoctorDegree
 from .specialization import Specialization, DoctorSpecialization
+from .medical_institution import MedicalInstitution, MedicalInstitutionType
+from .medical_institution_location import MedicalInstitutionLocation, MedicalInstitutionLocationVote
+from .medical_institution_phone import MedicalInstitutionPhone, MedicalInstitutionPhoneVote
