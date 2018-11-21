@@ -20,6 +20,9 @@ class Specialization(models.Model):
     metadata = JSONField(default=dict, null=True, blank=True)
     abbreviation = models.CharField(max_length=30, unique=True)
 
+    practitioner_title = models.CharField(max_length=60, blank=True, null=True)
+    practitioner_title_plural = models.CharField(max_length=64, blank=True, null=True)
+
     """
     admin
     """
@@ -47,7 +50,7 @@ class DoctorSpecialization(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     year_attained = models.PositiveSmallIntegerField(blank=True, null=True)
-    place_of_residency = models.CharField(max_length=120)
+    place_of_residency = models.CharField(max_length=120, blank=True, null=True)
 
     """
     admin
@@ -72,11 +75,12 @@ class DoctorSpecialization(models.Model):
         return f"{self.doctor}, {self.specialization.abbreviation}"
 
     def save(self, *args, **kwargs):
-        current_year = arrow.utcnow().year
-        min_year = current_year - 70
+        if self.year_attained:
+            current_year = arrow.utcnow().year
+            min_year = current_year - 70
 
-        if self.year_attained < min_year or self.year_attained > current_year:
-            raise ValueError('Dubious year attained')
+            if self.year_attained < min_year or self.year_attained > current_year:
+                raise ValueError('Dubious year attained')
 
         return super(DoctorSpecialization, self).save(*args, **kwargs)
 

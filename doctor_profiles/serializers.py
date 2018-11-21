@@ -15,6 +15,8 @@ class SpecializationSerializer(serializers.ModelSerializer):
             'last_updated',
             'metadata',
             'abbreviation',
+            'practitioner_title',
+            'practitioner_title_plural'
         )
 
 
@@ -26,6 +28,8 @@ class SpecializationPublicSerializer(serializers.ModelSerializer):
             'slug',
             'name',
             'abbreviation',
+            'practitioner_title',
+            'practitioner_title_plural'
         )
 
 
@@ -34,7 +38,9 @@ class SpecializationCreateSerializer(serializers.ModelSerializer):
         model = models.Specialization
         fields = (
             'name',
-            'abbreviation'
+            'abbreviation',
+            'practitioner_title',
+            'practitioner_title_plural'
         )
 
 

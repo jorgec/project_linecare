@@ -28,6 +28,14 @@
                         fieldName: "abbreviation",
                         default: "",
                         elementId: "#specialization_abbreviation"
+                    },{
+                        fieldName: "practitioner_title",
+                        default: "",
+                        elementId: "#specialization_practitioner_title"
+                    },{
+                        fieldName: "practitioner_title_plural",
+                        default: "",
+                        elementId: "#specialization_practitioner_title_plural"
                     }
                 ],
             }
@@ -212,8 +220,17 @@
             /**
              * Edit this part
              */
-            var description = '<strong>' + model.relatedEntity.objectList.data[key]["specialization"]["name"] + '</strong><br>' +
-                                model.relatedEntity.objectList.data[key].place_of_residency + ' (' + model.relatedEntity.objectList.data[key].year_attained + ')';
+            var title = '';
+            if(model.relatedEntity.objectList.data[key]["specialization"]["practitioner_title"]){
+                title = '<em>' + model.relatedEntity.objectList.data[key]["specialization"]["practitioner_title"] + '</em>';
+            }
+            var year_attained = '';
+            if(model.relatedEntity.objectList.data[key].year_attained){
+                year_attained = '(' + model.relatedEntity.objectList.data[key].year_attained + ')';
+            }
+            var description = title + ' <strong>' + model.relatedEntity.objectList.data[key]["specialization"]["name"] + '</strong><br>' +
+                                model.relatedEntity.objectList.data[key].place_of_residency + year_attained;
+
             /**
              * /end
              */

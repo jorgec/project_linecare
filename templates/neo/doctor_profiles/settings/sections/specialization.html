@@ -16,16 +16,16 @@
         <label for="doctor_specialization_place_of_residency" class="col-4 col-form-label">Place of Residency</label>
         <div class="col-8">
             <input id="doctor_specialization_place_of_residency" name="specialization_place_of_residency" type="text"
-                   class="form-control here"
-                   required="required">
+                   class="form-control here">
         </div>
     </div>
     <div class="form-group row">
         <label for="doctor_specialization_year_attained" class="col-4 col-form-label">Year Attained</label>
         <div class="col-8">
             <input id="doctor_specialization_year_attained" name="specialization_year_attained" type="number"
-                   required="required"
                    class="form-control here">
+            <br>
+            <small class="help-text">Leave blank if unfinished</small>
         </div>
     </div>
     <div class="btn-group  mt-4">
@@ -75,8 +75,7 @@
                         Residency</label>
                     <div class="col-8">
                         <input id="edit_doctor_specialization_place_of_residency"
-                               name="specialization_place_of_residency" type="text" class="form-control here"
-                               required="required">
+                               name="specialization_place_of_residency" type="text" class="form-control here">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -84,8 +83,7 @@
                         Attained</label>
                     <div class="col-8">
                         <input id="edit_doctor_specialization_year_attained" name="specialization_year_attained"
-                               type="number" required="required"
-                               class="form-control here">
+                               type="number" class="form-control here">
                     </div>
                 </div>
 
@@ -126,11 +124,33 @@
                         </label>
                         <div class="">
                             <input type="text" name="specialization_abbreviation" maxlength="30"
-                                   class="textinput textInput form-control" required=""
+                                   class="textinput textInput form-control" required
                                    id="specialization_abbreviation">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="specialization_practitioner_title" class="col-form-label requiredField">
+                            Practitioner Title<span class="asteriskField">*</span>
+                        </label>
+                        <div>
+                            <small class="help-text">What should a Doctor with this specialization be called?</small>
+                            <input type="text" name="specialization_practitioner_title" maxlength="60"
+                                   class="textinput textInput form-control" required
+                                   id="specialization_practitioner_title">
 
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="specialization_practitioner_title_plural" class="col-form-label requiredField">
+                            Practitioner Title (plural form)<span class="asteriskField">*</span>
+                        </label>
+                        <div>
+                            <input type="text" name="specialization_practitioner_title_plural" maxlength="60"
+                                   class="textinput textInput form-control" required
+                                   id="specialization_practitioner_title_plural">
+                            <br>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="btnEntityAdd" class="btn btn-primary btn-block">
