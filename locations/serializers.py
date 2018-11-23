@@ -3,15 +3,30 @@ from rest_framework import serializers
 from . import models
 
 
+class ProvinceCoordinateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProvinceCoordinate
+        fields = ('id',
+                  'lat',
+                  'lon',
+                  )
+
+
+class CityCoordinateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CityCoordinate
+        fields = ('id',
+                  'lat',
+                  'lon',
+                  )
+
+
 class RegionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Region
         fields = ('id',
                   'slug',
                   'name',
-                  'created',
-                  'last_updated',
-                  'code',
                   )
 
 
@@ -21,8 +36,6 @@ class ProvinceSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'slug',
                   'name',
-                  'created',
-                  'last_updated',
                   )
 
 
@@ -32,32 +45,54 @@ class CitySerializer(serializers.ModelSerializer):
         fields = ('id',
                   'slug',
                   'name',
-                  'created',
-                  'last_updated',
                   )
 
 
-class ProvinceCoordinateSerializer(serializers.ModelSerializer):
+class CountrySerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.ProvinceCoordinate
-        fields = ('id',
-                  'pk',
-                  'created',
-                  'last_updated',
-                  'lat',
-                  'lon',
-                  'is_approved',
-                  )
+        model = models.Country
+        fields = '__all__'
 
 
-class CityCoordinateSerializer(serializers.ModelSerializer):
+class LocationNestedCitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.CityCoordinate
-        fields = ('id',
-                  'pk',
-                  'created',
-                  'last_updated',
-                  'lat',
-                  'lon',
-                  'is_approved',
-                  )
+        model = models.City
+        fields = (
+            'id',
+            'name',
+            'slug',
+        )
+
+
+class LocationNestedProvinceSerializer(serializers.ModelSerializer):
+    cities = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Province
+        fields = (
+            'id',
+            'name',
+            'slug',
+            'cities'
+        )
+
+    def get_cities(self, obj):
+        queryset = models.City.objects.filter(province=obj)
+        return LocationNestedCitySerializer(queryset, many=True, read_only=True).data
+
+
+class LocationNestedRegionSerializer(serializers.ModelSerializer):
+    provinces = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Region
+        fields = (
+            'id',
+            'name',
+            'slug',
+            'provinces'
+        )
+
+    def get_provinces(self, obj):
+        queryset = models.Province.objects.filter(region=obj)
+        return LocationNestedProvinceSerializer(queryset, many=True, read_only=True).data
