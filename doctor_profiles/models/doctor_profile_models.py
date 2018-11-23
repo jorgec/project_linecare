@@ -79,7 +79,7 @@ class DoctorProfile(models.Model):
             max = len(progress)
             total = 0
             for key, value in progress.items():
-                if value is not None:
+                if value > 0:
                     total = total + 1
             retval['progress'] = total / max
             retval['progress_pct'] = f'{round((total/max)*100)}%'
