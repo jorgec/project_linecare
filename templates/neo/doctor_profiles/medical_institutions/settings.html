@@ -17,7 +17,7 @@
 
     <div class="hospital-list__item-wrapper">
 
-        // react app goes here
+        <div id="app"></div>
 
     </div>
 
@@ -44,6 +44,9 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{% static 'react/doctor_profile/medical_institutions/search/js/1.chunk.js' %}"></script>
+<script src="{% static 'react/doctor_profile/medical_institutions/search/js/main.chunk.js' %}"></script>
+<script src="{% static 'react/doctor_profile/medical_institutions/search/js/runtime-main.js' %}"></script>
 {% endblock %}
 {% block home_scripts %}
 {% endblock %}
