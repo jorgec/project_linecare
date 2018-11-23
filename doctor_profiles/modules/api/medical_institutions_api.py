@@ -48,8 +48,6 @@ class ApiPublicMedicalInstitutionList(APIView):
         if s:
             obj = obj.by_name(s=s)
 
-        print(obj.query)
-
         serializer = self.serializer_class(obj, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

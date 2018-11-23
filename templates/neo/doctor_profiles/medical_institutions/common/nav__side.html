@@ -1,4 +1,4 @@
 {% load static %}
-<a {% if sublocation == 'home' %}class="active"{% endif %} href="{% url 'doctor_profile_settings_home' %}">&laquo; Back to Settings</a>
+<a href="{% url 'doctor_profile_settings_home' %}">&laquo; Back to Settings</a>
 <hr>
 <a {% if sublocation == 'institution'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_medical_institution' %}">Medical Institution Home</a>

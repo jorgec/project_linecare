@@ -41,6 +41,18 @@ urlpatterns = [
     path('settings/medical_institution',
          institution_views.DoctorProfileMedicalInstitutionSettingsHomeView.as_view(),
          name='doctor_profile_settings_medical_institution'),
+
+
+    #############################################################################
+    # Medical Institutions
+    #############################################################################
+    path('settings/medical_institution/connect',
+         institution_views.DoctorProfileMedicalInstitutionDoctorCreate.as_view(),
+         name='doctor_profile_settings_medical_institution_connect'),
+    path('medical_institution/<slug>',
+         institution_views.DoctorProfileMedicalInstitutionHomeView.as_view(),
+         name='doctor_profile_medical_institution_home')
+
 ]
 
 #############################################################################

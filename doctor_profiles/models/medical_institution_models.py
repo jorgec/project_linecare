@@ -91,8 +91,6 @@ class MedicalInstitution(models.Model):
         return None
 
 
-
-
 class MedicalInstitutionType(models.Model):
     # Fields
     name = models.CharField(max_length=255)

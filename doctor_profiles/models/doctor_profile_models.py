@@ -91,3 +91,5 @@ class DoctorProfile(models.Model):
 
     def settings_progress(self):
         return self.calculate_settings_progress()
+
+    
