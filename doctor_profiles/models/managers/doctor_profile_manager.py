@@ -8,7 +8,7 @@ class DoctorProfileQuerySet(models.QuerySet):
 class DoctorProfileManager(models.Manager):
     def create(self, *args, **kwargs):
         try:
-            doctor = self.get(base_profile=kwargs['base_profile'])
+            doctor = self.get(user=kwargs['user'])
             return doctor
         except self.model.DoesNotExist:
             return super(DoctorProfileManager, self).create(*args, **kwargs)

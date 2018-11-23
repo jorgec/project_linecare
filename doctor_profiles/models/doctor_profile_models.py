@@ -65,7 +65,6 @@ class DoctorProfile(models.Model):
             }
         }
         self.save()
-        print(self.metadata)
         return self.metadata.get('doctor_progress')
 
     def calculate_settings_progress(self):
