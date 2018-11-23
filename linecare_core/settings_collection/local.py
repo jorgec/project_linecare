@@ -25,8 +25,8 @@ SECRET_KEY = 's90mk9&2pim-kzyo41abc5+igybj3ltzz84on0a_&def3!$b%*'
 DEBUG = True
 
 SITE_ID = 1
-# SITE_URL = 'https://192.168.10.245'
-SITE_URL = 'https://192.168.33.110'
+SITE_URL = 'https://192.168.10.245'
+# SITE_URL = 'https://192.168.33.110'
 
 ALLOWED_HOSTS = ['*']
 
@@ -249,6 +249,26 @@ REST_FRAMEWORK = {
     )
 }
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
 CORS_ORIGIN_WHITELIST = (
     '192.168.10.61:3000',
     '192.168.10.245',

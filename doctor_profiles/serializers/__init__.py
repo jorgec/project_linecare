@@ -1,16 +1,18 @@
-from .association import DoctorAssociationCreateSerializer, DoctorAssociationPublicSerializer, \
+from .association_serializers import DoctorAssociationCreateSerializer, DoctorAssociationPublicSerializer, \
     DoctorAssociationSerializer, DoctorAssociationUpdateSerializer, MedicalAssociationSerializer, \
     MedicalAssociationCreateSerializer, MedicalAssociationPublicSerializer
 
-from .doctor_profile import DoctorProfilePublicSerializer, DoctorProfileSerializer
+from .doctor_profile_serializers import DoctorProfilePublicSerializer, DoctorProfileSerializer
 
-from .insurance import InsuranceProviderSerializer, InsuranceProviderCreateSerializer, \
+from .insurance_serializers import InsuranceProviderSerializer, InsuranceProviderCreateSerializer, \
     InsuranceProviderPublicSerializer, DoctorInsuranceCreateSerializer, DoctorInsurancePublicSerializer, \
     DoctorInsuranceSerializer, DoctorInsuranceUpdateSerializer
 
-from .medical_degree import MedicalDegreeSerializer, MedicalDegreeCreateSerializer, MedicalDegreePublicSerializer, \
+from .medical_degree_serializers import MedicalDegreeSerializer, MedicalDegreeCreateSerializer, \
+    MedicalDegreePublicSerializer, \
     DoctorDegreeSerializer, DoctorDegreeCreateSerializer, DoctorDegreePublicSerializer, DoctorDegreeUpdateSerializer
 
-from .specialization import SpecializationSerializer, SpecializationCreateSerializer, SpecializationPublicSerializer, \
+from .specialization_serializers import SpecializationSerializer, SpecializationCreateSerializer, \
+    SpecializationPublicSerializer, \
     DoctorSpecializationCreateSerializer, DoctorSpecializationPublicSerializer, DoctorSpecializationSerializer, \
     DoctorSpecializationUpdateSerializer

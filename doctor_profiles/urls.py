@@ -1,6 +1,5 @@
 from django.urls import path
 
-
 from .modules.views import home as home_views
 from .modules.views import settings as setting_views
 from .modules.views import medical_institutions as institution_views
@@ -11,6 +10,7 @@ from .modules.api import medical_degrees_api
 from .modules.api import specializations_api
 from .modules.api import medical_associations_api
 from .modules.api import insurance_providers_api
+from .modules.api import medical_institutions_api
 
 #############################################################################
 # Views
@@ -54,7 +54,6 @@ urlpatterns += [
          snippets.DoctorProfileProgressDetailSnippet.as_view(),
          name='doctor_snippets_profile_progress'),
 ]
-
 
 #############################################################################
 # API
@@ -129,7 +128,7 @@ urlpatterns += [
     path(f'{version}/private/doctor_specialization/delete',
          specializations_api.ApiPrivateDoctorSpecializationDelete.as_view(),
          name='api_private_doctor_specialization_delete'),
-    
+
     #############################################################################
     # Medical Associations
     #############################################################################
@@ -163,7 +162,7 @@ urlpatterns += [
     path(f'{version}/private/doctor_association/delete',
          medical_associations_api.ApiPrivateDoctorAssociationDelete.as_view(),
          name='api_private_doctor_association_delete'),
-    
+
     #############################################################################
     # Insurance Providers
     #############################################################################
@@ -197,4 +196,25 @@ urlpatterns += [
     path(f'{version}/private/doctor_insurance/delete',
          insurance_providers_api.ApiPrivateDoctorInsuranceDelete.as_view(),
          name='api_private_doctor_insurance_delete'),
+
+    #############################################################################
+    # Medical Institutions
+    #############################################################################
+    path(f'{version}/public/medical_institution/list',
+         medical_institutions_api.ApiPublicMedicalInstitutionList.as_view(),
+         name='api_public_medical_institution_list'),
+    path(f'{version}/public/medical_institution/detail',
+         medical_institutions_api.ApiPublicMedicalInstitutionDetail.as_view(),
+         name='api_public_medical_institution_detail'),
+
+    # location
+    path(f'{version}/private/medical_institution/location/create',
+         medical_institutions_api.ApiPrivateMedicalInstitutionLocationCreate.as_view(),
+         name='api_private_medical_institution_location_create'),
+    path(f'{version}/private/medical_institution/location/vote_up',
+         medical_institutions_api.ApiPrivateMedicalInstitutionLocationVoteUp.as_view(),
+         name='api_private_medical_institution_location_vote_up'),
+    path(f'{version}/private/medical_institution/location/vote_down',
+         medical_institutions_api.ApiPrivateMedicalInstitutionLocationVoteDown.as_view(),
+         name='api_private_medical_institution_location_vote_down'),
 ]

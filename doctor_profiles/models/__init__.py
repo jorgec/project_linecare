@@ -1,8 +1,9 @@
-from .association import MedicalAssociation, DoctorAssociation
-from .doctor_profile import DoctorProfile
-from .insurance import InsuranceProvider, DoctorInsurance
-from .medical_degree import MedicalDegree, DoctorDegree
-from .specialization import Specialization, DoctorSpecialization
-from .medical_institution import MedicalInstitution, MedicalInstitutionType
-from .medical_institution_location import MedicalInstitutionLocation, MedicalInstitutionLocationVote
-from .medical_institution_phone import MedicalInstitutionPhone, MedicalInstitutionPhoneVote
+from .association_models import MedicalAssociation, DoctorAssociation
+from .doctor_profile_models import DoctorProfile
+from .insurance_models import InsuranceProvider, DoctorInsurance
+from .medical_degree_models import MedicalDegree, DoctorDegree
+from .specialization_models import Specialization, DoctorSpecialization
+from .medical_institution_models import MedicalInstitution, MedicalInstitutionType
+from .medical_institution_location_models import MedicalInstitutionLocation, MedicalInstitutionLocationVote
+from .medical_institution_phone_models import MedicalInstitutionPhone, MedicalInstitutionPhoneVote
+

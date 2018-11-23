@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
-from django.db import models as models
+from django.db import models as models, IntegrityError
 
 
 class MedicalInstitutionLocation(models.Model):
@@ -15,7 +15,7 @@ class MedicalInstitutionLocation(models.Model):
 
     # Relationship Fields
     country = models.ForeignKey('locations.Country', related_name="medical_institutions_in_country",
-                                on_delete=models.CASCADE)
+                                on_delete=models.CASCADE, default=169)
     region = models.ForeignKey('locations.Region', related_name="medical_institutions_in_region",
                                on_delete=models.CASCADE)
     province = models.ForeignKey('locations.Province', related_name="medical_institutions_in_province",
@@ -31,6 +31,7 @@ class MedicalInstitutionLocation(models.Model):
         on_delete=models.CASCADE, related_name="medical_institution_locations"
     )
 
+
     class Meta:
         ordering = ('-created',)
 
@@ -39,6 +40,26 @@ class MedicalInstitutionLocation(models.Model):
 
     def save(self, *args, **kwargs):
         return super(MedicalInstitutionLocation, self).save(*args, **kwargs)
+
+    def vote_up(self, user):
+        try:
+            return MedicalInstitutionLocationVote.objects.create(
+                type='Up',
+                voter=user,
+                medical_institution_location=self
+            )
+        except IntegrityError as e:
+            raise IntegrityError
+
+    def vote_down(self, user):
+        try:
+            return MedicalInstitutionLocationVote.objects.create(
+                type='Down',
+                voter=user,
+                medical_institution_location=self
+            )
+        except IntegrityError as e:
+            raise IntegrityError
 
     def get_ups(self):
         return self.medical_institution_location_votes.filter(type='Up').count()
@@ -75,4 +96,4 @@ class MedicalInstitutionLocationVote(models.Model):
         unique_together = ('voter', 'medical_institution_location')
 
     def __str__(self):
-        return u'%s' % self.pk
+        return f'{type}'

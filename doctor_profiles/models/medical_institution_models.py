@@ -1,7 +1,10 @@
+import operator
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models as models
 from django_extensions.db import fields as extension_fields
+
+from doctor_profiles.models.managers.medical_institution_manager import MedicalInstitutionManager
 
 
 class MedicalInstitution(models.Model):
@@ -23,8 +26,10 @@ class MedicalInstitution(models.Model):
         on_delete=models.CASCADE, related_name="medical_institutions_added"
     )
 
+    objects = MedicalInstitutionManager()
+
     class Meta:
-        ordering = ('-created',)
+        ordering = ('name',)
 
     def __str__(self):
         return f'{self.name}'
@@ -41,43 +46,51 @@ class MedicalInstitution(models.Model):
     def get_approved_phones(self):
         return self.medical_institution_phones.filter(is_approved=True)
 
-    def phones(self):
+    def phones(self, with_votes=True):
         approved = self.get_approved_phones()
 
         if approved.count() > 0:
-            phone_numbers = list(approved)
+            phone_list = approved
         else:
-            phone_numbers = list(self.get_phones())
+            phone_list = self.get_phones()
 
-        # selection sort
-        for i in range(len(phone_numbers) - 1, 0, -1):
-            pos_max = 0
-            for location in range(1, i + 1):
-                if phone_numbers[location].total_votes() > phone_numbers[pos_max].total_votes():
-                    pos_max = location
-            temp = phone_numbers[i]
-            phone_numbers[i] = phone_numbers[pos_max]
-            phone_numbers[pos_max] = temp
+        if phone_list.count() > 0:
+            phone_votes = {a: a.total_votes() for a in phone_list}
+            sorted_phones = sorted(phone_votes.items(), key=operator.itemgetter(1), reverse=True)
 
-        return phone_numbers
-    
-    def addresses(self):
+            if with_votes:
+                return [{"phone": a[0], "votes": a[1]} for a in sorted_phones]
+            else:
+                return [phone[0] for phone in sorted_phones]
+
+        return None
+
+    def addresses(self, with_votes=True):
         approved = self.get_approved_addresses()
 
         if approved.count() > 0:
-            address_list = list(approved)
+            address_list = approved
         else:
-            address_list = list(self.get_addresses())
+            address_list = self.get_addresses()
 
-        # selection sort
-        for i in range(len(address_list) - 1, 0, -1):
-            pos_max = 0
-            for location in range(1, i + 1):
-                if address_list[location].total_votes() > address_list[pos_max].total_votes():
-                    pos_max = location
-            temp = address_list[i]
-            address_list[i] = address_list[pos_max]
-            address_list[pos_max] = temp
+        if address_list.count() > 0:
+            address_votes = {a: a.total_votes() for a in address_list}
+            sorted_addresses = sorted(address_votes.items(), key=operator.itemgetter(1), reverse=True)
+
+            if with_votes:
+                return [{"address": a[0], "votes": a[1]} for a in sorted_addresses]
+            else:
+                return [address[0] for address in sorted_addresses]
+
+        return None
+
+    def address(self):
+        addresses = self.addresses()
+        if len(addresses) > 0:
+            return addresses[0]
+        return None
+
+
 
 
 class MedicalInstitutionType(models.Model):

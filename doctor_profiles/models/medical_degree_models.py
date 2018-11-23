@@ -5,7 +5,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django_extensions.db import fields as extension_fields
 
-from doctor_profiles.managers import DoctorDegreeManager
+from doctor_profiles.models.managers.medical_degree_manager import DoctorDegreeManager
 
 
 class MedicalDegree(models.Model):

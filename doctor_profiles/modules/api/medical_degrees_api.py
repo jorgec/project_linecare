@@ -21,9 +21,8 @@ from rest_framework.views import APIView
 
 from accounts.models import Account
 from doctor_profiles.models import MedicalDegree, DoctorDegree
-from doctor_profiles.serializers import MedicalDegreeCreateSerializer, MedicalDegreeSerializer, DoctorDegreeSerializer, \
-    DoctorDegreeCreateSerializer, DoctorDegreeUpdateSerializer, DoctorDegreePublicSerializer, \
-    MedicalDegreePublicSerializer
+from doctor_profiles.serializers import MedicalDegreeCreateSerializer, MedicalDegreePublicSerializer, \
+    DoctorDegreeSerializer, DoctorDegreeCreateSerializer, DoctorDegreeUpdateSerializer, DoctorDegreePublicSerializer
 
 
 class ApiPrivateMedicalDegreeCreate(APIView):

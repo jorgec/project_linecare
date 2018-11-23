@@ -21,10 +21,9 @@ from rest_framework.views import APIView
 
 from accounts.models import Account
 from doctor_profiles.models import MedicalAssociation, DoctorAssociation
-from doctor_profiles.serializers import MedicalAssociationCreateSerializer, MedicalAssociationSerializer, \
-    DoctorAssociationSerializer, \
-    DoctorAssociationCreateSerializer, DoctorAssociationUpdateSerializer, DoctorAssociationPublicSerializer, \
-    MedicalAssociationPublicSerializer
+from doctor_profiles.serializers import MedicalAssociationCreateSerializer, MedicalAssociationPublicSerializer, \
+    DoctorAssociationSerializer, DoctorAssociationCreateSerializer, DoctorAssociationUpdateSerializer, \
+    DoctorAssociationPublicSerializer
 
 
 class ApiPrivateMedicalAssociationCreate(APIView):

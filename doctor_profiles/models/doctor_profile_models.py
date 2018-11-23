@@ -1,6 +1,8 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models as models
 
+from doctor_profiles.models.managers.doctor_profile_manager import DoctorProfileManager
+
 
 class DoctorProfile(models.Model):
     """
@@ -19,6 +21,8 @@ class DoctorProfile(models.Model):
 
     # Relationship Fields
     user = models.OneToOneField('accounts.Account', related_name='doctorprofile', on_delete=models.CASCADE, null=True)
+
+    objects = DoctorProfileManager()
 
     class Meta:
         ordering = ('user',)

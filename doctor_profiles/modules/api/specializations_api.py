@@ -20,9 +20,9 @@ from rest_framework.views import APIView
 
 from accounts.models import Account
 from doctor_profiles.models import Specialization, DoctorSpecialization
-from doctor_profiles.serializers import SpecializationSerializer, SpecializationCreateSerializer, \
+from doctor_profiles.serializers import SpecializationPublicSerializer, SpecializationCreateSerializer, \
     DoctorSpecializationSerializer, DoctorSpecializationPublicSerializer, DoctorSpecializationCreateSerializer, \
-    DoctorSpecializationUpdateSerializer, SpecializationPublicSerializer
+    DoctorSpecializationUpdateSerializer
 
 
 class ApiPublicSpecializationList(APIView):

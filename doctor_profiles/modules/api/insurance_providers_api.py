@@ -21,9 +21,9 @@ from rest_framework.views import APIView
 
 from accounts.models import Account
 from doctor_profiles.models import InsuranceProvider, DoctorInsurance
-from doctor_profiles.serializers import InsuranceProviderCreateSerializer, InsuranceProviderSerializer, \
+from doctor_profiles.serializers import InsuranceProviderCreateSerializer, InsuranceProviderPublicSerializer, \
     DoctorInsuranceSerializer, DoctorInsuranceCreateSerializer, DoctorInsuranceUpdateSerializer, \
-    DoctorInsurancePublicSerializer, InsuranceProviderPublicSerializer
+    DoctorInsurancePublicSerializer
 
 
 class ApiPrivateInsuranceProviderCreate(APIView):

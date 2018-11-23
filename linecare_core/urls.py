@@ -32,6 +32,7 @@ urlpatterns = [
     path('rest-auth/facebook', ApiFacebookLogin.as_view(), name='api_facebook_login'),
     # /auth
 
+    path('location/', include('locations.urls')),
     path('profile/', include('profiles.urls')),
     path('album/', include('albums.urls')),
     path('doctor/', include('doctor_profiles.urls')),

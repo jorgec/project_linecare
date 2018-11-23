@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from doctor_profiles import models
-from doctor_profiles.serializers import DoctorProfileSerializer, DoctorProfilePublicSerializer
+from .doctor_profile_serializers import DoctorProfileSerializer, DoctorProfilePublicSerializer
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
