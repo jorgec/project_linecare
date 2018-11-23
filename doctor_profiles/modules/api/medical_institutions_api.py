@@ -32,6 +32,7 @@ class ApiPublicMedicalInstitutionList(APIView):
         region = request.GET.get('region', None)
         province = request.GET.get('province', None)
         city = request.GET.get('city', None)
+        s = request.GET.get('s', None)
 
         obj = self.model.objects.filter(**filters)
 
@@ -43,6 +44,11 @@ class ApiPublicMedicalInstitutionList(APIView):
 
         if city:
             obj = obj.by_city(city=city)
+
+        if s:
+            obj = obj.by_name(s=s)
+
+        print(obj.query)
 
         serializer = self.serializer_class(obj, many=True)
 
