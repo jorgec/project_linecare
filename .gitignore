@@ -94,3 +94,7 @@ datesdim/migrations/
 locations/migrations/
 
 doctor_profiles/migrations/
+
+package\.json
+
+yarn\.lock

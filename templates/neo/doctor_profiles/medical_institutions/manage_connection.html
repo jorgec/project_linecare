@@ -1,0 +1,35 @@
+{% extends 'neo/doctor_profiles/medical_institutions/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+   crossorigin=""/>
+
+    <style type="text/css">
+        #map{
+            height: 70vh;
+        }
+    </style>
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+<div class="career__header"><h5 class="h5">{{ page_title }}</h5></div>
+<div class="subcontent__wrapper">
+    {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connection.html' %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+   crossorigin=""></script>
+    {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connection.js.html' %}
+{% endblock %}
+{% block home_scripts %}
+
+{% endblock %}

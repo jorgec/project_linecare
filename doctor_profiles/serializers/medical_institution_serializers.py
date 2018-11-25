@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from doctor_profiles.models import MedicalInstitutionType, MedicalInstitutionLocation, MedicalInstitutionLocationVote, \
-    MedicalInstitutionPhone, MedicalInstitutionPhoneVote, MedicalInstitution
+    MedicalInstitutionPhone, MedicalInstitutionPhoneVote, MedicalInstitution, MedicalInstitutionCoordinate
 from locations.serializers import RegionSerializer, CountrySerializer, ProvinceSerializer, CitySerializer
 
 
@@ -42,28 +42,25 @@ class MedicalInstitutionLocationSerializer(serializers.ModelSerializer):
             'last_updated',
             'metadata',
             'is_approved',
-            'lat',
-            'lon',
             'country',
             'region',
             'province',
             'city',
             'address',
+            'zip_code',
         )
-
 
 
 class MedicalInstitutionLocationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicalInstitutionLocation
         fields = (
-            'lat',
-            'lon',
             'country',
             'region',
             'province',
             'city',
             'address',
+            'zip_code',
         )
 
 
@@ -77,8 +74,7 @@ class MedicalInstitutionLocationPublicSerializer(serializers.ModelSerializer):
         model = MedicalInstitutionLocation
         fields = (
             'id',
-            'lat',
-            'lon',
+            'zip_code',
             'country',
             'region',
             'province',
@@ -169,7 +165,29 @@ class MedicalInstitutionPhonesPublicSerializerWithVotes(serializers.Serializer):
     votes = serializers.IntegerField()
 
 
+class MedicalInstitutionCoordinateSerializer(serializers.Serializer):
+    class Meta:
+        model = MedicalInstitutionCoordinate
+        fields = '__all__'
+
+
+class MedicalInstitutionCoordinatePublicSerializer(serializers.Serializer):
+    class Meta:
+        model = MedicalInstitutionCoordinate
+        fields = (
+            'id',
+            'lat',
+            'lon'
+        )
+
+
+class MedicalInstitutionCoordinatePublicSerializerWithVotes(serializers.Serializer):
+    coordinates = MedicalInstitutionCoordinatePublicSerializer
+    votes = serializers.IntegerField()
+
+
 class MedicalInstitutionNestedPublicSerializer(serializers.Serializer):
     institution = MedicalInstitutionPublicSerializer()
     address = MedicalInstitutionLocationPublicSerializerWithVotes(allow_null=True, required=False, many=True)
     phones = MedicalInstitutionPhonesPublicSerializerWithVotes(allow_null=True, required=False, many=True)
+    coordinates = MedicalInstitutionCoordinatePublicSerializerWithVotes(allow_null=True, required=False, many=True)

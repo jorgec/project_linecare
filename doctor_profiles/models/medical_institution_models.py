@@ -32,7 +32,7 @@ class MedicalInstitution(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.name} ({self.type.name})'
 
     def get_addresses(self):
         return self.medical_institution_locations.all()
@@ -86,8 +86,41 @@ class MedicalInstitution(models.Model):
 
     def address(self):
         addresses = self.addresses()
-        if len(addresses) > 0:
-            return addresses[0]
+        if addresses:
+            if len(addresses) > 0:
+                return addresses[0]
+        return None
+
+    def get_coordinates(self):
+        return self.medical_institution_coordinates.all()
+
+    def get_approved_coordinates(self):
+        return self.medical_institution_coordinates.filter(is_approved=True)
+
+    def all_coordinates(self, with_votes=True):
+        approved = self.get_approved_coordinates()
+
+        if approved.count() > 0:
+            coordinate_list = approved
+        else:
+            coordinate_list = self.get_coordinates()
+
+        if coordinate_list.count() > 0:
+            coordinate_votes = {a: a.total_votes() for a in coordinate_list}
+            sorted_coordinates = sorted(coordinate_votes.items(), key=operator.itemgetter(1), reverse=True)
+
+            if with_votes:
+                return [{"coordinate": a[0], "votes": a[1]} for a in sorted_coordinates]
+            else:
+                return [coordinate[0] for coordinate in sorted_coordinates]
+
+        return None
+
+    def coordinates(self):
+        coordinates = self.coordinates()
+        if coordinates:
+            if len(coordinates) > 0:
+                return coordinates[0]
         return None
 
 

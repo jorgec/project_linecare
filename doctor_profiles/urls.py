@@ -11,6 +11,7 @@ from .modules.api import specializations_api
 from .modules.api import medical_associations_api
 from .modules.api import insurance_providers_api
 from .modules.api import medical_institutions_api
+from .modules.api import doctor_profile_api
 
 #############################################################################
 # Views
@@ -42,7 +43,6 @@ urlpatterns = [
          institution_views.DoctorProfileMedicalInstitutionSettingsHomeView.as_view(),
          name='doctor_profile_settings_medical_institution'),
 
-
     #############################################################################
     # Medical Institutions
     #############################################################################
@@ -50,7 +50,7 @@ urlpatterns = [
          institution_views.DoctorProfileMedicalInstitutionDoctorCreate.as_view(),
          name='doctor_profile_settings_medical_institution_connect'),
     path('medical_institution/<slug>',
-         institution_views.DoctorProfileMedicalInstitutionHomeView.as_view(),
+         institution_views.DoctorProfileMedicalInstitutionManageConnectionView.as_view(),
          name='doctor_profile_medical_institution_home')
 
 ]
@@ -73,6 +73,13 @@ urlpatterns += [
 version = 'api/v1'
 
 urlpatterns += [
+    #############################################################################
+    # Doctor Profile
+    #############################################################################
+    path(f'{version}/private/profile/dismiss_progress_display',
+         doctor_profile_api.ApiDismissProfileProgressDisplay.as_view(),
+         name='api_doctor_profile_dismiss_profile_progress_display'),
+
     #############################################################################
     # Medical Degrees
     #############################################################################
@@ -220,6 +227,15 @@ urlpatterns += [
          name='api_public_medical_institution_detail'),
 
     # location
+    path(f'{version}/public/medical_institution/location/list',
+         medical_institutions_api.ApiPublicMedicalInstitutionAddressList.as_view(),
+         name='api_public_medical_institution_location_list'),
+    path(f'{version}/public/medical_institution/location/top/detail',
+         medical_institutions_api.ApiPublicMedicalInstitutionTopAddressDetail.as_view(),
+         name='api_public_medical_institution_top_location_detail'),
+    path(f'{version}/public/medical_institution/location/detail',
+         medical_institutions_api.ApiPublicMedicalInstitutionAddressDetail.as_view(),
+         name='api_public_medical_institution_location_detail'),
     path(f'{version}/private/medical_institution/location/create',
          medical_institutions_api.ApiPrivateMedicalInstitutionLocationCreate.as_view(),
          name='api_private_medical_institution_location_create'),

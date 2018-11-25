@@ -54,14 +54,30 @@ class DoctorProfile(models.Model):
     def get_diplomates(self):
         return self.doctor_associations.filter(level='Diplomate', association__is_approved=True)
 
+    def get_profile_progress_metadata(self):
+        return self.metadata.get('doctor_progress')
+
+    def dismiss_profile_progress_display(self):
+        if self.get_profile_progress_metadata():
+            self.metadata['doctor_progress']['show'] = False
+            self.save()
+            return True
+        return False
+
+    def display_profile_progress_status(self):
+        return self.metadata['doctor_progress']['show']
+
     def initialize_progress_metadata(self):
         self.metadata = {
             'doctor_progress': {
-                'medical_degree': self.doctor_degrees.count(),
-                'insurance': self.doctor_insurance.count(),
-                'specialization': self.doctor_specializations.count(),
-                'association': self.doctor_associations.count(),
-                'institution': None
+                'show': True,
+                'data': {
+                    'medical_degree': self.doctor_degrees.count(),
+                    'insurance': self.doctor_insurance.count(),
+                    'specialization': self.doctor_specializations.count(),
+                    'association': self.doctor_associations.count(),
+                    'institution': None
+                }
             }
         }
         self.save()
@@ -76,9 +92,9 @@ class DoctorProfile(models.Model):
             'items': {}
         }
         if progress:
-            max = len(progress)
+            max = len(progress['data'])
             total = 0
-            for key, value in progress.items():
+            for key, value in progress['data'].items():
                 if value is not None:
                     if type(value) == int:
                         if value > 0:
@@ -91,5 +107,3 @@ class DoctorProfile(models.Model):
 
     def settings_progress(self):
         return self.calculate_settings_progress()
-
-    

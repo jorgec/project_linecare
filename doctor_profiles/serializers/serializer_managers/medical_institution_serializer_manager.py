@@ -3,7 +3,7 @@ from rest_framework.utils import json
 from doctor_profiles.serializers.medical_institution_serializers import MedicalInstitutionLocationPublicSerializer, \
     MedicalInstitutionLocationSerializer, MedicalInstitutionSerializer, MedicalInstitutionPublicSerializer, \
     MedicalInstitutionNestedPublicSerializer, MedicalInstitutionLocationPublicSerializerWithVotes, \
-    MedicalInstitutionPhonesPublicSerializerWithVotes
+    MedicalInstitutionPhonesPublicSerializerWithVotes, MedicalInstitutionCoordinatePublicSerializerWithVotes
 
 
 class MedicalInstitutionLocationSerializerManager:
@@ -31,11 +31,13 @@ class MedicalInstitutionSerializerManager:
         institution = self.public_serializer(instance)
         address = MedicalInstitutionLocationPublicSerializerWithVotes(instance.addresses(), many=True)
         phones = MedicalInstitutionPhonesPublicSerializerWithVotes(instance.phones(), many=True)
+        coordinates = MedicalInstitutionCoordinatePublicSerializerWithVotes(instance.all_coordinates(), many=True)
 
         nested = {
             'institution': institution.data,
             'address': address.data,
-            'phones': phones.data
+            'phones': phones.data,
+            'coordinages': coordinates.data
         }
 
         # return json.dumps(nested)

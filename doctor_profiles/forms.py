@@ -1,4 +1,6 @@
 from django import forms
+
+from doctor_profiles.models import MedicalInstitutionLocation
 from .models import Specialization, InsuranceProvider, DoctorProfile, MedicalDegree, MedicalAssociation, \
     DoctorSpecialization, DoctorInsurance, DoctorDegree, DoctorAssociation
 
@@ -63,13 +65,13 @@ class DoctorDegreeCreateForm(forms.ModelForm):
         fields = ['year_attained', 'school', 'metadata', 'license_number', 'degree']
 
 
-class DoctorDegreeEditForm(forms.ModelForm):
-    class Meta:
-        model = DoctorDegree
-        fields = ['year_attained', 'school', 'metadata', 'license_number']
-
-
 class DoctorAssociationForm(forms.ModelForm):
     class Meta:
         model = DoctorAssociation
         fields = ['level', 'year_attained', 'doctor', 'association']
+
+
+class MedicalInstitutionLocationForm(forms.ModelForm):
+    class Meta:
+        model = MedicalInstitutionLocation
+        fields = ['address', 'region', 'province', 'city', 'zip_code']

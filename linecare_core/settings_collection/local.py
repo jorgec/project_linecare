@@ -11,9 +11,14 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from os.path import abspath, basename, dirname, join, normpath
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+DJANGO_ROOT = dirname(dirname(abspath(__file__)))
+SITE_ROOT = dirname(DJANGO_ROOT)
+SITE_NAME = basename(DJANGO_ROOT)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -25,8 +30,8 @@ SECRET_KEY = 's90mk9&2pim-kzyo41abc5+igybj3ltzz84on0a_&def3!$b%*'
 DEBUG = True
 
 SITE_ID = 1
-SITE_URL = 'https://192.168.10.245'
-# SITE_URL = 'https://192.168.33.110'
+# SITE_URL = 'https://192.168.10.245'
+SITE_URL = 'https://192.168.33.110'
 
 ALLOWED_HOSTS = ['*']
 
@@ -170,7 +175,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            '/home/ubuntu/linecare/linecare_core/templates',
+            'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -311,3 +316,5 @@ MEDIA_ROOT = '/var/www/html/media/'
 TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# mapping

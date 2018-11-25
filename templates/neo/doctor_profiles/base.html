@@ -42,7 +42,17 @@
     <script src="{% static 'neo/js/snippetProfileProgress.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-            loadProfileProgress($("#profile-progress-snippet"));
+            {% if request.user.doctorprofile.display_profile_progress_status %}
+                var snippet_location = $("#profile-progress-snippet");
+                loadProfileProgress(snippet_location);
+                snippet_location.on('click', '#dismiss-profile-progress', function(e){
+                    e.preventDefault();
+                    snippet_location.remove();
+                    $.get("{% url 'api_doctor_profile_dismiss_profile_progress_display' %}");
+                });
+
+
+            {% endif %}
         });
     </script>
 

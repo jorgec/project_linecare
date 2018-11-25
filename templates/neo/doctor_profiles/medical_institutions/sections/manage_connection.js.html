@@ -1,0 +1,327 @@
+{% load static %}
+<script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'neo/js/stateManager.js' %}"></script>
+
+<script type="text/javascript">
+    var map;
+    var ajaxRequest;
+    var plotlist;
+    var plotlayers = [];
+
+
+    /**
+     * data
+     */
+    var model = {
+        top_address: {
+            dataSrc: "{% url 'api_public_medical_institution_top_location_detail' %}?id={{ rel.medical_institution.id  }}",
+            fetch: fetchTopAddress,
+            onReady: true,
+            container: $("#top-address-container"),
+            template: $("#top-address-template"),
+            actions: {
+                vote_up: {
+                    fn: addressVoteUp,
+                    parameters: {
+                        id: "data-pk",
+                        triggerElement: ".top-location-vote-up",
+                        api: "{% url 'api_private_medical_institution_location_vote_up' %}?",
+                    }
+                },
+                vote_down: {
+                    fn: addressVoteDown,
+                    parameters: {
+                        id: "data-pk",
+                        triggerElement: ".top-location-vote-down",
+                        api: "{% url 'api_private_medical_institution_location_vote_down' %}?",
+                    }
+                },
+            }
+        },
+        all_addresses: {
+            dataSrc: "{% url 'api_public_medical_institution_location_list' %}?id={{ rel.medical_institution.id }}",
+            fetch: fetchAllAddresses,
+            onReady: true,
+            container: $("#addresses-container"),
+            template: $("#addresses-template"),
+            actions: {
+                vote_up: {
+                    fn: addressVoteUp,
+                    parameters: {
+                        id: "data-pk",
+                        triggerElement: '.location-vote-up',
+                        api: "{% url 'api_private_medical_institution_location_vote_up' %}?",
+                    }
+                },
+                vote_down: {
+                    fn: addressVoteDown,
+                    parameters: {
+                        id: "data-pk",
+                        triggerElement: '.location-vote-down',
+                        api: "{% url 'api_private_medical_institution_location_vote_down' %}?",
+                    },
+                }
+            }
+        }
+    };
+
+    /**
+     * methods
+     */
+
+
+    function fetchTopAddress() {
+        var entity = model.top_address;
+
+        $.get(entity.dataSrc)
+            .done(function (result) {
+                entity.container.loadTemplate(entity.template, result);
+
+                $(entity.actions.vote_up.parameters.triggerElement).on('click', function (e) {
+                    var url = entity.actions.vote_up.parameters.api + "id=" + $(this).attr(entity.actions.vote_up.parameters.id)
+                    addressVoteUp(url);
+                });
+                $(entity.actions.vote_down.parameters.triggerElement).on('click', function (e) {
+                    var url = entity.actions.vote_down.parameters.api + "id=" + $(this).attr(entity.actions.vote_down.parameters.id)
+                    addressVoteDown(url);
+                });
+
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+    }
+
+    function fetchAllAddresses() {
+        var entity = model.all_addresses;
+        $.get(entity.dataSrc)
+            .done(function (result) {
+                entity.container.loadTemplate(entity.template, result);
+
+                $(entity.actions.vote_up.parameters.triggerElement).click(function (e) {
+                    var url = entity.actions.vote_up.parameters.api + "id=" + $(this).attr(entity.actions.vote_up.parameters.id)
+                    addressVoteUp(url);
+                });
+                $(entity.actions.vote_down.parameters.triggerElement).click(function (e) {
+                    var url = entity.actions.vote_down.parameters.api + "id=" + $(this).attr(entity.actions.vote_down.parameters.id)
+                    addressVoteDown(url);
+                });
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+    }
+
+    /*
+    function topAddressFetch() {
+        $.get(model.top_address.dataSrc)
+            .done(function (result) {
+                model.top_address.container.loadTemplate(model.top_address.template, result);
+
+                $(model.top_address.actions.vote_up.parameters.triggerElement).click(function (e) {
+                    addressVoteUp(
+                        $(this).attr(model.top_address.actions.vote_up.parameters.id),
+
+                    );
+                });
+                $(model.top_address.actions.vote_down.parameters.triggerElement).click(function (e) {
+                    addressVoteDown($(this).attr(model.top_address.actions.vote_down.parameters.id));
+                });
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+    }
+
+    function addressesFetch() {
+        $.get(model.all_addresses.dataSrc)
+            .done(function (result) {
+                model.all_addresses.container.loadTemplate(model.all_addresses.template, result);
+
+                $(model.all_addresses.actions.vote_up.parameters.triggerElement).click(function (e) {
+                    addressVoteUp($(this).attr(model.all_addresses.actions.vote_up.parameters.id));
+                });
+                $(model.all_addresses.actions.vote_down.parameters.triggerElement).click(function (e) {
+                    addressVoteDown($(this).attr(model.all_addresses.actions.vote_down.parameters.id));
+                });
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+    }
+    */
+
+    function addressVoteUp(url, onSuccess) {
+        console.log('up');
+        $.get(url)
+            .done(function (result) {
+                $.notify({
+                    message: result
+                }, {
+                    type: 'success'
+                });
+                updateState(model.top_address);
+                updateState(model.all_addresses);
+
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+    }
+
+    function addressVoteDown(url, onSuccess) {
+        $.get(url)
+            .done(function (result) {
+                $.notify({
+                    message: result
+                }, {
+                    type: 'success'
+                });
+
+                updateState(model.top_address);
+                updateState(model.all_addresses);
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+    }
+
+    function __addressVoteDown(pk, updateOnSuccess) {
+        var url = model.top_address.actions.vote_down.api + "id=" + pk
+        $.get(url)
+            .done(function (result) {
+                $.notify({
+                    message: result
+                }, {
+                    type: 'success'
+                });
+                updateState(model.top_address);
+                updateState(model.all_addresses);
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+    }
+
+    /**
+     * events
+     */
+    $("#submit-address-form").submit(function (e) {
+        e.preventDefault();
+        var url = "{% url 'api_private_medical_institution_location_create' %}?id={{ rel.medical_institution.pk }}";
+        var formData = {
+            address: $("#id_address").val(),
+            region: $("#id_region").val(),
+            province: $("#id_province").val(),
+            city: $("#id_city").val(),
+            zip_code: $("#id_zip_code").val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+
+        $.post(url, formData)
+            .done(function (result) {
+                $("#all-addresses-modal").modal('hide');
+                $("#submit-address-modal").modal('hide');
+                $("#all-addresses-modal").modal('show');
+                $.notify({
+                    message: "Location added!"
+                }, {
+                    type: 'success'
+                });
+                updateState(model.top_address);
+                updateState(model.all_addresses);
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+
+    });
+
+    $(document).ready(function () {
+
+        bootUp(model);
+
+
+        var region_id = null;
+        var province_id = null;
+
+        function load_provinces(region) {
+            var provinces_url = "{% url 'api_location_provinces_of_region' %}?region=" + region;
+            if (region) {
+                $.get(provinces_url, function (provincesResult) {
+                    $("#id_province").loadTemplate("#provinces-template", provincesResult);
+                    province_id = provincesResult[0].id;
+                    load_cities(province_id);
+                });
+            }
+        }
+
+        function load_cities(province) {
+            var cities_url = "{% url 'api_location_cities_of_province' %}?province=" + province;
+            if (province) {
+                $.get(cities_url, function (citiesResult) {
+                    $("#id_city").loadTemplate("#cities-template", citiesResult);
+                });
+            }
+        }
+
+        $("#id_region").on('change', function (regionChange) {
+            region_id = $(this).val();
+            load_provinces(region_id);
+        });
+        $("#id_province").on('change', function (provinceChange) {
+            province_id = $(this).val();
+            load_cities(province_id);
+        });
+
+    });
+
+
+    function __initmap() {
+        // set up the map
+        map = new L.Map('map');
+
+        // create the tile layer with correct attribution
+        var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+        var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});
+
+        // start the map in South-East England
+        map.setView(new L.LatLng(51.3, 0.7), 9);
+        map.addLayer(osm);
+    }
+
+
+</script>

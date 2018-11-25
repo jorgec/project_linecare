@@ -4,6 +4,6 @@ from .insurance_models import InsuranceProvider, DoctorInsurance
 from .medical_degree_models import MedicalDegree, DoctorDegree
 from .specialization_models import Specialization, DoctorSpecialization
 from .medical_institution_models import MedicalInstitution, MedicalInstitutionType
-from .medical_institution_location_models import MedicalInstitutionLocation, MedicalInstitutionLocationVote
+from .medical_institution_location_models import MedicalInstitutionLocation, MedicalInstitutionLocationVote, MedicalInstitutionCoordinate, MedicalInstitutionCoordinateVote
 from .medical_institution_phone_models import MedicalInstitutionPhone, MedicalInstitutionPhoneVote
 
