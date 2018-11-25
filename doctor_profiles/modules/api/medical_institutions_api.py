@@ -8,7 +8,8 @@ from doctor_profiles.models import MedicalInstitution, MedicalInstitutionLocatio
 from doctor_profiles.models.medical_institution_location_models import MedicalInstitutionCoordinate
 from doctor_profiles.serializers.medical_institution_serializers import MedicalInstitutionPublicSerializer, \
     MedicalInstitutionLocationPublicSerializer, MedicalInstitutionPhonePublicSerializer, \
-    MedicalInstitutionLocationCreateSerializer, MedicalInstitutionLocationPublicSerializerWithVotes
+    MedicalInstitutionLocationCreateSerializer, MedicalInstitutionLocationPublicSerializerWithVotes, \
+    MedicalInstitutionCoordinatePublicSerializerWithVotes, MedicalInstitutionCoordinatesCreateSerializer
 from doctor_profiles.serializers.serializer_managers.medical_institution_serializer_manager import \
     MedicalInstitutionSerializerManager
 
@@ -146,25 +147,6 @@ class ApiPrivateMedicalInstitutionLocationVoteUp(APIView):
             return Response("You've already upvoted this location", status=status.HTTP_409_CONFLICT)
 
 
-class ApiPrivateMedicalInstitutionCoordinateVoteUp(APIView):
-    """
-    Vote up coordinates
-    ?coordinate=id
-    """
-
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        id = request.GET.get('id', None)
-        coords = get_object_or_404(MedicalInstitutionCoordinate, id=id)
-
-        try:
-            coords.vote_up(user=request.user)
-            return Response("Thanks for voting", status=status.HTTP_200_OK)
-        except IntegrityError:
-            return Response("You've already upvoted this coordinate", status=status.HTTP_409_CONFLICT)
-
-
 class ApiPrivateMedicalInstitutionLocationVoteDown(APIView):
     """
     Vote down a location for a medical institution
@@ -184,29 +166,10 @@ class ApiPrivateMedicalInstitutionLocationVoteDown(APIView):
             return Response("You've already voted for this location", status=status.HTTP_409_CONFLICT)
 
 
-class ApiPrivateMedicalInstitutionCoordinateVoteDown(APIView):
-    """
-    Vote up coordinates
-    ?coordinate=id
-    """
-
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        id = request.GET.get('id', None)
-        coords = get_object_or_404(MedicalInstitutionCoordinate, id=id)
-
-        try:
-            coords.vote_down(user=request.user)
-            return Response("Thanks for voting", status=status.HTTP_200_OK)
-        except IntegrityError:
-            return Response("You've already downvoted this coordinate", status=status.HTTP_409_CONFLICT)
-
-
 class ApiPrivateMedicalInstitutionLocationCreate(APIView):
     """
     Add/suggest a new location for medical institution
-    ?id=n
+    ?id=medical_institution_id
 
     """
 
@@ -244,5 +207,112 @@ class ApiPrivateMedicalInstitutionLocationCreate(APIView):
             return_serializer = MedicalInstitutionLocationPublicSerializer(location)
 
             return Response(return_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+###############################################################################
+# Coordinates
+###############################################################################
+class ApiPublicMedicalInstitutionCoordinateList(APIView):
+    """
+    List of coordinates for medical institution
+    ?id=medical_institution_id
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id', None))
+        serializer = MedicalInstitutionCoordinatePublicSerializerWithVotes(medical_institution.all_coordinates(),
+                                                                           many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPublicMedicalInstitutionTopCoordinateDetail(APIView):
+    """
+    Detail of top coords for medical institution
+    ?id=medical_institution_id
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id', None))
+        serializer = MedicalInstitutionCoordinatePublicSerializerWithVotes(medical_institution.coordinates())
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPublicMedicalInstitutionCoordinateDetail(APIView):
+    """
+        Detail of oords
+        ?id=coords_id
+        """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        coords = get_object_or_404(MedicalInstitutionCoordinate, id=request.GET.get('id', None))
+        serializer = MedicalInstitutionCoordinatePublicSerializerWithVotes(coords)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivateMedicalInstitutionCoordinateVoteDown(APIView):
+    """
+    Vote up coordinates
+    ?coordinate=id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        id = request.GET.get('id', None)
+        coords = get_object_or_404(MedicalInstitutionCoordinate, id=id)
+
+        try:
+            coords.vote_down(user=request.user)
+            return Response("Thanks for voting", status=status.HTTP_200_OK)
+        except IntegrityError:
+            return Response("You've already downvoted this coordinate", status=status.HTTP_409_CONFLICT)
+
+
+class ApiPrivateMedicalInstitutionCoordinateVoteUp(APIView):
+    """
+    Vote up coordinates
+    ?coordinate=id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        id = request.GET.get('id', None)
+        coords = get_object_or_404(MedicalInstitutionCoordinate, id=id)
+
+        try:
+            coords.vote_up(user=request.user)
+            return Response("Thanks for voting", status=status.HTTP_200_OK)
+        except IntegrityError:
+            return Response("You've already upvoted this coordinate", status=status.HTTP_409_CONFLICT)
+
+
+class ApiPrivateMedicalInstitutionCoordinateCreate(APIView):
+    """
+    Add/suggest a new coordinate pair for medical institution
+    ?id=medical_institution_id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id'))
+        serializer = MedicalInstitutionCoordinatesCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            locdata = serializer.validated_data
+            locdata['medical_institution'] = medical_institution
+            locdata['suggested_by'] = request.user
+
+            coords = MedicalInstitutionCoordinate.objects.create(**locdata)
+
+            return Response("Coordinates saved", status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -16,3 +16,13 @@ from .specialization_serializers import SpecializationSerializer, Specialization
     SpecializationPublicSerializer, \
     DoctorSpecializationCreateSerializer, DoctorSpecializationPublicSerializer, DoctorSpecializationSerializer, \
     DoctorSpecializationUpdateSerializer
+
+from .medical_institution_serializers import MedicalInstitutionTypeSerializer, MedicalInstitutionTypePublicSerializer, \
+    MedicalInstitutionLocationSerializer, MedicalInstitutionLocationCreateSerializer, \
+    MedicalInstitutionLocationPublicSerializer, MedicalInstitutionLocationVoteSerializer, \
+    MedicalInstitutionPhoneSerializer, MedicalInstitutionPhonePublicSerializer, MedicalInstitutionPhoneVoteSerializer, \
+    MedicalInstitutionSerializer, MedicalInstitutionPublicSerializer, \
+    MedicalInstitutionLocationPublicSerializerWithVotes, MedicalInstitutionPhonesPublicSerializerWithVotes, \
+    MedicalInstitutionCoordinateSerializer, MedicalInstitutionCoordinatePublicSerializer, \
+    MedicalInstitutionCoordinatePublicSerializerWithVotes, MedicalInstitutionNestedPublicSerializer, \
+    MedicalInstitutionCoordinatesCreateSerializer

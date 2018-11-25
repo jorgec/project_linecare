@@ -165,13 +165,13 @@ class MedicalInstitutionPhonesPublicSerializerWithVotes(serializers.Serializer):
     votes = serializers.IntegerField()
 
 
-class MedicalInstitutionCoordinateSerializer(serializers.Serializer):
+class MedicalInstitutionCoordinateSerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicalInstitutionCoordinate
         fields = '__all__'
 
 
-class MedicalInstitutionCoordinatePublicSerializer(serializers.Serializer):
+class MedicalInstitutionCoordinatePublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicalInstitutionCoordinate
         fields = (
@@ -182,7 +182,7 @@ class MedicalInstitutionCoordinatePublicSerializer(serializers.Serializer):
 
 
 class MedicalInstitutionCoordinatePublicSerializerWithVotes(serializers.Serializer):
-    coordinates = MedicalInstitutionCoordinatePublicSerializer
+    coordinates = MedicalInstitutionCoordinatePublicSerializer()
     votes = serializers.IntegerField()
 
 
@@ -191,3 +191,12 @@ class MedicalInstitutionNestedPublicSerializer(serializers.Serializer):
     address = MedicalInstitutionLocationPublicSerializerWithVotes(allow_null=True, required=False, many=True)
     phones = MedicalInstitutionPhonesPublicSerializerWithVotes(allow_null=True, required=False, many=True)
     coordinates = MedicalInstitutionCoordinatePublicSerializerWithVotes(allow_null=True, required=False, many=True)
+
+
+class MedicalInstitutionCoordinatesCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicalInstitutionCoordinate
+        fields = (
+            'lat',
+            'lon'
+        )

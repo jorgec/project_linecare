@@ -107,8 +107,8 @@ class MedicalInstitutionLocationVote(models.Model):
 
 class MedicalInstitutionCoordinate(models.Model):
     # Fields
-    lat = models.DecimalField(max_digits=20, decimal_places=12, null=True, blank=True)
-    lon = models.DecimalField(max_digits=20, decimal_places=12, null=True, blank=True)
+    lat = models.DecimalField(max_digits=20, decimal_places=16, null=True, blank=True)
+    lon = models.DecimalField(max_digits=20, decimal_places=16, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, blank=True, null=True)
@@ -117,6 +117,11 @@ class MedicalInstitutionCoordinate(models.Model):
     medical_institution = models.ForeignKey(
         'doctor_profiles.MedicalInstitution',
         on_delete=models.CASCADE, related_name="medical_institution_coordinates"
+    )
+    suggested_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, related_name="medical_institution_coordinate_suggestions",
+        null=True, blank=True, default=None
     )
 
     class Meta:

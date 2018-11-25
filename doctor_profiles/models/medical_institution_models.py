@@ -110,17 +110,19 @@ class MedicalInstitution(models.Model):
             sorted_coordinates = sorted(coordinate_votes.items(), key=operator.itemgetter(1), reverse=True)
 
             if with_votes:
-                return [{"coordinate": a[0], "votes": a[1]} for a in sorted_coordinates]
+                return [{"coordinates": a[0], "votes": a[1]} for a in sorted_coordinates]
             else:
                 return [coordinate[0] for coordinate in sorted_coordinates]
 
         return None
 
     def coordinates(self):
-        coordinates = self.coordinates()
-        if coordinates:
-            if len(coordinates) > 0:
-                return coordinates[0]
+        coords = self.all_coordinates()
+        print(coords)
+        if coords:
+            if len(coords) > 0:
+                print(coords[0])
+                return coords[0]
         return None
 
 

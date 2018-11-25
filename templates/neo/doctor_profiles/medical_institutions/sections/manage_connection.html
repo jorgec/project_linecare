@@ -1,14 +1,38 @@
 {% load static %}
 {% load crispy_forms_tags %}
-<div class="row">
-    <div class="col-md-6 col-sm-12">
-        <div id="map" class="m-0"></div>
-    </div>
-    <div class="col-md-6 col-sm-12">
-        <div class="p-2">
-            <div id="top-address-container"></div>
-
+<div class="card mb-2">
+    <div id="map" class="m-0"></div>
+    <div class="card-footer">
+        <div class="row">
+            <div id="top-coords-vote-container" class="col-sm-12"></div>
         </div>
+        <div id="add-coordinage-form" class="collapse">
+            <div class="row my-2">
+                <div class="col-sm-12">
+                    <form id="map-geoloc">
+                        <input type="text" id="geoloc-address" name="geoloc-address" class="form-control"
+                               placeholder="Address...">
+                    </form>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <input type="text" name="geoloc-lat" id="geoloc-lat" class="form-control">
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" name="geoloc-lon" id="geoloc-lon" class="form-control">
+                </div>
+            </div>
+            <div class="btn-group-sm">
+                <a class="btn btn-outline-info" href="#!" id="btnAddCoordinates">Submit these coordinates
+                    for {{ rel.medical_institution }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card mb-2">
+    <div class="card-body">
+        <div id="top-address-container"></div>
     </div>
 </div>
 
@@ -25,12 +49,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Do you think the address listed is wrong? Help in making us better by submitting more accurate information:</p>
+                <p>Do you think the address listed is wrong? Help in making us better by submitting more accurate
+                    information:</p>
                 <div id="addresses-container"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#submit-address-modal">Submit a suggestion</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#submit-address-modal">
+                    Submit a suggestion
+                </button>
             </div>
         </div>
     </div>
@@ -62,20 +89,38 @@
 
 <!-- templates -->
 
+<!-- top coords -->
+<script type="text/html" id="top-coords-vote-template">
+    <span class="float-right badge badge-secondary" data-content="votes"></span>
+    <div class="btn-group-sm btn-group">
+        <a data-toggle="tooltip" data-placement="top" title="Upvote these coordinates"
+           class="card-link top-coordinates-vote-up btn btn-outline-primary" href="#!"
+           data-template-bind='[{"attribute": "data-pk", "value": "coordinates.id"}]'>
+            <i class="fa fa-thumbs-up"></i>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="Downvote these coordinates"
+           class="card-link top-coordinates-vote-down btn btn-outline-danger" href="#!"
+           data-template-bind='[{"attribute": "data-pk", "value": "coordinates.id"}]'>
+            <i class="fa fa-thumbs-down"></i>
+        </a>
+        <a data-toggle="collapse" href="#add-coordinage-form" class="btn btn-outline-info btn-sm" href="#!">
+            <small>Submit new coordinates</small>
+        </a>
+        <a class="btn btn-outline-info btn-sm" href="#!">
+            <small>Review other suggested coordinates</small>
+        </a>
+    </div>
+</script>
+<!-- /top coords -->
+
 <!-- top-address -->
 <script type="text/html" id="top-address-template">
-    <div class="card-body">
-
-        <p>
-            <span data-content="address.address"></span>
-            <br>
-            <span data-content="address.city.name"></span> <span data-content="address.zip_code"></span> <span
-                data-content="address.province.name"></span>
-            <br>
-            <span data-content="address.region.name"></span>
-        </p>
+    <div class="card-body p-1">
+        <span data-content="address.address"></span>, <span data-content="address.city.name"></span> <span
+            data-content="address.zip_code"></span> <span
+            data-content="address.province.name"></span>, <span data-content="address.region.name"></span>
     </div>
-    <div class="card-footer">
+    <div class="card-footer p-1">
         <span class="float-right badge badge-secondary" data-content="votes"></span>
         <div class="btn-group-sm btn-group">
             <a data-toggle="tooltip" data-placement="top" title="Upvote this address"
@@ -89,7 +134,7 @@
                 <i class="fa fa-thumbs-down"></i>
             </a>
             <a data-toggle="modal" data-target="#all-addresses-modal" class="btn btn-outline-info" href="#!">
-                <small>Is this incorrect? Submit an update</small>
+                <small>Is this incorrect? Submit an update or review other suggested addresses</small>
             </a>
         </div>
 
@@ -100,18 +145,11 @@
 
 <!-- all-addresses -->
 <script type="text/html" id="addresses-template">
-    <div class="card-body">
-
-        <p>
-            <span data-content="address.address"></span>
-            <br>
-            <span data-content="address.city.name"></span> <span data-content="address.zip_code"></span> <span
-                data-content="address.province.name"></span>
-            <br>
-            <span data-content="address.region.name"></span>
-        </p>
+    <div class="card-body p-1">
+            <span data-content="address.address"></span>, <span data-content="address.city.name"></span> <span data-content="address.zip_code"></span> <span
+                data-content="address.province.name"></span>, <span data-content="address.region.name"></span>
     </div>
-    <div class="card-footer">
+    <div class="card-footer p-1">
         <span class="float-right badge badge-secondary" data-content="votes"></span>
         <div class="btn-group-sm btn-group">
             <a data-toggle="tooltip" data-placement="top" title="Upvote this address"
