@@ -91,6 +91,7 @@ class MedicalInstitution(models.Model):
                 return addresses[0]
         return None
 
+
     def get_coordinates(self):
         return self.medical_institution_coordinates.all()
 

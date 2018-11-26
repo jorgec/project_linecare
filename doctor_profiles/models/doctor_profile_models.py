@@ -54,13 +54,18 @@ class DoctorProfile(models.Model):
     def get_diplomates(self):
         return self.doctor_associations.filter(level='Diplomate', association__is_approved=True)
 
+    def get_medical_institutions(self):
+        return self.medical_institutions_joined.filter(is_approved=True)
+
     def get_profile_progress_metadata(self):
         return self.metadata.get('doctor_progress')
 
     def dismiss_profile_progress_display(self):
         if self.get_profile_progress_metadata():
+            print(self.get_profile_progress_metadata())
             self.metadata['doctor_progress']['show'] = False
             self.save()
+            print(self.get_profile_progress_metadata())
             return True
         return False
 

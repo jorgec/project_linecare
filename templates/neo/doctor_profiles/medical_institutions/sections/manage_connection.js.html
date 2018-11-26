@@ -18,74 +18,134 @@
     var model = {
         top_coords: {
             dataSrc: "{% url 'api_public_medical_institution_top_coordinate_detail' %}?id={{ rel.medical_institution.id }}",
-            fetch: fetchTopCoords,
+            fetch: function(){genericFetch('top_coords')},
             onReady: true,
+            onSuccessResult: [
+                updateMap
+            ],
+            onSuccess: [],
+            container: $("#top-coords-vote-container"),
+            template: $("#top-coords-vote-template"),
             actions: {
                 vote_up: {
-                    fn: coordsVote,
+                    fn: genericGetAction,
+                    apiConsumer: true,
                     parameters: {
                         id: "data-pk",
                         triggerElement: ".top-coordinates-vote-up",
                         api: "{% url 'api_private_medical_institution_coordinate_vote_up' %}?",
+                        onSuccess: ['top_coords', 'all_coords']
                     }
                 },
                 vote_down: {
-                    fn: coordsVote,
+                    fn: genericGetAction,
+                    apiConsumer: true,
                     parameters: {
                         id: "data-pk",
                         triggerElement: ".top-coordinates-vote-down",
                         api: "{% url 'api_private_medical_institution_coordinate_vote_down' %}?",
+                        onSuccess: ['top_coords', 'all_coords']
                     }
                 },
             }
         },
-
+        all_coords: {
+            dataSrc: "{% url 'api_public_medical_institution_coordinate_list' %}?id={{ rel.medical_institution.id }}",
+            fetch: function(){genericFetch('all_coords')},
+            onReady: true,
+            onSuccessResult: [],
+            onSuccess: [],
+            container: $("#all-coords-vote-container"),
+            template: $("#all-coords-vote-template"),
+            actions: {
+                vote_up: {
+                    fn: genericGetAction,
+                    apiConsumer: true,
+                    parameters: {
+                        id: "data-pk",
+                        triggerElement: ".coordinates-vote-up",
+                        api: "{% url 'api_private_medical_institution_coordinate_vote_up' %}?",
+                        onSuccess: ['top_coords', 'all_coords']
+                    }
+                },
+                vote_down: {
+                    fn: genericGetAction,
+                    apiConsumer: true,
+                    parameters: {
+                        id: "data-pk",
+                        triggerElement: ".coordinates-vote-down",
+                        api: "{% url 'api_private_medical_institution_coordinate_vote_down' %}?",
+                        onSuccess: ['top_coords', 'all_coords']
+                    }
+                },
+                map_focus: {
+                    fn: focusMap,
+                    apiConsumer: false,
+                    parameters: {
+                        triggerElement: ".map-focus",
+                        fnParams: ["data-lat", "data-lon"],
+                    }
+                }
+            }
+        },
         top_address: {
             dataSrc: "{% url 'api_public_medical_institution_top_location_detail' %}?id={{ rel.medical_institution.id  }}",
-            fetch: fetchTopAddress,
+            fetch: function(){genericFetch('top_address')},
             onReady: true,
+            onSuccessResult: [],
+            onSuccess: [],
             container: $("#top-address-container"),
             template: $("#top-address-template"),
             actions: {
                 vote_up: {
-                    fn: addressVote,
+                    fn: genericGetAction,
+                    apiConsumer: true,
                     parameters: {
                         id: "data-pk",
                         triggerElement: ".top-location-vote-up",
                         api: "{% url 'api_private_medical_institution_location_vote_up' %}?",
+                        onSuccess: ["top_address", "all_addresses"]
                     }
                 },
                 vote_down: {
-                    fn: addressVote,
+                    fn: genericGetAction,
+                    apiConsumer: true,
                     parameters: {
                         id: "data-pk",
                         triggerElement: ".top-location-vote-down",
                         api: "{% url 'api_private_medical_institution_location_vote_down' %}?",
+                        onSuccess: ["top_address", "all_addresses"]
                     }
                 },
             }
         },
         all_addresses: {
             dataSrc: "{% url 'api_public_medical_institution_location_list' %}?id={{ rel.medical_institution.id }}",
-            fetch: fetchAllAddresses,
+            fetch: function(){genericFetch('all_addresses')},
             onReady: true,
+            onSuccessResult: [],
+            onSuccess: [],
             container: $("#addresses-container"),
             template: $("#addresses-template"),
             actions: {
                 vote_up: {
-                    fn: addressVote,
+                    fn: genericGetAction,
+                    apiConsumer: true,
                     parameters: {
                         id: "data-pk",
                         triggerElement: '.location-vote-up',
                         api: "{% url 'api_private_medical_institution_location_vote_up' %}?",
+                        onSuccess: ["top_address", "all_addresses"]
                     }
                 },
                 vote_down: {
-                    fn: addressVote,
+                    fn: genericGetAction,
+                    apiConsumer: true,
                     parameters: {
                         id: "data-pk",
                         triggerElement: '.location-vote-down',
                         api: "{% url 'api_private_medical_institution_location_vote_down' %}?",
+                        onSuccess: ["top_address", "all_addresses"]
                     },
                 }
             }
@@ -95,130 +155,6 @@
     /**
      * methods
      */
-
-    function fetchTopCoords() {
-        var entity = model.top_coords;
-
-        $.get(entity.dataSrc)
-            .done(function (result) {
-                var lat = parseFloat(result.coordinates.lat);
-                var lon = parseFloat(result.coordinates.lon);
-                drawMap(lat, lon)
-                updateLatLonInputs(lat, lon)
-                addMarker(lat, lon, "{{ rel.medical_institution }}")
-
-                $("#top-coords-vote-container").loadTemplate($("#top-coords-vote-template"), result);
-
-                $(".top-coordinates-vote-up").on('click', function (e) {
-                    e.preventDefault();
-                    var url = entity.actions.vote_up.parameters.api + "id=" + $(this).attr(entity.actions.vote_up.parameters.id);
-                    coordsVote(url)
-                });
-                $(".top-coordinates-vote-down").on('click', function (e) {
-                    e.preventDefault();
-                    var url = entity.actions.vote_down.parameters.api + "id=" + $(this).attr(entity.actions.vote_down.parameters.id);
-                    coordsVote(url)
-                });
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-            getGeoLocation();
-        });
-    }
-
-    function coordsVote(url){
-        $.get(url)
-            .done(function (result) {
-                $.notify({
-                    message: result
-                }, {
-                    type: 'success'
-                });
-                updateState(model.top_coords);
-
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                $.notify({
-                    message: jqXHR.responseJSON
-                }, {
-                    type: 'danger'
-                });
-            });
-    }
-
-
-    function fetchTopAddress() {
-        var entity = model.top_address;
-
-        $.get(entity.dataSrc)
-            .done(function (result) {
-                entity.container.loadTemplate(entity.template, result);
-
-                $(entity.actions.vote_up.parameters.triggerElement).on('click', function (e) {
-                    e.preventDefault();
-                    var url = entity.actions.vote_up.parameters.api + "id=" + $(this).attr(entity.actions.vote_up.parameters.id);
-                    addressVote(url);
-                });
-                $(entity.actions.vote_down.parameters.triggerElement).on('click', function (e) {
-                    e.preventDefault();
-                    var url = entity.actions.vote_down.parameters.api + "id=" + $(this).attr(entity.actions.vote_down.parameters.id);
-                    addressVote(url);
-                });
-
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                $.notify({
-                    message: jqXHR.responseJSON
-                }, {
-                    type: 'danger'
-                });
-            });
-    }
-
-    function fetchAllAddresses() {
-        var entity = model.all_addresses;
-        $.get(entity.dataSrc)
-            .done(function (result) {
-                entity.container.loadTemplate(entity.template, result);
-
-                $(entity.actions.vote_up.parameters.triggerElement).click(function (e) {
-                    var url = entity.actions.vote_up.parameters.api + "id=" + $(this).attr(entity.actions.vote_up.parameters.id)
-                    addressVote(url);
-                });
-                $(entity.actions.vote_down.parameters.triggerElement).click(function (e) {
-                    var url = entity.actions.vote_down.parameters.api + "id=" + $(this).attr(entity.actions.vote_down.parameters.id)
-                    addressVote(url);
-                });
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                $.notify({
-                    message: jqXHR.responseJSON
-                }, {
-                    type: 'danger'
-                });
-            });
-    }
-
-
-    function addressVote(url) {
-        $.get(url)
-            .done(function (result) {
-                $.notify({
-                    message: result
-                }, {
-                    type: 'success'
-                });
-                updateState(model.top_address);
-                updateState(model.all_addresses);
-
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                $.notify({
-                    message: jqXHR.responseJSON
-                }, {
-                    type: 'danger'
-                });
-            });
-    }
 
 
 
@@ -264,7 +200,6 @@
     $(document).ready(function () {
 
         bootUp(model);
-
 
         var region_id = null;
         var province_id = null;
@@ -319,6 +254,24 @@
                 type: 'danger'
             });
         }
+    }
+    function updateMap(result){
+        try{
+            var lat = parseFloat(result.coordinates.lat);
+            var lon = parseFloat(result.coordinates.lon);
+            focusMap({"data-lat": lat, "data-lon": lon});
+        }catch(err){
+            getGeoLocation();
+        }
+
+    }
+
+    function focusMap(coords){
+        var lat = parseFloat(coords["data-lat"]);
+        var lon = parseFloat(coords["data-lon"]);
+        drawMap(lat, lon);
+        updateLatLonInputs(lat, lon);
+        addMarker(lat, lon, "{{ rel.medical_institution }}");
     }
 
     function drawGeolocation(position){
@@ -430,7 +383,13 @@
         var url = "{% url 'api_private_medical_institution_coordinate_create' %}?id={{ rel.medical_institution.id }}";
         $.post(url, formData)
             .done(function(result){
-                console.log(result);
+                updateState(model.top_coords);
+                updateState(model.all_coords);
+                $.notify({
+                    message: result
+                }, {
+                    type: 'success'
+                });
             })
             .fail(function(jqXHR, textStatus, errorThrown){
                 console.log(jqXHR);

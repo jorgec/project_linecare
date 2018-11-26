@@ -6,7 +6,10 @@
         <div class="row">
             <div id="top-coords-vote-container" class="col-sm-12"></div>
         </div>
-        <div id="add-coordinage-form" class="collapse">
+        <div id="all-coords-vote-container-collapse" class="collapse">
+            <div class="row" id="all-coords-vote-container"></div>
+        </div>
+        <div id="add-coordinate-form" class="collapse">
             <div class="row my-2">
                 <div class="col-sm-12">
                     <form id="map-geoloc">
@@ -103,15 +106,39 @@
            data-template-bind='[{"attribute": "data-pk", "value": "coordinates.id"}]'>
             <i class="fa fa-thumbs-down"></i>
         </a>
-        <a data-toggle="collapse" href="#add-coordinage-form" class="btn btn-outline-info btn-sm" href="#!">
+        <a data-toggle="collapse" href="#add-coordinate-form" class="btn btn-outline-info btn-sm">
             <small>Submit new coordinates</small>
         </a>
-        <a class="btn btn-outline-info btn-sm" href="#!">
+        <a class="btn btn-outline-info btn-sm" data-toggle="collapse" href="#all-coords-vote-container-collapse">
             <small>Review other suggested coordinates</small>
         </a>
     </div>
 </script>
 <!-- /top coords -->
+
+<!-- all coords -->
+<script type="text/html" id="all-coords-vote-template">
+    <div class="col-sm-6 col-md-3 mt-2">
+        <span class="float-right badge badge-secondary" data-content="votes"></span>
+        <div class="btn-group-sm btn-group">
+            <a class="btn btn-outline-info map-focus" href="#!"
+               data-template-bind='[{"attribute": "data-lat", "value": "coordinates.lat"}, {"attribute": "data-lon", "value": "coordinates.lon"}]'>
+                <i class="fa fa-eye"></i>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="Upvote these coordinates"
+               class="card-link coordinates-vote-up btn btn-outline-primary" href="#!"
+               data-template-bind='[{"attribute": "data-pk", "value": "coordinates.id"}]'>
+                <i class="fa fa-thumbs-up"></i>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="Downvote these coordinates"
+               class="card-link coordinates-vote-down btn btn-outline-danger" href="#!"
+               data-template-bind='[{"attribute": "data-pk", "value": "coordinates.id"}]'>
+                <i class="fa fa-thumbs-down"></i>
+            </a>
+        </div>
+    </div>
+</script>
+<!-- /all coords -->
 
 <!-- top-address -->
 <script type="text/html" id="top-address-template">
@@ -146,8 +173,9 @@
 <!-- all-addresses -->
 <script type="text/html" id="addresses-template">
     <div class="card-body p-1">
-            <span data-content="address.address"></span>, <span data-content="address.city.name"></span> <span data-content="address.zip_code"></span> <span
-                data-content="address.province.name"></span>, <span data-content="address.region.name"></span>
+        <span data-content="address.address"></span>, <span data-content="address.city.name"></span> <span
+            data-content="address.zip_code"></span> <span
+            data-content="address.province.name"></span>, <span data-content="address.region.name"></span>
     </div>
     <div class="card-footer p-1">
         <span class="float-right badge badge-secondary" data-content="votes"></span>

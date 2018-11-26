@@ -9,46 +9,55 @@
 
 {% block subcontent %}
 
-<div class="settings__label">
-    <h5 class="h5">My Medical Institutions</h5>
-</div>
-
-<div class="hospital-list__container">
-
-    <div class="hospital-list__item-wrapper">
-        <div class="hospital-list__item">
-            <h6 class="h6">Name</h6>
-            <p>asdgasdg</p>
-        </div>
-        <div class="hospital-list__buttons">
-            <a class="rounded-circle">
-                asdgasdg
-            </a>
-        </div>
-    </div>
-</div>
-
-<div class="settings__label">
-    <h5 class="h5">Connect to Medical Institutions</h5>
-</div>
-
-<div class="hospital-list__container">
-
-    <div class="hospital-list__item-wrapper">
-
-        <div id="root"></div>
-
+    <div class="settings__label">
+        <h5 class="h5">My Medical Institutions</h5>
     </div>
 
-</div>
+    {% if medical_institutions %}
+        <div class="hospital-list__container">
+            {% for mi in medical_institutions %}
+                <div class="hospital-list__item-wrapper">
+
+                    <div class="hospital-list__item">
+                        <h6 class="h6">
+                            <a href="{% url 'doctor_profile_medical_institution_home' mi.medical_institution.slug %}">
+                                {{ mi.medical_institution }}
+                            </a>
+                        </h6>
+                        <p>
+                            {{ mi.medical_institution.address.address }}
+                        </p>
+                    </div>
+                    <div class="hospital-list__buttons">
+                        <a class="rounded-circle">
+
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="settings__label">
+        <h5 class="h5">Connect to Medical Institutions</h5>
+    </div>
+
+    <div class="hospital-list__container">
+
+        <div class="hospital-list__item-wrapper">
+
+            <div id="root"></div>
+
+        </div>
+
+    </div>
 
 
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'react/doctor_profile/medical_institutions/search/js/1.chunk.js' %}"></script>
-<script src="{% static 'react/doctor_profile/medical_institutions/search/js/main.chunk.js' %}"></script>
-<script src="{% static 'react/doctor_profile/medical_institutions/search/js/runtime-main.js' %}"></script>
+    <script src="{% static 'react/doctor_profile/medical_institutions/search/js/1.chunk.js' %}"></script>
+    <script src="{% static 'react/doctor_profile/medical_institutions/search/js/main.chunk.js' %}"></script>
+    <script src="{% static 'react/doctor_profile/medical_institutions/search/js/runtime-main.js' %}"></script>
 {% endblock %}
 {% block home_scripts %}
 {% endblock %}
