@@ -94,6 +94,7 @@ datesdim/migrations/
 locations/migrations/
 
 doctor_profiles/migrations/
+receptionist_profiles/migrations/
 
 package\.json
 
