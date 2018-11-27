@@ -37,7 +37,7 @@ class MedicalInstitutionSerializerManager:
             'institution': institution.data,
             'address': address.data,
             'phones': phones.data,
-            'coordinages': coordinates.data
+            'coordinates': coordinates.data
         }
 
         # return json.dumps(nested)
