@@ -118,6 +118,8 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                     added_by=request.user
                 )
             except IntegrityError:
+                print("Bad MI")
+                print(serializer.data)
                 return Response("Invalid data", status=status.HTTP_400_BAD_REQUEST)
 
             try:
@@ -130,13 +132,17 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                     suggested_by=request.user,
                     medical_institution=mi
                 )
+
             except IntegrityError:
+                print("Bad loc")
+                print(serializer.data)
                 return Response("Invalid data", status=status.HTTP_400_BAD_REQUEST)
 
             return_serializer = MedicalInstitutionPublicSerializer(mi)
 
             return Response(return_serializer.data, status=status.HTTP_200_OK)
         else:
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
