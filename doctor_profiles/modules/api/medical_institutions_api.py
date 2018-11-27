@@ -110,7 +110,6 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
 
     def post(self, request, *args, **kwargs):
         serializer = MedicalInstitutionCreatePrivateSerializer(request.data)
-        print(request.data)
         if serializer.is_valid():
             try:
                 mi = MedicalInstitution.objects.create(
