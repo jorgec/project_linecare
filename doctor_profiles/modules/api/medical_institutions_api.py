@@ -109,6 +109,7 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
     parser_classes = [parsers.JSONParser]
 
     def post(self, request, *args, **kwargs):
+        print(request.data)
         serializer = MedicalInstitutionCreatePrivateSerializer(data=request.data)
         if serializer.is_valid():
             try:
