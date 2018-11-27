@@ -129,7 +129,7 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                     region_id=serializer.validated_data['region'],
                     province_id=serializer.validated_data['province'],
                     city_id=serializer.validated_data['city'],
-                    zip_code=serializer.validated_data['zipcode'],
+                    zip_code=serializer.validated_data['zip_code'],
                     suggested_by=request.user,
                     medical_institution=mi
                 )
