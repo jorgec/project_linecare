@@ -1,0 +1,1 @@
+from .receptionist_profile_model import ReceptionistProfile

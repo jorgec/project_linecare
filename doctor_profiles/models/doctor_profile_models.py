@@ -70,7 +70,11 @@ class DoctorProfile(models.Model):
         return False
 
     def display_profile_progress_status(self):
-        return self.metadata['doctor_progress']['show']
+        try:
+            return self.metadata['doctor_progress']['show']
+        except KeyError:
+            self.initialize_progress_metadata()
+            return self.metadata['doctor_progress']['show']
 
     def initialize_progress_metadata(self):
         self.metadata = {
