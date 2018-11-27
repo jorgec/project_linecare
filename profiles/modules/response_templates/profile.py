@@ -1,7 +1,7 @@
 from rest_framework.status import HTTP_200_OK
 from rest_framework.utils import json
 
-from albums.serializers import AlbumSerializer, PhotoSerializer
+from albums.serializers import AlbumSerializer, PhotoSerializer, SinglePhotoSerializer
 from profiles.modules.response_templates.phone import phone_dict_template, private_phone_dict_template
 
 
@@ -63,19 +63,19 @@ def update_template(**kwargs):
 
 def private_profile_template(user, as_json=False):
     profile = user.base_profile()
-    phones =profile.get_all_phones()
-    _phones = ''
+    phones = profile.get_all_phones()
+    _phones = {}
     profile_photo = profile.get_profile_photo()
-    _profile_photo = ''
+    _profile_photo = {'photo': None}
     cover_photo = profile.get_cover_photo()
-    _cover_photo = ''
+    _cover_photo = {'photo': None}
 
     if phones:
         _phones = private_phone_dict_template(phones)
     if profile_photo:
-        _profile_photo = PhotoSerializer(profile_photo).data
+        _profile_photo = SinglePhotoSerializer({'photo': profile_photo}).data
     if cover_photo:
-        _cover_photo = PhotoSerializer(cover_photo).data
+        _cover_photo = SinglePhotoSerializer({'photo': cover_photo}).data
 
     data = {
         'username': user.username,
@@ -90,5 +90,5 @@ def private_profile_template(user, as_json=False):
     }
 
     if as_json:
-        return json.dump(data)
+        return json.dumps(data)
     return data

@@ -19,6 +19,9 @@ urlpatterns = [
     path('api/public/profile/by_username',
          api_retrieve.ApiPublicProfileGetByUsername.as_view(),
          name='api_public_profile_by_username'),
+    path('api/public/profile/by_pk',
+         api_retrieve.ApiPrivateProfileGetByPK.as_view(),
+         name='api_private_profile_by_pk'),
 
     # Update
     path('api/private/profile/update',

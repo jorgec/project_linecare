@@ -22,8 +22,11 @@ function buildURLwithParams(action) {
 
 function genericFetch(key) {
     var entity = model[key];
+
     $.get(entity.dataSrc)
         .done(function (result) {
+            // console.log(key, entity.dataSrc, result);
+
             entity.container.loadTemplate(entity.template, result);
 
             // onSuccessResult

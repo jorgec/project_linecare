@@ -255,7 +255,7 @@ urlpatterns += [
     path(f'{version}/private/medical_institution/location/vote_down',
          medical_institutions_api.ApiPrivateMedicalInstitutionLocationVoteDown.as_view(),
          name='api_private_medical_institution_location_vote_down'),
-    
+
     # coordinate
     path(f'{version}/public/medical_institution/coordinate/list',
          medical_institutions_api.ApiPublicMedicalInstitutionCoordinateList.as_view(),
@@ -275,4 +275,15 @@ urlpatterns += [
     path(f'{version}/private/medical_institution/coordinate/vote_down',
          medical_institutions_api.ApiPrivateMedicalInstitutionCoordinateVoteDown.as_view(),
          name='api_private_medical_institution_coordinate_vote_down'),
+
+    # receptionists
+    path(f'{version}/private/medical_institution/receptionist/list',
+         medical_institutions_api.ApiPrivateMedicalInstitutionReceptionistList.as_view(),
+         name='api_private_medical_institution_receptionist_list'),
+    path(f'{version}/private/medical_institution/receptionist/not_connected/list',
+         medical_institutions_api.ApiPrivateMedicalInstitutionNotConnectedReceptionistList.as_view(),
+         name='api_private_medical_institution_receptionist_not_connected_list'),
+    path(f'{version}/private/medical_institution/receptionist/connected/list',
+         medical_institutions_api.ApiPrivateMedicalInstitutionConnectedReceptionistList.as_view(),
+         name='api_private_medical_institution_receptionist_connected_list'),
 ]

@@ -1,0 +1,56 @@
+{% load static %}
+<div class="modal fade" id="modalCreateReceptionist" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="post" id="formCreateReceptionist">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCreateReceptionistTitle">Create Receptionist profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+
+
+                        <div class="form-group row">
+                            <label for="receptionist_first_name" class="col-3 col-form-label">First Name</label>
+                            <div class="col-9">
+                                <input id="receptionist_first_name" name="receptionist_first_name" placeholder="Juan" type="text" required="required"
+                                       class="form-control here">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="receptionist_last_name" class="col-3 col-form-label">Last Name</label>
+                            <div class="col-9">
+                                <input id="receptionist_last_name" name="receptionist_last_name" placeholder="Dela Cruz" type="text"
+                                       class="form-control here">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="receptionist_email" class="col-3 col-form-label">Email</label>
+                            <div class="col-9">
+                                <input id="receptionist_email" name="receptionist_email" placeholder="juandelacruz@linecare.net" type="text"
+                                           required="required" class="form-control here">
+
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="receptionist_password" class="col-3 col-form-label">Password</label>
+                            <div class="col-9">
+                                <input id="receptionist_password" name="receptionist_password" type="password" required="required"
+                                           class="form-control here">
+                            </div>
+                        </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="btnCreateReceptionistSave">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

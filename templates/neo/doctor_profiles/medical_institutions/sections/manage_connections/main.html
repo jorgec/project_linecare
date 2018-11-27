@@ -1,3 +1,4 @@
+{% load static %}
 <div class="career__header"><h4 class="h4">{{ page_title }}</h4></div>
 <div class="subcontent__wrapper">
     {% include 'neo/medical_institutions/location/common/template/medical_institution_location.template.html' %}
@@ -7,17 +8,7 @@
     <h5 class="h5">Connections</h5>
 </div>
 <div class="subcontent__wrapper">
-    <div class="card">
-        <div class="card-body">
-            ...
-        </div>
-        <div class="card-footer">
-            <div class="btn-group btn-group-sm">
-                <a class="btn btn-outline-primary" href="#!" id="btnCreateReceptionist">
-                    <i class="fa fa-plus"></i>
-                    Create a Receptionist profile
-                </a>
-            </div>
-        </div>
-    </div>
+        {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/receptionist/template/receptionist_main.html' %}
+        {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/receptionist/template/receptionist_modals.html' %}
+        {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/receptionist/template/receptionist_main.templates.html' %}
 </div>

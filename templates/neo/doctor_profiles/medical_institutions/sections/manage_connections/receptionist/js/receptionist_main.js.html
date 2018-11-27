@@ -1,0 +1,112 @@
+{% load static %}
+
+
+<script type="text/javascript">
+
+    model.all_receptionists = {
+        dataSrc: "{% url 'api_private_medical_institution_receptionist_not_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}",
+        fetch: function(){genericFetch('all_receptionists')},
+        onReady: true,
+        onSuccessResult: [],
+        onSuccess: [],
+        container: $("#all_receptionists_container"),
+        template: $("#all_receptionists_template"),
+        actions: {
+            connect: {
+                fn: connectReceptionist,
+                apiConsumer: false,
+                parameters: {
+                    parameters: {
+                        triggerElement: ".connect-receptionist",
+                        fnParams: ["data-id", "data-institution-id", "data-receptionist-id"]
+                    }
+                }
+            },
+        }
+    };
+    model.my_receptionists = {
+        dataSrc: "{% url 'api_private_medical_institution_receptionist_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}",
+        fetch: fetchMyReceptionists,
+        onReady: true,
+        onSuccessResult: [],
+        onSuccess: [],
+        container: $("#my_receptionists_container"),
+        template: $("#my_receptionists_template"),
+        actions: {
+            connect: {
+                fn: connectReceptionist,
+                apiConsumer: false,
+                parameters: {
+                    parameters: {
+                        triggerElement: ".connect-receptionist",
+                        fnParams: ["data-id", "data-institution-id", "data-receptionist-id"]
+                    }
+                }
+            },
+        }
+    };
+
+    /**
+     * events
+     */
+
+    $("#formCreateReceptionist").on('submit', function(e){
+        e.preventDefault();
+        createReceptionist();
+    });
+
+    $("#btnCreateReceptionistSave").on('click', function(e){
+        e.preventDefault();
+        createReceptionist();
+    });
+
+
+    /**
+     * methods
+     */
+
+    function fetchMyReceptionists(){
+        var url = "{% url 'api_private_medical_institution_receptionist_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
+        $.get(url)
+            .done(function(result){
+                $("#my_receptionists_container").loadTemplate($("#my_receptionists_template"), result);
+            })
+            .fail(function(jqXHR){
+                console.log(jqXHR);
+            });
+    }
+
+    function connectReceptionist(){
+        alert('masdgasdg');
+    }
+
+    function createReceptionist(){
+        var url = "{% url 'api_private_receptionist_profile_create_by_doctor' %}?doctor_id={{ rel.doctor.id }}&medical_institution_id={{ rel.medical_institution.id }}";
+        var formData = {
+            first_name: $("#receptionist_first_name").val(),
+            last_name: $("#receptionist_last_name").val(),
+            email: $("#receptionist_email").val(),
+            password: $("#receptionist_password").val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+
+        $.post(url, formData)
+            .done(function(result){
+                $.notify({
+                    message: "Receptionist added!"
+                }, {
+                    type: 'success'
+                });
+                updateState(model.all_receptionists);
+                $("#modalCreateReceptionist").modal('hide');
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+    }
+
+</script>

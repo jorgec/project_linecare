@@ -4,16 +4,16 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from doctor_profiles.models import MedicalInstitution, MedicalInstitutionLocation, MedicalInstitutionLocationVote, \
-    MedicalInstitutionType
+from doctor_profiles.models import MedicalInstitution, MedicalInstitutionLocation, MedicalInstitutionType, DoctorProfile
 from doctor_profiles.models.medical_institution_location_models import MedicalInstitutionCoordinate
-from doctor_profiles.serializers.medical_institution_serializers import MedicalInstitutionPublicSerializer, \
-    MedicalInstitutionLocationPublicSerializer, MedicalInstitutionPhonePublicSerializer, \
-    MedicalInstitutionLocationCreateSerializer, MedicalInstitutionLocationPublicSerializerWithVotes, \
-    MedicalInstitutionCoordinatePublicSerializerWithVotes, MedicalInstitutionCoordinatesCreateSerializer, \
-    MedicalInstitutionCreatePrivateSerializer, MedicalInstitutionTypePublicSerializer
+from doctor_profiles.serializers import MedicalInstitutionTypePublicSerializer, MedicalInstitutionPublicSerializer, \
+    MedicalInstitutionCreatePrivateSerializer, MedicalInstitutionLocationPublicSerializerWithVotes, \
+    MedicalInstitutionLocationCreateSerializer, MedicalInstitutionLocationPublicSerializer, \
+    MedicalInstitutionCoordinatePublicSerializerWithVotes, MedicalInstitutionCoordinatesCreateSerializer
 from doctor_profiles.serializers.serializer_managers.medical_institution_serializer_manager import \
     MedicalInstitutionSerializerManager
+from profiles.modules.response_templates.profile import private_profile_template
+from receptionist_profiles.serializers.receptionist_profile_serializers import ReceptionistProfileSerializer
 
 
 class ApiPublicMedicalInstitutionSearch(APIView):
@@ -377,3 +377,68 @@ class ApiPrivateMedicalInstitutionCoordinateCreate(APIView):
             return Response("Coordinates saved", status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+###############################################################################
+# Receptionists
+###############################################################################
+
+class ApiPrivateMedicalInstitutionReceptionistList(APIView):
+    """
+    List of receptionists in this medical institution
+    ?id=medical_institution_id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id'))
+        rel = medical_institution.institution_connections.filter(is_approved=True)
+        receptionists = [r.receptionist for r in rel]
+        serializer = ReceptionistProfileSerializer(receptionists, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivateMedicalInstitutionNotConnectedReceptionistList(APIView):
+    """
+    List of receptionists in this medical institution not connected to doctor
+    ?id=medical_institution_id&doctor_id=doctor_id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id'))
+        doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
+        rel = medical_institution.institution_connections.filter(is_approved=True).exclude(doctor=doctor)
+        receptionists = [r.receptionist for r in rel]
+        serializer = ReceptionistProfileSerializer(receptionists, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
+    """
+    List of receptionists in this medical institution of doctor
+    ?id=medical_institution_id&doctor_id=doctor_id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id'))
+        doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
+        rel = medical_institution.institution_connections.filter(is_approved=True, doctor=doctor)
+        receptionists = [r.receptionist for r in rel]
+
+        if request.GET.get('fmt', None) == 'full':
+            print(receptionists)
+            serializer_list = []
+            for r in receptionists:
+                serializer_list.append(private_profile_template(r.user))
+
+            return Response(serializer_list, status=status.HTTP_200_OK)
+        else:
+            serializer = ReceptionistProfileSerializer(receptionists, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)

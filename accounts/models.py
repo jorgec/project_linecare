@@ -40,7 +40,7 @@ class Account(AbstractBaseUser):
     updated = models.DateTimeField(null=False, auto_now=True)
 
     # NonRelational data
-    user_settings = JSONField(default=list)
+    user_settings = JSONField(default=dict)
 
     # unused
     first_name = models.CharField(max_length=60, null=True, blank=True)

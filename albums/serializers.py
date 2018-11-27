@@ -49,6 +49,10 @@ class PhotoSerializer(serializers.ModelSerializer):
         )
 
 
+class SinglePhotoSerializer(serializers.Serializer):
+    photo = serializers.CharField(allow_blank=True, allow_null=True, max_length=1024)
+
+
 class PhotoUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Photo

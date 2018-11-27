@@ -1,6 +1,9 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models as models
 
+from receptionist_profiles.models.managers.receptionist_profile_manager import ReceptionistConnectionManager, \
+    ReceptionistProfileManager
+
 
 class ReceptionistProfile(models.Model):
     """
@@ -21,6 +24,8 @@ class ReceptionistProfile(models.Model):
     user = models.OneToOneField('accounts.Account', related_name='receptionistprofile', on_delete=models.CASCADE,
                                 null=True)
 
+    objects = ReceptionistProfileManager()
+
     class Meta:
         ordering = ('user',)
 
@@ -33,7 +38,6 @@ class ReceptionistConnection(models.Model):
     Connection between doctor, receptionist, and medical institution
     """
 
-    # Fields
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -51,6 +55,8 @@ class ReceptionistConnection(models.Model):
                                on_delete=models.CASCADE)
     medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution',
                                             related_name='institution_connections', on_delete=models.CASCADE)
+
+    objects = ReceptionistConnectionManager()
 
     class Meta:
         ordering = ('medical_institution', 'doctor', 'receptionist')

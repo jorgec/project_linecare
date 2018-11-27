@@ -9,7 +9,7 @@ from doctor_profiles.models.managers.medical_institution_manager import MedicalI
 
 class MedicalInstitution(models.Model):
     # Fields
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -30,6 +30,7 @@ class MedicalInstitution(models.Model):
 
     class Meta:
         ordering = ('name',)
+        unique_together = ('name', 'type')
 
     def __str__(self):
         return f'{self.name} ({self.type.name})'

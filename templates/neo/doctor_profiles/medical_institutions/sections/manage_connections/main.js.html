@@ -1,2 +1,12 @@
-{% include 'neo/medical_institutions/location/common/js/medical_institution_location,js.html' %}
+{% load static %}
+<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+        integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+        crossorigin=""></script>
+<script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'neo/js/stateManager.js' %}"></script>
+<script type="text/javascript">
+    var model = {};
+</script>
 
+{% include 'neo/medical_institutions/location/common/js/medical_institution_location,js.html' %}
+{% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/receptionist/js/receptionist_main.js.html' %}
