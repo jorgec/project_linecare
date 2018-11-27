@@ -1,19 +1,37 @@
 {% load static %}
 <script type="text/html" id="all_receptionists_template">
-    <div class="col-sm-12 col-md-6 col-lg-4 mb-2">
-        <span data-content="user"></span>
+    <div class="col-sm-4 col-md-3 col-lg-2 mb-2">
+        <div class="card receptionist-card-compressed">
+            <img class="card-img-top img-fluid" data-src="profile_photo.photo" data-alt="username">
+            <div class="card-body">
+                <p>
+                    <span data-content="first_name"></span>
+                    <span data-content="last_name"></span>
+                </p>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-outline-primary btn-sm" href="#!">
+                    Connect
+                </a>
+            </div>
+        </div>
     </div>
 </script>
 
 <script type="text/html" id="my_receptionists_template">
     <div class="col-sm-6 col-md-4 col-lg-3 mb-2">
-        <div class="card">
+        <div class="card receptionist-card">
             <img class="card-img-top img-fluid" data-src="profile_photo.photo" data-alt="username">
             <div class="card-body">
                 <h6>
                     <span data-content="first_name"></span>
                     <span data-content="last_name"></span>
                 </h6>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-outline-secondary btn-sm" href="#!">
+                    Remove
+                </a>
             </div>
         </div>
     </div>

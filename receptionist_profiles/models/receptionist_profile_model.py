@@ -52,7 +52,7 @@ class ReceptionistConnection(models.Model):
     receptionist = models.ForeignKey(ReceptionistProfile, related_name="receptionist_connections",
                                      on_delete=models.CASCADE)
     doctor = models.ForeignKey('doctor_profiles.DoctorProfile', related_name='doctor_connections',
-                               on_delete=models.CASCADE)
+                               on_delete=models.SET_NULL, null=True, blank=True, default=None)
     medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution',
                                             related_name='institution_connections', on_delete=models.CASCADE)
 

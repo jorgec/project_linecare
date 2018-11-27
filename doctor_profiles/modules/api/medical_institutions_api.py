@@ -404,6 +404,8 @@ class ApiPrivateMedicalInstitutionNotConnectedReceptionistList(APIView):
     """
     List of receptionists in this medical institution not connected to doctor
     ?id=medical_institution_id&doctor_id=doctor_id
+    [optional]
+    ?fmt=[full] - returns serialized private profile objects
     """
 
     permission_classes = [permissions.IsAuthenticated]
@@ -413,15 +415,24 @@ class ApiPrivateMedicalInstitutionNotConnectedReceptionistList(APIView):
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
         rel = medical_institution.institution_connections.filter(is_approved=True).exclude(doctor=doctor)
         receptionists = [r.receptionist for r in rel]
-        serializer = ReceptionistProfileSerializer(receptionists, many=True)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if request.GET.get('fmt', None) == 'full':
+            serializer_list = []
+            for r in receptionists:
+                serializer_list.append(private_profile_template(r.user))
+
+            return Response(serializer_list, status=status.HTTP_200_OK)
+        else:
+            serializer = ReceptionistProfileSerializer(receptionists, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
     """
     List of receptionists in this medical institution of doctor
     ?id=medical_institution_id&doctor_id=doctor_id
+    [optional]
+    ?fmt=[full] - returns serialized private profile objects
     """
 
     permission_classes = [permissions.IsAuthenticated]
@@ -433,7 +444,6 @@ class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
         receptionists = [r.receptionist for r in rel]
 
         if request.GET.get('fmt', None) == 'full':
-            print(receptionists)
             serializer_list = []
             for r in receptionists:
                 serializer_list.append(private_profile_template(r.user))

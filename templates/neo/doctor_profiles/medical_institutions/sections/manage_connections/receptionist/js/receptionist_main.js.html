@@ -4,7 +4,7 @@
 <script type="text/javascript">
 
     model.all_receptionists = {
-        dataSrc: "{% url 'api_private_medical_institution_receptionist_not_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}",
+        dataSrc: "{% url 'api_private_medical_institution_receptionist_not_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full",
         fetch: function(){genericFetch('all_receptionists')},
         onReady: true,
         onSuccessResult: [],
