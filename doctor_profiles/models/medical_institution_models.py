@@ -119,10 +119,8 @@ class MedicalInstitution(models.Model):
 
     def coordinates(self):
         coords = self.all_coordinates()
-        print(coords)
         if coords:
             if len(coords) > 0:
-                print(coords[0])
                 return coords[0]
         return None
 
@@ -134,9 +132,10 @@ class MedicalInstitutionType(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, blank=True, null=True)
+    is_approved = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ('name',)
 
     def __str__(self):
         return f'{self.name}'

@@ -4,12 +4,14 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from doctor_profiles.models import MedicalInstitution, MedicalInstitutionLocation, MedicalInstitutionLocationVote
+from doctor_profiles.models import MedicalInstitution, MedicalInstitutionLocation, MedicalInstitutionLocationVote, \
+    MedicalInstitutionType
 from doctor_profiles.models.medical_institution_location_models import MedicalInstitutionCoordinate
 from doctor_profiles.serializers.medical_institution_serializers import MedicalInstitutionPublicSerializer, \
     MedicalInstitutionLocationPublicSerializer, MedicalInstitutionPhonePublicSerializer, \
     MedicalInstitutionLocationCreateSerializer, MedicalInstitutionLocationPublicSerializerWithVotes, \
-    MedicalInstitutionCoordinatePublicSerializerWithVotes, MedicalInstitutionCoordinatesCreateSerializer
+    MedicalInstitutionCoordinatePublicSerializerWithVotes, MedicalInstitutionCoordinatesCreateSerializer, \
+    MedicalInstitutionCreatePrivateSerializer, MedicalInstitutionTypePublicSerializer
 from doctor_profiles.serializers.serializer_managers.medical_institution_serializer_manager import \
     MedicalInstitutionSerializerManager
 
@@ -17,6 +19,18 @@ from doctor_profiles.serializers.serializer_managers.medical_institution_seriali
 class ApiPublicMedicalInstitutionSearch(APIView):
     def get(self, request, *args, **kwargs):
         pass
+
+
+class ApiPublicMedicalInstitutionTypeList(APIView):
+    """
+    List all medical institution types
+    """
+
+    def get(self, request, *args, **kwargs):
+        types = MedicalInstitutionType.objects.filter(is_approved=True)
+        serializer = MedicalInstitutionTypePublicSerializer(types, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ApiPublicMedicalInstitutionList(APIView):
@@ -84,6 +98,45 @@ class ApiPublicMedicalInstitutionDetail(APIView):
             return Response(serializer_manager.serialize_nested(obj), status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class ApiPrivateMedicalInstitutionCreate(APIView):
+    """
+    Create new medical institution
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = MedicalInstitutionCreatePrivateSerializer(request.data)
+        if serializer.is_valid():
+            try:
+                mi = MedicalInstitution.objects.create(
+                    name=serializer.validated_data['name'],
+                    type_id=serializer.validated_data['type'],
+                    added_by=request.user
+                )
+            except IntegrityError:
+                return Response("Invalid data", status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                loc = MedicalInstitutionLocation.objects.create(
+                    address=serializer.validated_data['address'],
+                    region_id=serializer.validated_data['region'],
+                    province_id=serializer.validated_data['province'],
+                    city_id=serializer.validated_data['city'],
+                    zip_code=serializer.validated_data['zipcode'],
+                    suggested_by=request.user,
+                    medical_institution=mi
+                )
+            except IntegrityError:
+                return Response("Invalid data", status=status.HTTP_400_BAD_REQUEST)
+
+            return_serializer = MedicalInstitutionPublicSerializer(mi)
+
+            return Response(return_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ApiPublicMedicalInstitutionAddressList(APIView):

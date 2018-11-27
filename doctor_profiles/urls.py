@@ -47,8 +47,11 @@ urlpatterns = [
     # Medical Institutions
     #############################################################################
     path('settings/medical_institution/connect',
-         institution_views.DoctorProfileMedicalInstitutionDoctorCreate.as_view(),
+         institution_views.DoctorProfileMedicalInstitutionConnect.as_view(),
          name='doctor_profile_settings_medical_institution_connect'),
+    path('settings/medical_institution/create_connection',
+         institution_views.DoctorProfileMedicalInstitutionDoctorCreateConnection.as_view(),
+         name='doctor_profile_settings_medical_institution_create_connection'),
     path('medical_institution/<slug>',
          institution_views.DoctorProfileMedicalInstitutionManageConnectionView.as_view(),
          name='doctor_profile_medical_institution_home')
@@ -219,12 +222,19 @@ urlpatterns += [
     #############################################################################
     # Medical Institutions
     #############################################################################
+    path(f'{version}/public/medical_institution/type/list',
+         medical_institutions_api.ApiPublicMedicalInstitutionTypeList.as_view(),
+         name='api_public_medical_institution_type_list'),
+
     path(f'{version}/public/medical_institution/list',
          medical_institutions_api.ApiPublicMedicalInstitutionList.as_view(),
          name='api_public_medical_institution_list'),
     path(f'{version}/public/medical_institution/detail',
          medical_institutions_api.ApiPublicMedicalInstitutionDetail.as_view(),
          name='api_public_medical_institution_detail'),
+    path(f'{version}/private/medical_institution/create',
+         medical_institutions_api.ApiPrivateMedicalInstitutionCreate.as_view(),
+         name='api_private_medical_institution_create'),
 
     # location
     path(f'{version}/public/medical_institution/location/list',

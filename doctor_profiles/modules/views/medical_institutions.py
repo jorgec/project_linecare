@@ -26,7 +26,20 @@ class DoctorProfileMedicalInstitutionSettingsHomeView(LoginRequiredMixin, UserPa
         return self.request.user.doctor_profile()
 
 
-class DoctorProfileMedicalInstitutionDoctorCreate(LoginRequiredMixin, UserPassesTestMixin, View):
+class DoctorProfileMedicalInstitutionConnect(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id', None))
+
+        if request.user.doctor_profile():
+            return HttpResponseRedirect(
+                f"{reverse('doctor_profile_settings_medical_institution_create_connection')}?id={medical_institution.id}"
+            )
+        else:
+            # redirect somewhere else
+            pass
+
+
+class DoctorProfileMedicalInstitutionDoctorCreateConnection(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def get(self, request, *args, **kwargs):
         medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id', None))

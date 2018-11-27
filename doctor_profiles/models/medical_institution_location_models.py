@@ -1,7 +1,10 @@
 import operator
+import requests
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models as models, IntegrityError
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class MedicalInstitutionLocation(models.Model):
@@ -187,3 +190,28 @@ class MedicalInstitutionCoordinateVote(models.Model):
 
     def __str__(self):
         return f'{type}'
+
+
+@receiver(post_save, sender=MedicalInstitutionLocation)
+def autocreate_coordinates(sender, instance=None, created=False, **kwargs):
+    if created:
+        address = f'{instance.address} {instance.city.name}'
+        payload = {
+            'format': 'json',
+            'addressdetails': 1,
+            'limit': 1,
+            'q': address
+        }
+
+        result = requests.get('https://nominatim.openstreetmap.org/search', params=payload)
+        if result.status_code == 200:
+            response = result.json()
+            if len(response) > 0:
+                lat = response[0]['lat']
+                lon = response[0]['lon']
+                MedicalInstitutionCoordinate.objects.create(
+                    lat=lat,
+                    lon=lon,
+                    suggested_by=instance.suggested_by,
+                    medical_institution=instance.medical_institution
+                )

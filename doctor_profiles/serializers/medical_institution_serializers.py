@@ -21,11 +21,7 @@ class MedicalInstitutionTypeSerializer(serializers.ModelSerializer):
 class MedicalInstitutionTypePublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicalInstitutionType
-        fields = (
-            'id',
-            'slug',
-            'name',
-        )
+        fields = '__all__'
 
 
 class MedicalInstitutionLocationSerializer(serializers.ModelSerializer):
@@ -200,3 +196,13 @@ class MedicalInstitutionCoordinatesCreateSerializer(serializers.ModelSerializer)
             'lat',
             'lon'
         )
+
+
+class MedicalInstitutionCreatePrivateSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=128)
+    region = serializers.IntegerField()
+    province = serializers.IntegerField()
+    city = serializers.IntegerField()
+    zip_code = serializers.IntegerField()
+    address = serializers.CharField(max_length=512)
+    type = serializers.IntegerField()

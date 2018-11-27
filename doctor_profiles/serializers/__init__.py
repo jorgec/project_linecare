@@ -25,4 +25,4 @@ from .medical_institution_serializers import MedicalInstitutionTypeSerializer, M
     MedicalInstitutionLocationPublicSerializerWithVotes, MedicalInstitutionPhonesPublicSerializerWithVotes, \
     MedicalInstitutionCoordinateSerializer, MedicalInstitutionCoordinatePublicSerializer, \
     MedicalInstitutionCoordinatePublicSerializerWithVotes, MedicalInstitutionNestedPublicSerializer, \
-    MedicalInstitutionCoordinatesCreateSerializer
+    MedicalInstitutionCoordinatesCreateSerializer, MedicalInstitutionCreatePrivateSerializer
