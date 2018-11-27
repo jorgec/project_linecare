@@ -1,5 +1,5 @@
 from django.db import IntegrityError
-from rest_framework import status, permissions
+from rest_framework import status, permissions, parsers
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -106,6 +106,7 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
     """
 
     permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.JSONParser]
 
     def post(self, request, *args, **kwargs):
         serializer = MedicalInstitutionCreatePrivateSerializer(request.data)
