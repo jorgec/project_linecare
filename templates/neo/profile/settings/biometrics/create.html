@@ -11,11 +11,11 @@
 <form method="post">
     {% csrf_token %}
 
-    <div class="settings__wrapper">
-        <div class="settings__label">
+    <div class="two-column__right--settings">
+        <div class="header">
             <h5 class="h5">{{ page_title }}</h5>
         </div>
-        <div class="settings__edit-info">
+        <div class="body--with-inputs">
 
             {% if messages %}
                 {% for m in messages %}
