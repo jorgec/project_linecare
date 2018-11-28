@@ -8,16 +8,16 @@
 {% endblock %}
 
 {% block content %}
-<div class="settings__container">
+<div class="two-column">
     <div class="row">
         <div class="col-lg-3 col-sm-12">
-            <div class="settings__sidenav">
+            <div class="two-column__left--nav">
                 <h5 class="h5">Settings</h5>
                 {% include 'neo/doctor_profiles/settings/common/nav__side.html' %}
             </div>
         </div>
         <div class="col-lg-9 col-sm-12">
-            <div class="settings__wrapper">
+            <div class="two-column__right--settings">
                 {% block subcontent %}
 
                 {% endblock %}
