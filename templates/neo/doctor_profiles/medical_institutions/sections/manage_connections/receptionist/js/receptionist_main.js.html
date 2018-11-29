@@ -71,7 +71,9 @@
             .done(function(result){
                 $("#my_receptionists_container").loadTemplate($("#my_receptionists_template"), result);
 
-                $(".connect-receptionist").on('click', function(){
+                $(".connect-receptionist").on('click', function(e){
+                    e.preventDefault();
+                    alert($(this));
                     var doctor_id = $(this).attr("data-doctor-id");
                     var receptionist_id = $(this).attr("data-receptionist-id");
                     var institution_id = $(this).attr("data-institution-id");
