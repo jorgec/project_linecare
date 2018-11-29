@@ -25,7 +25,7 @@ class ApiPrivateReceptionistConnectionCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        receptionist_profile = get_object_or_404(ReceptionistProfile, id=request.GET.get('receptionist_profile', None))
+        receptionist_profile = get_object_or_404(ReceptionistProfile, id=request.GET.get('receptionist_id', None))
 
         params = {
             'receptionist': receptionist_profile
