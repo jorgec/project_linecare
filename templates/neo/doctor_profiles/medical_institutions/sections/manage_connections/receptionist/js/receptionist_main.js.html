@@ -34,11 +34,11 @@
         template: $("#my_receptionists_template"),
         actions: {
             connect: {
-                fn: connectReceptionist,
+                fn: removeReceptionist,
                 apiConsumer: false,
                 parameters: {
                     parameters: {
-                        triggerElement: ".connect-receptionist",
+                        triggerElement: ".remove-receptionist",
                         fnParams: ["data-id", "data-institution-id", "data-receptionist-id"]
                     }
                 }
@@ -95,6 +95,31 @@
             .done(function(result){
                 $.notify({
                     message: "Receptionist connected!"
+                }, {
+                    type: 'success'
+                });
+                updateState(model.all_receptionists);
+                updateState(model.my_receptionists);
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+    }
+
+    function removeReceptionist(doctor_id, receptionist_id, institution_id){
+        var url = "{% url 'api_private_receptionist_connection_delete' %}?doctor_id=" + doctor_id + "&receptionist_id=" + receptionist_id + "&medical_institution_id=" + institution_id;
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+
+        $.post(url, formData)
+            .done(function(result){
+                $.notify({
+                    message: "Receptionist removed!"
                 }, {
                     type: 'success'
                 });

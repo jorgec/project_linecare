@@ -9,11 +9,9 @@
                     <span data-content="last_name"></span>
                 </p>
             </div>
-            <div class="card-footer">
-                <a class="card-action connect-receptionist" href="#!" data-doctor-id="{{ rel.doctor.id }}" data-institution-id="{{ rel.medical_institution.id }}" data-template-bind='[{"attribute": "data-receptionist-id", "value": "receptionist.id"}]'>
-                    Connect
-                </a>
-            </div>
+            <a class="card-action connect-receptionist" href="#!" data-doctor-id="{{ rel.doctor.id }}" data-institution-id="{{ rel.medical_institution.id }}" data-template-bind='[{"attribute": "data-receptionist-id", "value": "receptionist.id"}]'>
+                Connect
+            </a>
         </div>
     </div>
 </script>
@@ -28,11 +26,9 @@
                     <span data-content="last_name"></span>
                 </h6>
             </div>
-            <div class="card-footer">
-                <a class="btn btn-outline-secondary btn-sm" href="#!">
-                    Remove
-                </a>
-            </div>
+            <a class="card-action remove-receptionist" href="#!" data-doctor-id="{{ rel.doctor.id }}" data-institution-id="{{ rel.medical_institution.id }}" data-template-bind='[{"attribute": "data-receptionist-id", "value": "receptionist.id"}]'>
+                Connect
+            </a>
         </div>
     </div>
 </script>

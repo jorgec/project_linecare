@@ -52,6 +52,44 @@ class ApiPrivateReceptionistConnectionCreate(APIView):
             return Response("This connection already exists!", status=status.HTTP_400_BAD_REQUEST)
 
 
+class ApiPrivateReceptionistConnectionDelete(APIView):
+    """
+    Removes a connection
+    ?receptionist_id=receptionist_id&doctor_id=doctor_id&medical_institution_id=medical_institution_id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        receptionist_profile = get_object_or_404(ReceptionistProfile, id=request.GET.get('receptionist_id', None))
+
+        params = {
+            'receptionist': receptionist_profile
+        }
+
+        doctor_id = request.GET.get('doctor_id', None)
+        medical_institution_id = request.GET.get('medical_institution_id', None)
+
+        if doctor_id:
+            doctor_profile = get_object_or_404(DoctorProfile, id=doctor_id)
+            params['doctor'] = doctor_profile
+
+        if medical_institution_id:
+            medical_institution = get_object_or_404(MedicalInstitution, id=medical_institution_id)
+            params['medical_institution'] = medical_institution
+
+        try:
+            connection = ReceptionistConnection.objects.get(
+                **params
+            )
+
+            connection.delete()
+            return Response("Connection removed", status=status.HTTP_200_OK)
+
+        except ReceptionistConnection.DoesNotExist:
+            return Response("This connection does not exist!", status=status.HTTP_400_BAD_REQUEST)
+
+
 class ApiPrivateReceptionistProfileCreateByDoctor(APIView):
     """
     Create a receptionist profile for someone via a doctor account
