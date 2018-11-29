@@ -107,6 +107,13 @@ class Account(AbstractBaseUser):
         )
         return profile
 
+    def create_receptionist_profile(self):
+        ReceptionistProfile = apps.get_model('receptionist_profiles.ReceptionistProfile')
+        profile = ReceptionistProfile.objects.create(
+            user=self
+        )
+        return profile
+
 
 @receiver(post_save, sender=Account)
 def create_auth_token(sender, instance=None, created=False, **kwargs):

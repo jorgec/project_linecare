@@ -53,8 +53,13 @@ class AccountRegistrationView(View):
                 # patient profile
                 pass
             elif primary_profile == "3":
-                # receptionist profile
-                pass
+                profile = account.create_receptionist_profile()
+                account.user_settings = {
+                    'primary_profile': {
+                        'type': 'receptionist',
+                        'pk': profile.pk
+                    }
+                }
 
             account.save()
             context = {

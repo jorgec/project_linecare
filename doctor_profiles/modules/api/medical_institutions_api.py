@@ -409,8 +409,11 @@ class ApiPrivateMedicalInstitutionNotConnectedReceptionistList(APIView):
     def get(self, request, *args, **kwargs):
         medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id'))
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
-        rel = medical_institution.institution_connections.filter(is_approved=True).exclude(doctor=doctor)
-        receptionists = [r.receptionist for r in rel]
+
+        receptionists_to_exclude = doctor.get_receptionists(medical_institution=medical_institution)
+
+        rel = medical_institution.institution_connections.filter(is_approved=True).exclude(receptionist__in=receptionists_to_exclude)
+        receptionists = {r.receptionist for r in rel}
 
         if request.GET.get('fmt', None) == 'full':
             serializer_list = []
