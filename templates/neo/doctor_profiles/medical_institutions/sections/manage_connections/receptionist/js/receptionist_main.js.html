@@ -85,8 +85,27 @@
     }
 
     function connectReceptionist(doctor_id, receptionist_id, institution_id){
-        console.log(doctor_id, receptionist_id, institution_id);
+        var url = "{% url 'api_private_receptionist_connection_create' %}?doctor_id=" + doctor_id + "&receptionist_id=" + receptionist_id + "&medical_institution_id=" + institution_id;
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
 
+        $.post(url, formData)
+            .done(function(result){
+                $.notify({
+                    message: "Receptionist connected!"
+                }, {
+                    type: 'success'
+                });
+                updateState(model.all_receptionists);
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
     }
 
     function createReceptionist(){
