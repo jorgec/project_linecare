@@ -117,7 +117,7 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                 mi = MedicalInstitution.objects.create(
                     name=serializer.validated_data['name'],
                     type_id=serializer.validated_data['type'],
-                    added_by_id=request.user
+                    added_by=request.user
                 )
             except IntegrityError:
                 return Response("That Medical Institution already exists!", status=status.HTTP_400_BAD_REQUEST)
@@ -129,7 +129,7 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                     province_id=serializer.validated_data['province'],
                     city_id=serializer.validated_data['city'],
                     zip_code=serializer.validated_data['zip_code'],
-                    suggested_by_id=request.user,
+                    suggested_by=request.user,
                     medical_institution=mi
                 )
 
