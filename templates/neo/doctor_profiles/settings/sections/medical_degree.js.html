@@ -227,11 +227,9 @@
              * Edit this part
              */
 
-            console.log(model.relatedEntity.objectList);
-
             var year_attained = '';
             if(model.relatedEntity.objectList.data[key].year_attained){
-                year_attained = '(' + model.relatedEntity.objectList.data[key].year_attained + ')';
+                year_attained = ' (' + model.relatedEntity.objectList.data[key].year_attained + ')';
             }
             var description = '<strong>' + model.relatedEntity.objectList.data[key]["degree"]["name"] + '</strong><br>' +
                                 model.relatedEntity.objectList.data[key].school + year_attained;
