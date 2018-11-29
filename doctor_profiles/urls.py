@@ -99,23 +99,23 @@ urlpatterns += [
          name='api_private_medical_degree_create'),
 
     #############################################################################
-    # Doctor Degrees
+    # Doctor Degrees api_public_doctor_medical_degree_list
     #############################################################################
     path(f'{version}/public/doctor_degree/list',
          medical_degrees_api.ApiPublicDoctorDegreeList.as_view(),
-         name='api_public_doctor_degree_list'),
+         name='api_public_doctor_medical_degree_list'),
     path(f'{version}/private/doctor_degree/detail',
          medical_degrees_api.ApiPrivateDoctorDegreeDetail.as_view(),
-         name='api_private_doctor_degree_detail'),
+         name='api_private_doctor_medical_degree_detail'),
     path(f'{version}/private/doctor_degree/create',
          medical_degrees_api.ApiPrivateDoctorDegreeCreate.as_view(),
-         name='api_private_doctor_degree_create'),
+         name='api_private_doctor_medical_degree_create'),
     path(f'{version}/private/doctor_degree/update',
          medical_degrees_api.ApiPrivateDoctorDegreeUpdate.as_view(),
-         name='api_private_doctor_degree_update'),
+         name='api_private_doctor_medical_degree_update'),
     path(f'{version}/private/doctor_degree/delete',
          medical_degrees_api.ApiPrivateDoctorDegreeDelete.as_view(),
-         name='api_private_doctor_degree_delete'),
+         name='api_private_doctor_medical_degree_delete'),
 
     #############################################################################
     # Specialization
