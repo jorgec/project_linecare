@@ -21,6 +21,7 @@ class PublicPhoneSerializer(serializers.ModelSerializer):
             'carrier'
         )
 
+
 class PublicProfileSerializer(serializers.Serializer):
     phones = PublicPhoneSerializer(many=True, read_only=True)
     albums = AlbumSerializer(many=True, read_only=True)
@@ -44,16 +45,27 @@ class PrivatePhoneSerializer(serializers.ModelSerializer):
             'is_active'
         )
 
+
+# class PrivateProfileSerializer(serializers.ModelSerializer):
+#     phones = PrivatePhoneSerializer(many=True, read_only=True)
+#     albums = AlbumSerializer(many=True, read_only=True)
+#     profile_photo = PhotoSerializer(read_only=True)
+#     cover_photo = PhotoSerializer(read_only=True)
+#     username = serializers.CharField(max_length=32)
+#     first_name = serializers.CharField(max_length=32)
+#     last_name = serializers.CharField(max_length=32)
+#     gender = GenderSerializer(read_only=True)
+#     user_type = serializers.IntegerField()
+
 class PrivateProfileSerializer(serializers.ModelSerializer):
-    phones = PrivatePhoneSerializer(many=True, read_only=True)
-    albums = AlbumSerializer(many=True, read_only=True)
-    profile_photo = PhotoSerializer(read_only=True)
-    cover_photo = PhotoSerializer(read_only=True)
-    username = serializers.CharField(max_length=32)
-    first_name = serializers.CharField(max_length=32)
-    last_name = serializers.CharField(max_length=32)
-    gender = GenderSerializer(read_only=True)
-    user_type = serializers.IntegerField()
+    class Meta:
+        model = BaseProfile
+        fields = (
+            'first_name',
+            'last_name',
+            'gender',
+            'date_of_birth'
+        )
 
 
 class ProfileSerializer(serializers.ModelSerializer):

@@ -1,6 +1,6 @@
 {% load static %}
 <script type="text/html" id="all_receptionists_template">
-    <div class="col-sm-4 col-md-3 col-lg-2 mb-2">
+    <div class="col-sm-4 col-md-4 col-lg-3 mb-2">
         <div class="card receptionist-card-compressed">
             <img class="card-img-top img-fluid" data-src="profile_photo.photo" data-alt="username">
             <div class="card-body">
@@ -10,7 +10,7 @@
                 </p>
             </div>
             <div class="card-footer">
-                <a class="btn btn-outline-primary btn-sm" href="#!">
+                <a class="card-action" href="#!" data-doctor-id="{{ rel.doctor.id }}" data-institution-id="{{ rel.medical_institution.id }}" data-template-bind='[{"attribute": "data-receptionist-id", "value": "receptionist.id"}]'>
                     Connect
                 </a>
             </div>

@@ -78,6 +78,7 @@ def private_profile_template(user, as_json=False):
         _cover_photo = SinglePhotoSerializer({'photo': cover_photo}).data
 
     data = {
+        'id': user.id,
         'username': user.username,
         'user_type': user.user_type,
         'first_name': profile.first_name,

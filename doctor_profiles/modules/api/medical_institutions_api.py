@@ -13,6 +13,7 @@ from doctor_profiles.serializers import MedicalInstitutionTypePublicSerializer, 
 from doctor_profiles.serializers.serializer_managers.medical_institution_serializer_manager import \
     MedicalInstitutionSerializerManager
 from profiles.modules.response_templates.profile import private_profile_template
+from receptionist_profiles.modules.response_templates.receptionist_profile import private_receptionist_profile_template
 from receptionist_profiles.serializers.receptionist_profile_serializers import ReceptionistProfileSerializer
 
 
@@ -109,7 +110,6 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
     parser_classes = [parsers.JSONParser]
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
         serializer = MedicalInstitutionCreatePrivateSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -119,9 +119,7 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                     added_by=request.user
                 )
             except IntegrityError:
-                print("Bad MI")
-                print(serializer.data)
-                return Response("Invalid data", status=status.HTTP_400_BAD_REQUEST)
+                return Response("Duplicate name", status=status.HTTP_400_BAD_REQUEST)
 
             try:
                 loc = MedicalInstitutionLocation.objects.create(
@@ -135,9 +133,7 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                 )
 
             except IntegrityError:
-                print("Bad loc")
-                print(serializer.data)
-                return Response("Invalid data", status=status.HTTP_400_BAD_REQUEST)
+                return Response("Duplicate address", status=status.HTTP_400_BAD_REQUEST)
 
             return_serializer = MedicalInstitutionPublicSerializer(mi)
 
@@ -419,7 +415,7 @@ class ApiPrivateMedicalInstitutionNotConnectedReceptionistList(APIView):
         if request.GET.get('fmt', None) == 'full':
             serializer_list = []
             for r in receptionists:
-                serializer_list.append(private_profile_template(r.user))
+                serializer_list.append(private_receptionist_profile_template(user=r.user))
 
             return Response(serializer_list, status=status.HTTP_200_OK)
         else:
@@ -440,13 +436,12 @@ class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
     def get(self, request, *args, **kwargs):
         medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id'))
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
-        rel = medical_institution.institution_connections.filter(is_approved=True, doctor=doctor)
-        receptionists = [r.receptionist for r in rel]
+        receptionists = doctor.get_receptionists(medical_institution=medical_institution)
 
         if request.GET.get('fmt', None) == 'full':
             serializer_list = []
             for r in receptionists:
-                serializer_list.append(private_profile_template(r.user))
+                serializer_list.append(private_receptionist_profile_template(user=r.user))
 
             return Response(serializer_list, status=status.HTTP_200_OK)
         else:

@@ -57,6 +57,22 @@ class DoctorProfile(models.Model):
     def get_medical_institutions(self):
         return self.medical_institutions_joined.filter(is_approved=True)
 
+    def get_receptionists(self, *, medical_institution=None):
+
+        filters = {
+            'is_approved': True
+        }
+
+        if medical_institution:
+            filters['medical_institution'] = medical_institution
+
+        connections = self.doctor_connections.filter(**filters)
+
+        return {r.receptionist for r in connections}
+
+    def get_unconnected_receptionists(self, *, medical_institution):
+        pass
+
     def get_profile_progress_metadata(self):
         return self.metadata.get('doctor_progress')
 

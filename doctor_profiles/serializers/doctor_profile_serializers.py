@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from accounts.serializers import AccountSerializerPublic
+from accounts.serializers import AccountSerializerPublic, AccountWithProfileSerializerPrivate
 from doctor_profiles import models
 
 
@@ -27,3 +27,10 @@ class DoctorProfilePublicSerializer(serializers.ModelSerializer):
             'id',
             'user',
         )
+
+
+class DoctorProfilePrivateSerializer(serializers.ModelSerializer):
+    user = AccountWithProfileSerializerPrivate()
+    class Meta:
+        model = models.DoctorProfile
+        fields = ('user',)
