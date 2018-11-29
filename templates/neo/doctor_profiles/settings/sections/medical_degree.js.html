@@ -2,81 +2,166 @@
 <script type="text/javascript" src="{% static 'neo/js/formHelpers.jquery.js' %}"></script>
 <script type="text/javascript">
 
-    var medicalDegreeList = [];
-    var doctorDegreeList = [];
-    var medicalDegreeOptions = document.querySelector("#medical_degree_options");
-    var medicalDegreeHTMLList = document.querySelector("#medical_degree_list");
-
-    var medicalDegreeFormFields = [
-        {
-            id: "medical_degree_options",
-            value: null,
-            default: "",
-            field_name: "degree.name"
+    var model = {
+        baseEntity: {
+            displayName: 'Medical Degree',
+            displayNamePlural: 'Medical Degrees',
+            objectList: {
+                url: "{% url 'api_public_medical_degree_list' %}",
+                listElementId: "#entity_options",
+                querySelector: document.querySelector("#entity_options"),
+                keyValuePair: {
+                    key: "id",
+                    value: "name"
+                },
+                data: []
+            },
+            objectCreate: {
+                url: "{% url 'api_private_medical_degree_create' %}",
+                modalElementId: "#modalMedicalDegreeCreate",
+                fields: [
+                    {
+                        fieldName: "name",
+                        default: "",
+                        elementId: "#degree_name"
+                    }, {
+                        fieldName: "abbreviation",
+                        default: "",
+                        elementId: "#medical_degree_abbreviation"
+                    },
+                ],
+            }
         },
-        {
-            id: "doctor_degree_school",
-            value: null,
-            default: "",
-            field_name: "school",
-        },
-        {
-            id: "doctor_degree_year_attained",
-            value: null,
-            default: "",
-            field_name: "year_attained",
-        },
-        {
-            id: "doctor_degree_license",
-            value: null,
-            default: "",
-            field_name: "license_number",
-        },
-        {
-            id: "doctor_degree_id",
-            value: null,
-            default: "",
-            field_name: "id",
-        },
-    ];
+        relatedEntity: {
+            displayName: 'My Medical Degree',
+            displayNamePlural: 'My Medical Degrees',
+            objectList: {
+                url: "{% url 'api_public_doctor_medical_degree_list' %}?user={{ request.user.pk }}",
+                listElementId: "#related_entity_list",
+                querySelector: document.querySelector("#related_entity_list"),
+                data: [],
+            },
+            objectDetail: {
+                url: "{% url 'api_private_doctor_medical_degree_detail' %}?medical_degree=",
+                fields: [
+                    {
+                        elementId: "#entity_options",
+                        value: null,
+                        default: "",
+                        fieldName: "medical_degree.name"
+                    },
+                    {
+                        elementId: "#doctor_medical_degree_school",
+                        value: null,
+                        default: "",
+                        fieldName: "school",
+                    },
+                    {
+                        elementId: "#doctor_medical_degree_year_attained",
+                        value: null,
+                        default: "",
+                        fieldName: "year_attained",
+                    },
+                    {
+                        elementId: "#doctor_medical_degree_license_number",
+                        value: null,
+                        default: "",
+                        fieldName: "license_number"
+                    },
+                    {
+                        elementId: "#related_entity_id",
+                        value: null,
+                        default: "",
+                        fieldName: "id",
+                    }
+                ]
+            },
+            objectUpdate: {
+                url: "{% url 'api_private_doctor_medical_degree_update' %}?medical_degree=",
+                fields: [
+                    {
+                        elementId: "#edit_doctor_medical_degree_school",
+                        fieldName: "school"
+                    },
+                    {
+                        elementId: "#edit_doctor_medical_degree_year_attained",
+                        fieldName: "year_attained"
+                    },
+                    {
+                        elementId: "#edit_doctor_medical_degree_license_number",
+                        fieldName: "license_number"
+                    },
+                    {
+                        elementId: "#edit_related_entity_id",
+                        fieldName: "id"
+                    }
+                ]
+            },
+            objectCreate: {
+                url: "{% url 'api_private_doctor_medical_degree_create' %}",
+                fields: [
+                    {
+                        elementId: "#doctor_medical_degree_school",
+                        fieldName: "school"
+                    },
+                    {
+                        elementId: "#doctor_medical_degree_license_number",
+                        fieldName: "license_number"
+                    },
+                    {
+                        elementId: "#doctor_medical_degree_year_attained",
+                        fieldName: "year_attained"
+                    },
+                    {
+                        elementId: "#entity_options",
+                        fieldName: "medical_degree"
+                    }
+                ]
+            },
+            objectDelete: {
+                url: "{% url 'api_private_doctor_medical_degree_delete' %}?medical_degree=",
+            }
+        }
+    };
 
 
     // startup
-    loadMedicalDegreeList();
-    loadDoctorDegreeList();
+    loadBaseEntity();
+    loadRelatedEntity();
+    populateLabels();
 
     /**************************************************************************
      * Events
      **************************************************************************/
-    $("#btnDoctorDegreeAdd").click(function(e){
+    $("#btnRelatedEntityAdd").click(function(e){
         e.preventDefault();
-        addDoctorDegree();
+        addRelatedEntity();
     });
 
-    $("#btnMedicalDegreeAdd").click(function(e){
+    $("#btnEntityAdd").click(function(e){
         e.preventDefault();
-        addMedicalDegree();
+        addBaseEntity();
     });
 
-    $("#btnDoctorDegreeReset").click(function(e){
+    $("#btnRelatedEntityReset").click(function(e){
         e.preventDefault();
-        resetForm(medicalDegreeFormFields);
+        resetForm(model.relatedEntity.objectDetail.fields);
     });
 
-    $("#btnConfirmEditDoctorDegree").click(function(e){
+    $("#btnConfirmRelatedEntityEdit").click(function(e){
         e.preventDefault();
-        editDoctorDegree();
+        editRelatedEntity();
 
     });
 
-    $("#medical_degree_list").on('click', '.doctorDegreeEdit', function(e){
+    $("#related_entity_list").on('click', '.relatedEntityEdit', function(e){
         e.preventDefault();
-        var degree = $(this).attr("data-degree");
-        loadDoctorDegreeDetail(degree);
-    }).on('click', '.doctorDegreeDelete', function(e){
+        var relatedEntityId = $(this).attr("data-related-entity");
+        loadRelatedEntityDetail(relatedEntityId);
+    }).on('click', '.relatedEntityDelete', function(e){
         e.preventDefault();
-        var degree = $(this).attr("data-degree");
-        deleteDoctorDegree(degree);
+        var relatedEntityId = $(this).attr("data-related-entity");
+        deleteRelatedEntity(relatedEntityId);
     });
 
 
@@ -84,118 +169,143 @@
      * Functions
      **************************************************************************/
 
-    function loadMedicalDegreeList(){
-        var url = "{% url 'api_public_medical_degree_list' %}";
-        $.get(url, function(response){
-            medicalDegreeList = response;
-            populateMedicalDegreeList();
+    function populateLabels(){
+        $(".baseEntityDisplayName").html(model.baseEntity.displayName);
+        $(".relatedEntityDisplayName").html(model.relatedEntity.displayName);
+        $(".relatedEntityDisplayNamePlural").html(model.relatedEntity.displayNamePlural);
+
+    }
+
+    // base entity
+    function loadBaseEntity(){
+        $.get(model.baseEntity.objectList.url, function(response){
+            model.baseEntity.objectList.data = response;
+            populateBaseEntity();
         });
     }
 
-    function loadDoctorDegreeList(){
-        var url = "{% url 'api_public_doctor_degree_list' %}?user={{ request.user.id }}";
-        $.get(url, function(response){
-            doctorDegreeList = response;
-            populateDoctorDegreeList();
+    function populateBaseEntity(){
+        // Populate options
+        $(model.baseEntity.objectList.listElementId).find('option').remove().end();
+        model.baseEntity.objectList.data.map(function (option) {
+            var key = option[model.baseEntity.objectList.keyValuePair.key];
+            var value = option[model.baseEntity.objectList.keyValuePair.value];
+            var html = "<option value=" + key + ">" + value + "</option>";
+            model.baseEntity.objectList.querySelector.insertAdjacentHTML("beforeend", html);
         });
     }
 
-    function loadDoctorDegreeDetail(degree){
-        var url = "{% url 'api_private_doctor_degree_detail' %}?degree=" + degree;
+    function addBaseEntity() {
+        var postData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+
+        for(var i in model.baseEntity.objectCreate.fields){
+            postData[model.baseEntity.objectCreate.fields[i]["fieldName"]] = $(model.baseEntity.objectCreate.fields[i]["elementId"]).val();
+        }
+
+        postForm(model.baseEntity.objectCreate.url, postData, onSuccess=[loadBaseEntity]);
+        $("#modalEntityCreate").modal('hide');
+    }
+
+    // related entity
+
+    function loadRelatedEntity(){
+        $.get(model.relatedEntity.objectList.url, function(response){
+            model.relatedEntity.objectList.data = response;
+            populateRelatedEntity();
+        });
+    }
+
+    function populateRelatedEntity(){
+        $(model.relatedEntity.objectList.listElementId).find('li').remove().end();
+        for(var key in model.relatedEntity.objectList.data){
+
+            var relatedEntityId = model.relatedEntity.objectList.data[key].id;
+
+            /**
+             * Edit this part
+             */
+
+            var year_attained = '';
+            if(model.relatedEntity.objectList.data[key].year_attained){
+                year_attained = '(' + model.relatedEntity.objectList.data[key].year_attained + ')';
+            }
+            var description = '<strong>' + model.relatedEntity.objectList.data[key]["medical_degree"]["name"] + '</strong><br>' +
+                                model.relatedEntity.objectList.data[key].school + year_attained;
+
+            /**
+             * /end
+             */
+
+            var html =
+            '<li class="list-group-item">' +
+                '<a class="float-right relatedEntityEdit btn-sm btn-warning" href="#!" data-related-entity="' + relatedEntityId +'">' +
+                    '<i class="fas fa-edit"></i>' +
+                '</a>' +
+                '<a class="float-right relatedEntityDelete btn-sm btn-danger" href="#!" data-related-entity="' + relatedEntityId +'">' +
+                    '<i class="fas fa-times"></i>' +
+                '</a>' +
+                description +
+            '</li>';
+            model.relatedEntity.objectList.querySelector.insertAdjacentHTML("beforeend", html);
+        }
+    }
+
+    function loadRelatedEntityDetail(relatedEntityId){
+        var url = model.relatedEntity.objectDetail.url + relatedEntityId;
         $.get(url).done(function(response){
-            loadFormData(medicalDegreeFormFields, response);
-            $("#edit_medical_degree_options").html(response.degree.name);
-            $("#editDoctorDegree").modal('show');
+            loadFormData(model.relatedEntity.objectUpdate.fields, response);
+            $("#editRelatedEntity").modal('show');
 
         }).fail(function(jqXHR, textStatus, errorThrown){
             console.log(jqXHR);
         });
     }
 
-    function deleteDoctorDegree(degree) {
-        var url = "{% url 'api_private_doctor_degree_delete' %}?degree=" + degree;
-        $("#confirmDoctorDegreeDelete").modal('show');
-        $("#btnConfirmDeleteDoctorDegree").click(function (e) {
+    function deleteRelatedEntity(relatedEntityId) {
+        var url = model.relatedEntity.objectDelete.url + relatedEntityId;
+        $("#confirmRelatedEntityDelete").modal('show');
+        $("#btnConfirmRelatedEntityDelete").click(function (e) {
             e.preventDefault();
             var postData = {
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             };
-            postForm(url, postData, onSuccess=[loadDoctorDegreeList, function(){loadProfileProgress($("#profile-progress-snippet"))}], onFail=[], failSilently=true);
-            $("#confirmDoctorDegreeDelete").modal('hide');
+            postForm(url, postData, onSuccess=[loadRelatedEntity, function(){loadProfileProgress($("#profile-progress-snippet"))}], onFail=[], failSilently=true);
+            $("#confirmRelatedEntityDelete").modal('hide');
         });
     }
 
-    function populateMedicalDegreeList(){
-        // Populate options
-        $("#medical_degree_options").find('option').remove().end();
-        medicalDegreeList.map(function (option) {
-            var id = option.id;
-            var name = option.name;
-            var html = "<option value=" + id + ">" + name + "</option>";
-            medicalDegreeOptions.insertAdjacentHTML("beforeend", html);
-        });
-    }
+    function editRelatedEntity(){
+        var postData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
 
-    function populateDoctorDegreeList(){
-        $("#medical_degree_list").find('li').remove().end();
-        for(var key in doctorDegreeList){
-            var degreeId = doctorDegreeList[key].id;
-            var description = '<strong>' + doctorDegreeList[key].degree.name + '</strong><br>' +
-                                doctorDegreeList[key].school + ' (' + doctorDegreeList[key].year_attained + ')<br>' +
-                                '<code>' + doctorDegreeList[key].license_number + '</code>';
-            var html =
-            '<li class="list-group-item">' +
-                '<a class="float-right doctorDegreeEdit btn-sm btn-warning" href="#!" data-degree="' + degreeId +'">' +
-                    '<i class="fas fa-edit"></i>' +
-                '</a>' +
-                '<a class="float-right doctorDegreeDelete btn-sm btn-danger" href="#!" data-degree="' + degreeId +'">' +
-                    '<i class="fas fa-times"></i>' +
-                '</a>' +
-                description +
-            '</li>';
-            medicalDegreeHTMLList.insertAdjacentHTML("beforeend", html);
+        for(var i in model.relatedEntity.objectUpdate.fields){
+            postData[model.relatedEntity.objectUpdate.fields[i]["fieldName"]] = $(model.relatedEntity.objectUpdate.fields[i]["elementId"]).val();
         }
+
+        var relatedEntityId = $("#edit_related_entity_id").val();
+        url = model.relatedEntity.objectUpdate.url + relatedEntityId;
+
+        postForm(url, postData, onSuccess=[loadRelatedEntity]);
+        resetForm(model.relatedEntity.objectUpdate.fields);
+        $("#editRelatedEntity").modal('hide');
     }
 
-    function addMedicalDegree() {
+    function addRelatedEntity(){
         var postData = {
-            name: $("#medical_degree_name").val(),
-            abbreviation: $("#medical_degree_abbreviation").val(),
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
-        var url = "{% url 'api_private_medical_degree_create' %}";
-        postForm(url, postData, onSuccess=[loadMedicalDegreeList]);
-        $("#addMedicalDegree").modal('hide');
-    }
 
-    function editDoctorDegree(){
-        var postData = {
-            school: $("#edit_doctor_degree_school").val(),
-            year_attained: $("#edit_doctor_degree_year_attained").val(),
-            license_number: $("#edit_doctor_degree_license").val(),
-            csrfmiddlewaretoken: '{{ csrf_token }}'
-        };
-        var degreeId = $("#edit_doctor_degree_id").val();
-        url = "{% url 'api_private_doctor_degree_update' %}?degree=" + degreeId;
+        for(var i in model.relatedEntity.objectCreate.fields){
+            postData[model.relatedEntity.objectCreate.fields[i]["fieldName"]] = $(model.relatedEntity.objectCreate.fields[i]["elementId"]).val();
+        }
 
-        postForm(url, postData, onSuccess=[loadDoctorDegreeList]);
-        resetForm(medicalDegreeFormFields, "edit_");
-        $("#editDoctorDegree").modal('hide');
-    }
-
-    function addDoctorDegree(){
-        var postData = {
-            school: $("#doctor_degree_school").val(),
-            year_attained: $("#doctor_degree_year_attained").val(),
-            license_number: $("#doctor_degree_license").val(),
-            degree: $("#medical_degree_options").val(),
-            csrfmiddlewaretoken: '{{ csrf_token }}'
-        };
-        url = "{% url 'api_private_doctor_degree_create' %}?user={{ request.user.id }}";
-        postForm(url, postData, onSuccess=[
-            loadDoctorDegreeList,
-            function(){resetForm(medicalDegreeFormFields)},
+        postForm(model.relatedEntity.objectCreate.url, postData, onSuccess=[
+            loadRelatedEntity,
+            function(){resetForm(model.relatedEntity.objectCreate.fields)},
             function(){loadProfileProgress($("#profile-progress-snippet"))}
-            ]);
+        ]);
     }
 </script>

@@ -3,122 +3,127 @@
 <div class="career__medical-degree">
 
     <div class="form-group row">
-        <label for="medical_degree_options" class="col-4 col-form-label">Medical Degree</label>
+        <label for="entity_options" class="col-4 col-form-label"><span class="baseEntityDisplayName"></span></label>
         <div class="col-8">
-            <select id="medical_degree_options" name="medical_degree_options" class="custom-select form-control"
+            <select id="entity_options" name="entity_options" class="custom-select form-control"
                     required="required"></select>
             <a href="javascript:void(0)" class="btn-sm btn-outline-primary" data-toggle="modal"
-               data-target="#addMedicalDegree">Add a new Medical Degree</a>
+               data-target="#modalEntityCreate">Add a new <span class="baseEntityDisplayName"></span></a>
 
         </div>
     </div>
     <div class="form-group row">
-        <label for="doctor_degree_school" class="col-4 col-form-label">School</label>
+        <label for="doctor_medical_degree_school" class="col-4 col-form-label">School</label>
         <div class="col-8">
-            <input id="doctor_degree_school" name="doctor_degree_school" type="text" class="form-control here"
-                   required="required">
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="doctor_degree_year_attained" class="col-4 col-form-label">Year Attained</label>
-        <div class="col-8">
-            <input id="doctor_degree_year_attained" name="doctor_degree_year_attained" type="number" required="required"
+            <input id="doctor_medical_degree_school" name="medical_degree_school" type="text"
                    class="form-control here">
         </div>
     </div>
     <div class="form-group row">
-        <label for="doctor_degree_license" class="col-4 col-form-label">License Number</label>
+        <label for="doctor_medical_degree_year_attained" class="col-4 col-form-label">Year Attained</label>
         <div class="col-8">
-            <input id="doctor_degree_license" name="doctor_degree_license" type="text" class="form-control here"
-                   required="required">
+            <input id="doctor_medical_degree_year_attained" name="medical_degree_year_attained" type="number"
+                   class="form-control here">
+            <br>
+            <small class="help-text">Leave blank if unfinished</small>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="doctor_medical_degree_license_number" class="col-4 col-form-label">License Number</label>
+        <div class="col-8">
+            <input id="doctor_medical_degree_license_number" name="medical_degree_license_number" type="text"
+                   class="form-control here">
         </div>
     </div>
     <div class="btn-group  mt-4">
-        <a id="btnDoctorDegreeAdd" href="javascript:void(0)" class="btn btn-primary">Save</a>
-        <a id="btnDoctorDegreeReset" href="#!" class="btn btn-secondary">Reset</a>
+        <a id="btnRelatedEntityAdd" href="javascript:void(0)" class="btn btn-primary">Save</a>
+        <a id="btnRelatedEntityReset" href="#!" class="btn btn-secondary">Reset</a>
     </div>
 
-    <h6 class="h6 mt-3">My Degrees</h6>
+    <h6 class="h6 mt-3"><span class="relatedEntityDisplayNamePlural"></span></h6>
 
-    <ul class="list-group list-group-flush" id="medical_degree_list">
+    <ul class="list-group list-group-flush" id="related_entity_list">
 
     </ul>
 
 </div>
 
-<div class="modal fade" id="confirmDoctorDegreeDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" id="confirmRelatedEntityDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                Remove Medical Degree
+                Confirm delete
             </div>
             <div class="modal-body">
-                You are about to remove this Medical Degree from your profile. This action is destructive and non-recoverable. Are you sure?
+                You are about to remove this <span class="baseEntityDisplayName"></span> from your profile. This action
+                is destructive and non-recoverable. Are you sure?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">No, I changed my mind</button>
-                <a class="btn btn-danger btn-ok text-white" id="btnConfirmDeleteDoctorDegree">Yes, remove it</a>
+                <a class="btn btn-danger btn-ok text-white" id="btnConfirmRelatedEntityDelete">Yes, remove it</a>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="editDoctorDegree" role="dialog" aria-hidden="true">
+<div class="modal fade" id="editRelatedEntity" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6>Edit <span id="edit_medical_degree_options"></span></h6>
+                <h6>Edit <span id="relatedEntityTitleEdit"></span></h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group row">
-                    <label for="edit_doctor_degree_school" class="col-4 col-form-label">School</label>
+                    <label for="edit_doctor_medical_degree_school" class="col-4 col-form-label">Place of
+                        Residency</label>
                     <div class="col-8">
-                        <input id="edit_doctor_degree_school" name="doctor_degree_school" type="text" class="form-control here"
-                               required="required">
+                        <input id="edit_doctor_medical_degree_school"
+                               name="medical_degree_school" type="text" class="form-control here">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="edit_doctor_degree_year_attained" class="col-4 col-form-label">Year Attained</label>
+                    <label for="edit_doctor_medical_degree_year_attained" class="col-4 col-form-label">Year
+                        Attained</label>
                     <div class="col-8">
-                        <input id="edit_doctor_degree_year_attained" name="doctor_degree_year_attained" type="number" required="required"
-                               class="form-control here">
+                        <input id="edit_doctor_medical_degree_year_attained" name="medical_degree_year_attained"
+                               type="number" class="form-control here">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="edit_doctor_degree_license" class="col-4 col-form-label">License Number</label>
+                    <label for="edit_doctor_medical_degree_license_number" class="col-4 col-form-label">License
+                        Number</label>
                     <div class="col-8">
-                        <input id="edit_doctor_degree_license" name="doctor_degree_license" type="text" class="form-control here"
-                               required="required">
+                        <input id="edit_doctor_medical_degree_license_number"
+                               name="medical_degree_license_number" type="text" class="form-control here">
+                    </div>
+                </div>
 
-                    </div>
-                </div>
-                <input type="hidden" name="doctor_degree_id" id="edit_doctor_degree_id" value="">
+                <input type="hidden" name="related_entity_id" id="edit_related_entity_id" value="">
             </div>
             <div class="modal-footer">
-                <a class="btn btn-warning btn-ok text-white" id="btnConfirmEditDoctorDegree">Update</a>
+                <a class="btn btn-warning btn-ok text-white" id="btnConfirmRelatedEntityEdit">Update</a>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="addMedicalDegree" role="dialog"
-     aria-labelledby="addMedicalDegreeLabel" aria-hidden="true">
+<div class="modal fade" id="modalEntityCreate" role="dialog"
+     aria-labelledby="addEntityLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <form class="modal-content">
             <div class="modal-header">
-                <h6>Add Medical Degree</h6>
+                <h6>Add <span class="baseEntityDisplayName"></span></h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form method="post" id="medical_degree_form">
-                    {% csrf_token %}
-
+            <form method="post" id="baseEntityCreateForm">
+                {% csrf_token %}
+                <div class="modal-body">
                     <div id="div_medical_degree_name" class="form-group">
                         <label for="medical_degree_name" class="col-form-label  requiredField">
                             Name<span class="asteriskField">*</span>
@@ -134,17 +139,40 @@
                         </label>
                         <div class="">
                             <input type="text" name="medical_degree_abbreviation" maxlength="30"
-                                   class="textinput textInput form-control" required=""
+                                   class="textinput textInput form-control" required
                                    id="medical_degree_abbreviation">
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <a id="btnMedicalDegreeAdd" href="#!" class="btn btn-primary btn-block">
-                    Add
-                </a>
-            </div>
-        </div>
+                    <div class="form-group">
+                        <label for="medical_degree_practitioner_title" class="col-form-label requiredField">
+                            Practitioner Title<span class="asteriskField">*</span>
+                        </label>
+                        <div>
+                            <small class="help-text">What should a Doctor with this medical_degree be called?</small>
+                            <input type="text" name="medical_degree_practitioner_title" maxlength="60"
+                                   class="textinput textInput form-control" required
+                                   id="medical_degree_practitioner_title">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="medical_degree_practitioner_title_plural" class="col-form-label requiredField">
+                            Practitioner Title (plural form)<span class="asteriskField">*</span>
+                        </label>
+                        <div>
+                            <input type="text" name="medical_degree_practitioner_title_plural" maxlength="60"
+                                   class="textinput textInput form-control" required
+                                   id="medical_degree_practitioner_title_plural">
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="btnEntityAdd" class="btn btn-primary btn-block">
+                        Add
+                    </button>
+                </div>
+            </form>
     </div>
+</div>
 </div>

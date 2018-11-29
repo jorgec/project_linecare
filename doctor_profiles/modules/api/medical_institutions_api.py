@@ -111,15 +111,16 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
 
     def post(self, request, *args, **kwargs):
         serializer = MedicalInstitutionCreatePrivateSerializer(data=request.data)
+
         if serializer.is_valid():
             try:
                 mi = MedicalInstitution.objects.create(
                     name=serializer.validated_data['name'],
                     type_id=serializer.validated_data['type'],
-                    added_by=request.user
+                    added_by_id=request.user
                 )
             except IntegrityError:
-                return Response("Duplicate name", status=status.HTTP_400_BAD_REQUEST)
+                return Response("That Medical Institution already exists!", status=status.HTTP_400_BAD_REQUEST)
 
             try:
                 loc = MedicalInstitutionLocation.objects.create(
@@ -128,7 +129,7 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                     province_id=serializer.validated_data['province'],
                     city_id=serializer.validated_data['city'],
                     zip_code=serializer.validated_data['zip_code'],
-                    suggested_by=request.user,
+                    suggested_by_id=request.user,
                     medical_institution=mi
                 )
 
