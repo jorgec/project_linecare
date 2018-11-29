@@ -107,7 +107,7 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
     """
 
     permission_classes = [permissions.IsAuthenticated]
-    parser_classes = [parsers.JSONParser]
+    # parser_classes = [parsers.JSONParser]
 
     def post(self, request, *args, **kwargs):
         serializer = MedicalInstitutionCreatePrivateSerializer(data=request.data)

@@ -31,6 +31,9 @@ class DoctorProfilePublicSerializer(serializers.ModelSerializer):
 
 class DoctorProfilePrivateSerializer(serializers.ModelSerializer):
     user = AccountWithProfileSerializerPrivate()
+
     class Meta:
         model = models.DoctorProfile
-        fields = ('user',)
+        fields = ('id',
+                  'user',
+                  )

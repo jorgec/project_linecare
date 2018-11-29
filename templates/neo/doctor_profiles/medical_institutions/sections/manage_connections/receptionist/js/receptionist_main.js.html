@@ -70,14 +70,23 @@
         $.get(url)
             .done(function(result){
                 $("#my_receptionists_container").loadTemplate($("#my_receptionists_template"), result);
+
+                $(".connect-receptionist").on('click', function(){
+                    var doctor_id = $(this).attr("data-doctor-id");
+                    var receptionist_id = $(this).attr("data-receptionist-id");
+                    var institution_id = $(this).attr("data-institution-id");
+
+                    connectReceptionist(doctor_id, receptionist_id, institution_id);
+                });
             })
             .fail(function(jqXHR){
                 console.log(jqXHR);
             });
     }
 
-    function connectReceptionist(){
-        alert('masdgasdg');
+    function connectReceptionist(doctor_id, receptionist_id, institution_id){
+        console.log(doctor_id, receptionist_id, institution_id);
+
     }
 
     function createReceptionist(){

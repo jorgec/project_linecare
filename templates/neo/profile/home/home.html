@@ -13,6 +13,8 @@
 {% endblock %}
 
 {% block scripts %}
+    {% block inner_scripts %}
+    {% endblock %}
 
 <script type="text/javascript">
     var photoEndpoint = "{% url 'api_private_profile_photos_all' %}";

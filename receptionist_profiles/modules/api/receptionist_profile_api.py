@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from rest_framework import permissions, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -5,9 +6,50 @@ from rest_framework.views import APIView
 
 from accounts.models import Account
 from doctor_profiles.models import DoctorProfile, MedicalInstitution
-from profiles.models import BaseProfile
 from receptionist_profiles.models import ReceptionistProfile
-from receptionist_profiles.serializers import ReceptionistProfileCreateByDoctorSerializer, ReceptionistProfileSerializer
+from receptionist_profiles.models.receptionist_profile_model import ReceptionistConnection
+from receptionist_profiles.serializers import ReceptionistProfileCreateByDoctorSerializer, \
+    ReceptionistProfileSerializer, ReceptionistConnectionPrivateBasicSerializer
+
+
+class ApiPrivateReceptionistConnectionCreate(APIView):
+    """
+    Create a connection between a receptionist profile and either a doctor or medical institution
+    ?receptionist_id=receptionist_id
+    [one optional]
+    ?doctor_id=doctor_id
+    -or-
+    ?medical_institution_id=medical_institution_id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        receptionist_profile = get_object_or_404(ReceptionistProfile, id=request.GET.get('receptionist_profile', None))
+
+        params = {
+            'receptionist': receptionist_profile
+        }
+
+        doctor_id = request.GET.get('doctor_id', None)
+        medical_institution_id = request.GET.get('medical_institution_id', None)
+
+        if doctor_id:
+            doctor_profile = get_object_or_404(DoctorProfile, id=doctor_id)
+            params['doctor'] = doctor_profile
+
+        if medical_institution_id:
+            medical_institution = get_object_or_404(MedicalInstitution, id=medical_institution_id)
+            params['medical_institution'] = medical_institution
+
+        try:
+            connection = ReceptionistConnection.objects.create(
+                **params
+            )
+            serializer = ReceptionistConnectionPrivateBasicSerializer(connection)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except IntegrityError:
+            return Response("This connection already exists!", status=status.HTTP_400_BAD_REQUEST)
 
 
 class ApiPrivateReceptionistProfileCreateByDoctor(APIView):

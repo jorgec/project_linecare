@@ -22,6 +22,7 @@ class ReceptionistProfileCreateByDoctorSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=120)
 
 
+
 class ReceptionistConnectionPrivateNestedSerializer(serializers.ModelSerializer):
     doctor = DoctorProfilePrivateSerializer()
     medical_institution = MedicalInstitutionTypePublicSerializer()
