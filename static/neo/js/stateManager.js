@@ -28,7 +28,6 @@ function genericFetch(key) {
             // console.log(key, entity.dataSrc, result);
 
             entity.container.loadTemplate(entity.template, result);
-            console.log(result);
 
             // onSuccessResult
             if (entity.onSuccessResult.length > 0) {

@@ -5,7 +5,7 @@
 
     model.all_receptionists = {
         dataSrc: "{% url 'api_private_medical_institution_receptionist_not_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full",
-        fetch: function(){genericFetch('all_receptionists')},
+        fetch: fetchAllReceptionists,
         onReady: true,
         onSuccessResult: [],
         onSuccess: [],
@@ -65,11 +65,11 @@
      * methods
      */
 
-    function fetchMyReceptionists(){
-        var url = "{% url 'api_private_medical_institution_receptionist_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
+    function fetchAllReceptionists(){
+        var url = "{% url 'api_private_medical_institution_receptionist_not_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
         $.get(url)
             .done(function(result){
-                $("#my_receptionists_container").loadTemplate($("#my_receptionists_template"), result);
+                $("#all_receptionists_container").loadTemplate($("#all_receptionists_template"), result);
 
                 $(".connect-receptionist").on('click', function(e){
                     e.preventDefault();
@@ -85,8 +85,29 @@
             });
     }
 
+    function fetchMyReceptionists(){
+        var url = "{% url 'api_private_medical_institution_receptionist_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
+        $.get(url)
+            .done(function(result){
+                $("#my_receptionists_container").loadTemplate($("#my_receptionists_template"), result);
+
+                $(".remove-receptionist").on('click', function(e){
+                    e.preventDefault();
+                    var doctor_id = $(this).attr("data-doctor-id");
+                    var receptionist_id = $(this).attr("data-receptionist-id");
+                    var institution_id = $(this).attr("data-institution-id");
+
+                    removeReceptionist(doctor_id, receptionist_id, institution_id);
+                });
+            })
+            .fail(function(jqXHR){
+                console.log(jqXHR);
+            });
+    }
+
     function connectReceptionist(doctor_id, receptionist_id, institution_id){
         var url = "{% url 'api_private_receptionist_connection_create' %}?doctor_id=" + doctor_id + "&receptionist_id=" + receptionist_id + "&medical_institution_id=" + institution_id;
+        console.log(url);
         var formData = {
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };

@@ -3,6 +3,7 @@ from rest_framework.utils import json
 
 from albums.serializers import SinglePhotoSerializer
 from profiles.modules.response_templates.phone import private_phone_dict_template
+from profiles.serializers import GenderSerializer
 from receptionist_profiles.serializers import ReceptionistConnectionPrivateNestedSerializer, \
     ReceptionistProfileSerializer
 
@@ -22,11 +23,22 @@ def private_receptionist_profile_template(*, user, nested=False, as_json=False):
     receptionist_serializer = ReceptionistProfileSerializer(receptionist_profile)
 
     profile = user.base_profile()
-    phones = profile.get_all_phones()
+    if not profile:
+        return False
+    try:
+        phones = profile.get_all_phones()
+    except AttributeError:
+        phones = None
     _phones = {}
-    profile_photo = profile.get_profile_photo()
+    try:
+        profile_photo = profile.get_profile_photo()
+    except AttributeError:
+        profile_photo = None
     _profile_photo = {'photo': None}
-    cover_photo = profile.get_cover_photo()
+    try:
+        cover_photo = profile.get_cover_photo()
+    except AttributeError:
+        cover_photo = None
     _cover_photo = {'photo': None}
 
     if phones:
@@ -42,7 +54,7 @@ def private_receptionist_profile_template(*, user, nested=False, as_json=False):
         'user_type': user.user_type,
         'first_name': profile.first_name,
         'last_name': profile.last_name,
-        'gender': profile.gender,
+        'gender': GenderSerializer(profile.gender).data,
         'date_of_birth': profile.date_of_birth,
         'profile_photo': _profile_photo,
         'cover_photo': _cover_photo,

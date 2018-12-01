@@ -161,11 +161,15 @@ class BaseProfile(models.Model):
 
     def get_profile_photo(self):
         album = self.get_profile_album()
-        return album.get_primary_photo()
+        if album:
+            return album.get_primary_photo()
+        return None
 
     def get_cover_photo(self):
         album = self.get_cover_album()
-        return album.get_primary_photo()
+        if album:
+            return album.get_primary_photo()
+        return None
 
     # Biometrics
     def get_biometrics(self):
