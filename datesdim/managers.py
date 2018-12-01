@@ -112,6 +112,8 @@ class DateDimManager(models.Manager):
             date = datetime.datetime.strptime(s, "%Y-%m-%d")
         except ValueError:
             return False
+        except TypeError:
+            return False
         return {
             'year': date.year,
             'month': date.month,
@@ -123,12 +125,14 @@ class DateDimManager(models.Manager):
             return str
 
         date = self.parse(str)
-        try:
-            return self.model.objects.get(
-                **date
-            )
-        except self.model.DoesNotExist:
-            return False
+        if date:
+            try:
+                return self.model.objects.get(
+                    **date
+                )
+            except self.model.DoesNotExist:
+                return False
+        return False
 
     def preload_year(self, *args, **kwargs):
         if not kwargs['year']:
