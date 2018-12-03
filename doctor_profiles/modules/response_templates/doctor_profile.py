@@ -34,14 +34,14 @@ def public_doctor_profile_template(*, user, as_json=False):
     if cover_photo:
         _cover_photo = SinglePhotoSerializer({'photo': cover_photo}).data
 
-    medical_degrees = MedicalDegreePublicSerializer(doctor_profile.get_degrees()).data
-    insurance_providers = InsuranceProviderPublicSerializer(doctor_profile.get_insurance_providers()).data
-    specializations = SpecializationPublicSerializer(doctor_profile.get_specializations()).data
+    medical_degrees = MedicalDegreePublicSerializer(doctor_profile.get_degrees(), many=True).data
+    insurance_providers = InsuranceProviderPublicSerializer(doctor_profile.get_insurance_providers(), many=True).data
+    specializations = SpecializationPublicSerializer(doctor_profile.get_specializations(), many=True).data
     subspecializations = {}
-    associations = MedicalAssociationPublicSerializer(doctor_profile.get_associations()).data
-    fellowships = MedicalAssociationPublicSerializer(doctor_profile.get_fellowships()).data
-    diplomates = MedicalAssociationPublicSerializer(doctor_profile.get_diplomates()).data
-    medical_institutions = MedicalInstitutionPublicSerializer(doctor_profile.get_medical_institutions()).data
+    associations = MedicalAssociationPublicSerializer(doctor_profile.get_associations(), many=True).data
+    fellowships = MedicalAssociationPublicSerializer(doctor_profile.get_fellowships(), many=True).data
+    diplomates = MedicalAssociationPublicSerializer(doctor_profile.get_diplomates(), many=True).data
+    medical_institutions = MedicalInstitutionPublicSerializer(doctor_profile.get_medical_institutions(), many=True).data
 
     data = {
         'id': user.id,
