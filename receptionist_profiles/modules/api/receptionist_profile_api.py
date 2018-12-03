@@ -94,9 +94,12 @@ class ApiPrivateReceptionistProfileCreateByDoctor(APIView):
     """
     Create a receptionist profile for someone via a doctor account
     ?doctor_id=doctor_id&medical_institution_id=medical_institution_id
+
+    TODO
+    Make this private
     """
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
