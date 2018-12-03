@@ -448,9 +448,12 @@ class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
     ?id=medical_institution_id&doctor_id=doctor_id
     [optional]
     ?fmt=[full] - returns serialized private profile objects
+
+    TODO
+    Make this private
     """
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
