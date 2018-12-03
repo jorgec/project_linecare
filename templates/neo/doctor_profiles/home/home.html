@@ -9,17 +9,14 @@
 
 {% block subcontent %}
 
-<div id="profile-progress-detail-snippet"></div>
-
 
 {% endblock %}
 
 {% block home_scripts %}
 <script type="text/javascript">
-    $(document).ready(function(){
-        {% if request.user.doctorprofile.settings_progress.progress_int < 50 %}
-            loadProfileProgressDetail($("#profile-progress-detail-snippet"));
-        {% endif %}
-    });
+    var context = {
+        doctor_id: '{{request.user.doctorprofile.id}}',
+    };
 </script>
+
 {% endblock %}
