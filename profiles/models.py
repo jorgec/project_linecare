@@ -28,9 +28,9 @@ class Gender(models.Model):
 
 class BaseProfile(models.Model):
     # Fields
-    first_name = models.CharField(max_length=32, blank=True, null=True)
-    middle_name = models.CharField(max_length=32, blank=True, null=True)
-    last_name = models.CharField(max_length=32, blank=True, null=True)
+    first_name = models.CharField(max_length=32, blank=True, null=True, default='')
+    middle_name = models.CharField(max_length=32, blank=True, null=True, default='')
+    last_name = models.CharField(max_length=32, blank=True, null=True, default='')
 
     date_of_birth = models.DateField(default=None, blank=True, null=True)
 
@@ -39,7 +39,7 @@ class BaseProfile(models.Model):
 
     # Relationship Fields
     gender = models.ForeignKey(Gender, related_name='gender_profiles', on_delete=models.SET_NULL, null=True, blank=True)
-    user = models.ForeignKey('accounts.Account', related_name='account_profiles', on_delete=models.CASCADE)
+    user = models.OneToOneField('accounts.Account', related_name='account_profiles', on_delete=models.CASCADE)
 
     is_fresh = models.BooleanField(default=True)
 

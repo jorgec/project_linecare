@@ -26,3 +26,5 @@ from .medical_institution_serializers import MedicalInstitutionTypeSerializer, M
     MedicalInstitutionCoordinateSerializer, MedicalInstitutionCoordinatePublicSerializer, \
     MedicalInstitutionCoordinatePublicSerializerWithVotes, MedicalInstitutionNestedPublicSerializer, \
     MedicalInstitutionCoordinatesCreateSerializer, MedicalInstitutionCreatePrivateSerializer
+
+from .doctor_schedule_serializer import *

@@ -83,7 +83,16 @@ class Account(AbstractBaseUser):
     Profile Functions
     """
     def base_profile(self):
-        return self.account_profiles.all().first()
+        BaseProfile = apps.get_model('profiles.BaseProfile')
+        try:
+            return BaseProfile.objects.get(
+                user=self
+            )
+        except BaseProfile.DoesNotExist:
+            profile = BaseProfile.objects.create(
+                user=self
+            )
+            return profile
 
     def settings_set_primary_profile(self):
         # TODO

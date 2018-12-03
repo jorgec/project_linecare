@@ -60,16 +60,58 @@
         createReceptionist();
     });
 
+    $("#frmSearchAllReceptionists").on('submit', function(e){
+        e.preventDefault();
+        var s = $("#txtSearchAllReceptionists").val();
+        if(s.length >= 3){
+            fetchAllReceptionists(s);
+        }else{
+            $.notify({
+                message: "Search parameter is too short"
+            }, {
+                type: 'danger'
+            });
+        }
+    });
+    
+    $("#frmSearchMyReceptionists").on('submit', function(e){
+        e.preventDefault();
+        var s = $("#txtSearchMyReceptionists").val();
+        if(s.length >= 3){
+            fetchMyReceptionists(s);
+        }else{
+            $.notify({
+                message: "Search parameter is too short"
+            }, {
+                type: 'danger'
+            });
+        }
+    });
+
+    $("#btnClearAllReceptionists").on('click', function(e){
+        e.preventDefault();
+        fetchAllReceptionists();
+    });
+
+    $("#btnClearMyReceptionists").on('click', function(e){
+        e.preventDefault();
+        fetchMyReceptionists();
+    });
 
     /**
      * methods
      */
 
-    function fetchAllReceptionists(){
+    function fetchAllReceptionists(s=null){
+        var container = $("#all_receptionists_container");
+        container.html("Loading...");
         var url = "{% url 'api_private_medical_institution_receptionist_not_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
+        if(s){
+            url = url + "&s=" + s;
+        }
         $.get(url)
             .done(function(result){
-                $("#all_receptionists_container").loadTemplate($("#all_receptionists_template"), result);
+                container.loadTemplate($("#all_receptionists_template"), result);
 
                 $(".connect-receptionist").on('click', function(e){
                     e.preventDefault();
@@ -85,11 +127,16 @@
             });
     }
 
-    function fetchMyReceptionists(){
+    function fetchMyReceptionists(s=null){
+        var container = $("#my_receptionists_container");
+        container.html("Loading...");
         var url = "{% url 'api_private_medical_institution_receptionist_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
+        if(s){
+            url = url + "&s=" + s;
+        }
         $.get(url)
             .done(function(result){
-                $("#my_receptionists_container").loadTemplate($("#my_receptionists_template"), result);
+                container.loadTemplate($("#my_receptionists_template"), result);
 
                 $(".remove-receptionist").on('click', function(e){
                     e.preventDefault();
@@ -107,7 +154,6 @@
 
     function connectReceptionist(doctor_id, receptionist_id, institution_id){
         var url = "{% url 'api_private_receptionist_connection_create' %}?doctor_id=" + doctor_id + "&receptionist_id=" + receptionist_id + "&medical_institution_id=" + institution_id;
-        console.log(url);
         var formData = {
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
@@ -174,6 +220,7 @@
                     type: 'success'
                 });
                 updateState(model.all_receptionists);
+                updateState(model.my_receptionists);
                 $("#modalCreateReceptionist").modal('hide');
             })
             .fail(function(jqXHR, textStatus, errorThrown) {

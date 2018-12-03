@@ -12,6 +12,7 @@ from .modules.api import medical_associations_api
 from .modules.api import insurance_providers_api
 from .modules.api import medical_institutions_api
 from .modules.api import doctor_profile_api
+from .modules.api import doctor_schedule_api
 
 #############################################################################
 # Views
@@ -286,4 +287,9 @@ urlpatterns += [
     path(f'{version}/private/medical_institution/receptionist/connected/list',
          medical_institutions_api.ApiPrivateMedicalInstitutionConnectedReceptionistList.as_view(),
          name='api_private_medical_institution_receptionist_connected_list'),
+
+    # schedule
+    path(f'{version}/private/doctor/schedule/create',
+         doctor_schedule_api.ApiDoctorScheduleCreate.as_view(),
+         name='api_private_doctor_schedule_create'),
 ]

@@ -1,4 +1,8 @@
+import operator
+from functools import reduce
+
 from django.db import IntegrityError
+from django.db.models import Q
 from rest_framework import status, permissions, parsers
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -411,9 +415,21 @@ class ApiPrivateMedicalInstitutionNotConnectedReceptionistList(APIView):
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
 
         receptionists_to_exclude = doctor.get_receptionists(medical_institution=medical_institution)
+        rel = medical_institution.institution_connections.filter(is_approved=True).exclude(
+            receptionist__in=receptionists_to_exclude).order_by('receptionist__user__account_profiles__last_name')
 
-        rel = medical_institution.institution_connections.filter(is_approved=True).exclude(receptionist__in=receptionists_to_exclude)
-        receptionists = {r.receptionist for r in rel}
+        search_filters = {}
+
+        search = request.GET.get('s', None)
+        if search:
+            search_filters['receptionist__user__account_profiles__last_name__icontains'] = search
+            search_filters['receptionist__user__account_profiles__first_name__icontains'] = search
+            search_filters['receptionist__user__username__icontains'] = search
+            search_filters['receptionist__user__email__icontains'] = search
+            rel = rel.filter(reduce(operator.or_,(Q(**d) for d in [dict([i]) for i in search_filters.items()])))
+
+        receptionists = list({r.receptionist for r in rel})
+        receptionists.sort(key=lambda x: x.user.account_profiles.last_name)
 
         if request.GET.get('fmt', None) == 'full':
             serializer_list = []
@@ -439,7 +455,9 @@ class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
     def get(self, request, *args, **kwargs):
         medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id'))
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
-        receptionists = doctor.get_receptionists(medical_institution=medical_institution)
+        search = request.GET.get('s', None)
+        receptionists = list(doctor.get_receptionists(medical_institution=medical_institution, s=search))
+        receptionists.sort(key=lambda x: x.user.account_profiles.last_name)
 
         if request.GET.get('fmt', None) == 'full':
             serializer_list = []

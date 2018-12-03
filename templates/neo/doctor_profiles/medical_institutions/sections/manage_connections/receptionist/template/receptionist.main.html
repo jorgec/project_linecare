@@ -1,0 +1,41 @@
+{% load static %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="h5">My Receptionists</h5>
+        <div class="py-4">
+            <form id="frmSearchMyReceptionists" class="d-flex">
+                <input type="text" class="form-control" placeholder="Search..." id="txtSearchMyReceptionists">
+                <button type="submit" class="btn btn-info"  id="btnSearchMyReceptionists">
+                    <i class="fa fa-search"></i> Search</button>
+                <button type="reset" class="btn btn-secondary" id="btnClearMyReceptionists">
+                    <i class="fa fa-reload"></i> Reset
+                </button>
+            </form>
+
+        </div>
+        <div id="my_receptionists_container" class="row"></div>
+
+        <hr>
+        <h5 class="h5">All Receptionists</h5>
+        <div class="py-4">
+            <form id="frmSearchAllReceptionists" class="d-flex">
+                <input type="text" class="form-control" placeholder="Search..." id="txtSearchAllReceptionists">
+                <button type="submit" class="btn btn-info"  id="btnSearchAllReceptionists">
+                    <i class="fa fa-search"></i> Search</button>
+                <button type="reset" class="btn btn-secondary" id="btnClearAllReceptionists">
+                    <i class="fa fa-reload"></i> Reset
+                </button>
+            </form>
+
+        </div>
+        <div id="all_receptionists_container" class="row"></div>
+    </div>
+    <div class="card-footer">
+        <div class="btn-group btn-group-sm">
+            <a class="btn btn-outline-primary" href="#!" id="btnCreateReceptionist" data-toggle="modal" data-target="#modalCreateReceptionist">
+                <i class="fa fa-plus"></i>
+                Create a Receptionist profile
+            </a>
+        </div>
+    </div>
+</div>

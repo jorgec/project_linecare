@@ -12,6 +12,7 @@
             height: 70vh;
         }
     </style>
+    <link rel="stylesheet" href="{% static 'neo/css/wickedpicker.min.css' %}">
 {% endblock %}
 {% block header_js %}
 {% endblock %}
@@ -23,7 +24,7 @@
 {% endblock %}
 
 {% block scripts %}
-
+    <script type="text/javascript" src="{% static 'neo/js/wickedpicker.min.js' %}"></script>
     {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/main.js.html' %}
 {% endblock %}
 {% block home_scripts %}

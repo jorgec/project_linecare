@@ -145,7 +145,59 @@ class DateDimManager(models.Manager):
                 self.create(year=year, month=month[0], day=day)
 
 
+class TimeDimQuerySet(models.QuerySet):
+    def morning(self):
+        return self.filter(
+            hour__lte=12
+        )
+
+    def noon(self):
+        return self.filter(
+            hour__gte=12,
+            hour__lte=13
+        )
+
+    def afternoon(self):
+        return self.filter(
+            hour__gte=3,
+            hour__lte=18
+        )
+
+    def evening(self):
+        return self.filter(hour__gte=18)
+
+
 class TimeDimManager(models.Manager):
+    def get_queryset(self):
+        return TimeDimQuerySet(self.model, using=self._db)
+
+    def morning(self):
+        return self.get_queryset().morning()
+
+    def noon(self):
+        return self.get_queryset().noon()
+
+    def afternoon(self):
+        return self.get_queryset().afternoon()
+
+    def evening(self):
+        return self.get_queryset().evening()
+
+    def convert_to_24(self, time):
+        """Converts 12 hours time format to 24 hours
+        """
+        time = time.replace(' ', '')
+        time, half_day = time[:-2], time[-2:].lower()
+        if half_day == 'am':
+            return time
+        elif half_day == 'pm':
+            split = time.find(':')
+            if split == -1:
+                split = None
+            return str(int(time[:split]) + 12) + time[split:]
+        else:
+            raise ValueError("Didn't end with AM or PM.")
+
     def parse(self, t):
         """
         Try to parse string (HH:MM) or datetime
@@ -155,6 +207,10 @@ class TimeDimManager(models.Manager):
         :rtype:
         """
         if type(t) == str:
+            t = t.lower()
+            if "am" in t or "pm" in t:
+                t = self.convert_to_24(t)
+
             pattern = re.compile('^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$')
             match = pattern.match(t)
             if match:

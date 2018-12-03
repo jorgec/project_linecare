@@ -1,0 +1,56 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.timepicker').wickedpicker({
+            title: "Select time"
+        });
+
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            date: new Date()
+        });
+
+        var countRegularScheduleForms = 0;
+
+        $("#btnAddRegularSchedule").on('click', function (e) {
+            e.preventDefault();
+            countRegularScheduleForms = countRegularScheduleForms + 1;
+            $("#frmAddRegularWeeklySchedule_0").clone().attr("id", "frmAddRegularWeeklySchedule_" + countRegularScheduleForms).appendTo($("#divAddRegularSchedule"));
+             $('.timepicker').wickedpicker({
+                title: "Select time"
+            });
+
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                date: new Date()
+            });
+        });
+
+
+        $("#frmCollectionRegularWeeklySchedule").on('submit', '.frmAddRegularWeeklySchedule', function (e) {
+            e.preventDefault();
+
+            var days = $("input[name=weekday]:checked", this).map(
+                function () {
+                    return this.value;
+                }
+            ).get().join(";");
+            var startTime = $("input[name=startTime]", this).val();
+            var endTime = $("input[name=endTime]", this).val();
+            var startDate = $("input[name=startDate]", this).val();
+            var endDate = $("input[name=endDate]", this).val();
+
+            var formData = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                days: days,
+                start_time: startTime,
+                end_time: endTime,
+                start_date: startDate,
+                end_date: endDate
+            };
+            console.log(formData);
+
+            $.post("{% url 'api_private_doctor_schedule_create' %}", formData);
+        });
+
+    });
+</script>

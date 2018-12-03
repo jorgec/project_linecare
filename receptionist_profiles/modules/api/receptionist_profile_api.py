@@ -117,6 +117,12 @@ class ApiPrivateReceptionistProfileCreateByDoctor(APIView):
             profile.is_fresh = False
             profile.save()
 
+            ReceptionistProfile.objects.create_by_doctor(
+                doctor=None,
+                medical_institution=medical_institution,
+                user=account
+            )
+
             receptionist = ReceptionistProfile.objects.create_by_doctor(
                 doctor=doctor,
                 medical_institution=medical_institution,
@@ -127,5 +133,4 @@ class ApiPrivateReceptionistProfileCreateByDoctor(APIView):
 
             return Response(return_serializer.data, status=status.HTTP_200_OK)
         else:
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

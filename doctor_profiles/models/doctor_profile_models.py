@@ -1,3 +1,7 @@
+import operator
+from django.db.models import Q
+from functools import reduce
+
 from django.contrib.postgres.fields import JSONField
 from django.db import models as models
 
@@ -57,7 +61,7 @@ class DoctorProfile(models.Model):
     def get_medical_institutions(self):
         return self.medical_institutions_joined.filter(is_approved=True)
 
-    def get_receptionists(self, *, medical_institution=None):
+    def get_receptionists(self, *, medical_institution=None, s=None):
 
         filters = {
             'is_approved': True
@@ -66,7 +70,16 @@ class DoctorProfile(models.Model):
         if medical_institution:
             filters['medical_institution'] = medical_institution
 
-        connections = self.doctor_connections.filter(**filters)
+        connections = self.doctor_connections.filter(**filters).order_by('receptionist__user__account_profiles__last_name')
+
+        search_filters = {}
+        if s:
+            search_filters['receptionist__user__account_profiles__last_name__icontains'] = s
+            search_filters['receptionist__user__account_profiles__first_name__icontains'] = s
+            search_filters['receptionist__user__username__icontains'] = s
+            search_filters['receptionist__user__email__icontains'] = s
+            connections = connections.filter(reduce(operator.or_,(Q(**d) for d in [dict([i]) for i in search_filters.items()])))
+
 
         return {r.receptionist for r in connections}
 
