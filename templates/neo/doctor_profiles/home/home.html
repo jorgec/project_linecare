@@ -14,9 +14,10 @@
 
 {% block home_scripts %}
 <script type="text/javascript">
-    var context = {
+    var appContext = {
         doctor_id: '{{request.user.doctorprofile.id}}',
     };
+    window.appContext = context;
 </script>
 
 {% endblock %}
