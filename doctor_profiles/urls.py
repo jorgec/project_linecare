@@ -83,6 +83,9 @@ urlpatterns += [
     path(f'{version}/private/profile/dismiss_progress_display',
          doctor_profile_api.ApiDismissProfileProgressDisplay.as_view(),
          name='api_doctor_profile_dismiss_profile_progress_display'),
+    path(f'{version}/public/profile/detail',
+         doctor_schedule_api.ApiPublicDoctorProfileDetail.as_view(),
+         name='api_public_doctor_profile_detail'),
 
     #############################################################################
     # Medical Degrees
