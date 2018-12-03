@@ -45,7 +45,7 @@ class DoctorProfile(models.Model):
 
     def get_degrees(self):
         rel = self.get_degrees_rel()
-        return [d.medical_degree for d in rel]
+        return [d.degree for d in rel]
 
     def get_insurance_providers_rel(self):
         return self.doctor_insurance.filter(is_approved=True)
