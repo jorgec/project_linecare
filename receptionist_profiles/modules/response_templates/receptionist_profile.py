@@ -8,15 +8,17 @@ from receptionist_profiles.serializers import ReceptionistConnectionPrivateNeste
     ReceptionistProfileSerializer
 
 
-def private_receptionist_profile_template(*, user, nested=False, as_json=False):
+def private_receptionist_profile_template(*, user, nested=False, as_json=False, doctor_id=None):
     try:
         receptionist_profile = user.receptionistprofile
     except ObjectDoesNotExist:
         return False
 
     if nested:
-        connections_serializer = ReceptionistConnectionPrivateNestedSerializer(
-            receptionist_profile.receptionist_connections.all(), many=True).data
+        if doctor_id:
+            connections_serializer = ReceptionistConnectionPrivateNestedSerializer(receptionist_profile.get_medical_institution_connections(doctor_id=doctor_id), many=True).data
+        else:
+            connections_serializer = ReceptionistConnectionPrivateNestedSerializer(receptionist_profile.get_medical_institution_connections(), many=True).data
     else:
         connections_serializer = {}
 
