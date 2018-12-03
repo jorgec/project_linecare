@@ -466,7 +466,7 @@ class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
         if request.GET.get('fmt', None) == 'full':
             serializer_list = []
             for r in receptionists:
-                serializer_list.append(private_receptionist_profile_template(user=r.user))
+                serializer_list.append(private_receptionist_profile_template(user=r.user, nested=True))
 
             return Response(serializer_list, status=status.HTTP_200_OK)
         else:
