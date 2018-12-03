@@ -103,7 +103,7 @@ class ApiPublicDoctorSpecializationList(APIView):
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(Account, id=request.GET.get('user', None))
         if user.doctor_profile():
-            specializations = user.doctor_profile().get_specializations()
+            specializations = user.doctor_profile().get_specializations_rel()
             serializer = DoctorSpecializationSerializer(specializations, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:

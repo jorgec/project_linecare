@@ -38,7 +38,7 @@ class DoctorProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'get_degrees')
 
     def get_degrees(self, obj):
-        return obj.get_degrees()
+        return obj.get_degrees_rel()
 
 
 admin.site.register(DoctorProfile, DoctorProfileAdmin)

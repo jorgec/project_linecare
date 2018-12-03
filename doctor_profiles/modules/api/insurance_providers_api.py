@@ -104,7 +104,7 @@ class ApiPublicDoctorInsuranceList(APIView):
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(Account, id=request.GET.get('user', None))
         if user.doctor_profile():
-            insurance_providers = user.doctor_profile().get_insurance_providers()
+            insurance_providers = user.doctor_profile().get_insurance_providers_rel()
             serializer = DoctorInsuranceSerializer(insurance_providers, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:

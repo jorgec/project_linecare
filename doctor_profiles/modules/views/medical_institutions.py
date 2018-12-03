@@ -17,7 +17,7 @@ class DoctorProfileMedicalInstitutionSettingsHomeView(LoginRequiredMixin, UserPa
             'page_title': 'Medical Institutions',
             'location': 'doctor_profile_settings',
             'sublocation': 'home',
-            'medical_institutions': request.user.doctor_profile().get_medical_institutions()
+            'medical_institutions': request.user.doctor_profile().get_medical_institutions_rel()
         }
 
         return render(request, 'neo/doctor_profiles/medical_institutions/settings.html', context)

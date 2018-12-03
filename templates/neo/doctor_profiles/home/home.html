@@ -17,6 +17,7 @@
 <script type="text/javascript">
     var appContext = {
         doctor_id: '{{request.user.doctorprofile.id}}',
+        user_id: '{{ request.user.id }}'
     };
 </script>
 <script src="{% static 'react/doctor_profile/home/js/1.chunk.js' %}"></script>

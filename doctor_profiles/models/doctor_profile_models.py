@@ -32,34 +32,56 @@ class DoctorProfile(models.Model):
         ordering = ('user',)
 
     def __str__(self):
-        degrees = ", ".join([a.degree.abbreviation for a in self.get_degrees()])
-        fellowships = ", ".join([a.get_abbreviation() for a in self.get_fellowships()])
-        diplomates = ", ".join([a.get_abbreviation() for a in self.get_diplomates()])
+        degrees = ", ".join([a.degree.abbreviation for a in self.get_degrees_rel()])
+        fellowships = ", ".join([a.get_abbreviation() for a in self.get_fellowships_rel()])
+        diplomates = ", ".join([a.get_abbreviation() for a in self.get_diplomates_rel()])
 
         title = f"Dr. {self.user.base_profile().get_name()} {degrees} {fellowships} {diplomates}"
 
         return title
 
-    def get_degrees(self):
+    def get_degrees_rel(self):
         return self.doctor_degrees.filter(degree__is_approved=True)
 
-    def get_insurance_providers(self):
+    def get_degrees(self):
+        rel = self.get_degrees_rel()
+        return [d.medical_degree for d in rel]
+
+    def get_insurance_providers_rel(self):
         return self.doctor_insurance.filter(is_approved=True)
 
-    def get_specializations(self):
+    def get_insurance_providers(self):
+        return [ip.insurance_provider for ip in self.get_insurance_providers_rel()]
+
+    def get_specializations_rel(self):
         return self.doctor_specializations.filter(specialization__parent__isnull=True, specialization__is_approved=True)
 
-    def get_associations(self):
+    def get_specializations(self):
+        return [s.specialization for s in self.get_specializations_rel()]
+
+    def get_associations_rel(self):
         return self.doctor_associations.filter(association__is_approved=True)
 
-    def get_fellowships(self):
+    def get_associations(self):
+        return [a.association for a in self.get_associations_rel()]
+
+    def get_fellowships_rel(self):
         return self.doctor_associations.filter(level='Fellow', association__is_approved=True)
 
-    def get_diplomates(self):
+    def get_fellowships(self):
+        return [a.association for a in self.get_fellowships_rel()]
+
+    def get_diplomates_rel(self):
         return self.doctor_associations.filter(level='Diplomate', association__is_approved=True)
 
-    def get_medical_institutions(self):
+    def get_diplomates(self):
+        return [a.association for a in self.get_diplomates_rel()]
+
+    def get_medical_institutions_rel(self):
         return self.medical_institutions_joined.filter(is_approved=True)
+
+    def get_medical_institutions(self):
+        return [mi.medical_institution for mi in self.get_medical_institutions_rel()]
 
     def get_receptionists(self, *, medical_institution=None, s=None):
 
@@ -70,7 +92,8 @@ class DoctorProfile(models.Model):
         if medical_institution:
             filters['medical_institution'] = medical_institution
 
-        connections = self.doctor_connections.filter(**filters).order_by('receptionist__user__account_profiles__last_name')
+        connections = self.doctor_connections.filter(**filters).order_by(
+            'receptionist__user__account_profiles__last_name')
 
         search_filters = {}
         if s:
@@ -78,8 +101,8 @@ class DoctorProfile(models.Model):
             search_filters['receptionist__user__account_profiles__first_name__icontains'] = s
             search_filters['receptionist__user__username__icontains'] = s
             search_filters['receptionist__user__email__icontains'] = s
-            connections = connections.filter(reduce(operator.or_,(Q(**d) for d in [dict([i]) for i in search_filters.items()])))
-
+            connections = connections.filter(
+                reduce(operator.or_, (Q(**d) for d in [dict([i]) for i in search_filters.items()])))
 
         return {r.receptionist for r in connections}
 

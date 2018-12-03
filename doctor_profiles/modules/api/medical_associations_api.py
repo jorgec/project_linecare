@@ -104,7 +104,7 @@ class ApiPublicDoctorAssociationList(APIView):
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(Account, id=request.GET.get('user', None))
         if user.doctor_profile():
-            associations = user.doctor_profile().get_associations()
+            associations = user.doctor_profile().get_associations_rel()
             serializer = DoctorAssociationSerializer(associations, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:

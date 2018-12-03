@@ -23,9 +23,6 @@ class Specialization(models.Model):
     practitioner_title_plural = models.CharField(max_length=105, null=True, blank=True)
 
 
-    practitioner_title = models.CharField(max_length=60, blank=True, null=True)
-    practitioner_title_plural = models.CharField(max_length=64, blank=True, null=True)
-
     """
     admin
     """
