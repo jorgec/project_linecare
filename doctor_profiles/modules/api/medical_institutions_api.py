@@ -453,8 +453,12 @@ class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id'))
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
+        if request.GET.get('id', None):
+            medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('id'))
+        else:
+            medical_institution = None
+
         search = request.GET.get('s', None)
         receptionists = list(doctor.get_receptionists(medical_institution=medical_institution, s=search))
         receptionists.sort(key=lambda x: x.user.account_profiles.last_name)
