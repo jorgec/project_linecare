@@ -46,6 +46,7 @@ def public_doctor_profile_template(*, user, as_json=False):
     data = {
         'id': user.id,
         'doctor_id': doctor_profile.id,
+        'full_name': str(doctor_profile),
         'first_name': profile.first_name,
         'last_name': profile.last_name,
         'gender': GenderSerializer(profile.gender).data,
