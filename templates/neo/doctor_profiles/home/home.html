@@ -18,7 +18,9 @@
     var appContext = {
         doctor_id: '{{request.user.doctorprofile.id}}',
         profile_id: '{{request.user.base_profile.id}}',
-        user_id: '{{ request.user.id }}'
+        user_id: '{{ request.user.id }}',
+        profile_photo_album_id: '{{ request.user.base_profile.get_profile_album.id }}',
+        cover_photo_album_id: '{{ request.user.base_profile.get_cover_album.id }}',
     };
 </script>
 <script src="{% static 'react/doctor_profile/home/js/1.chunk.js' %}"></script>
