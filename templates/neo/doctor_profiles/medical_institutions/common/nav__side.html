@@ -3,3 +3,10 @@
 <hr>
 <a {% if sublocation == 'home' %}class="active"{% endif %} href="{% url 'doctor_profile_settings_medical_institution' %}">My Affiliated Medical Institutions</a>
 <a {% if sublocation == 'connection' %}class="active"{% endif %} href="">Connection Details {{ rel.medical_institution }}</a>
+{% if sublocation == 'connection' %}
+    <ul>
+        <li><a href="#map-section">Location</a></li>
+        <li><a href="#connections-section">Receptionist Connections</a></li>
+        <li><a href="#schedule-section">Schedule</a></li>
+    </ul>
+{% endif %}
