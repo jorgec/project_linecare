@@ -1,0 +1,202 @@
+{% extends 'neo/profile/home/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+
+    <style type="text/css">
+        .gallery-container {
+
+            min-height: 400px;
+            display: flex;
+            display: -webkit-flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+            align-content: center;
+        }
+
+        .gallery-item {
+            order: 0;
+            flex: 0 0 auto;
+            align-self: auto;
+            margin: 5px;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        #detailModalImage{
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            width: 100%;
+            height: 60vh;
+        }
+
+        @media (max-width: 400px) {
+            .gallery-item {
+                width: 180px;
+                height: 180px;
+            }
+        }
+
+        @media (min-width: 401px) and (max-width: 600px) {
+            .gallery-item {
+                width: 190px;
+                height: 190px;
+            }
+        }
+
+        @media (min-width: 601px) {
+            .gallery-item {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+    </style>
+
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+
+    <div class="user-profile__container">
+        <div class="p-3">
+            <h3>{{ album }}</h3>
+            <hr>
+
+            {% if messages %}
+                {% for m in messages %}
+                    <div class="my-3 alert alert-{{ m.tags }}">{{ m }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="gallery-container">
+                {% for p in album.album_photos.all %}
+                    <a href="#!" data-url="{{ p.get_photo }}" data-id="{{ p.id }}" class="photo-detail">
+                        <div class="gallery-item" style="background-image: url({{ p.get_photo }})">
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <hr>
+            <div class="btn-group">
+                <a class="btn btn-outline-primary" href="#!" data-toggle="modal" data-target="#uploadModal">
+                    <i class="fa fa-plus"></i>
+                    Add photo
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadModalLabel">Upload new photo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        {{ upload_form|crispy }}
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">Photo Detail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div id="detailModalImage">
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-sm btn-outline-primary" id="make-primary" href="#!" data-id="">
+                        Make Primary Photo
+                    </a>
+                    <a class="btn btn-sm btn-outline-secondary" id="toggle-privacy" href="#!" data-id="">
+                        Toggle Privacy
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+    {% block inner_scripts %}
+    {% endblock %}
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".photo-detail").click(function(e){
+                e.preventDefault();
+                var imgUrl = $(this).attr("data-url");
+                var imgId = $(this).attr("data-id");
+
+                $("#detailModalImage").attr("style", "background-image: url(" + imgUrl + ")");
+                $("#detailModal").modal('show');
+
+                $("#make-primary").attr("data-id", imgId);
+                $("#toggle-privacy").attr("data-id", imgId);
+
+            });
+
+            $("#make-primary").click(function(e){
+                e.preventDefault();
+                var imgId = $(this).attr("data-id");
+                var url = "{% url 'api_private_photo_set_primary' %}?photo=" + imgId;
+                var formData = {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                };
+
+                $.post(url, formData)
+                    .done(function(result){
+                        $.notify({
+                            message: "Primary photo set!"
+                        }, {
+                            type: 'success'
+                        });
+                    })
+                    .fail(function(result){
+                        $.notify({
+                            message: result
+                        }, {
+                            type: 'danger'
+                        });
+                    });
+
+            });
+        });
+    </script>
+
+{% endblock %}

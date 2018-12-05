@@ -8,7 +8,7 @@ from albums.modules.response_templates.photo import save_template as photo_save_
 from albums.modules.response_templates.album import save_template as album_save_template
 
 # album
-from albums.serializers import AlbumUpdateSerializer, PhotoUpdateSerializer
+from albums.serializers import AlbumUpdateSerializer, PhotoUpdateSerializer, PhotoSerializer
 
 
 class ApiPrivateAlbumUpdate(APIView):
@@ -154,6 +154,7 @@ class ApiPrivateSetPrimaryPhoto(APIView):
         result = photo.set_primary_photo()
         if result:
             retstatus = status.HTTP_200_OK
+            result = PhotoSerializer(result).data
         else:
             retstatus = status.HTTP_500_INTERNAL_SERVER_ERROR
         retval = photo_save_template(**{

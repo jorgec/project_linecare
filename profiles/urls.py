@@ -4,6 +4,7 @@ from .modules.api import update as api_update
 
 from .modules.views import settings as settings_view
 from .modules.views import home as home_view
+from .modules.views import albums as albums_view
 
 urlpatterns = [
     # Retrieve
@@ -49,4 +50,7 @@ urlpatterns += [
     path('settings/password', settings_view.ProfileSettingsPasswordView.as_view(), name='profile_settings_password_view'),
     path('settings/biometrics/create', settings_view.BiometricsCreateView.as_view(), name='profile_settings_biometrics_create'),
     path('settings/biometrics/update', settings_view.BiometricsUpdateView.as_view(), name='profile_settings_biometrics_update'),
+
+    path('albums/list', albums_view.BaseProfileAlbumList.as_view(), name='profile_album_list'),
+    path('albums/<slug>/detail', albums_view.BaseProfileAlbumDetail.as_view(), name='profile_album_detail'),
 ]

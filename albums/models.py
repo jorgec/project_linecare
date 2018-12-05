@@ -85,6 +85,9 @@ class Photo(models.Model):
     def __str__(self):
         return self.photo.url
 
+    def get_photo(self):
+        return f"{settings.MEDIA_URL}{self.photo}"
+
     def set_primary_photo(self):
         photos_in_album = Photo.objects.filter(album=self.album)
         photos_in_album.update(is_primary=False)
