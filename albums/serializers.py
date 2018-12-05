@@ -8,6 +8,7 @@ class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Album
         fields = (
+            'id',
             'pk',
             'slug',
             'name',
