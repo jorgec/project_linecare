@@ -78,7 +78,7 @@ class ApiPublicGetPhotos(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
-        album = get_object_or_404(Album, request.GET.get('id', None))
+        album = get_object_or_404(Album, id=request.GET.get('id', None))
 
         serializer = PhotoSerializer(album.get_public_photos(), many=True)
 
