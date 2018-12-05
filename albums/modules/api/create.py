@@ -16,10 +16,14 @@ class ApiPrivateAlbumPostUploadPhoto(APIView):
     photo: file
     caption: string
     """
-    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
+        print("="*80)
+        print(request.data)
+        print("="*80)
+
         album = get_object_or_404(Album, pk=request.GET.get('album', None), profile=request.user.base_profile())
 
         # auth check
