@@ -20,9 +20,6 @@ class ApiPrivateAlbumPostUploadPhoto(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        print("="*80)
-        print(request.data)
-        print("="*80)
 
         album = get_object_or_404(Album, pk=request.GET.get('album', None), profile=request.user.base_profile())
 
@@ -51,6 +48,7 @@ class ApiPrivateAlbumPostUploadPhoto(APIView):
             })
             return Response(response_data, status=status.HTTP_200_OK)
         else:
+            print(serializer.errors)
             response_data = save_template(**{
                 'as_json': False,
                 'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
