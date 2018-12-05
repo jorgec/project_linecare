@@ -1,7 +1,7 @@
 from . import models
 
 from rest_framework import serializers
-from drf_extra_fields.fields import Base64ImageField
+from drf_extra_fields.fields import Base64ImageField, HybridImageField
 
 
 class AlbumSerializer(serializers.ModelSerializer):
@@ -68,7 +68,7 @@ class PhotoUpdateSerializer(serializers.ModelSerializer):
 
 
 class PhotoUploadSerializer(serializers.ModelSerializer):
-    photo = Base64ImageField()
+    photo = HybridImageField()
 
     class Meta:
         model = models.Photo
