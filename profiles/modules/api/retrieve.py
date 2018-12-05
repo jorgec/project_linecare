@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from accounts.constants import USER_TYPE_CHOICES, USER_TYPES_TO_TEST
 from accounts.models import Account
 from albums.serializers import AlbumSerializer
+from profiles.models import BaseProfile
 from profiles.modules.response_templates.profile import public_profile_template, private_profile_template
 
 
@@ -118,4 +119,30 @@ class ApiPrivateProfileGetByUsername(APIView):
 
         return Response(profile, status=status.HTTP_200_OK)
 
+class ApiPublicProfileGetProfilePhotoAlbum(APIView):
+    """
+    Get a user's profile photo album
+    ?id=profile_id
+    """
 
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        profile = get_object_or_404(BaseProfile, id=request.GET.get('id', None))
+        serializer = AlbumSerializer(profile.get_profile_album())
+
+        return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)
+
+class ApiPublicProfileGetCoverPhotoAlbum(APIView):
+    """
+    Get a user's cover photo album
+    ?id=profile_id
+    """
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        profile = get_object_or_404(BaseProfile, id=request.GET.get('id', None))
+        serializer = AlbumSerializer(profile.get_cover_album())
+
+        return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)

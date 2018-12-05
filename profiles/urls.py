@@ -28,6 +28,13 @@ urlpatterns = [
          api_update.ApiPrivateProfileUpdate.as_view(),
          name='api_private_profile_update'),
 
+     # albums
+     path('api/public/profile_photos/album',
+          api_retrieve.ApiPublicProfileGetProfilePhotoAlbum.as_view(),
+          name='api_public_profile_photo_album'),
+     path('api/public/cover_photos/album',
+          api_retrieve.ApiPublicProfileGetCoverPhotoAlbum.as_view(),
+          name='api_public_cover_photo_album'),
 ]
 
 # views
