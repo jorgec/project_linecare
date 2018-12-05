@@ -16,6 +16,9 @@ urlpatterns = [
     path('api/public/get_album',
          retrieve.ApiPublicAlbumGetByPK.as_view(),
          name='api_public_album_get_by_pk'),
+     path('api/public/album/photos/all',
+          retrieve.ApiPublicGetPhotos.as_view(),
+          name='api_public_album_photos_all'),
 
     # albums retrieve, private
     path('api/private/albums/all',

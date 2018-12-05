@@ -67,3 +67,19 @@ class ApiPrivateGetProfilePhotos(APIView):
             serializer = PhotoSerializer(album.album_photos.all(), many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+
+class ApiPublicGetPhotos(APIView):
+    """
+    Get all public photos of an album
+    ?id=album_id
+    """
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        album = get_object_or_404(Album, request.GET.get('id', None))
+
+        serializer = PhotoSerializer(album.get_public_photos(), many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
