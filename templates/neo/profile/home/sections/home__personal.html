@@ -113,16 +113,5 @@
 </div>
 
 {% block inner_scripts %}
-<script type="text/javascript">
-    var appContext = {
-        doctor_id: '{{request.user.doctorprofile.id}}',
-        profile_id: '{{request.user.base_profile.id}}',
-        user_id: '{{ request.user.id }}',
-        profile_photo_album_id: '{{ request.user.base_profile.get_profile_album.id }}',
-        cover_photo_album_id: '{{ request.user.base_profile.get_cover_album.id }}',
-    };
-</script>
-<script src="{% static 'react/base_profile/home/js/1.chunk.js' %}"></script>
-<script src="{% static 'react/base_profile/home/js/main.chunk.js' %}"></script>
-<script src="{% static 'react/base_profile/home/js/runtime-main.js' %}"></script>
+
 {% endblock %}
