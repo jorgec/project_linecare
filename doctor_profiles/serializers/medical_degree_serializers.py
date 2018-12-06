@@ -84,6 +84,13 @@ class DoctorDegreeCreateSerializer(serializers.ModelSerializer):
             'degree'
         )
         extra_kwargs = {
+            "degree": {
+                "error_messages": {
+                    "blank": "Medical Degree is required",
+                    "null": "Medical Degree is required",
+                    "invalid": "Medical Degree is required",
+                }
+            },
             "school": {
                 "error_messages": {
                     "blank": "School is required",

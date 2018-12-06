@@ -38,17 +38,31 @@
             var endTime = $("input[name=endTime]", this).val();
             var startDate = $("input[name=startDate]", this).val();
             var endDate = $("input[name=endDate]", this).val();
-
+            var url = "{% url 'api_private_doctor_schedule_create' %}?medical_institution={{ rel.medical_institution.id }}";
             var formData = {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 days: days,
                 start_time: startTime,
                 end_time: endTime,
                 start_date: startDate,
-                end_date: endDate
+                end_date: endDate,
             };
 
-            $.post("{% url 'api_private_doctor_schedule_create' %}", formData);
+            $.post(url, formData)
+                .done(function(result){
+                    $.notify({
+                        message: "Receptionist connected!"
+                    }, {
+                        type: 'success'
+                    });
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    $.notify({
+                        message: jqXHR.responseJSON
+                    }, {
+                        type: 'danger'
+                    });
+                });
         });
 
     });

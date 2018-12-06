@@ -25,3 +25,4 @@ MONTH_CHOICES = (
     (NOVEMBER, 'November'),
     (DECEMBER, 'December')
 )
+

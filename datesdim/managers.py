@@ -51,6 +51,23 @@ class DateDimQuerySet(models.QuerySet):
             year=year
         )
 
+    def get_days_between(self, *, start, end, day_filter=None, inclusive=True):
+        if inclusive:
+            filter = {
+                'date_obj__gte': start.date_obj,
+                'date_obj__lte': end.date_obj
+            }
+        else:
+            filter = {
+                'date_obj__gt': start.date_obj,
+                'date_obj__lt': end.date_obj
+            }
+
+        if day_filter:
+            filter['day_name__in'] = day_filter
+
+        return self.filter(**filter)
+
 
 class DateDimManager(models.Manager):
     def get_queryset(self):
@@ -131,10 +148,14 @@ class DateDimManager(models.Manager):
                     **date
                 )
             except self.model.DoesNotExist:
-                return False
+                self.create(year=date['year'], month=date['month'], day=date['day'])
+                return self.model.objects.get(
+                    **date
+                )
         return False
 
     def preload_year(self, *args, **kwargs):
+        calendar.setfirstweekday(calendar.MONDAY)
         if not kwargs['year']:
             return False
         year = int(kwargs['year'])
@@ -143,6 +164,9 @@ class DateDimManager(models.Manager):
             num_days = calendar.monthrange(year, month[0])[1]
             for day in range(1, num_days + 1):
                 self.create(year=year, month=month[0], day=day)
+
+    def get_days_between(self, *, start, end, day_filter=None, inclusive=True):
+        return self.get_queryset().get_days_between(start=start, end=end, day_filter=day_filter, inclusive=inclusive)
 
 
 class TimeDimQuerySet(models.QuerySet):

@@ -50,7 +50,7 @@ class DateDim(models.Model):
         return x - y
 
     def get_weeks(self):
-        c = calendar.Calendar(calendar.SUNDAY)
+        c = calendar.Calendar(calendar.MONDAY)
         __weeks = c.monthdatescalendar(self.year, self.month)
         weeks = []
         for week in __weeks:
