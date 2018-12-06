@@ -51,7 +51,7 @@ class DoctorProfile(models.Model):
         return self.doctor_insurance.filter(is_approved=True)
 
     def get_insurance_providers(self):
-        return [ip.insurance_provider for ip in self.get_insurance_providers_rel()]
+        return [ip.insurance for ip in self.get_insurance_providers_rel()]
 
     def get_specializations_rel(self):
         return self.doctor_specializations.filter(specialization__parent__isnull=True, specialization__is_approved=True)
