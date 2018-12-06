@@ -1,21 +1,8 @@
 {% load static %}
 {% load crispy_forms_tags %}
 <div class="user-profile__container">
-    <div class="user-profile__cover" style="background-image: url({{ profile.get_cover_photo }}">
-        <div class="user-profile__cover">
-            <div class="user-profile__cover-edit">
-                <a href="javascript:void(0)"
-                ><i class="fas fa-edit"></i><span>Edit Cover Photo</span></a>
-            </div>
-        </div>
-    </div>
-
-    <div class="user-profile__profile-photo">
-        <div class="image-wrapper" data-toggle="modal" data-target="#editProfilePicture">
-            <a href="javascript:void(0)"><i class="fas fa-camera fa-fw"></i></a>
-        </div>
-        <div class="profile-photo" style="background-image: url({{ profile.get_profile_photo }})"></div>
-    </div>
+    <!-- React Base Profile goes here -->
+    <div id="base_profile_app"></div>
 
 
     <div class="user-profile__wrapper col-lg-12">
@@ -126,5 +113,16 @@
 </div>
 
 {% block inner_scripts %}
-
+<script type="text/javascript">
+    var appContext = {
+        doctor_id: '{{request.user.doctorprofile.id}}',
+        profile_id: '{{request.user.base_profile.id}}',
+        user_id: '{{ request.user.id }}',
+        profile_photo_album_id: '{{ request.user.base_profile.get_profile_album.id }}',
+        cover_photo_album_id: '{{ request.user.base_profile.get_cover_album.id }}',
+    };
+</script>
+<script src="{% static 'react/base_profile/home/js/1.chunk.js' %}"></script>
+<script src="{% static 'react/base_profile/home/js/main.chunk.js' %}"></script>
+<script src="{% static 'react/base_profile/home/js/runtime-main.js' %}"></script>
 {% endblock %}
