@@ -166,6 +166,14 @@ class DateDimManager(models.Manager):
                 self.create(year=year, month=month[0], day=day)
 
     def get_days_between(self, *, start, end, day_filter=None, inclusive=True):
+        if type(start) == str:
+            start = self.parse_get(start)
+            if not start:
+                return False
+        if type(end) == str:
+            end = self.parse_get(end)
+            if not end:
+                return False
         return self.get_queryset().get_days_between(start=start, end=end, day_filter=day_filter, inclusive=inclusive)
 
 

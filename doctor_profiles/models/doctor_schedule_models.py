@@ -66,12 +66,13 @@ class DoctorScheduleDay(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, null=True, blank=True)
 
-    day = models.ForeignKey('datesdim.DateDim', related_name='schedule_day', on_delete=models.CASCADE)
-    doctor = models.ForeignKey('doctor_profiles.DoctorProfile', related_name='doctor_schedule_day',
+    day = models.ForeignKey('datesdim.DateDim', related_name='schedule_days', on_delete=models.CASCADE)
+    doctor = models.ForeignKey('doctor_profiles.DoctorProfile', related_name='doctor_schedule_days',
                                on_delete=models.CASCADE)
-    medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution', related_name='mi_doctor_schedule_day',
+    medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution',
+                                            related_name='mi_doctor_schedule_days',
                                             on_delete=models.CASCADE)
-    schedule = models.ForeignKey(DoctorSchedule, related_name='schedule_on_day', on_delete=models.CASCADE)
+    schedule = models.ForeignKey(DoctorSchedule, related_name='schedule_on_days', on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.day} - {self.doctor} in {self.medical_institution}'

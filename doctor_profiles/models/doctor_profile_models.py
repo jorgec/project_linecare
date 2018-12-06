@@ -177,3 +177,11 @@ class DoctorProfile(models.Model):
             filters['medical_institution'] = medical_institution
 
         return self.doctor_schedules.filter(**filters)
+
+    def get_schedule_days(self, *, medical_institution=None):
+        filters = {}
+        if medical_institution:
+            filters['medical_institution'] = medical_institution
+
+        return self.doctor_schedule_days.filter(**filters)
+
