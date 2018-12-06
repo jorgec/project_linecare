@@ -21,7 +21,21 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
     end_date = DateDimSerializer()
     doctor = DoctorProfileSerializer()
     medical_institution = MedicalInstitutionSerializer()
+    days_split = serializers.SerializerMethodField('repr_days_split')
+
+    def repr_days_split(self, obj):
+        return obj.split_days()
 
     class Meta:
         model = DoctorSchedule
-        fields = '__all__'
+        fields = (
+            'id',
+            'start_time',
+            'end_time',
+            'start_date',
+            'end_date',
+            'doctor',
+            'medical_institution',
+            'days',
+            'days_split'
+        )

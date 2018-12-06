@@ -54,6 +54,9 @@ class DoctorSchedule(models.Model):
     class Meta:
         ordering = ('start_date',)
 
+    def split_days(self):
+        return ", ".join(self.days)
+
 
 class DoctorScheduleDay(models.Model):
     """
@@ -77,17 +80,18 @@ class DoctorScheduleDay(models.Model):
 @receiver(post_save, sender=DoctorSchedule)
 def populate_schedule_days(sender, instance=None, created=False, **kwargs):
     if created and instance:
-        DateDim = apps.get_model('datesdim.DateDim')
-        date_range = DateDim.objects.get_days_between(
-            start=instance.start_date,
-            end=instance.end_date,
-            day_filter=instance.days
-        )
-
-        for day in date_range:
-            DoctorScheduleDay.objects.create(
-                day=day,
-                doctor=instance.doctor,
-                medical_institution=instance.medical_institution,
-                schedule=instance
+        if instance.is_regular:
+            DateDim = apps.get_model('datesdim.DateDim')
+            date_range = DateDim.objects.get_days_between(
+                start=instance.start_date,
+                end=instance.end_date,
+                day_filter=instance.days
             )
+
+            for day in date_range:
+                DoctorScheduleDay.objects.create(
+                    day=day,
+                    doctor=instance.doctor,
+                    medical_institution=instance.medical_institution,
+                    schedule=instance
+                )

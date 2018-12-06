@@ -295,4 +295,7 @@ urlpatterns += [
     path(f'{version}/private/doctor/schedule/create',
          doctor_schedule_api.ApiDoctorScheduleCreate.as_view(),
          name='api_private_doctor_schedule_create'),
+    path(f'{version}/public/doctor/schedule/list',
+         doctor_schedule_api.ApiDoctorScheduleList.as_view(),
+         name='api_public_doctor_schedule_list'),
 ]

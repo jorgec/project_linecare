@@ -10,6 +10,21 @@ class DateDimSerializer(serializers.ModelSerializer):
 
 
 class TimeDimSerializer(serializers.ModelSerializer):
+    format_24 = serializers.SerializerMethodField('repr_format_24')
+    format_12 = serializers.SerializerMethodField('repr_format_12')
+
+    def repr_format_24(self, obj):
+        return obj.as_string()
+
+    def repr_format_12(self, obj):
+        return obj.format_12()
+
     class Meta:
         model = TimeDim
-        fields = '__all__'
+        fields = (
+            'hour',
+            'minute',
+            'minutes_since',
+            'format_24',
+            'format_12'
+        )

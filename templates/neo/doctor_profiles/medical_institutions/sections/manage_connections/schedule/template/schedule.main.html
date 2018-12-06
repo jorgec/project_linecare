@@ -1,3 +1,8 @@
+<div class="card">
+    <div class="card-body">
+        <div id="my_schedules_container"></div>
+    </div>
+</div>
 <ul class="nav nav-tabs" id="tabScheduleTypes" role="tablist">
     <li class="nav-item">
         <a class="nav-link active" id="regular-schedule-tab" data-toggle="tab" href="#regular-schedule" role="tab" aria-controls="regular-schedule"
@@ -58,7 +63,7 @@
                                     <label>
                                         Start Time
                                     </label>
-                                    <input type="text" name="startTime" class="form-control timepicker">
+                                    <input type="text" name="startTime" id="startTime" class="form-control startTime">
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -66,7 +71,7 @@
                                     <label>
                                         End Time
                                     </label>
-                                    <input type="text" name="endTime" class="form-control timepicker">
+                                    <input type="text" name="endTime" id="endTime" class="form-control endTime">
                                 </div>
                             </div>
                         </div>
@@ -74,13 +79,13 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Starting Date</label>
-                                    <input type="text" name="startDate" class="datepicker form-control">
+                                    <input type="text" name="startDate" id="startDate" class="startDate form-control">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Valid until</label>
-                                    <input type="text" name="endDate" class="datepicker form-control">
+                                    <input type="text" name="endDate" id="endDate" class="endDate form-control">
                                 </div>
                             </div>
                         </div>

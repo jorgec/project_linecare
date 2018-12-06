@@ -168,3 +168,12 @@ class DoctorProfile(models.Model):
 
     def settings_progress(self):
         return self.calculate_settings_progress()
+
+    def get_schedules(self, *, medical_institution=None):
+        filters = {
+            'is_approved': True
+        }
+        if medical_institution:
+            filters['medical_institution'] = medical_institution
+
+        return self.doctor_schedules.filter(**filters)
