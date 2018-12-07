@@ -44,7 +44,19 @@
     </div>
     <hr class="my-1">
     <div class="btn-group btn-group-sm">
-
+        <a class="btn btn-outline-danger btn-sm delete-schedule" data-template-bind='[{"attribute": "data-schedule-id", "value": "id"}]' href="#!">
+            <i class="fa fa-times"></i> Delete
+        </a>
     </div>
     <hr class="my-3">
+</script>
+<script type="text/html" id="schedule_errors_template">
+    <div class="alert alert-danger my-1">
+        <h6>Conflicts with schedule at <span data-content="medical_institution.name"></span></h6>
+        <p>
+            <strong><span data-content="day.day_name"></span>, <span data-content="day.date_obj"></span></strong>:
+            <span data-content="start_time.format_12"></span> to
+            <span data-content="end_time.format_12"></span>
+        </p>
+    </div>
 </script>

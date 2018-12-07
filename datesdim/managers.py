@@ -287,7 +287,7 @@ class TimeDimManager(models.Manager):
             )
 
             if t.hour > 0:
-                t.minutes_since = t.hour * t.minute
+                t.minutes_since = (t.hour * 60) + t.minute
             else:
                 t.minutes_since = t.minute
 

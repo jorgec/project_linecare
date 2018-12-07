@@ -1,11 +1,13 @@
 from rest_framework import status, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from datesdim.models import TimeDim, DateDim
 from doctor_profiles.models import DoctorSchedule, DoctorProfile, MedicalInstitution
-from doctor_profiles.serializers import DoctorScheduleCreateRegularScheduleSerializer, DoctorScheduleSerializer
+from doctor_profiles.serializers import DoctorScheduleCreateRegularScheduleSerializer, DoctorScheduleSerializer, \
+    DoctorScheduleCollisionSerializer, MedicalInstitutionSerializer, DateDimSerializer, TimeDimSerializer
 
 
 class ApiDoctorScheduleCreate(APIView):
@@ -30,10 +32,26 @@ class ApiDoctorScheduleCreate(APIView):
             'doctor_id': request.user.doctorprofile.id
         }
 
-        schedule = DoctorSchedule.objects.create(**schedule_data)
-        schedule_serializer = DoctorScheduleSerializer(schedule)
+        result, message, schedule = DoctorSchedule.objects.create(**schedule_data)
+        if result:
+            schedule_serializer = DoctorScheduleSerializer(schedule)
+            return Response(schedule_serializer.data, status.HTTP_200_OK)
+        else:
+            if message == "Schedule Conflict":
+                conflict_data = []
+                for conflict in schedule:
+                    d = {
+                        'medical_institution': MedicalInstitutionSerializer(conflict['medical_institution']).data,
+                        'day': DateDimSerializer(conflict['day']).data,
+                        'schedule': DoctorScheduleSerializer(conflict['schedule']).data,
+                        'start_time': TimeDimSerializer(conflict['start_time']).data,
+                        'end_time': TimeDimSerializer(conflict['end_time']).data
+                    }
+                    conflict_data.append(d)
 
-        return Response(schedule_serializer.data, status.HTTP_200_OK)
+                return Response(conflict_data, status=status.HTTP_409_CONFLICT)
+            elif message == "Invalid start and end time":
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ApiDoctorScheduleList(APIView):
@@ -41,7 +59,7 @@ class ApiDoctorScheduleList(APIView):
     Get schedule list of doctor
     ?id=doctor_id
     [optional]
-
+    medical_institution=medical_institution_id
     """
     permission_classes = [permissions.AllowAny]
 
@@ -56,3 +74,22 @@ class ApiDoctorScheduleList(APIView):
         serializer = DoctorScheduleSerializer(doctor.get_schedules(medical_institution=medical_institution), many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiDoctorScheduleDelete(APIView):
+    """
+    Delete schedule
+    ?id=schedule_id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.doctorprofile:
+            return Response("Not a doctor", status=status.HTTP_403_FORBIDDEN)
+
+        schedule = get_object_or_404(DoctorSchedule, id=request.GET.get('id', None), doctor=request.user.doctorprofile)
+
+        schedule.delete()
+
+        return Response("Schedule deleted", status=status.HTTP_200_OK)

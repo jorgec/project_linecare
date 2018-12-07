@@ -6,6 +6,8 @@ from django_extensions.db import fields as extension_fields
 
 from django.apps import apps
 
+from doctor_profiles.models.managers.doctor_schedule_manager import DoctorScheduleManager
+
 
 class DoctorSchedule(models.Model):
     """
@@ -43,6 +45,8 @@ class DoctorSchedule(models.Model):
                                on_delete=models.CASCADE)
     medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution', related_name='mi_doctor_schedules',
                                             on_delete=models.CASCADE)
+
+    objects = DoctorScheduleManager()
 
     def __str__(self):
         if len(self.days) > 0:

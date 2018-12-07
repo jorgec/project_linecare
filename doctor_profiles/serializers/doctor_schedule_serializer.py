@@ -39,3 +39,11 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
             'days',
             'days_split'
         )
+
+
+class DoctorScheduleCollisionSerializer(serializers.Serializer):
+    medical_institution = MedicalInstitutionSerializer()
+    day = DateDimSerializer()
+    schedule = DoctorScheduleSerializer()
+    start_time = TimeDimSerializer()
+    end_time = TimeDimSerializer()
