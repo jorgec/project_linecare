@@ -25,38 +25,6 @@
             $(".endDate").bootstrapMaterialDatePicker('setMinDate', date)
         });
 
-        var countRegularScheduleForms = 0;
-
-        $("#btnAddRegularSchedule").on('click', function (e) {
-            e.preventDefault();
-            countRegularScheduleForms = countRegularScheduleForms + 1;
-            $("#frmAddRegularWeeklySchedule_0").clone().attr("id", "frmAddRegularWeeklySchedule_" + countRegularScheduleForms).appendTo($("#divAddRegularSchedule"));
-
-            $(".endTime").bootstrapMaterialDatePicker({
-                date: false,
-                format: "h:mm a",
-                shortTime: true,
-            });
-            $(".startTime").bootstrapMaterialDatePicker({
-                date: false,
-                format: "h:mm a",
-                shortTime: true,
-            });
-
-
-            $(".endDate").bootstrapMaterialDatePicker({
-                format: "YYYY-MM-DD",
-                time: false
-            });
-            $(".startDate").bootstrapMaterialDatePicker({
-                format: "YYYY-MM-DD",
-                time: false
-            }).on('change', function (e, date) {
-                $(".endDate").bootstrapMaterialDatePicker('setMinDate', date)
-            });
-
-
-        });
 
         $("#frmCollectionRegularWeeklySchedule").on('submit', '.frmAddRegularWeeklySchedule', function (e) {
             e.preventDefault();
@@ -81,7 +49,9 @@
             };
 
             $.post(url, formData)
+
                 .done(function (result) {
+                    $("#schedule_errors_container").html('');
                     $.notify({
                         message: "Schedule created!"
                     }, {

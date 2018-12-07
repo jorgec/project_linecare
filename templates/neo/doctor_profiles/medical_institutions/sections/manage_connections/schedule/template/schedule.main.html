@@ -3,7 +3,7 @@
         <div id="my_schedules_container"></div>
     </div>
 </div>
-<h5>Create new Schedule</h5>
+<h5 class="my-3">Create new Schedule</h5>
 <ul class="nav nav-tabs" id="tabScheduleTypes" role="tablist">
     <li class="nav-item">
         <a class="nav-link active" id="regular-schedule-tab" data-toggle="tab" href="#regular-schedule" role="tab" aria-controls="regular-schedule"
@@ -25,7 +25,7 @@
                         <div class="form-group">
                             <div class="form-check form-check-inline">
                                 <label>
-                                    <input class="form-check-input day-input" type="checkbox" name="weekday" value="Monday"> Monday
+                                    <input class="form-check-input day-input" type="checkbox" name="weekday" value="Monday" required> Monday
                                 </label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -65,7 +65,7 @@
                                     <label>
                                         Start Time
                                     </label>
-                                    <input type="text" name="startTime" id="startTime" class="form-control startTime">
+                                    <input type="text" name="startTime" id="startTime" class="form-control startTime" required>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -73,7 +73,7 @@
                                     <label>
                                         End Time
                                     </label>
-                                    <input type="text" name="endTime" id="endTime" class="form-control endTime">
+                                    <input type="text" name="endTime" id="endTime" class="form-control endTime" required>
                                 </div>
                             </div>
                         </div>
@@ -81,13 +81,13 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Starting Date</label>
-                                    <input type="text" name="startDate" id="startDate" class="startDate form-control">
+                                    <input type="text" name="startDate" id="startDate" class="startDate form-control" required>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Valid until</label>
-                                    <input type="text" name="endDate" id="endDate" class="endDate form-control">
+                                    <input type="text" name="endDate" id="endDate" class="endDate form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -99,11 +99,7 @@
 
                     <div id="divAddRegularSchedule"></div>
                 </div>
-                <div class="btn-group my-3">
-                    <a class="btn btn-outline-primary btn-sm" href="#!" id="btnAddRegularSchedule">
-                        <i class="fa fa-plus"></i> Add another schedule
-                    </a>
-                </div>
+
             </div>
         </div>
 

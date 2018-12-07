@@ -74,8 +74,6 @@ class DoctorScheduleManager(models.Manager):
                 return False
         else:
             e = end
-        print(e)
-        print(f"{s.minutes_since}, {e.minutes_since}, {s.minutes_since > e.minutes_since}")
         if s.minutes_since > e.minutes_since:
             return False
 
@@ -101,7 +99,6 @@ class DoctorScheduleManager(models.Manager):
         has_collisions, collision_days = self.check_collision_days(doctor=doctor, schedule_days=schedule_days,
                                                                    start_time=kwargs['start_time'],
                                                                    end_time=kwargs['end_time'])
-
         if has_collisions:
             return False, "Schedule Conflict", collision_days
 
