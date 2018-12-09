@@ -2,13 +2,12 @@
 {% load crispy_forms_tags %}
 <div class="user-profile__container">
     <!-- React Base Profile goes here -->
-    <div id="base_profile_app"></div>
+    <div id="base_profile_app">Loading...</div>
 
 
     <div class="user-profile__wrapper col-lg-12">
         <div class="user-profile__edit-btn">
-            <a href="{% url 'profile_settings_basic_info_view' %}" class="btn btn-light rounded-circle"><i
-                    class="fas fa-pen fa-fw"></i></a>
+            <a href="{% url 'profile_settings_basic_info_view' %}" class="btn btn-light rounded-circle"><i class="fas fa-pen fa-fw"></i></a>
         </div>
         <div class="user-profile__name">
             <div class="user-profile__flex">
@@ -20,35 +19,35 @@
         <div class="user-profile__buttons row">
             <div class="col-sm-3 col-md-1">
                 {% if profile.user.doctorprofile %}
-                    <a href="{% url 'doctor_profile_home' %}" data-toggle="tooltip" data-placement="top" title="My Doctor Profile">
-                        <img src="{% static 'neo/images/icons/doctor-active.png' %}" class="img-fluid">
-                    </a>
+                <a href="{% url 'doctor_profile_home' %}" data-toggle="tooltip" data-placement="top" title="My Doctor Profile">
+                    <img src="{% static 'neo/images/icons/doctor-active.png' %}" class="img-fluid">
+                </a>
                 {% else %}
-                    <a href="{% url 'doctor_profile_home' %}" data-toggle="tooltip" data-placement="top" title="Create a Doctor Profile">
-                        <img src="{% static 'neo/images/icons/doctor-inactive.png' %}" class="img-fluid">
-                    </a>
+                <a href="{% url 'doctor_profile_home' %}" data-toggle="tooltip" data-placement="top" title="Create a Doctor Profile">
+                    <img src="{% static 'neo/images/icons/doctor-inactive.png' %}" class="img-fluid">
+                </a>
                 {% endif %}
             </div>
             <div class="col-sm-3 col-md-1">
                 {% if profile.user.receptionistprofile %}
-                    <a href="" data-toggle="tooltip" data-placement="top" title="My Receptionist Profile">
-                        <img src="{% static 'neo/images/icons/receptionist-active.png' %}" class="img-fluid">
-                    </a>
+                <a href="" data-toggle="tooltip" data-placement="top" title="My Receptionist Profile">
+                    <img src="{% static 'neo/images/icons/receptionist-active.png' %}" class="img-fluid">
+                </a>
                 {% else %}
-                    <a href="" data-toggle="tooltip" data-placement="top" title="Create a Receptionist Profile">
-                        <img src="{% static 'neo/images/icons/receptionist-inactive.png' %}" class="img-fluid">
-                    </a>
+                <a href="" data-toggle="tooltip" data-placement="top" title="Create a Receptionist Profile">
+                    <img src="{% static 'neo/images/icons/receptionist-inactive.png' %}" class="img-fluid">
+                </a>
                 {% endif %}
             </div>
             <div class="col-sm-3 col-md-1">
                 {% if profile.user.patientprofile %}
-                    <a href="" data-toggle="tooltip" data-placement="top" title="My Patient Profile">
-                        <img src="{% static 'neo/images/icons/patient-active.png' %}" class="img-fluid">
-                    </a>
+                <a href="" data-toggle="tooltip" data-placement="top" title="My Patient Profile">
+                    <img src="{% static 'neo/images/icons/patient-active.png' %}" class="img-fluid">
+                </a>
                 {% else %}
-                    <a href="" data-toggle="tooltip" data-placement="top" title="My Patient Profile">
-                        <img src="{% static 'neo/images/icons/patient-inactive.png' %}" class="img-fluid">
-                    </a>
+                <a href="" data-toggle="tooltip" data-placement="top" title="My Patient Profile">
+                    <img src="{% static 'neo/images/icons/patient-inactive.png' %}" class="img-fluid">
+                </a>
                 {% endif %}
             </div>
             <div class="col-sm-3 col-md-9">
