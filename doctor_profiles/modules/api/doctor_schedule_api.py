@@ -14,22 +14,43 @@ class ApiDoctorScheduleCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        if not request.user.doctorprofile:
-            return Response("Not a doctor", status=status.HTTP_403_FORBIDDEN)
+        if not request.user.doctorprofile and not request.user.receptionistprofile:
+            return Response("Not a doctor or receptionist", status=status.HTTP_403_FORBIDDEN)
+
+        doctor_id = request.GET.get('doctor_id', None)
+        if not doctor_id:
+            if not request.user.doctorprofile:
+                return Response("Not a doctor", status=status.HTTP_403_FORBIDDEN)
+            doctor_id = request.user.doctorprofile.id
+
+        doctor = get_object_or_404(DoctorProfile, id=doctor_id)
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution'))
+
+        if request.user.doctorprofile.id != doctor_id:
+            """ person adding isn't the doctor, so check if receptionist is allowed """
+            connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
+                                                    medical_institution=medical_institution)
+            if not connection:
+                return Response("Receptionist is not authorized by this doctor for this medical institution",
+                                status=status.HTTP_403_FORBIDDEN)
 
         start_time = TimeDim.objects.parse(request.data.get('start_time'))
         end_time = TimeDim.objects.parse(request.data.get('end_time'))
         start_date = DateDim.objects.parse_get(request.data.get('start_date'))
         end_date = DateDim.objects.parse_get(request.data.get('end_date'))
+        days = request.data.get('days').split(';')
+        if days == ['']:
+            return Response("Which days should this schedule be applied to?", status=status.HTTP_400_BAD_REQUEST)
 
         schedule_data = {
-            'days': request.data.get('days').split(';'),
-            'medical_institution_id': request.GET.get('medical_institution'),
+            'days': days,
+            'medical_institution': medical_institution,
             'start_time': start_time,
             'end_time': end_time,
             'start_date': start_date,
             'end_date': end_date,
-            'doctor_id': request.user.doctorprofile.id
+            'doctor': doctor,
+            'created_by': request.user
         }
 
         result, message, schedule = DoctorSchedule.objects.create(**schedule_data)

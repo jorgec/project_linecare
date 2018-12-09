@@ -83,6 +83,20 @@ class DoctorProfile(models.Model):
     def get_medical_institutions(self):
         return [mi.medical_institution for mi in self.get_medical_institutions_rel()]
 
+    def verify_receptionist(self, *, receptionist, medical_institution=None):
+        filters = {
+            'is_approved': True,
+            'receptionist': receptionist
+        }
+        if medical_institution:
+            filters['medical_institution'] = medical_institution
+
+        try:
+            connection = self.doctor_connections.get(**filters)
+            return connection
+        except self.doctor_connections.DoesNotExist:
+            return False
+
     def get_receptionists(self, *, medical_institution=None, s=None):
 
         filters = {
@@ -114,10 +128,8 @@ class DoctorProfile(models.Model):
 
     def dismiss_profile_progress_display(self):
         if self.get_profile_progress_metadata():
-            print(self.get_profile_progress_metadata())
             self.metadata['doctor_progress']['show'] = False
             self.save()
-            print(self.get_profile_progress_metadata())
             return True
         return False
 

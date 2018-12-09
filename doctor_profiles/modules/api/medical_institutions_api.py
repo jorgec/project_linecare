@@ -141,7 +141,6 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                 return Response("Duplicate address", status=status.HTTP_400_BAD_REQUEST)
 
             return_serializer = MedicalInstitutionPublicSerializer(mi)
-            print(return_serializer.data)
             return Response(return_serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

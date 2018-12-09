@@ -45,6 +45,8 @@ class DoctorSchedule(models.Model):
                                on_delete=models.CASCADE)
     medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution', related_name='mi_doctor_schedules',
                                             on_delete=models.CASCADE)
+    created_by = models.ForeignKey('accounts.Account', related_name='schedule_creator', on_delete=models.SET_NULL,
+                                   null=True, blank=True)
 
     objects = DoctorScheduleManager()
 

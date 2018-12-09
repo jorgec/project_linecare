@@ -203,6 +203,6 @@ class MedicalInstitutionCreatePrivateSerializer(serializers.Serializer):
     region = serializers.IntegerField()
     province = serializers.IntegerField()
     city = serializers.IntegerField()
-    zip_code = serializers.IntegerField()
-    address = serializers.CharField(max_length=512)
+    zip_code = serializers.IntegerField(allow_null=True)
+    address = serializers.CharField(max_length=512, allow_null=True, allow_blank=True)
     type = serializers.IntegerField()

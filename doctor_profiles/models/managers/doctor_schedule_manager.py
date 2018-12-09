@@ -25,9 +25,6 @@ class DoctorScheduleManager(models.Manager):
                 a, b = existing.schedule.start_time.minutes_since, existing.schedule.end_time.minutes_since
                 x, y = start_time.minutes_since, end_time.minutes_since
 
-                print(f'x <= a <= y: {x <= a <= y}')
-                print(f'x <= b <= y: {x <= b <= y}')
-                print(f'x >= a and y <= b: {x >= a and y <= b}')
                 if x <= a <= y:
                     collisions.append(
                         {
@@ -77,15 +74,14 @@ class DoctorScheduleManager(models.Manager):
         if s.minutes_since > e.minutes_since:
             return False
 
+        if s.minutes_since == e.minutes_since:
+            return False
+
         return True
 
     def create(self, *args, **kwargs):
-        Doctor = apps.get_model('doctor_profiles.DoctorProfile')
         DateDim = apps.get_model('datesdim.DateDim')
-        try:
-            doctor = Doctor.objects.get(pk=kwargs['doctor_id'])
-        except Doctor.DoesNotExist:
-            raise ObjectDoesNotExist("Doctor does not exist")
+        doctor = kwargs['doctor']
 
         if not self.valid_times(start=kwargs['start_time'], end=kwargs['end_time']):
             return False, "Invalid start and end time", []

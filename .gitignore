@@ -99,3 +99,5 @@ receptionist_profiles/migrations/
 package\.json
 
 yarn\.lock
+
+drug_information/migrations/
