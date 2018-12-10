@@ -3,14 +3,14 @@
 {% load crispy_forms_tags %}
 
 {% block header_css %}
-<link rel="stylesheet" href="{% static 'react/doctor_profile/home/css/1.chunk.css' %}">
-<link rel="stylesheet" href="{% static 'react/doctor_profile/home/css/main.chunk.css' %}">
+<link rel="stylesheet" href="{% static 'react/base_profile/home/css/1.chunk.css' %}">
+<link rel="stylesheet" href="{% static 'react/base_profile/home/css/main.chunk.css' %}">
 {% endblock %}
 {% block header_js %}
 {% endblock %}
 
 {% block subcontent %}
-    <div id="doctor_profile_app"></div>
+<div id="base_profile_app">Loading...</div>
 
 {% endblock %}
 
@@ -24,8 +24,8 @@
         cover_photo_album_id: '{{ request.user.base_profile.get_cover_album.id }}',
     };
 </script>
-<script src="{% static 'react/doctor_profile/home/js/1.chunk.js' %}"></script>
-<script src="{% static 'react/doctor_profile/home/js/main.chunk.js' %}"></script>
-<script src="{% static 'react/doctor_profile/home/js/runtime-main.js' %}"></script>
+<script src="{% static 'react/base_profile/home/js/1.chunk.js' %}"></script>
+<script src="{% static 'react/base_profile/home/js/main.chunk.js' %}"></script>
+<script src="{% static 'react/base_profile/home/js/runtime-main.js' %}"></script>
 
 {% endblock %}
