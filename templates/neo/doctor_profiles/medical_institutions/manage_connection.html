@@ -3,59 +3,73 @@
 {% load crispy_forms_tags %}
 
 {% block header_css %}
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
-   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-   crossorigin=""/>
-    <link rel="stylesheet" href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin="" />
+<link rel="stylesheet" href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <style type="text/css">
-        #map{
-            height: 70vh;
-        }
+<style type="text/css">
+    #map {
+        height: 70vh;
+    }
 
-        .schedule-item{
-            display: flex;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-            align-items: center;
-            align-content: stretch;
-            font-size: .9rem;
-        }
+    .schedule-item {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        align-content: stretch;
+        font-size: .9rem;
+    }
 
-        .schedule-item .schedule-label{
-            width: 40%;
-            padding: 5px 10px;
-        }
+    .schedule-item .schedule-label {
+        width: 40%;
+        padding: 5px 10px;
+    }
 
-        .schedule-item .schedule-label.schedule-start{
-            background-color: #d6e9c6;
-        }
+    .schedule-item .schedule-label.schedule-start {
+        background-color: #d6e9c6;
+    }
 
-        .schedule-item .schedule-label.schedule-end{
-            background-color: #c8cbcf;;
-        }
+    .schedule-item .schedule-label.schedule-end {
+        background-color: #c8cbcf;
+        ;
+    }
 
-        .schedule-item .schedule-value{
-            text-align: center;
-            padding: 5px 10px;
-        }
+    .schedule-item .schedule-value {
+        text-align: center;
+        padding: 5px 10px;
+    }
 
-    </style>
+    #top-coords-vote-container {
+        position: relative;
+    }
+
+    #top-coords-vote-container span {
+        position: absolute;
+        left: 190px;
+        top: 5px;
+    }
+
+    #top-coords-vote-container .btn-group-sm {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+</style>
 {% endblock %}
 {% block header_js %}
 {% endblock %}
 
 {% block subcontent %}
 
-    {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/main.html' %}
+{% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/main.html' %}
 
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="{% static '3rd-party/moment.js' %}"></script>
-    <script type="text/javascript" src="{% static '3rd-party/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
-    {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/main.js.html' %}
+<script type="text/javascript" src="{% static '3rd-party/moment.js' %}"></script>
+<script type="text/javascript" src="{% static '3rd-party/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
+{% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/main.js.html' %}
 {% endblock %}
 {% block home_scripts %}
 
