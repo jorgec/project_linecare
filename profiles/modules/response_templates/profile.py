@@ -11,38 +11,34 @@ def public_profile_template(user, as_json=False):
     if not profile:
         return False
 
-    try:
-        phones = profile.get_public_phones()
-    except AttributeError:
-        phones = None
-    _phones = ''
+
     try:
         profile_photo = profile.get_profile_photo()
     except AttributeError:
         profile_photo = None
-    _profile_photo = ''
+    _profile_photo = {'photo': None}
     try:
         cover_photo = profile.get_cover_photo()
     except AttributeError:
         cover_photo = None
-    _cover_photo = ''
+    _cover_photo = {'photo': None}
 
-    if phones:
-        _phones = phone_dict_template(phones)
+
     if profile_photo:
-        _profile_photo = PhotoSerializer(profile_photo).data
+        _profile_photo = SinglePhotoSerializer({'photo': profile_photo}).data
     if cover_photo:
-        _cover_photo = PhotoSerializer(cover_photo).data
+        _cover_photo = SinglePhotoSerializer({'photo': cover_photo}).data
 
     data = {
+        'id': user.id,
         'username': user.username,
         'user_type': user.user_type,
         'first_name': profile.first_name,
         'last_name': profile.last_name,
         'gender': GenderSerializer(profile.gender).data,
+        'date_of_birth': profile.date_of_birth,
         'profile_photo': _profile_photo,
         'cover_photo': _cover_photo,
-        'phones': _phones
     }
 
     if as_json:

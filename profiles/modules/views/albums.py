@@ -27,7 +27,7 @@ class BaseProfileAlbumList(LoginRequiredMixin, View):
 class BaseProfileAlbumDetail(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         profile = request.user.base_profile()
-        album = get_object_or_404(Album, slug=kwargs['slug'])
+        album = get_object_or_404(Album, slug=kwargs['slug'], profile=profile)
 
         context = {
             'page_title': profile,
@@ -41,7 +41,8 @@ class BaseProfileAlbumDetail(LoginRequiredMixin, View):
         return render(request, 'neo/profile/albums/detail.html', context)
 
     def post(self, request, *args, **kwargs):
-        album = get_object_or_404(Album, slug=kwargs['slug'])
+        profile = request.user.base_profile()
+        album = get_object_or_404(Album, slug=kwargs['slug'], profile=profile)
         form = PhotoUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
