@@ -1,11 +1,17 @@
+{% load static %}
 <div class="card">
+    <div class="card-header">
+        <h4 class="h6">
+            {{ doctor }} &mdash; {{ rel.medical_institution }}
+        </h4>
+    </div>
     <div class="card-body">
         <div id="my_schedules_container">
             <div class="donut-spinner"></div>
         </div>
     </div>
 </div>
-<div class="card-body">
+<div class="card-header">
     <h5 class="h6">Create new Schedule</h5>
 </div>
 <ul class="nav nav-tabs" id="tabScheduleTypes" role="tablist">

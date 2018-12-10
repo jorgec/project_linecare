@@ -10,9 +10,9 @@ urlpatterns = [
     path('home', home_views.ReceptionistProfileHomeView.as_view(),
          name='receptionist_profile_home'),
 
-    path('<doctor_id>/schedule', doctor_schedule_views.ReceptionistProfileDoctorScheduleList.as_view(),
+    path('schedule/<medical_institution>/<doctor_id>', doctor_schedule_views.ReceptionistProfileDoctorScheduleList.as_view(),
          name='receptionist_profile_doctor_schedules'),
-    path('<doctor_id>/queue', doctor_schedule_views.ReceptionistProfileDoctorScheduleDetail.as_view(),
+    path('queue/<medical_institution>/<doctor_id>', doctor_schedule_views.ReceptionistProfileDoctorScheduleDetail.as_view(),
          name='receptionist_profile_doctor_queue'),
 ]
 

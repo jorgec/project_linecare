@@ -27,10 +27,10 @@
                                 </span>
                             </p>
                             <div class="btn-group btn-group-sm">
-                                <a class="btn btn-sm btn-outline-primary" href="{% url 'receptionist_profile_doctor_queue' rel.doctor.id %}">
+                                <a class="btn btn-sm btn-outline-primary" href="{% url 'receptionist_profile_doctor_queue' rel.medical_institution.slug rel.doctor.id %}">
                                     <i class="fa fa-calendar"></i> Queue
                                 </a>
-                                <a class="btn btn-sm btn-outline-warning" href="{% url 'receptionist_profile_doctor_schedules' rel.doctor.id %}">
+                                <a class="btn btn-sm btn-outline-warning" href="{% url 'receptionist_profile_doctor_schedules' rel.medical_institution.slug  rel.doctor.id%}">
                                     <i class="fa fa-edit"></i>
                                     Update Schedule
                                 </a>

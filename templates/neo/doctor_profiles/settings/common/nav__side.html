@@ -1,10 +1,35 @@
 {% load static %}
-<a {% if sublocation == 'home' %}class="active"{% endif %} href="{% url 'doctor_profile_settings_home' %}">Home</a>
-<hr>
-<a {% if sublocation == 'degree'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_medical_degree' %}">Medical Degree</a>
-<a {% if sublocation == 'specialization'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_specialization' %}">Specializations</a>
-<a {% if sublocation == 'subspecialization'%}class="active"{% endif %} href="">Sub Specializations</a>
-<a {% if sublocation == 'associations'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_association' %}">Medical Association</a>
-<a {% if sublocation == 'insurance'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_insurance' %}">Insurance Providers</a>
-<hr class="hr">
-<a {% if sublocation == 'institution'%}class="active"{% endif %} href="{% url 'doctor_profile_settings_medical_institution' %}">Medical Institution Linkages</a>
+
+<ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+        <a {% if sublocation == 'home' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_settings_home' %}">Home</a>
+    </li>
+    <li class="sidebar-nav-separator"></li>
+    <li class="sidebar-nav-item">
+        <a {% if sublocation == 'degree' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_settings_medical_degree' %}">Medical Degree</a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a {% if sublocation == 'specialization' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_settings_specialization' %}">Specializations</a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a {% if sublocation == 'subspecialization' %}class="active"{% endif %} href="">Sub Specializations</a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a {% if sublocation == 'associations' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_settings_association' %}">Medical Association</a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a {% if sublocation == 'insurance' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_settings_insurance' %}">Insurance
+            Providers</a>
+    </li>
+    <li class="sidebar-nav-separator"></li>
+    <li class="sidebar-nav-item">
+        <a {% if sublocation == 'institution' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_settings_medical_institution' %}">Medical Institution Linkages</a>
+
+    </li>
+</ul>

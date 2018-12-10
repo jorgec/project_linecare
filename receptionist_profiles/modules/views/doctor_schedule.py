@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
 
-from doctor_profiles.models import DoctorProfile
+from doctor_profiles.models import DoctorProfile, MedicalInstitution
 from receptionist_profiles.models import ReceptionistProfile
 from receptionist_profiles.models.receptionist_profile_model import ReceptionistConnection
 
@@ -13,7 +13,9 @@ class ReceptionistProfileDoctorScheduleList(LoginRequiredMixin, UserPassesTestMi
     def get(self, request, *args, **kwargs):
         profile = get_object_or_404(ReceptionistProfile, user=request.user)
         doctor = get_object_or_404(DoctorProfile, id=kwargs['doctor_id'])
-        rel = get_object_or_404(ReceptionistConnection, receptionist=profile, doctor=doctor)
+        medical_institution = get_object_or_404(MedicalInstitution, slug=kwargs['medical_institution'])
+        rel = get_object_or_404(ReceptionistConnection, receptionist=profile, doctor=doctor,
+                                medical_institution=medical_institution)
         context = {
             'page_title': f'Managing schedule for {doctor} in {rel.medical_institution}',
             'location': 'receptionist_profile_manage_schedule',
@@ -34,7 +36,9 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
     def get(self, request, *args, **kwargs):
         profile = get_object_or_404(ReceptionistProfile, user=request.user)
         doctor = get_object_or_404(DoctorProfile, id=kwargs['doctor_id'])
-        rel = get_object_or_404(ReceptionistConnection, receptionist=profile, doctor=doctor)
+        medical_institution = get_object_or_404(MedicalInstitution, slug=kwargs['medical_institution'])
+        rel = get_object_or_404(ReceptionistConnection, receptionist=profile, doctor=doctor,
+                                medical_institution=medical_institution)
         context = {
             'page_title': f'Queue for {doctor} in {rel.medical_institution}',
             'location': 'receptionist_profile_manage_schedule',
