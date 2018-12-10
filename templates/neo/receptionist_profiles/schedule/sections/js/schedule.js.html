@@ -130,7 +130,7 @@
     });
 
     function deleteSchedule(schedule_id){
-        var url = "{% url 'api_private_doctor_schedule_delete' %}?id=" + schedule_id;
+        var url = "{% url 'api_private_doctor_schedule_delete' %}?id=" + schedule_id + "&doctor_id=" + {{ doctor.id }} + "&medical_institution=" + {{ rel.medical_institution.id }};
         var formData = {
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };

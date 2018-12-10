@@ -1,38 +1,50 @@
 from rest_framework import status, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from datesdim.models import TimeDim, DateDim
 from doctor_profiles.models import DoctorSchedule, DoctorProfile, MedicalInstitution
-from doctor_profiles.serializers import DoctorScheduleCreateRegularScheduleSerializer, DoctorScheduleSerializer, \
-    DoctorScheduleCollisionSerializer, MedicalInstitutionSerializer, DateDimSerializer, TimeDimSerializer
+from doctor_profiles.serializers import DoctorScheduleSerializer, \
+    MedicalInstitutionSerializer, DateDimSerializer, TimeDimSerializer
+from receptionist_profiles.models import ReceptionistProfile
+
+
+def is_doctor_or_receptionist(user):
+    user_type = None
+    try:
+        doctor = DoctorProfile.objects.get(user=user)
+        user_type = doctor
+    except DoctorProfile.DoesNotExist:
+        try:
+            receptionist = ReceptionistProfile.objects.get(user=user)
+            user_type = receptionist
+        except ReceptionistProfile.DoesNotExist:
+            return False, user_type
+    return True, user_type
 
 
 class ApiDoctorScheduleCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        if not request.user.doctorprofile and not request.user.receptionistprofile:
-            return Response("Not a doctor or receptionist", status=status.HTTP_403_FORBIDDEN)
+        result, profile_type = is_doctor_or_receptionist(request.user)
+        if not result:
+            return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
 
         doctor_id = request.GET.get('doctor_id', None)
-        if not doctor_id:
-            if not request.user.doctorprofile:
-                return Response("Not a doctor", status=status.HTTP_403_FORBIDDEN)
-            doctor_id = request.user.doctorprofile.id
-
         doctor = get_object_or_404(DoctorProfile, id=doctor_id)
-        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution'))
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution', None))
 
-        if request.user.doctorprofile.id != doctor_id:
+        if type(profile_type) != DoctorProfile:
             """ person adding isn't the doctor, so check if receptionist is allowed """
             connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
-                                                    medical_institution=medical_institution)
+                                                          medical_institution=medical_institution)
             if not connection:
                 return Response("Receptionist is not authorized by this doctor for this medical institution",
                                 status=status.HTTP_403_FORBIDDEN)
+        elif profile_type.id != doctor.id:
+            return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
 
         start_time = TimeDim.objects.parse(request.data.get('start_time'))
         end_time = TimeDim.objects.parse(request.data.get('end_time'))
@@ -106,16 +118,23 @@ class ApiDoctorScheduleDelete(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        if not request.user.doctorprofile and not request.user.receptionistprofile:
-            return Response("Not a doctor or receptionist", status=status.HTTP_403_FORBIDDEN)
+        result, profile_type =  is_doctor_or_receptionist(request.user)
+        if not result:
+            return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
 
         doctor_id = request.GET.get('doctor_id', None)
-        if not doctor_id:
-            if not request.user.doctorprofile:
-                return Response("Not a doctor", status=status.HTTP_403_FORBIDDEN)
-            doctor_id = request.user.doctorprofile.id
-
         doctor = get_object_or_404(DoctorProfile, id=doctor_id)
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution', None))
+
+        if type(profile_type) != DoctorProfile:
+            """ person adding isn't the doctor, so check if receptionist is allowed """
+            connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
+                                                    medical_institution=medical_institution)
+            if not connection:
+                return Response("Receptionist is not authorized by this doctor for this medical institution",
+                                status=status.HTTP_403_FORBIDDEN)
+        elif profile_type.id != doctor.id:
+            return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
 
         schedule = get_object_or_404(DoctorSchedule, id=request.GET.get('id', None), doctor=doctor)
 

@@ -8,9 +8,24 @@
 {% endblock %}
 
 {% block content %}
-    {% block subcontent %}
 
-    {% endblock %}
+<div class="two-column">
+    <div class="row">
+        <div class="col-lg-3 col-sm-12">
+            <div class="two-column__left--nav">
+                <h5 class="h5">Settings</h5>
+                {% include 'neo/receptionist_profiles/schedule/common/nav__side.html' %}
+            </div>
+        </div>
+        <div class="col-lg-9 col-sm-12">
+            <div class="two-column__right--settings">
+                {% block subcontent %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

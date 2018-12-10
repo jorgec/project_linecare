@@ -15,7 +15,7 @@ class ReceptionistProfileDoctorScheduleList(LoginRequiredMixin, UserPassesTestMi
         doctor = get_object_or_404(DoctorProfile, id=kwargs['doctor_id'])
         rel = get_object_or_404(ReceptionistConnection, receptionist=profile, doctor=doctor)
         context = {
-            'page_title': f'Managing schedule for {doctor}',
+            'page_title': f'Managing schedule for {doctor} in {rel.medical_institution}',
             'location': 'receptionist_profile_manage_schedule',
             'sublocation': 'list',
             'user': request.user,
