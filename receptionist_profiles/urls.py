@@ -1,9 +1,18 @@
 from django.urls import path
 
+from .modules.views import home as home_views
+from .modules.views import doctor_schedule as doctor_schedule_views
+
 from .modules.api import receptionist_profile_api
+from .modules.api import receptionist_connections_api
 
+urlpatterns = [
+    path('home', home_views.ReceptionistProfileHomeView.as_view(),
+         name='receptionist_profile_home'),
 
-urlpatterns = []
+    path('<doctor_id>/schedule', doctor_schedule_views.ReceptionistProfileDoctorScheduleList.as_view(),
+         name='receptionist_profile_doctor_schedules'),
+]
 
 
 #############################################################################
@@ -21,4 +30,9 @@ urlpatterns += [
     path(f'{version}/private/profile/create_by_doctor',
          receptionist_profile_api.ApiPrivateReceptionistProfileCreateByDoctor.as_view(),
          name='api_private_receptionist_profile_create_by_doctor'),
+
+    # connections
+    path(f'{version}/private/connection/list',
+         receptionist_connections_api.ApiPrivateReceptionistProfileConnectionList.as_view(),
+         name='api_private_receptionist_connection_list'),
 ]

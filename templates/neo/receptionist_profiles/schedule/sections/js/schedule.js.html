@@ -1,0 +1,157 @@
+{% load static %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".endTime").bootstrapMaterialDatePicker({
+            date: false,
+            format: "h:mm a",
+            shortTime: true,
+        });
+        $(".startTime").bootstrapMaterialDatePicker({
+            date: false,
+            format: "h:mm a",
+            shortTime: true,
+        });
+
+
+        $(".endDate").bootstrapMaterialDatePicker({
+            format: "YYYY-MM-DD",
+            time: false
+        });
+        $(".startDate").bootstrapMaterialDatePicker({
+            format: "YYYY-MM-DD",
+            time: false
+        }).on('change', function (e, date) {
+            $(".endDate").bootstrapMaterialDatePicker('setMinDate', date)
+        });
+
+
+        $("#frmCollectionRegularWeeklySchedule").on('submit', '.frmAddRegularWeeklySchedule', function (e) {
+            e.preventDefault();
+
+            var days = $("input[name=weekday]:checked", this).map(
+                function () {
+                    return this.value;
+                }
+            ).get().join(";");
+            var startTime = $("#startTime", this).val();
+            var endTime = $("#endTime", this).val();
+            var startDate = $("#startDate", this).val();
+            var endDate = $("#endDate", this).val();
+            var url = "{% url 'api_private_doctor_schedule_create' %}?medical_institution={{ rel.medical_institution.id }}&doctor_id={{ doctor.id }}";
+            var formData = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                days: days,
+                start_time: startTime,
+                end_time: endTime,
+                start_date: startDate,
+                end_date: endDate,
+            };
+
+            $.post(url, formData)
+
+                .done(function (result) {
+                    $("#schedule_errors_container").html('');
+                    $.notify({
+                        message: "Schedule created!"
+                    }, {
+                        type: 'success'
+                    });
+                    updateState(model.all_schedules);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    if(jqXHR.status === 409){
+                        $("#schedule_errors_container").loadTemplate($("#schedule_errors_template"), jqXHR.responseJSON);
+                        $.notify({
+                            message: "Schedule conflict detected"
+                        }, {
+                            type: 'danger'
+                        });
+                    }else if(jqXHR.status === 400){
+                        $.notify({
+                            message: jqXHR.responseText
+                        }, {
+                            type: 'danger'
+                        });
+                    }
+
+                });
+        });
+    });
+
+
+    model.all_schedules = {
+        dataSrc: "{% url 'api_public_doctor_schedule_list' %}?id={{ rel.doctor.id }}&medical_institution={{ rel.medical_institution.id }}",
+        fetch: fetchMySchedules,
+        onReady: true,
+        onSuccessResult: [],
+        onSuccess: [],
+        container: $("#my_schedules_container"),
+        template: $("#my_schedules_template"),
+        actions: {
+            deletePrompt: {
+                fn: deleteSchedulePrompt,
+                apiConsumer: false,
+                parameters: {
+                    parameters: {
+                        triggerElement: ".delete-schedule",
+                        fnParams: ["data-schedule-id"]
+                    }
+                }
+            }
+        }
+    };
+
+    function fetchMySchedules(){
+        var url = "{% url 'api_public_doctor_schedule_list' %}?id={{ rel.doctor.id }}&medical_institution={{ rel.medical_institution.id }}";
+
+        $.get(url)
+            .done(function(result){
+                $("#my_schedules_container").loadTemplate($("#my_schedules_template"), result);
+                $(".delete-schedule").on('click', function(e){
+                    e.preventDefault();
+                    var sid = $(this).attr("data-schedule-id");
+                    deleteSchedulePrompt(sid);
+                });
+            })
+    }
+
+    function deleteSchedulePrompt(schedule_id){
+        $("#btnViewAffectedAppointments").attr("data-schedule-id", schedule_id);
+        $("#btnDeleteSchedule").attr("data-schedule-id", schedule_id);
+        $("#modalConfirmDeleteSchedule").modal('show');
+    }
+
+    $("#btnDeleteSchedule").on('click', function(e){
+        e.preventDefault();
+        $("#modalConfirmDeleteSchedule").modal('hide');
+        var sid = $(this).attr("data-schedule-id");
+        deleteSchedule(sid);
+    });
+
+    function deleteSchedule(schedule_id){
+        var url = "{% url 'api_private_doctor_schedule_delete' %}?id=" + schedule_id;
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+
+        $.post(url, formData)
+            .done(function(result){
+                $.notify({
+                    message: "Schedule deleted!"
+                }, {
+                    type: 'success'
+                });
+                updateState(model.all_schedules);
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                $.notify({
+                    message: jqXHR.responseJSON
+                }, {
+                    type: 'danger'
+                });
+            });
+    }
+
+
+</script>

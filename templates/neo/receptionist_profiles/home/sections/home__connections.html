@@ -1,0 +1,45 @@
+{% load static %}
+<div class="connections__container">
+    <div class="row">
+        <div class="col-sm-12 col-md-3">
+            sdfh
+        </div>
+        <div class="col-sm-12 col-md-9">
+            <div class="connections__content">
+                <h5>Connections</h5>
+                <div class="row">
+                {% for rel in profile.get_doctor_connections %}
+                    <div class="col-sm-12 col-md-6">
+                        <div class="item">
+                            <div class="image" style="background-image: url({{ rel.doctor.user.base_profile.get_profile_photo }})">
+
+                            </div>
+                            <div class="info">
+                                <p>
+                                    <span class="info-name">
+                                        <a href="#">{{ rel.doctor }}</a>
+                                    </span>
+                                    <br>
+                                    <span class="info-location">
+                                        <a href="#">
+                                            {{ rel.medical_institution }}
+                                        </a>
+                                    </span>
+                                </p>
+                                <a class="btn btn-sm btn-outline-primary" href="{% url 'receptionist_profile_doctor_schedules' rel.doctor.id %}">
+                                    Manage Schedule
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% block inner_scripts %}
+
+{% endblock %}

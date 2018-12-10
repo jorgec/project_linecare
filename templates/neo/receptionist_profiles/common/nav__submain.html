@@ -1,0 +1,11 @@
+{% load static %}
+<div class="container">
+    <div class="sub-nav__container">
+        <ul class="nav justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link {% if location == 'receptionist_profile_home' %}active{% endif %}" href="{% url 'receptionist_profile_home' %}">My Receptionist Profile</a>
+            </li>
+
+        </ul>
+    </div>
+</div>

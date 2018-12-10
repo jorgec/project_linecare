@@ -1,0 +1,51 @@
+{% extends 'neo/receptionist_profiles/home/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+    <link rel="stylesheet" href="{% static 'react/base_profile/home/css/1.chunk.css' %}">
+    <link rel="stylesheet" href="{% static 'react/base_profile/home/css/main.chunk.css' %}">
+
+    <style type="text/css">
+        .item .image{
+            background-color: #eee;
+        }
+        .item .info p{
+            margin-bottom: 1rem !important;
+        }
+        .item .info{
+            padding: 1rem 1rem 1rem 0;
+            font-size: .85rem;
+        }
+        .item .info .info-name{
+            font-weight: bold;
+        }
+        .item .info .btn-sm{
+            font-size: .75rem;
+            padding: .25rem .5rem;
+        }
+    </style>
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+    {% include 'neo/receptionist_profiles/home/sections/home__personal.html' %}
+    {% include 'neo/receptionist_profiles/home/sections/home__connections.html' %}
+{% endblock %}
+
+{% block home_scripts %}
+{% block inner_scripts %}
+    {% endblock %}
+    <script type="text/javascript">
+        var appContext = {
+            profile_id: '{{request.user.base_profile.id}}',
+            user_id: '{{ request.user.id }}',
+            profile_photo_album_id: '{{ request.user.base_profile.get_profile_album.id }}',
+            cover_photo_album_id: '{{ request.user.base_profile.get_cover_album.id }}',
+        };
+    </script>
+    <script src="{% static 'react/base_profile/home/js/1.chunk.js' %}"></script>
+    <script src="{% static 'react/base_profile/home/js/main.chunk.js' %}"></script>
+    <script src="{% static 'react/base_profile/home/js/runtime-main.js' %}"></script>
+{% endblock %}
