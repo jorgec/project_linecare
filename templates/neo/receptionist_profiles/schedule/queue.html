@@ -1,42 +1,11 @@
-{% extends 'neo/receptionist_profiles/schedule/base.html' %}
+{% extends 'neo/receptionist_profiles/schedule/base_fullwidth.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 
 {% block header_css %}
     <link rel="stylesheet" href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style type="text/css">
-        #map{
-            height: 70vh;
-        }
-
-        .schedule-item{
-            display: flex;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-            align-items: center;
-            align-content: stretch;
-            font-size: .9rem;
-        }
-
-        .schedule-item .schedule-label{
-            width: 40%;
-            padding: 5px 10px;
-        }
-
-        .schedule-item .schedule-label.schedule-start{
-            background-color: #d6e9c6;
-        }
-
-        .schedule-item .schedule-label.schedule-end{
-            background-color: #c8cbcf;;
-        }
-
-        .schedule-item .schedule-value{
-            text-align: center;
-            padding: 5px 10px;
-        }
 
     </style>
 {% endblock %}
@@ -48,9 +17,9 @@
         <h4 class="h6">{{ page_title }}</h4>
     </div>
     <div class="subcontent__wrapper" id="schedule-section">
-        {% include 'neo/receptionist_profiles/schedule/sections/template/schedule.main.html' %}
-        {% include 'neo/receptionist_profiles/schedule/sections/template/schedule.modals.html' %}
-        {% include 'neo/receptionist_profiles/schedule/sections/template/schedule.templates.html' %}
+        {% include 'neo/receptionist_profiles/schedule/sections/template/queue.main.html' %}
+        {% include 'neo/receptionist_profiles/schedule/sections/template/queue.modals.html' %}
+        {% include 'neo/receptionist_profiles/schedule/sections/template/queue.templates.html' %}
     </div>
 
 {% endblock %}
@@ -65,7 +34,7 @@
             var model = {};
         </script>
 
-        {% include 'neo/receptionist_profiles/schedule/sections/js/schedule.js.html' %}
+        {% include 'neo/receptionist_profiles/schedule/sections/js/queue.js.html' %}
 
         <script type="text/javascript">
             $(document).ready(function(){

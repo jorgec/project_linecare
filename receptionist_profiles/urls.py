@@ -12,6 +12,8 @@ urlpatterns = [
 
     path('<doctor_id>/schedule', doctor_schedule_views.ReceptionistProfileDoctorScheduleList.as_view(),
          name='receptionist_profile_doctor_schedules'),
+    path('<doctor_id>/queue', doctor_schedule_views.ReceptionistProfileDoctorScheduleDetail.as_view(),
+         name='receptionist_profile_doctor_queue'),
 ]
 
 

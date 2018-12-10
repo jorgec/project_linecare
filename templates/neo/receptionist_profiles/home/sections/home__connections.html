@@ -2,38 +2,42 @@
 <div class="connections__container">
     <div class="row">
         <div class="col-sm-12 col-md-3">
-            sdfh
+            <div class="two-column__left--nav">
+                {% include 'neo/receptionist_profiles/common/nav__side.html' %}
+            </div>
         </div>
         <div class="col-sm-12 col-md-9">
             <div class="connections__content">
                 <h5>Connections</h5>
-                <div class="row">
                 {% for rel in profile.get_doctor_connections %}
-                    <div class="col-sm-12 col-md-6">
-                        <div class="item">
-                            <div class="image" style="background-image: url({{ rel.doctor.user.base_profile.get_profile_photo }})">
+                    <div class="item">
+                        <div class="image" style="background-image: url({{ rel.doctor.user.base_profile.get_profile_photo }})">
 
-                            </div>
-                            <div class="info">
-                                <p>
-                                    <span class="info-name">
-                                        <a href="#">{{ rel.doctor }}</a>
-                                    </span>
-                                    <br>
-                                    <span class="info-location">
-                                        <a href="#">
-                                            {{ rel.medical_institution }}
-                                        </a>
-                                    </span>
-                                </p>
-                                <a class="btn btn-sm btn-outline-primary" href="{% url 'receptionist_profile_doctor_schedules' rel.doctor.id %}">
-                                    Manage Schedule
+                        </div>
+                        <div class="info">
+                            <p>
+                                <span class="info-name">
+                                    <a href="#">{{ rel.doctor }}</a>
+                                </span>
+                                <br>
+                                <span class="info-location">
+                                    <a href="#">
+                                        {{ rel.medical_institution }}
+                                    </a>
+                                </span>
+                            </p>
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-sm btn-outline-primary" href="{% url 'receptionist_profile_doctor_queue' rel.doctor.id %}">
+                                    <i class="fa fa-calendar"></i> Queue
+                                </a>
+                                <a class="btn btn-sm btn-outline-warning" href="{% url 'receptionist_profile_doctor_schedules' rel.doctor.id %}">
+                                    <i class="fa fa-edit"></i>
+                                    Update Schedule
                                 </a>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
-                </div>
             </div>
         </div>
     </div>

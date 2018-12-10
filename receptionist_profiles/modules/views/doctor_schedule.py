@@ -28,3 +28,24 @@ class ReceptionistProfileDoctorScheduleList(LoginRequiredMixin, UserPassesTestMi
 
     def test_func(self):
         return self.request.user.receptionist_profile()
+
+
+class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        profile = get_object_or_404(ReceptionistProfile, user=request.user)
+        doctor = get_object_or_404(DoctorProfile, id=kwargs['doctor_id'])
+        rel = get_object_or_404(ReceptionistConnection, receptionist=profile, doctor=doctor)
+        context = {
+            'page_title': f'Queue for {doctor} in {rel.medical_institution}',
+            'location': 'receptionist_profile_manage_schedule',
+            'sublocation': 'detail',
+            'user': request.user,
+            'profile': profile,
+            'doctor': doctor,
+            'rel': rel
+        }
+
+        return render(request, 'neo/receptionist_profiles/schedule/queue.html', context)
+
+    def test_func(self):
+        return self.request.user.receptionist_profile()

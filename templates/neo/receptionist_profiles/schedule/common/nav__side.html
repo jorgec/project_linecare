@@ -1,5 +1,24 @@
 {% load static %}
-<a {% if sublocation == 'home' %}class="active"{% endif %} href="{% url 'receptionist_profile_home' %}">Home</a>
-<hr>
-<a href="">Doctor Connections</a>
-<a href="">Medical Institution Connections</a>
+<ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+        <a {% if sublocation == 'home' %}class="active"{% endif %} href="{% url 'receptionist_profile_home' %}">Home</a>
+    </li>
+    <li class="sidebar-nav-separator"></li>
+    <li class="sidebar-nav-item">
+        <a href="" {% if sublocation == 'list' %}class="active"{% endif %}>Doctor Connections</a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a href="">Medical Institution Connections</a>
+        <ul class="sidebar-nav-child">
+            <li>
+                <a href="">child</a>
+            </li>
+            <li>
+                <a href="">child</a>
+            </li>
+            <li>
+                <a href="">child</a>
+            </li>
+        </ul>
+    </li>
+</ul>
