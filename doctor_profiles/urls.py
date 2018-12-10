@@ -21,6 +21,9 @@ urlpatterns = [
     path('home',
          home_views.DoctorProfileHomeView.as_view(),
          name='doctor_profile_home'),
+    path('create',
+         home_views.DoctorProfileCreate.as_view(),
+         name='doctor_profile_create'),
 
     #############################################################################
     # Settings

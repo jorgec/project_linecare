@@ -71,3 +71,11 @@ class ReceptionistConnection(models.Model):
     class Meta:
         ordering = ('medical_institution', 'doctor', 'receptionist')
         unique_together = ('medical_institution', 'doctor', 'receptionist')
+
+    def get_doctor_schedules(self):
+        if not self.doctor or not self.medical_institution:
+            return False
+
+        schedules = self.doctor.doctor_schedules.filter(medical_institution=self.medical_institution)
+
+        return schedules

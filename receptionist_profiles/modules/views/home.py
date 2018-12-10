@@ -22,3 +22,9 @@ class ReceptionistProfileHomeView(LoginRequiredMixin, UserPassesTestMixin, View)
 
     def test_func(self):
         return self.request.user.receptionist_profile()
+
+
+class ReceptionistProfileCreate(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        profile = request.user.create_receptionist_profile()
+        return HttpResponseRedirect(reverse('receptionist_profile_home'))

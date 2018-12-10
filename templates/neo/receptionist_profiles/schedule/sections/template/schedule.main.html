@@ -1,120 +1,140 @@
 {% load static %}
-<div class="card">
-    <div class="card-header">
+<div class="two-column__right--settings">
+    <div class="header">
         <h4 class="h6">
             {{ doctor }} &mdash; {{ rel.medical_institution }}
         </h4>
     </div>
-    <div class="card-body">
+    <div class="body">
         <div id="my_schedules_container">
             <div class="donut-spinner"></div>
         </div>
     </div>
 </div>
-<div class="card-header">
-    <h5 class="h6">Create new Schedule</h5>
-</div>
-<ul class="nav nav-tabs" id="tabScheduleTypes" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" id="regular-schedule-tab" data-toggle="tab" href="#regular-schedule" role="tab" aria-controls="regular-schedule"
-           aria-selected="true">I have a regular weekly schedule</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="flexible-schedule-tab" data-toggle="tab" href="#flexible-schedule" role="tab" aria-controls="flexible-schedule"
-           aria-selected="false">My schedule varies from week to week</a>
-    </li>
-</ul>
-<div id="schedule_errors_container"></div>
-<div class="tab-content" id="tabScheduleTypesContent">
-    <div class="tab-pane fade show active" id="regular-schedule" role="tabpanel" aria-labelledby="regular-schedule-tab">
-        <div class="card">
-            <div class="card-body">
-                <div id="frmCollectionRegularWeeklySchedule" class="mt-2">
-                    <form id="frmAddRegularWeeklySchedule_0" class="frmAddRegularWeeklySchedule" method="post">
-                        <h5 class="h5 my-2">Which days should this schedule be applied to?</h5>
-                        <div class="form-group">
-                            <div class="form-check form-check-inline">
-                                <label>
-                                    <input class="form-check-input day-input" type="checkbox" name="weekday" value="Monday"> Monday
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <label>
-                                    <input class="form-check-input day-input" type="checkbox" name="weekday" value="Tuesday"> Tuesday
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <label>
-                                    <input class="form-check-input day-input" type="checkbox" name="weekday" value="Wednesday"> Wednesday
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <label>
-                                    <input class="form-check-input day-input" type="checkbox" name="weekday" value="Thursday"> Thursday
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <label>
-                                    <input class="form-check-input day-input" type="checkbox" name="weekday" value="Friday"> Friday
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <label>
-                                    <input class="form-check-input day-input" type="checkbox" name="weekday" value="Saturday"> Saturday
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <label>
-                                    <input class="form-check-input day-input" type="checkbox" name="weekday" value="Sunday"> Sunday
-                                </label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>
-                                        Start Time
-                                    </label>
-                                    <input type="text" name="startTime" id="startTime" class="form-control startTime" required>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>
-                                        End Time
-                                    </label>
-                                    <input type="text" name="endTime" id="endTime" class="form-control endTime" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Starting Date</label>
-                                    <input type="text" name="startDate" id="startDate" class="startDate form-control" required>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Valid until</label>
-                                    <input type="text" name="endDate" id="endDate" class="endDate form-control" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-primary btn-sm" type="submit">Save this schedule</button>
-                        </div>
-                        <hr>
-                    </form>
 
-                    <div id="divAddRegularSchedule"></div>
+<div class="two-column__right--settings">
+    <div class="header">
+        <h4 class="h6">Create new Schedule</h4>
+    </div>
+    <div class="body">
+        <ul class="nav nav-tabs" id="tabScheduleTypes" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="regular-schedule-tab" data-toggle="tab" href="#regular-schedule"
+                   role="tab"
+                   aria-controls="regular-schedule"
+                   aria-selected="true">I have a regular weekly schedule</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="flexible-schedule-tab" data-toggle="tab" href="#flexible-schedule" role="tab"
+                   aria-controls="flexible-schedule"
+                   aria-selected="false">My schedule varies from week to week</a>
+            </li>
+        </ul>
+        <div id="schedule_errors_container"></div>
+        <div class="tab-content" id="tabScheduleTypesContent">
+            <div class="tab-pane fade show active" id="regular-schedule" role="tabpanel"
+                 aria-labelledby="regular-schedule-tab">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="frmCollectionRegularWeeklySchedule" class="mt-2">
+                            <form id="frmAddRegularWeeklySchedule_0" class="frmAddRegularWeeklySchedule" method="post">
+                                <h5 class="h5 my-2">Which days should this schedule be applied to?</h5>
+                                <div class="form-group">
+                                    <div class="form-check form-check-inline">
+                                        <label>
+                                            <input class="form-check-input day-input" type="checkbox" name="weekday"
+                                                   value="Monday"> Monday
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label>
+                                            <input class="form-check-input day-input" type="checkbox" name="weekday"
+                                                   value="Tuesday"> Tuesday
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label>
+                                            <input class="form-check-input day-input" type="checkbox" name="weekday"
+                                                   value="Wednesday"> Wednesday
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label>
+                                            <input class="form-check-input day-input" type="checkbox" name="weekday"
+                                                   value="Thursday"> Thursday
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label>
+                                            <input class="form-check-input day-input" type="checkbox" name="weekday"
+                                                   value="Friday"> Friday
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label>
+                                            <input class="form-check-input day-input" type="checkbox" name="weekday"
+                                                   value="Saturday"> Saturday
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label>
+                                            <input class="form-check-input day-input" type="checkbox" name="weekday"
+                                                   value="Sunday"> Sunday
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>
+                                                Start Time
+                                            </label>
+                                            <input type="text" name="startTime" id="startTime"
+                                                   class="form-control startTime" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>
+                                                End Time
+                                            </label>
+                                            <input type="text" name="endTime" id="endTime" class="form-control endTime"
+                                                   required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Starting Date</label>
+                                            <input type="text" name="startDate" id="startDate"
+                                                   class="startDate form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Valid until</label>
+                                            <input type="text" name="endDate" id="endDate" class="endDate form-control"
+                                                   required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-sm" type="submit">Save this schedule</button>
+                                </div>
+                                <hr>
+                            </form>
+
+                            <div id="divAddRegularSchedule"></div>
+                        </div>
+
+                    </div>
                 </div>
 
             </div>
+            <div class="tab-pane fade" id="flexible-schedule" role="tabpanel" aria-labelledby="flexible-schedule-tab">
+
+            </div>
         </div>
-
-    </div>
-    <div class="tab-pane fade" id="flexible-schedule" role="tabpanel" aria-labelledby="flexible-schedule-tab">
-
     </div>
 </div>

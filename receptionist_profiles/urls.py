@@ -9,6 +9,8 @@ from .modules.api import receptionist_connections_api
 urlpatterns = [
     path('home', home_views.ReceptionistProfileHomeView.as_view(),
          name='receptionist_profile_home'),
+    path('create', home_views.ReceptionistProfileCreate.as_view(),
+         name='receptionist_profile_create'),
 
     path('schedule/<medical_institution>/<doctor_id>', doctor_schedule_views.ReceptionistProfileDoctorScheduleList.as_view(),
          name='receptionist_profile_doctor_schedules'),
