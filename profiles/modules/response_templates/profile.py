@@ -37,8 +37,10 @@ def public_profile_template(user, as_json=False):
         'last_name': profile.last_name,
         'gender': GenderSerializer(profile.gender).data,
         'date_of_birth': profile.date_of_birth,
+        'profile_album': AlbumSerializer(profile.get_profile_album()),
         'profile_photo': _profile_photo,
         'cover_photo': _cover_photo,
+        'cover_album': AlbumSerializer(profile.get_cover_album())
     }
 
     if as_json:
@@ -106,8 +108,10 @@ def private_profile_template(user, as_json=False):
         'last_name': profile.last_name,
         'gender': GenderSerializer(profile.gender).data,
         'date_of_birth': profile.date_of_birth,
+        'profile_album': AlbumSerializer(profile.get_profile_album()),
         'profile_photo': _profile_photo,
         'cover_photo': _cover_photo,
+        'cover_album': AlbumSerializer(profile.get_cover_album()),
         'phones': _phones
     }
 
