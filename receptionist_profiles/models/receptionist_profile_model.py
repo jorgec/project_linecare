@@ -31,11 +31,15 @@ class ReceptionistProfile(models.Model):
 
     def __str__(self):
         return f'{self.user}'
-    
+
     def get_medical_institution_connections(self, doctor_id=None):
         connections = self.receptionist_connections.all()
         if doctor_id:
             connections = connections.filter(doctor_id=doctor_id)
+        return connections
+
+    def get_doctor_connections(self):
+        connections = self.receptionist_connections.filter(doctor__isnull=False)
         return connections
 
 

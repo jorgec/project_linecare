@@ -106,10 +106,18 @@ class ApiDoctorScheduleDelete(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        if not request.user.doctorprofile:
-            return Response("Not a doctor", status=status.HTTP_403_FORBIDDEN)
+        if not request.user.doctorprofile and not request.user.receptionistprofile:
+            return Response("Not a doctor or receptionist", status=status.HTTP_403_FORBIDDEN)
 
-        schedule = get_object_or_404(DoctorSchedule, id=request.GET.get('id', None), doctor=request.user.doctorprofile)
+        doctor_id = request.GET.get('doctor_id', None)
+        if not doctor_id:
+            if not request.user.doctorprofile:
+                return Response("Not a doctor", status=status.HTTP_403_FORBIDDEN)
+            doctor_id = request.user.doctorprofile.id
+
+        doctor = get_object_or_404(DoctorProfile, id=doctor_id)
+
+        schedule = get_object_or_404(DoctorSchedule, id=request.GET.get('id', None), doctor=doctor)
 
         schedule.delete()
 

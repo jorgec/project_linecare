@@ -30,9 +30,9 @@
             </div>
             <div class="col-sm-3 col-md-1">
                 {% if profile.user.receptionistprofile %}
-                <a href="" data-toggle="tooltip" data-placement="top" title="My Receptionist Profile">
-                    <img src="{% static 'neo/images/icons/receptionist-active.png' %}" class="img-fluid">
-                </a>
+                    <a href="{% url 'receptionist_profile_home' %}" data-toggle="tooltip" data-placement="top" title="My Receptionist Profile">
+                        <img src="{% static 'neo/images/icons/receptionist-active.png' %}" class="img-fluid">
+                    </a>
                 {% else %}
                 <a href="" data-toggle="tooltip" data-placement="top" title="Create a Receptionist Profile">
                     <img src="{% static 'neo/images/icons/receptionist-inactive.png' %}" class="img-fluid">
