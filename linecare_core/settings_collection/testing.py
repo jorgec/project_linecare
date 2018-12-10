@@ -100,7 +100,8 @@ INSTALLED_APPS = [
     'doctor_profiles',
     'biometrics',
     'locations',
-    'receptionist_profiles'
+    'receptionist_profiles',
+    'drug_information',
 ]
 
 # User Model
