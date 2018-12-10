@@ -14,6 +14,7 @@ from profiles.models import BaseProfile
 
 from django.apps import apps
 
+
 class Account(AbstractBaseUser):
     username = models.CharField(
         max_length=50,
@@ -58,10 +59,8 @@ class Account(AbstractBaseUser):
 
     # REQUIRED_FIELDS = ['username']
 
-
     def __str__(self):  # __unicode__ on Python 2
         return self.username
-
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -82,6 +81,7 @@ class Account(AbstractBaseUser):
     """
     Profile Functions
     """
+
     def base_profile(self):
         BaseProfile = apps.get_model('profiles.BaseProfile')
         try:
@@ -97,7 +97,6 @@ class Account(AbstractBaseUser):
     def settings_set_primary_profile(self):
         # TODO
         settings = self.user_settings
-
 
     def doctor_profile(self):
         DoctorProfile = apps.get_model('doctor_profiles.DoctorProfile')
@@ -115,6 +114,16 @@ class Account(AbstractBaseUser):
             user=self
         )
         return profile
+
+    def receptionist_profile(self):
+        ReceptionistProfile = apps.get_model('receptionist_profiles.ReceptionistProfile')
+        try:
+            return ReceptionistProfile.objects.get(
+                user=self,
+                is_approved=True
+            )
+        except ReceptionistProfile.DoesNotExist:
+            return False
 
     def create_receptionist_profile(self):
         ReceptionistProfile = apps.get_model('receptionist_profiles.ReceptionistProfile')
@@ -134,4 +143,3 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 def create_base_profile(sender, instance=None, created=False, **kwargs):
     if created:
         BaseProfile.objects.create(user=instance)
-
