@@ -118,7 +118,7 @@
 <!-- all coords -->
 <script type="text/html" id="all-coords-vote-template">
     <div class="col-sm-6 col-md-3 mt-2">
-        <span class="badge badge-secondary" data-content="votes"></span>
+        <span class="float-right badge badge-secondary" data-content="votes"></span>
         <div class="btn-group-sm btn-group">
             <a class="btn btn-outline-info map-focus" href="#!"
                data-template-bind='[{"attribute": "data-lat", "value": "coordinates.lat"}, {"attribute": "data-lon", "value": "coordinates.lon"}]'>
@@ -148,11 +148,11 @@
     </div>
     <div class="card-footer">
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-12">
                 <small>Address</small>
             </div>
-            <div class="col-sm-10">
-                <span class="float-right badge badge-secondary" data-content="votes"></span>
+            <div class="col-sm-12">
+                <span class="badge badge-secondary" data-content="votes"></span>
                 <div class="btn-group-sm btn-group">
                     <a data-toggle="tooltip" data-placement="top" title="Upvote this address"
                        class="card-link top-location-vote-up btn btn-outline-primary" href="#!"
