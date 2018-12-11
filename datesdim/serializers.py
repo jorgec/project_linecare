@@ -12,8 +12,8 @@ class DateDimSerializer(serializers.ModelSerializer):
     def repr_month_name(self, obj):
         return MONTH_CHOICES[obj.month - 1][1]
 
-    def repr_month_name_short(self):
-        return self.repr_month_name()[:3]
+    def repr_month_name_short(self, obj):
+        return MONTH_CHOICES[obj.month - 1][1][:3]
 
     def repr_day_name_short(self, obj):
         return obj.day_name[:3]
