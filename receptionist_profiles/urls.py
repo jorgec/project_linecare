@@ -2,6 +2,7 @@ from django.urls import path
 
 from .modules.views import home as home_views
 from .modules.views import doctor_schedule as doctor_schedule_views
+from .modules.views import receptionist_connections as receptionist_connection_views
 
 from .modules.api import receptionist_profile_api
 from .modules.api import receptionist_connections_api
@@ -12,12 +13,30 @@ urlpatterns = [
     path('create', home_views.ReceptionistProfileCreate.as_view(),
          name='receptionist_profile_create'),
 
-    path('schedule/<medical_institution>/<doctor_id>', doctor_schedule_views.ReceptionistProfileDoctorScheduleList.as_view(),
+    path('schedule/<medical_institution>/<doctor_id>',
+         doctor_schedule_views.ReceptionistProfileDoctorScheduleList.as_view(),
          name='receptionist_profile_doctor_schedules'),
-    path('queue/<medical_institution>/<doctor_id>', doctor_schedule_views.ReceptionistProfileDoctorScheduleDetail.as_view(),
+    path('queue/<medical_institution>/<doctor_id>',
+         doctor_schedule_views.ReceptionistProfileDoctorScheduleDetail.as_view(),
          name='receptionist_profile_doctor_queue'),
-]
 
+    # connections
+    path('settings/medical_institution',
+         receptionist_connection_views.ReceptionistProfileMedicalInstitutionSettingsHomeView.as_view(),
+         name='receptionist_profile_settings_medical_institution'),
+    path('settings/medical_institution/connect',
+         receptionist_connection_views.ReceptionistMedicalInstitutionConnect.as_view(),
+         name='receptionist_profile_settings_medical_institution_connect'),
+    path('settings/medical_institution/create_connection',
+         receptionist_connection_views.ReceptionistProfileMedicalInstitutionCreateConnection.as_view(),
+         name='receptionist_profile_settings_medical_institution_create_connection'),
+    path('medical_institution/<slug>',
+         receptionist_connection_views.ReceptionistProfileMedicalInstitutionManageConnectionView.as_view(),
+         name='receptionist_profile_medical_institution_home'),
+    path('medical_institution/<slug>/remove',
+         receptionist_connection_views.ReceptionistProfileRemoveConnectionView.as_view(),
+         name='receptionist_profile_medical_intitution_remove'),
+]
 
 #############################################################################
 # API

@@ -32,6 +32,10 @@ class ReceptionistProfile(models.Model):
     def __str__(self):
         return f'{self.user}'
 
+    def get_medical_institutions_rel(self):
+        connections = self.get_medical_institution_connections()
+        return {c.medical_institution for c in connections}
+
     def get_medical_institution_connections(self, doctor_id=None):
         connections = self.receptionist_connections.all()
         if doctor_id:
@@ -79,3 +83,5 @@ class ReceptionistConnection(models.Model):
         schedules = self.doctor.doctor_schedules.filter(medical_institution=self.medical_institution)
 
         return schedules
+
+

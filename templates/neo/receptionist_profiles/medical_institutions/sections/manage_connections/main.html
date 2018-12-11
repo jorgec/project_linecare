@@ -1,0 +1,43 @@
+{% load static %}
+<div class="two-column__right--settings">
+    <div class="header">
+        <h3 class="h5">{{ page_title }}</h3>
+    </div>
+    <div class="subcontent__wrapper" id="map-section">
+        {% include 'neo/medical_institutions/location/common/template/medical_institution_location.template.html' %}
+    </div>
+</div>
+<div class="btn-group">
+    <a class="btn btn-danger" href="#!" data-toggle="modal" data-target="#removeConnectionModal">
+        <i class="fa fa-times"></i> Remove Connection
+    </a>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="removeConnectionModal" tabindex="-1" role="dialog" aria-labelledby="removeConnectionLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeConnectionLabel">Remove Connection</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    This action will remove all your connections to {{ rel.medical_institution }},
+                    as well as all your connections to doctors in that institution. Are you sure you want to do this?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{% url 'receptionist_profile_medical_intitution_remove' rel.medical_institution.slug %}">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes, remove my connection</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
