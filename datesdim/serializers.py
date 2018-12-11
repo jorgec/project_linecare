@@ -6,9 +6,17 @@ from datesdim.models import DateDim, TimeDim
 
 class DateDimSerializer(serializers.ModelSerializer):
     month_name = serializers.SerializerMethodField('repr_month_name')
+    month_name_short = serializers.SerializerMethodField('repr_month_name_short')
+    day_name_short = serializers.SerializerMethodField('repr_day_name_short')
 
     def repr_month_name(self, obj):
         return MONTH_CHOICES[obj.month - 1][1]
+
+    def repr_month_name_short(self):
+        return self.repr_month_name()[:3]
+
+    def repr_day_name_short(self, obj):
+        return obj.day_name[:3]
 
     class Meta:
         model = DateDim
