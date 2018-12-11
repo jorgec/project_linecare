@@ -37,6 +37,7 @@ class MedicalInstitutionLocation(models.Model):
 
     class Meta:
         ordering = ('-created',)
+        unique_together = ('country', 'region', 'province', 'city', 'address')
 
     def __str__(self):
         return f"{self.address}, {self.city}, {self.zip_code}, {self.province}, {self.region}, {self.country}"
