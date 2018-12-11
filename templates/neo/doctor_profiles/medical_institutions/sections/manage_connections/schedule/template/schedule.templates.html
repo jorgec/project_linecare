@@ -1,32 +1,30 @@
 <script type="text/html" id="my_schedules_template">
-<div class="body">
-    <div class="schedules__container mt-4">
-        <div class="schedules__item">
-            <a href="#!" class="delete-schedule" data-template-bind='[{"attribute": "data-schedule-id", "value": "id"}]' >
-                <i class="fas fa-times"></i>
-            </a>
-            <div class="days">
-                <h6 class="h6" data-content="days_split"></h6>
+<div class="schedules__container mt-4">
+    <div class="schedules__item">
+        <a href="#!" class="delete-schedule" data-template-bind='[{"attribute": "data-schedule-id", "value": "id"}]' >
+            <i class="fas fa-times"></i>
+        </a>
+        <div class="days">
+            <h6 class="h6" data-content="days_split"></h6>
+        </div>
+        <div class="wrapper">
+            <div class="dates">
+                <span>
+                    <span data-content="start_date.month_name_short"></span>
+                    <span data-content="start_date.day"></span>
+                    <span data-content="start_date.year"></span>
+                </span>
+                <span>&mdash;</span>
+                <span>
+                    <span data-content="end_date.month_name_short"></span>
+                    <span data-content="end_date.day"></span>
+                    <span data-content="end_date.year"></span>
+                </span>
             </div>
-            <div class="wrapper">
-                <div class="dates">
-                    <span>
-                        <span data-content="start_date.month_name_short"></span>
-                        <span data-content="start_date.day"></span>
-                        <span data-content="start_date.year"></span>
-                    </span>
-                    <span>&mdash;</span>
-                    <span>
-                        <span data-content="end_date.month_name_short"></span>
-                        <span data-content="end_date.day"></span>
-                        <span data-content="end_date.year"></span>
-                    </span>
-                </div>
-                <div class="time">
-                    <span data-content="start_time.format_12"></span>
-                    <span>&mdash;</span>
-                    <span data-content="end_time.format_12"></span>
-                </div>
+            <div class="time">
+                <span data-content="start_time.format_12"></span>
+                <span>&mdash;</span>
+                <span data-content="end_time.format_12"></span>
             </div>
         </div>
     </div>
