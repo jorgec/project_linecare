@@ -30,7 +30,9 @@ class DateDimSerializer(serializers.ModelSerializer):
             'week_day',
             'week_month',
             'week_year',
-            'month_name'
+            'month_name',
+            'month_name_short',
+            'day_name_short',
         )
 
 
