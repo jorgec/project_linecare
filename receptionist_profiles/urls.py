@@ -1,5 +1,6 @@
 from django.urls import path
 
+from doctor_profiles.modules.api import medical_institutions_api
 from .modules.views import home as home_views
 from .modules.views import doctor_schedule as doctor_schedule_views
 from .modules.views import receptionist_connections as receptionist_connection_views
@@ -58,4 +59,8 @@ urlpatterns += [
     path(f'{version}/private/connection/list',
          receptionist_connections_api.ApiPrivateReceptionistProfileConnectionList.as_view(),
          name='api_private_receptionist_connection_list'),
+
+    path(f'{version}/private/medical_institution/create',
+         medical_institutions_api.ApiPrivateMedicalInstitutionCreate.as_view(),
+         name='api_private_medical_institution_create_by_receptionist'),
 ]
