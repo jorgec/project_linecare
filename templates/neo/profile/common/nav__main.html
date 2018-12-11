@@ -31,12 +31,12 @@
                     <hr>
                     <a class="dropdown-item" href="{% url 'base_profile_home_view' %}">My Personal Profile</a>
                     <hr>
-                    {% if profile.user.doctorprofile %}
+                    {% if request.user.doctorprofile %}
                         <a class="dropdown-item" href="{% url 'doctor_profile_home' %}" data-toggle="tooltip" data-placement="top" title="My Doctor Profile">
                             My Doctor Profile
                         </a>
                     {% endif %}
-                    {% if profile.user.receptionistprofile %}
+                    {% if request.user.receptionistprofile %}
                         <a class="dropdown-item" href="{% url 'receptionist_profile_home' %}" data-toggle="tooltip" data-placement="top" title="My Receptionist Profile">
                             My Receptionist Profile
                         </a>
