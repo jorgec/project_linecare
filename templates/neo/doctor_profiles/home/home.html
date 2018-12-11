@@ -10,7 +10,20 @@
 {% endblock %}
 
 {% block subcontent %}
-<div id="base_profile_app"><div class="donut-spinner"></div></div>
+    <div id="base_profile_app"><div class="donut-spinner"></div></div>
+
+    <div class="connections__container">
+        <div class="row">
+            <div class="col-sm-12 col-md-3">
+                <div class="two-column__left--nav">
+                    {% include 'neo/doctor_profiles/common/nav__side.html' %}
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-9">
+                {% include 'neo/doctor_profiles/home/sections/home__connections.html' %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 

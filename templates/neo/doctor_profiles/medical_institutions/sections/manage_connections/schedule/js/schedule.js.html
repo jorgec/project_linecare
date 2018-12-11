@@ -107,6 +107,7 @@
 
         $.get(url)
             .done(function(result){
+                console.log(result);
                 $("#my_schedules_container").loadTemplate($("#my_schedules_template"), result);
                 $(".delete-schedule").on('click', function(e){
                     e.preventDefault();
