@@ -137,8 +137,8 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                     medical_institution=mi
                 )
 
-            except IntegrityError:
-                return Response("Duplicate address", status=status.HTTP_400_BAD_REQUEST)
+            except IntegrityError as e:
+                return Response(f"Duplicate address: {e}", status=status.HTTP_400_BAD_REQUEST)
 
             return_serializer = MedicalInstitutionPublicSerializer(mi)
             return Response(return_serializer.data, status=status.HTTP_200_OK)
