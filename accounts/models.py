@@ -86,11 +86,13 @@ class Account(AbstractBaseUser):
         BaseProfile = apps.get_model('profiles.BaseProfile')
         try:
             return BaseProfile.objects.get(
-                user=self
+                user=self,
+                is_primary=True
             )
         except BaseProfile.DoesNotExist:
             profile = BaseProfile.objects.create(
-                user=self
+                user=self,
+                is_primary=True
             )
             return profile
 
@@ -131,6 +133,8 @@ class Account(AbstractBaseUser):
             user=self
         )
         return profile
+
+
 
 
 @receiver(post_save, sender=Account)

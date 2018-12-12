@@ -1,9 +1,8 @@
 import operator
-from functools import reduce
-
 from django.db import IntegrityError
 from django.db.models import Q
-from rest_framework import status, permissions, parsers
+from functools import reduce
+from rest_framework import status, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -16,7 +15,6 @@ from doctor_profiles.serializers import MedicalInstitutionTypePublicSerializer, 
     MedicalInstitutionCoordinatePublicSerializerWithVotes, MedicalInstitutionCoordinatesCreateSerializer
 from doctor_profiles.serializers.serializer_managers.medical_institution_serializer_manager import \
     MedicalInstitutionSerializerManager
-from profiles.modules.response_templates.profile import private_profile_template
 from receptionist_profiles.modules.response_templates.receptionist_profile import private_receptionist_profile_template
 from receptionist_profiles.serializers.receptionist_profile_serializers import ReceptionistProfileSerializer
 
@@ -452,7 +450,7 @@ class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
     Make this private
     """
 
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))

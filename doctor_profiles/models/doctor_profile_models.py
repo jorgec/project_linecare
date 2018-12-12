@@ -141,18 +141,18 @@ class DoctorProfile(models.Model):
             return self.metadata['doctor_progress']['show']
 
     def initialize_progress_metadata(self):
-        self.metadata = {
-            'doctor_progress': {
-                'show': True,
-                'data': {
-                    'medical_degree': self.doctor_degrees.count(),
-                    'insurance': self.doctor_insurance.count(),
-                    'specialization': self.doctor_specializations.count(),
-                    'association': self.doctor_associations.count(),
-                    'institution': None
-                }
+
+        self.metadata['progress_metadata'] = {
+            'show': True,
+            'data': {
+                'medical_degree': self.doctor_degrees.count(),
+                'insurance': self.doctor_insurance.count(),
+                'specialization': self.doctor_specializations.count(),
+                'association': self.doctor_associations.count(),
+                'institution': None
             }
         }
+
         self.save()
         return self.metadata.get('doctor_progress')
 
@@ -197,3 +197,30 @@ class DoctorProfile(models.Model):
 
         return self.doctor_schedule_days.filter(**filters)
 
+    def initialize_options(self):
+        self.metadata['options'] = {
+            'checkup_duration': 60,
+            'checkup_gap': 15
+        }
+        self.save()
+        return self.metadata['options']
+
+    def get_options(self, key=None):
+        try:
+            options = self.metadata['options']
+        except KeyError:
+            options = self.initialize_options()
+
+        if key:
+            try:
+                return options[key]
+            except KeyError:
+                self.metadata['options'][key] = None
+                self.save()
+                return options[key]
+        return options
+
+    def set_option(self, key, value):
+        self.metadata['options'][key] = value
+        self.save()
+        return value

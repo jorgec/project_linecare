@@ -46,7 +46,8 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
             'user': request.user,
             'profile': profile,
             'doctor': doctor,
-            'rel': rel
+            'rel': rel,
+            'medical_institution': medical_institution
         }
 
         return render(request, 'neo/receptionist_profiles/schedule/queue.html', context)

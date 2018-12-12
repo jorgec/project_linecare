@@ -1,17 +1,42 @@
+from django.db.models import Q, Value
+from django.db.models.functions import Concat
 from rest_framework import permissions, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.utils import json
 from rest_framework.views import APIView
 
-from accounts.constants import USER_TYPE_CHOICES, USER_TYPES_TO_TEST
+from accounts.constants import USER_TYPES_TO_TEST
 from accounts.models import Account
 from albums.serializers import AlbumSerializer
 from profiles.models import BaseProfile
 from profiles.modules.response_templates.profile import public_profile_template, private_profile_template
-
-
 # Public
+from profiles.serializers import BaseProfilePrivateSerializerFull
+
+
+class ApiPrivateProfilesGetByName(APIView):
+    """
+    Get users based on LIKE name
+    ?s=str
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        s = request.GET.get('s', None)
+        if not s:
+            return Response('KeyError', status.HTTP_400_BAD_REQUEST)
+
+        qs = BaseProfile.objects.annotate(
+            fullname=Concat('first_name', Value(' '), 'last_name'))
+        patients = qs.filter(
+            Q(last_name__icontains=s) | Q(first_name__icontains=s) | Q(fullname__icontains=s)
+        )
+
+        serializer = BaseProfilePrivateSerializerFull(patients, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class ApiPublicProfileGetByPK(APIView):
     """
@@ -101,6 +126,7 @@ class ApiPrivateProfileGetByPK(APIView):
 
         return Response(profile, status=status.HTTP_200_OK)
 
+
 class ApiPrivateProfileGetByUsername(APIView):
     """
         Get a user's private profile via username
@@ -119,6 +145,7 @@ class ApiPrivateProfileGetByUsername(APIView):
 
         return Response(profile, status=status.HTTP_200_OK)
 
+
 class ApiPublicProfileGetProfilePhotoAlbum(APIView):
     """
     Get a user's profile photo album
@@ -132,6 +159,7 @@ class ApiPublicProfileGetProfilePhotoAlbum(APIView):
         serializer = AlbumSerializer(profile.get_profile_album())
 
         return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)
+
 
 class ApiPublicProfileGetCoverPhotoAlbum(APIView):
     """

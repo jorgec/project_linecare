@@ -13,6 +13,7 @@ from .modules.api import insurance_providers_api
 from .modules.api import medical_institutions_api
 from .modules.api import doctor_profile_api
 from .modules.api import doctor_schedule_api
+from .modules.api import patient_connection_api
 
 #############################################################################
 # Views
@@ -304,4 +305,14 @@ urlpatterns += [
     path(f'{version}/private/doctor/schedule/delete',
          doctor_schedule_api.ApiDoctorScheduleDelete.as_view(),
          name='api_private_doctor_schedule_delete'),
+
+    # patient connections
+    path(f'{version}/private/patients/search',
+         patient_connection_api.ApiPrivatePatientConnectionSearchList.as_view(),
+         name='api_private_patient_connection_search'),
+
+    # appointments
+    path(f'{version}/private/appointment/create',
+         doctor_schedule_api.ApiDoctorScheduleAppointmentCreate.as_view(),
+         name='api_private_appointment_create'),
 ]

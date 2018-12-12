@@ -39,9 +39,10 @@ class BaseProfile(models.Model):
 
     # Relationship Fields
     gender = models.ForeignKey(Gender, related_name='gender_profiles', on_delete=models.SET_NULL, null=True, blank=True)
-    user = models.OneToOneField('accounts.Account', related_name='account_profiles', on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.Account', related_name='account_profiles', on_delete=models.CASCADE)
 
     is_fresh = models.BooleanField(default=True)
+    is_primary = models.BooleanField(default=False)
 
     objects = BaseProfileManager()
 

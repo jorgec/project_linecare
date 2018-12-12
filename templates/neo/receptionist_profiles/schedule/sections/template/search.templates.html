@@ -1,0 +1,16 @@
+<script type="text/html" id="template_patients_serp">
+    <div class="item">
+        <div class="image" data-template-bind='[{"attribute": "style", "value": "profile_photo_css"}]'></div>
+        <div class="info">
+            <p class="info-name">
+                <span data-content="first_name"></span>
+                <span data-content="last_name"></span>
+            </p>
+            <div class="btn-group btn-group-sm">
+                <a href="#!" class="btn btn-sm btn-outline-primary btnCreateSchedule" data-template-bind='[{"attribute": "data-profile-id", "value": "id"}]'>
+                    <i class="fa fa-calendar"></i> Schedule an appointment
+                </a>
+            </div>
+        </div>
+    </div>
+</script>

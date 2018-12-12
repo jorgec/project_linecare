@@ -7,4 +7,5 @@ from .medical_institution_models import MedicalInstitution, MedicalInstitutionTy
 from .medical_institution_location_models import MedicalInstitutionLocation, MedicalInstitutionLocationVote, MedicalInstitutionCoordinate, MedicalInstitutionCoordinateVote
 from .medical_institution_phone_models import MedicalInstitutionPhone, MedicalInstitutionPhoneVote
 from .doctor_schedule_models import DoctorSchedule
+from .patient_connection_models import PatientConnection
 

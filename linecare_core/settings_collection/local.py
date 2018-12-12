@@ -119,6 +119,7 @@ INSTALLED_APPS = [
     'locations',
     'receptionist_profiles',
     'drug_information',
+
 ]
 
 # User Model

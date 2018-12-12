@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from albums.models import Photo
 from albums.serializers import AlbumSerializer, PhotoSerializer
 from profiles.models import BaseProfile, ProfilePhone, Gender
 
@@ -72,6 +73,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = BaseProfile
         fields = (
+            'id',
             'first_name',
             'last_name',
             'gender',
@@ -93,4 +95,35 @@ class PublicBaseProfileSerializer(serializers.ModelSerializer):
         fields = (
             'first_name',
             'last_name',
+        )
+
+
+class BaseProfilePrivateSerializerFull(serializers.ModelSerializer):
+    profile_photo = serializers.SerializerMethodField('repr_profile_photo')
+    profile_photo_css = serializers.SerializerMethodField('repr_profile_photo_css')
+
+    def repr_profile_photo(self, obj):
+        if type(obj.get_profile_photo()) == Photo:
+            return obj.get_profile_photo().photo.url
+        else:
+            return obj.get_profile_photo()
+
+    def repr_profile_photo_css(self, obj):
+        if type(obj.get_profile_photo()) == Photo:
+            photo = obj.get_profile_photo().photo.url
+        else:
+            photo = obj.get_profile_photo()
+
+        return f"background-image: url({photo})"
+
+    class Meta:
+        model = BaseProfile
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'gender',
+            'date_of_birth',
+            'profile_photo',
+            'profile_photo_css'
         )

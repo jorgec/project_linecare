@@ -81,7 +81,50 @@ class DoctorScheduleDay(models.Model):
     schedule = models.ForeignKey(DoctorSchedule, related_name='schedule_on_days', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.day} - {self.doctor} in {self.medical_institution}'
+        return f'{self.day} - {self.schedule}'
+
+
+class PatientAppointment(models.Model):
+    """
+    Scheduled appointments
+    """
+
+    # Fields
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    metadata = JSONField(default=dict, null=True, blank=True)
+
+    """
+    admin
+    """
+    is_approved = models.BooleanField(default=True)
+
+    # Relationship fields
+    schedule_day = models.ForeignKey('datesdim.DateDim', on_delete=models.SET_NULL,
+                                     related_name='day_scheduled_patients',
+                                     null=True, blank=True)
+    time_start = models.ForeignKey('datesdim.TimeDim', on_delete=models.SET_NULL,
+                                   related_name='time_start_scheduled_patients',
+                                   null=True, blank=True)
+    time_end = models.ForeignKey('datesdim.TimeDim', on_delete=models.SET_NULL,
+                                 related_name='time_end_scheduled_patients',
+                                 null=True, blank=True)
+    patient = models.ForeignKey('profiles.BaseProfile', on_delete=models.SET_NULL,
+                                related_name='patient_scheduled_appointments',
+                                null=True, blank=True)
+    doctor = models.ForeignKey('doctor_profiles.DoctorProfile', on_delete=models.SET_NULL,
+                               related_name='doctor_scheduled_appointments',
+                               null=True, blank=True)
+    medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution', on_delete=models.SET_NULL,
+                                            related_name='medical_institution_scheduled_appointments',
+                                            null=True, blank=True)
+
+    class Meta:
+        ordering = ('-schedule_day',)
+        unique_together = ('patient', 'doctor', 'medical_institution', 'schedule_day', 'time_start', 'time_end')
+
+    def __str__(self):
+        return f'{self.schedule_day} - {self.patient}'
 
 
 @receiver(post_save, sender=DoctorSchedule)

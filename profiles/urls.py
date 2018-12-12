@@ -12,6 +12,9 @@ urlpatterns = [
     path('api/public/profiles/by_user_type',
          api_retrieve.ApiPublicProfileGetByUserType.as_view(),
          name='api_public_profiles_by_user_type'),
+    path('api/private/profiles/by_name',
+         api_retrieve.ApiPrivateProfilesGetByName.as_view(),
+         name='api_private_profiles_by_name'),
 
     # single
     path('api/public/profile/by_pk',

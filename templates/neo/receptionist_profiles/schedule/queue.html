@@ -3,7 +3,10 @@
 {% load crispy_forms_tags %}
 
 {% block header_css %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
+
+
 {% endblock %}
 {% block header_js %}
 {% endblock %}
@@ -16,6 +19,10 @@
         {% include 'neo/receptionist_profiles/schedule/sections/template/queue.main.html' %}
         {% include 'neo/receptionist_profiles/schedule/sections/template/queue.modals.html' %}
         {% include 'neo/receptionist_profiles/schedule/sections/template/queue.templates.html' %}
+
+        {% include 'neo/receptionist_profiles/schedule/sections/template/search.main.html' %}
+        {% include 'neo/receptionist_profiles/schedule/sections/template/search.modals.html' %}
+        {% include 'neo/receptionist_profiles/schedule/sections/template/search.templates.html' %}
     </div>
 
 {% endblock %}
@@ -31,6 +38,7 @@
         </script>
 
         {% include 'neo/receptionist_profiles/schedule/sections/js/queue.js.html' %}
+        {% include 'neo/receptionist_profiles/schedule/sections/js/search.js.html' %}
 
         <script type="text/javascript">
             $(document).ready(function(){

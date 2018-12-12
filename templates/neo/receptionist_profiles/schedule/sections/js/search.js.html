@@ -1,0 +1,104 @@
+<script type="text/javascript">
+    var containerSerp = $("#container_patients_serp");
+    var templateSerp = $("#template_patients_serp");
+    var sTerm = $("#txtSearchTerm");
+    var chkRestrictToParents = $("#chkRestrictToOldPatients");
+    var scheduleDate = $("#scheduleDate");
+    var frmScheduleAppointment = $("#frmScheduleAppointment");
+    $(document).ready(function(){
+
+        scheduleDate.bootstrapMaterialDatePicker({
+            format: "YYYY-MM-DD HH:mm",
+            time: true
+        });
+
+        sTerm.on('keydown', function(e){
+            var selfLen = $(this).val().length;
+
+            if(selfLen >= 3){
+                searchPatients();
+                containerSerp.html(
+                    $(this).val()
+                );
+            }else if(selfLen > 0){
+                containerSerp.html(
+                    "<div class='donut-spinner'></div>"
+                );
+            }else{
+                containerSerp.html('');
+            }
+        });
+
+        chkRestrictToParents.on('click', function(e){
+            searchPatients();
+        });
+
+        frmScheduleAppointment.on('submit', function(e){
+            e.preventDefault();
+            var profile_id = $("#profile_id").val();
+            var appointment_datetime = scheduleDate.val();
+
+            scheduleAppointment(profile_id, appointment_datetime);
+        });
+
+
+    });
+
+    function scheduleAppointment(profile_id, appointment_datetime){
+        var url = "{% url 'api_private_appointment_create' %}?doctor_id={{ doctor.id }}&medical_institution_id={{ medical_institution.id }}";
+
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            schedule_date: appointment_datetime,
+            profile_id: profile_id
+        };
+
+        $.post(url, formData)
+            .done(function(response){
+                console.log(response);
+            })
+            .fail(function(response){
+                console.log(response);
+            })
+    }
+
+    function searchPatients(){
+        var restrictToOldPatients = chkRestrictToParents.prop("checked");
+        var url = null;
+        $("#profile_id").val(null);
+
+        if(sTerm.val().length > 0){
+            if(restrictToOldPatients){
+            url = "{% url 'api_private_patient_connection_search' %}?s=" + sTerm.val() + "&doctor_id={{ doctor.id }}";
+        }else{
+            url = "{% url 'api_private_profiles_by_name' %}?s=" + sTerm.val();
+        }
+
+        $.get(url)
+            .done(function(result){
+                console.log(result);
+
+                if(result.length > 0){
+                    containerSerp.loadTemplate(templateSerp, result);
+
+                    $(".btnCreateSchedule").click(function(e){
+                        e.preventDefault();
+                        $("#profile_id").val($(this).attr("data-profile-id"));
+                        $("#modalScheduleAppointment").modal('show');
+                    });
+
+                }else{
+                    $("#profile_id").val(null);
+                    containerSerp.html(
+                        "<div class='alert alert-warning'>No results</div>"
+                    )
+                }
+
+            })
+            .fail(function(jqXHR){
+                console.log(jqXHR);
+            });
+        }
+    }
+
+</script>
