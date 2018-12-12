@@ -17,7 +17,7 @@
     {% if medical_institutions %}
     <div class="hospital-list__container">
         {% for mi in medical_institutions %}
-        
+        <div class="hospital-list__item-wrapper">
             <div class="hospital-list__item">
                 <h6 class="h6">
                     <a href="{% url 'receptionist_profile_medical_institution_home' mi.slug %}">
@@ -27,7 +27,7 @@
                 <p>{{ mi.address.address }}</p>
             </div>
 
-        
+        </div>
         {% endfor %}
     </div>
 </div>
@@ -38,9 +38,7 @@
     </div>
 
     <div class="hospital-list__container">
-        <div class="hospital-list__item-wrapper">
-            <div id="root"><div class="donut-spinner"></div></div>
-        </div>
+        <div id="root"><div class="donut-spinner"></div></div>
     </div>
 </div>
 
