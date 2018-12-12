@@ -152,21 +152,23 @@
                 <small>Address</small>
             </div>
             <div class="col-sm-12">
-                <span class="badge badge-secondary" data-content="votes"></span>
-                <div class="btn-group-sm btn-group">
-                    <a data-toggle="tooltip" data-placement="top" title="Upvote this address"
-                       class="card-link top-location-vote-up btn btn-outline-primary" href="#!"
-                       data-template-bind='[{"attribute": "data-pk", "value": "address.id"}]'>
-                        <i class="fa fa-thumbs-up"></i>
-                    </a>
-                    <a data-toggle="tooltip" data-placement="top" title="Downvote this address"
-                       class="card-link top-location-vote-down btn btn-outline-secondary" href="#!"
-                       data-template-bind='[{"attribute": "data-pk", "value": "address.id"}]'>
-                        <i class="fa fa-thumbs-down"></i>
-                    </a>
-                    <a data-toggle="modal" data-target="#all-addresses-modal" class="btn btn-outline-info" href="#!">
-                        <small>Is this incorrect? Submit an update or review other suggested addresses</small>
-                    </a>
+                <div class="custom-btn-group-grid">
+                    <span class="badge badge-secondary" data-content="votes"></span>
+                    <div class="btn-group-sm btn-group">
+                        <a data-toggle="tooltip" data-placement="top" title="Upvote this address"
+                        class="card-link top-location-vote-up btn btn-outline-primary" href="#!"
+                        data-template-bind='[{"attribute": "data-pk", "value": "address.id"}]'>
+                            <i class="fa fa-thumbs-up"></i>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Downvote this address"
+                        class="card-link top-location-vote-down btn btn-outline-secondary" href="#!"
+                        data-template-bind='[{"attribute": "data-pk", "value": "address.id"}]'>
+                            <i class="fa fa-thumbs-down"></i>
+                        </a>
+                        <a data-toggle="modal" data-target="#all-addresses-modal" class="btn btn-outline-info" href="#!">
+                            <small>Is this incorrect? Submit an update or review other suggested addresses</small>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
