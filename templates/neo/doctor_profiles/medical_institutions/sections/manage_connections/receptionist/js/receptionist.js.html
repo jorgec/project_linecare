@@ -102,54 +102,54 @@
      * methods
      */
 
-    function fetchAllReceptionists() {
-        var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
+    function fetchAllReceptionists(s=null){
         var container = $("#all_receptionists_container");
         container.html("Loading...");
         var url = "{% url 'api_private_medical_institution_receptionist_not_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
-        if (s) {
+        if(s){
             url = url + "&s=" + s;
         }
-        $.get(url).done(function (result) {
-            container.loadTemplate($("#all_receptionists_template"), result);
+        $.get(url)
+            .done(function(result){
+                container.loadTemplate($("#all_receptionists_template"), result);
 
-            $(".connect-receptionist").on('click', function (e) {
-                e.preventDefault();
-                var doctor_id = $(this).attr("data-doctor-id");
-                var receptionist_id = $(this).attr("data-receptionist-id");
-                var institution_id = $(this).attr("data-institution-id");
+                $(".connect-receptionist").on('click', function(e){
+                    e.preventDefault();
+                    var doctor_id = $(this).attr("data-doctor-id");
+                    var receptionist_id = $(this).attr("data-receptionist-id");
+                    var institution_id = $(this).attr("data-institution-id");
 
-                connectReceptionist(doctor_id, receptionist_id, institution_id);
+                    connectReceptionist(doctor_id, receptionist_id, institution_id);
+                });
+            })
+            .fail(function(jqXHR){
+                console.log(jqXHR);
             });
-        }).fail(function (jqXHR) {
-            console.log(jqXHR);
-        });
     }
 
-    function fetchMyReceptionists() {
-        var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
+    function fetchMyReceptionists(s=null){
         var container = $("#my_receptionists_container");
         container.html("Loading...");
         var url = "{% url 'api_private_medical_institution_receptionist_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
-        if (s) {
+        if(s){
             url = url + "&s=" + s;
         }
-        $.get(url).done(function (result) {
-            container.loadTemplate($("#my_receptionists_template"), result);
+        $.get(url)
+            .done(function(result){
+                container.loadTemplate($("#my_receptionists_template"), result);
 
-            $(".remove-receptionist").on('click', function (e) {
-                e.preventDefault();
-                var doctor_id = $(this).attr("data-doctor-id");
-                var receptionist_id = $(this).attr("data-receptionist-id");
-                var institution_id = $(this).attr("data-institution-id");
+                $(".remove-receptionist").on('click', function(e){
+                    e.preventDefault();
+                    var doctor_id = $(this).attr("data-doctor-id");
+                    var receptionist_id = $(this).attr("data-receptionist-id");
+                    var institution_id = $(this).attr("data-institution-id");
 
-                removeReceptionist(doctor_id, receptionist_id, institution_id);
+                    removeReceptionist(doctor_id, receptionist_id, institution_id);
+                });
+            })
+            .fail(function(jqXHR){
+                console.log(jqXHR);
             });
-        }).fail(function (jqXHR) {
-            console.log(jqXHR);
-        });
     }
 
     function connectReceptionist(doctor_id, receptionist_id, institution_id){
