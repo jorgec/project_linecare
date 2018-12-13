@@ -135,14 +135,19 @@ class DoctorProfile(models.Model):
 
     def display_profile_progress_status(self):
         try:
-            return self.metadata['doctor_progress']['show']
+            progress = self.metadata['doctor_progress']
         except KeyError:
             self.initialize_progress_metadata()
-            return self.metadata['doctor_progress']['show']
+
+        try:
+            return progress['show']
+        except KeyError:
+            self.initialize_progress_metadata()
+            return progress['show']
 
     def initialize_progress_metadata(self):
 
-        self.metadata['progress_metadata'] = {
+        self.metadata['doctor_progress'] = {
             'show': True,
             'data': {
                 'medical_degree': self.doctor_degrees.count(),
