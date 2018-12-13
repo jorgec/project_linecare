@@ -426,7 +426,7 @@ class ApiPrivateMedicalInstitutionNotConnectedReceptionistList(APIView):
             rel = rel.filter(reduce(operator.or_,(Q(**d) for d in [dict([i]) for i in search_filters.items()])))
 
         receptionists = list({r.receptionist for r in rel})
-        receptionists.sort(key=lambda x: x.user.account_profiles.last_name)
+        receptionists.sort(key=lambda x: x.user.base_profile().last_name)
 
         if request.GET.get('fmt', None) == 'full':
             serializer_list = []
@@ -461,7 +461,7 @@ class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
 
         search = request.GET.get('s', None)
         receptionists = list(doctor.get_receptionists(medical_institution=medical_institution, s=search))
-        receptionists.sort(key=lambda x: x.user.account_profiles.last_name)
+        receptionists.sort(key=lambda x: x.user.base_profile().last_name)
 
         if request.GET.get('fmt', None) == 'full':
             serializer_list = []
