@@ -359,18 +359,15 @@
 
         }
     });
-    map.on('click', function (e) {
+    map.on("click", function(e) {
         var lat = e.latlng.lat;
         var lon = e.latlng.lng;
 
-        updateLatLonInputs(lat, lon)
+        updateLatLonInputs(lat, lon);
 
-        L.marker(
-            [lat, lon],
-            {
-                title: lat + ', ' + lon,
-            },
-        ).addTo(map);
+        L.marker([lat, lon], {
+            title: lat + ", " + lon
+        }).addTo(map);
     });
 
     $("#btnAddCoordinates").on('click', function (e) {
