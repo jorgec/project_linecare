@@ -30,7 +30,6 @@ class MedicalInstitution(models.Model):
 
     class Meta:
         ordering = ('name',)
-        unique_together = ('name', 'type')
 
     def __str__(self):
         return f'{self.name} ({self.type.name})'
