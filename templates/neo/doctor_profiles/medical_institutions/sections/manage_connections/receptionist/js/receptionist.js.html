@@ -102,7 +102,7 @@
      * methods
      */
 
-    function fetchAllReceptionists(s=null){
+    function fetchAllReceptionists(s){
         var container = $("#all_receptionists_container");
         container.html("Loading...");
         var url = "{% url 'api_private_medical_institution_receptionist_not_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
@@ -127,7 +127,7 @@
             });
     }
 
-    function fetchMyReceptionists(s=null){
+    function fetchMyReceptionists(s){
         var container = $("#my_receptionists_container");
         container.html("Loading...");
         var url = "{% url 'api_private_medical_institution_receptionist_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
