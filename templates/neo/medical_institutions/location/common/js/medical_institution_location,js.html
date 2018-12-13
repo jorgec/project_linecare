@@ -302,19 +302,18 @@
         $("#geoloc-lon").val(lon);
     }
 
-    function addMarker(lat, lon, title = false) {
-        if (title) {
-            markerTitle = title;
-        } else {
-            markerTitle = lat + ', ' + lon;
-        }
-        L.marker(
-            [lat, lon],
-            {
-                title: markerTitle,
-            },
-        ).addTo(map);
+    function addMarker(lat, lon) {
+    var title = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+    if (title) {
+        markerTitle = title;
+    } else {
+        markerTitle = lat + ', ' + lon;
     }
+    L.marker([lat, lon], {
+        title: markerTitle
+    }).addTo(map);
+}
 
     function geolocate(address) {
         var nominatim = 'https://nominatim.openstreetmap.org/search?format=json&addressdetials=1&limit=1&q=' + address;

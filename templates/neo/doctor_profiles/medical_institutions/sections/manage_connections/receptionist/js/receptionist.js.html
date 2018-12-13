@@ -102,30 +102,30 @@
      * methods
      */
 
-    function fetchAllReceptionists(s=null){
-        var container = $("#all_receptionists_container");
-        container.html("Loading...");
-        var url = "{% url 'api_private_medical_institution_receptionist_not_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
-        if(s){
-            url = url + "&s=" + s;
-        }
-        $.get(url)
-            .done(function(result){
-                container.loadTemplate($("#all_receptionists_template"), result);
+    function fetchAllReceptionists() {
+    var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-                $(".connect-receptionist").on('click', function(e){
-                    e.preventDefault();
-                    var doctor_id = $(this).attr("data-doctor-id");
-                    var receptionist_id = $(this).attr("data-receptionist-id");
-                    var institution_id = $(this).attr("data-institution-id");
-
-                    connectReceptionist(doctor_id, receptionist_id, institution_id);
-                });
-            })
-            .fail(function(jqXHR){
-                console.log(jqXHR);
-            });
+    var container = $("#all_receptionists_container");
+    container.html("Loading...");
+    var url = "/doctor/api/v1/private/medical_institution/receptionist/not_connected/list?id=33&doctor_id=8&fmt=full";
+    if (s) {
+        url = url + "&s=" + s;
     }
+    $.get(url).done(function (result) {
+        container.loadTemplate($("#all_receptionists_template"), result);
+
+        $(".connect-receptionist").on('click', function (e) {
+            e.preventDefault();
+            var doctor_id = $(this).attr("data-doctor-id");
+            var receptionist_id = $(this).attr("data-receptionist-id");
+            var institution_id = $(this).attr("data-institution-id");
+
+            connectReceptionist(doctor_id, receptionist_id, institution_id);
+        });
+    }).fail(function (jqXHR) {
+        console.log(jqXHR);
+    });
+}
 
     function fetchMyReceptionists(s=null){
         var container = $("#my_receptionists_container");
