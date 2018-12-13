@@ -1,4 +1,5 @@
 import operator
+from django.apps import apps
 from django.db.models import Q
 from functools import reduce
 
@@ -186,14 +187,20 @@ class DoctorProfile(models.Model):
     def settings_progress(self):
         return self.calculate_settings_progress()
 
-    def get_schedules(self, *, medical_institution=None):
+    def get_schedules(self, *, medical_institution=None, include_past=False):
+        DateDim = apps.get_model('datesdim.DateDim')
         filters = {
             'is_approved': True
         }
         if medical_institution:
             filters['medical_institution'] = medical_institution
 
-        return self.doctor_schedules.filter(**filters)
+        if include_past:
+            return self.doctor_schedules.filter(**filters)
+        else:
+            return self.doctor_schedules.filter(**filters).filter(
+                end_date__date_obj__gte=DateDim.objects.today().date_obj
+            )
 
     def get_schedule_days(self, *, medical_institution=None):
         filters = {}

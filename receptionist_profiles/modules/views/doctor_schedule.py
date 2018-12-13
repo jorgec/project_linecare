@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
 
+from datesdim.models import DateDim
 from doctor_profiles.models import DoctorProfile, MedicalInstitution
 from receptionist_profiles.models import ReceptionistProfile
 from receptionist_profiles.models.receptionist_profile_model import ReceptionistConnection
@@ -39,6 +40,9 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
         medical_institution = get_object_or_404(MedicalInstitution, slug=kwargs['medical_institution'])
         rel = get_object_or_404(ReceptionistConnection, receptionist=profile, doctor=doctor,
                                 medical_institution=medical_institution)
+
+        date = request.GET.get('date', DateDim.objects.today())
+
         context = {
             'page_title': f'Queue for {doctor} in {rel.medical_institution}',
             'location': 'receptionist_profile_manage_schedule',
@@ -47,7 +51,8 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
             'profile': profile,
             'doctor': doctor,
             'rel': rel,
-            'medical_institution': medical_institution
+            'medical_institution': medical_institution,
+            'date': date
         }
 
         return render(request, 'neo/receptionist_profiles/schedule/queue.html', context)

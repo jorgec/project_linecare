@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.models import Account
-from profiles.serializers import PrivateProfileSerializer, PublicBaseProfileSerializer
+from profiles.serializers import PrivateProfileSerializer, PublicBaseProfileSerializer, BaseProfilePrivateSerializerFull
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -47,7 +47,7 @@ class LoginSerializer(serializers.Serializer):
 
 
 class AccountWithProfileSerializerPrivate(serializers.ModelSerializer):
-    base_profile = PrivateProfileSerializer(read_only=True)
+    base_profile = BaseProfilePrivateSerializerFull(read_only=True)
 
     class Meta:
         model = Account

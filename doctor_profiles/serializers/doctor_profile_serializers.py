@@ -31,9 +31,14 @@ class DoctorProfilePublicSerializer(serializers.ModelSerializer):
 
 class DoctorProfilePrivateSerializer(serializers.ModelSerializer):
     user = AccountWithProfileSerializerPrivate()
+    doctor_name = serializers.SerializerMethodField('repr_doctor_name')
+
+    def repr_doctor_name(self, obj):
+        return str(obj)
 
     class Meta:
         model = models.DoctorProfile
         fields = ('id',
                   'user',
+                  'doctor_name'
                   )

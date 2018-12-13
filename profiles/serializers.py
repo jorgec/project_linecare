@@ -101,6 +101,8 @@ class PublicBaseProfileSerializer(serializers.ModelSerializer):
 class BaseProfilePrivateSerializerFull(serializers.ModelSerializer):
     profile_photo = serializers.SerializerMethodField('repr_profile_photo')
     profile_photo_css = serializers.SerializerMethodField('repr_profile_photo_css')
+    gender = GenderSerializer()
+    full_name = serializers.SerializerMethodField('repr_full_name')
 
     def repr_profile_photo(self, obj):
         if type(obj.get_profile_photo()) == Photo:
@@ -116,6 +118,9 @@ class BaseProfilePrivateSerializerFull(serializers.ModelSerializer):
 
         return f"background-image: url({photo})"
 
+    def repr_full_name(self, obj):
+        return obj.get_full_name()
+
     class Meta:
         model = BaseProfile
         fields = (
@@ -125,5 +130,6 @@ class BaseProfilePrivateSerializerFull(serializers.ModelSerializer):
             'gender',
             'date_of_birth',
             'profile_photo',
-            'profile_photo_css'
+            'profile_photo_css',
+            'full_name'
         )

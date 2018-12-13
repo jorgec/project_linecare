@@ -11,7 +11,6 @@ def public_profile_template(user, as_json=False):
     if not profile:
         return False
 
-
     try:
         profile_photo = profile.get_profile_photo()
     except AttributeError:

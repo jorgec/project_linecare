@@ -123,6 +123,11 @@ class MedicalInstitutionPhoneVoteSerializer(serializers.ModelSerializer):
 
 class MedicalInstitutionSerializer(serializers.ModelSerializer):
     type = MedicalInstitutionTypeSerializer()
+    address = serializers.SerializerMethodField('repr_address')
+
+    def repr_address(self, obj):
+        address = obj.address()
+        return str(address)
 
     class Meta:
         model = MedicalInstitution
@@ -134,7 +139,8 @@ class MedicalInstitutionSerializer(serializers.ModelSerializer):
             'last_updated',
             'is_approved',
             'metadata',
-            'type'
+            'type',
+            'address'
         )
 
 

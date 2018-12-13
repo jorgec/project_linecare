@@ -1,0 +1,44 @@
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        getQueue('{{ date }}');
+    });
+
+    function getQueue(){
+
+        var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0]: null;
+
+        if( !date ){
+            date = new Date().toISOString().split("T")[0];
+        }
+        var url = "{% url 'api_private_queue_list' %}?doctor_id={{ doctor.id }}&medical_institution_id={{ medical_institution.id }}&date=" + date;
+
+        $.get(url)
+            .done(function(result){
+                console.log(result);
+                var queue = [];
+                for(var r in result){
+                    var q = result[r];
+
+                    var btnAction = "";
+
+                    if(q["status"] === "Pending"){
+                        btnAction = "<a class='btn btn-danger btn-sm cancel-appointment' href='#!' data-id='" + q["id"] +"'>Cancel</a>";
+                    }
+                    else if(q["status"] === "Queueing"){
+                        btnAction = "<a class='btn btn-primary btn-sm receive-appointment' href='#!' data-id='" + q["id"] +"'>Come In</a>";
+                    }
+
+                    q["button_action"] = btnAction;
+
+                    queue.push(q);
+                }
+                console.log(queue);
+                $("#container-queue").loadTemplate($("#template-queue"), queue);
+            })
+            .fail(function(result){
+                console.log(result);
+            });
+    }
+
+</script>

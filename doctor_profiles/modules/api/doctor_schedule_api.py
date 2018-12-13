@@ -5,11 +5,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from datesdim.models import TimeDim, DateDim
+from datesdim.serializers import DateDimSerializer, TimeDimSerializer
+from doctor_profiles.constants import QUEUE_DISPLAY_CODES
 from doctor_profiles.models import DoctorSchedule, DoctorProfile, MedicalInstitution
 from doctor_profiles.models.doctor_schedule_models import DoctorScheduleDay, PatientAppointment
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
 from doctor_profiles.serializers import DoctorScheduleSerializer, \
-    MedicalInstitutionSerializer, DateDimSerializer, TimeDimSerializer
+    MedicalInstitutionSerializer, PatientQueuePrivateSerializer
 from profiles.models import BaseProfile
 from receptionist_profiles.models import ReceptionistProfile
 
@@ -104,6 +106,7 @@ class ApiDoctorScheduleList(APIView):
     ?id=doctor_id
     [optional]
     medical_institution=medical_institution_id
+    include_past=yes
     """
     permission_classes = [permissions.AllowAny]
 
@@ -115,7 +118,12 @@ class ApiDoctorScheduleList(APIView):
         else:
             medical_institution = None
 
-        serializer = DoctorScheduleSerializer(doctor.get_schedules(medical_institution=medical_institution), many=True)
+        if request.GET.get('include_past', 'no') == 'yes':
+            serializer = DoctorScheduleSerializer(
+                doctor.get_schedules(medical_institution=medical_institution, include_past=True), many=True)
+        else:
+            serializer = DoctorScheduleSerializer(doctor.get_schedules(medical_institution=medical_institution),
+                                                  many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -264,13 +272,82 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
 
         # all clear
 
+        approintment_type = request.data.get('appointment_type', 'Check Up')
+        schedule_day_object = DoctorScheduleDay.objects.get(doctor=doctor, medical_institution=medical_institution,
+                                                              day=schedule_day)
         appointment = PatientAppointment.objects.create(
             schedule_day=schedule_day,
             time_start=schedule_time_start,
             time_end=schedule_time_end,
             patient=patient,
             doctor=doctor,
-            medical_institution=medical_institution
+            medical_institution=medical_institution,
+            type=approintment_type,
+            schedule_day_object=schedule_day_object
         )
 
+        # update queue number
+        appointments_on_this_day = PatientAppointment.objects.filter(
+            schedule_day_object=schedule_day_object
+        ).order_by('time_start__minutes_since')
+
+        queue_number = 1
+        for a in appointments_on_this_day:
+            a.queue_number = queue_number
+            queue_number = queue_number + 1
+            a.save()
+
         return Response(f"Appointment for {appointment} set", status=status.HTTP_200_OK)
+
+
+class ApiPrivateDoctorScheduleQueueList(APIView):
+    """
+    Queue of doctor at medical institution on day
+    ?doctor_id=doctor_id&medical_institution_id=medical_institution_id
+    [optional]
+    date=YYYY-MM-DD
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        result, profile_type = is_doctor_or_receptionist(request.user)
+        if not result:
+            return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
+
+        doctor_id = request.GET.get('doctor_id', None)
+        doctor = get_object_or_404(DoctorProfile, id=doctor_id)
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution_id', None))
+
+        mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
+                                          medical_institution=medical_institution, is_approved=True)
+        if type(profile_type) != DoctorProfile:
+            """ person adding isn't the doctor, so check if receptionist is allowed """
+            connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
+                                                    medical_institution=medical_institution)
+            if not connection:
+                return Response("Receptionist is not authorized by this doctor for this medical institution",
+                                status=status.HTTP_403_FORBIDDEN)
+        elif profile_type.id != doctor.id:
+            return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
+
+        __queue_date = request.GET.get('date', None)
+        if not __queue_date:
+            queue_date = DateDim.objects.today()
+        else:
+            if " " in __queue_date:
+                __queue_date = __queue_date.split(" ")[0]
+            queue_date = DateDim.objects.parse_get(__queue_date)
+            if not queue_date:
+                return Response(f"{__queue_date} is an invalid date", status=status.HTTP_400_BAD_REQUEST)
+
+        queue = PatientAppointment.objects.filter(
+            status__in=QUEUE_DISPLAY_CODES,
+            doctor=doctor,
+            medical_institution=medical_institution,
+            schedule_day=queue_date
+        ).order_by('time_start__minutes_since')
+
+        serializer = PatientQueuePrivateSerializer(queue, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -121,7 +121,7 @@ class TimeDim(models.Model):
 
     def format_12(self):
 
-        if self.hour > 12:
+        if self.hour >= 12:
             am_pm = 'PM'
             hour = self.hour - 12
         else:

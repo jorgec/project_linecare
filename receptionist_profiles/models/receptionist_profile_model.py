@@ -80,7 +80,8 @@ class ReceptionistConnection(models.Model):
         if not self.doctor or not self.medical_institution:
             return False
 
-        schedules = self.doctor.doctor_schedules.filter(medical_institution=self.medical_institution)
+        # schedules = self.doctor.doctor_schedules.filter(medical_institution=self.medical_institution)
+        schedules = self.doctor.get_schedules(medical_institution=self.medical_institution, include_past=False)
 
         return schedules
 

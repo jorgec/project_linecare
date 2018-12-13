@@ -68,3 +68,5 @@ class ApiPrivatePatientConnectionSearchList(APIView):
         serializer = BaseProfilePrivateSerializerFull(patients, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+

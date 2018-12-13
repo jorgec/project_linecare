@@ -6,6 +6,6 @@ from .specialization_models import Specialization, DoctorSpecialization
 from .medical_institution_models import MedicalInstitution, MedicalInstitutionType
 from .medical_institution_location_models import MedicalInstitutionLocation, MedicalInstitutionLocationVote, MedicalInstitutionCoordinate, MedicalInstitutionCoordinateVote
 from .medical_institution_phone_models import MedicalInstitutionPhone, MedicalInstitutionPhoneVote
-from .doctor_schedule_models import DoctorSchedule
+from .doctor_schedule_models import DoctorSchedule, DoctorScheduleDay, PatientAppointment
 from .patient_connection_models import PatientConnection
 

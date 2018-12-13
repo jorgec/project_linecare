@@ -1,12 +1,14 @@
 from django.contrib.postgres.fields import JSONField, ArrayField
-from django.db import models as models
-from django.db.models.signals import post_save, post_delete
+from django.db import models as models, IntegrityError
+from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 from django_extensions.db import fields as extension_fields
+from django.apps import apps
 
 from django.apps import apps
 
-from doctor_profiles.models.managers.doctor_schedule_manager import DoctorScheduleManager
+from doctor_profiles.constants import QUEUE_STATUS_CODES, APPOINTMENT_TYPES
+from doctor_profiles.models.managers.doctor_schedule_manager import DoctorScheduleManager, PatientAppointmentManager
 
 
 class DoctorSchedule(models.Model):
@@ -98,6 +100,9 @@ class PatientAppointment(models.Model):
     admin
     """
     is_approved = models.BooleanField(default=True)
+    status = models.CharField(choices=QUEUE_STATUS_CODES, max_length=50, default='Pending')
+    type = models.CharField(choices=APPOINTMENT_TYPES, max_length=50, default='Check Up')
+    queue_number = models.PositiveSmallIntegerField(null=True, blank=True, default=1)
 
     # Relationship fields
     schedule_day = models.ForeignKey('datesdim.DateDim', on_delete=models.SET_NULL,
@@ -118,6 +123,10 @@ class PatientAppointment(models.Model):
     medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution', on_delete=models.SET_NULL,
                                             related_name='medical_institution_scheduled_appointments',
                                             null=True, blank=True)
+    schedule_day_object = models.ForeignKey(DoctorScheduleDay, on_delete=models.SET_NULL,
+                                            related_name='day_schedule_object_patients', null=True, blank=True)
+
+    objects = PatientAppointmentManager()
 
     class Meta:
         ordering = ('-schedule_day',)
@@ -125,6 +134,22 @@ class PatientAppointment(models.Model):
 
     def __str__(self):
         return f'{self.schedule_day} - {self.patient}'
+
+
+@receiver(post_save, sender=PatientAppointment)
+def add_new_to_patient_connection(sender, instance, created=False, **kwargs):
+    if created and instance:
+        PatientConnection = apps.get_model('doctor_profiles.PatientConnection')
+        try:
+            PatientConnection.objects.create(
+                patient=instance.patient,
+                doctor=instance.doctor,
+                metadata={
+                    'initial_day': str(instance.schedule_day),
+                }
+            )
+        except IntegrityError:
+            pass
 
 
 @receiver(post_save, sender=DoctorSchedule)

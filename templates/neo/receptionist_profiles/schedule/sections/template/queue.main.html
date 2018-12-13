@@ -1,0 +1,32 @@
+<div class="nav__page-control">
+    <div class="form-group control-row m-0">
+        <label for="queue-date">Date:</label>
+        <input type="text" class="form-control" id="queue-date" value="{{ date }}">
+    </div>
+</div>
+
+<div class="connections__content">
+    <div class="header">
+        <h4 class="h6">
+            {{ page_title }}
+        </h4>
+    </div>
+    <div class="body py-3">
+        <table class="table table-bordered table-responsive-md medical-records__table">
+            <thead>
+            <tr>
+                <th>Queue</th>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Prior Visits</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="container-queue">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

@@ -2,6 +2,28 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models as models
 from django.apps import apps
 
+from doctor_profiles.constants import QUEUE_DONE_CODES
+
+
+class PatientAppointmentQuerySet(models.QuerySet):
+    def prior_visits(self, *, doctor, patient):
+        return self.filter(
+            doctor=doctor,
+            patient=patient,
+            status__in=QUEUE_DONE_CODES
+        )
+
+
+class PatientAppointmentManager(models.Manager):
+    def get_queryset(self):
+        return PatientAppointmentQuerySet(self.model, using=self._db)
+
+    def prior_visits(self, *, doctor, patient):
+        return self.get_queryset().prior_visits(
+            doctor=doctor,
+            patient=patient,
+        )
+
 
 class DoctorScheduleManager(models.Manager):
     @staticmethod
