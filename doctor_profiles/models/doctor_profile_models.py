@@ -138,7 +138,7 @@ class DoctorProfile(models.Model):
             progress = self.metadata['doctor_progress']
         except KeyError:
             self.initialize_progress_metadata()
-
+            progress = self.metadata['doctor_progress']
         try:
             return progress['show']
         except KeyError:
