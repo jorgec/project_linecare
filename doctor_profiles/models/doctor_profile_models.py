@@ -154,7 +154,7 @@ class DoctorProfile(models.Model):
                 'insurance': self.doctor_insurance.count(),
                 'specialization': self.doctor_specializations.count(),
                 'association': self.doctor_associations.count(),
-                'institution': None
+                'institution': self.medical_institutions_joined.count()
             }
         }
 
