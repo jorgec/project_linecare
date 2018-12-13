@@ -306,14 +306,11 @@
         if (title) {
             markerTitle = title;
         } else {
-            markerTitle = lat + ', ' + lon;
+            markerTitle = lat + ", " + lon;
         }
-        L.marker(
-            [lat, lon],
-            {
-                title: markerTitle,
-            },
-        ).addTo(map);
+        L.marker([lat, lon], {
+            title: markerTitle
+        }).addTo(map);
     }
 
     function geolocate(address) {
