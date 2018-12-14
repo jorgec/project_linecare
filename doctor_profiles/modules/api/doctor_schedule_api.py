@@ -9,6 +9,7 @@ from datesdim.serializers import DateDimSerializer, TimeDimSerializer
 from doctor_profiles.constants import QUEUE_DISPLAY_CODES
 from doctor_profiles.models import DoctorSchedule, DoctorProfile, MedicalInstitution
 from doctor_profiles.models.doctor_schedule_models import DoctorScheduleDay, PatientAppointment
+from doctor_profiles.models.managers.doctor_schedule_manager import check_collisions, find_gaps
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
 from doctor_profiles.serializers import DoctorScheduleSerializer, \
     MedicalInstitutionSerializer, PatientQueuePrivateSerializer
@@ -197,25 +198,9 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         """
         put this in a manager
         """
-        preferred_schedule = request.data.get('schedule_date', None)
-        if not preferred_schedule:
-            return Response("Please set a date", status=status.HTTP_400_BAD_REQUEST)
 
-        preferred_schedule_split = preferred_schedule.split(" ")
-
-        schedule_day = DateDim.objects.parse_get(preferred_schedule_split[0])
-        schedule_time_start = TimeDim.objects.parse(preferred_schedule_split[1])
-
-        checkup_duration = doctor.get_options('checkup_duration') + doctor.get_options('checkup_gap')
-
-        goes_past_midnight = False
-        try:
-            schedule_time_end = TimeDim.objects.get(minutes_since=schedule_time_start.minutes_since + checkup_duration)
-        except TimeDim.DoesNotExist:
-            goes_past_midnight = True
-            mins_til_midnight = 1440 - schedule_time_start.minutes_since
-            mins_past_midnight = checkup_duration - mins_til_midnight
-            schedule_time_end = TimeDim.objects.get(minutes_since=mins_past_midnight)
+        schedule_time_start = None
+        schedule_time_end = None
 
         patient_id = request.data.get("profile_id", None)
         if not patient_id:
@@ -223,48 +208,91 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
 
         patient = get_object_or_404(BaseProfile, id=patient_id)
 
-        """
-        collision checks
-        """
-        # check if doc has schedule on this day
+        schedule_choice = request.data.get('schedule_choice', 'first_available')
+        preferred_day = request.data.get('schedule_day', None)
+        if preferred_day:
+            schedule_day = DateDim.objects.parse_get(preferred_day)
+            if not schedule_day:
+                return Response("Please set a date", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            schedule_day = DateDim.objects.today()
+
         existing_schedules = DoctorScheduleDay.objects.filter(
             doctor=doctor,
             medical_institution=medical_institution,
             day=schedule_day
-        )
+        ).order_by('schedule__start_time__minutes_since')
+
         if existing_schedules.count() == 0:
             return Response(f"{doctor} does not have a schedule for this day in {medical_institution}!",
                             status=status.HTTP_404_NOT_FOUND)
 
+        existing_appointments = PatientAppointment.objects.filter(
+            schedule_day=schedule_day,
+            doctor=doctor,
+            medical_institution=medical_institution,
+        )
+
+        """
+        appointment type
+        """
+        appointment_type = request.data.get('appointment_type', 'Check Up')
+
+        if schedule_choice == 'user_select':
+
+            _schedule_time_start = request.data.get('appointment_time_start', None)
+            if not _schedule_time_start:
+                return Response("Please set a start time", status=status.HTTP_400_BAD_REQUEST)
+
+            _schedule_time_end = request.data.get('appointment_time_end', None)
+            if not _schedule_time_end:
+                return Response("Please set a end time", status=status.HTTP_400_BAD_REQUEST)
+
+            schedule_time_start = TimeDim.objects.parse(_schedule_time_start)
+            schedule_time_end = TimeDim.objects.parse(_schedule_time_end)
+
+
+        elif schedule_choice == 'first_available':
+            """
+            TODO:
+            figure out how to get the first available slot
+            """
+            schedule_options = doctor.get_options('schedule_options')
+            if not f'{appointment_type}_duration' in schedule_options:
+                return Response("Invalid appointment type", status=status.HTTP_400_BAD_REQUEST)
+
+            first_available_result, schedule_time_start, schedule_time_end = find_gaps(
+                schedules=existing_schedules,
+                appointments=existing_appointments,
+                duration=schedule_options[f'{appointment_type}_duration'],
+                gap=f'{appointment_type}_gap'
+            )
+
+            if not first_available_result:
+                return Response(
+                    "We couldn't find an available slot; you can try manually setting your appointment times if you wish",
+                    status=status.HTTP_409_CONFLICT)
+
+        if not schedule_time_start or not schedule_time_end:
+            return Response(f'{schedule_time_start} - {schedule_time_end} are invalid times!',
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        """
+        collision checks
+        """
         # check if doc has schedule on that time
-        if not goes_past_midnight:
-            valid_times = existing_schedules.filter(
-                schedule__start_time__minutes_since__lte=schedule_time_start.minutes_since,
-                schedule__end_time__minutes_since__gte=schedule_time_end.minutes_since
-            )
-        else:
-            valid_times = existing_schedules.filter(
-                schedule__time_start__minutes_since__lte=schedule_time_start.minutes_since
-            )
+
+        valid_times = existing_schedules.filter(
+            schedule__start_time__minutes_since__lte=schedule_time_start.minutes_since,
+            schedule__end_time__minutes_since__gte=schedule_time_end.minutes_since
+        )
 
         if valid_times.count() == 0:
             return Response(f"{doctor} does not have a schedule on that time!", status=status.HTTP_404_NOT_FOUND)
 
         # check available
-        collisions = PatientAppointment.objects.filter(
-            schedule_day=schedule_day,
-            doctor=doctor,
-            medical_institution=medical_institution,
-        ).filter(
-            (Q(time_start__minutes_since__lte=schedule_time_start.minutes_since) & Q(
-                time_end__minutes_since__gte=schedule_time_start.minutes_since)) |
-            (Q(time_start__minutes_since__lte=schedule_time_end.minutes_since) & Q(
-                time_end__minutes_since__gte=schedule_time_end.minutes_since)) |
-            (Q(time_end__minutes_since__gte=schedule_time_start.minutes_since) & Q(
-                time_end__minutes_since__lte=schedule_time_end.minutes_since)) |
-            (Q(time_start__minutes_since__gte=schedule_time_start.minutes_since) & Q(
-                time_end__minutes_since__lte=schedule_time_end.minutes_since))
-        )
+        collisions = check_collisions(appointments=existing_appointments, schedule_time_start=schedule_time_start,
+                                      schedule_time_end=schedule_time_end)
 
         if collisions.count() > 0:
             return Response("The schedule you want conflicts with an existing schedule!",
@@ -272,9 +300,8 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
 
         # all clear
 
-        approintment_type = request.data.get('appointment_type', 'Check Up')
         schedule_day_object = DoctorScheduleDay.objects.get(doctor=doctor, medical_institution=medical_institution,
-                                                              day=schedule_day)
+                                                            day=schedule_day)
         appointment = PatientAppointment.objects.create(
             schedule_day=schedule_day,
             time_start=schedule_time_start,
@@ -282,7 +309,7 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
             patient=patient,
             doctor=doctor,
             medical_institution=medical_institution,
-            type=approintment_type,
+            type=appointment_type,
             schedule_day_object=schedule_day_object
         )
 

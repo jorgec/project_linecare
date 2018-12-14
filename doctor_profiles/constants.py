@@ -43,7 +43,7 @@ QUEUE_STATUS_CODES = (
 
 
 APPOINTMENT_TYPES = (
-    ('Check Up', 'Check Up'),
-    ('Follow Up', 'Follow Up'),
-    ('Lab Test', 'Lab Test'),
+    ('checkup', 'Check Up'),
+    ('followup', 'Follow Up'),
+    ('lab_result', 'Lab Result'),
 )

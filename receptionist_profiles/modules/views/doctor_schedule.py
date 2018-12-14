@@ -3,8 +3,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
+from rest_framework.utils import json
 
 from datesdim.models import DateDim
+from doctor_profiles.constants import APPOINTMENT_TYPES
 from doctor_profiles.models import DoctorProfile, MedicalInstitution
 from receptionist_profiles.models import ReceptionistProfile
 from receptionist_profiles.models.receptionist_profile_model import ReceptionistConnection
@@ -52,7 +54,9 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
             'doctor': doctor,
             'rel': rel,
             'medical_institution': medical_institution,
-            'date': date
+            'date': date,
+            'appointment_types': APPOINTMENT_TYPES,
+            'doctor_sched_options': json.dumps(doctor.get_options('schedule_options'))
         }
 
         return render(request, 'neo/receptionist_profiles/schedule/queue.html', context)

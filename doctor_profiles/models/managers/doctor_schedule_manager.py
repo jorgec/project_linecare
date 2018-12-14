@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models as models
 from django.apps import apps
+from django.db.models import Q
 
 from doctor_profiles.constants import QUEUE_DONE_CODES
 
@@ -121,3 +122,41 @@ class DoctorScheduleManager(models.Manager):
             return False, "Schedule Conflict", collision_days
 
         return True, "Schedule Created", super(DoctorScheduleManager, self).create(*args, **kwargs)
+
+
+"""
+Doctor Schedule helper functions
+"""
+
+
+def find_gaps(*, schedules, appointments, duration, gap):
+    TimeDim = apps.get_model('datesdim.TimeDim')
+    for schedule in schedules:
+        start_time = schedule.start_time
+        end_time = TimeDim.objects.get(minutes_since=start_time.minutes_since + duration + gap)
+        while start_time.minutes_since <= (schedule.end_time.minutes_since - end_time):
+            collisions = check_collisions(
+                appointments=appointments,
+                schedule_time_start=start_time,
+                schedule_time_end=end_time
+            )
+
+            if collisions.count() == 0:
+                return True, start_time, end_time
+
+            start_time = end_time
+            end_time = TimeDim.objects.get(minutes_since=start_time.minutes_since + duration)
+    return False, None, None
+
+
+def check_collisions(*, appointments, schedule_time_start, schedule_time_end):
+    return appointments.filter(
+        (Q(time_start__minutes_since__lte=schedule_time_start.minutes_since) & Q(
+            time_end__minutes_since__gte=schedule_time_start.minutes_since)) |
+        (Q(time_start__minutes_since__lte=schedule_time_end.minutes_since) & Q(
+            time_end__minutes_since__gte=schedule_time_end.minutes_since)) |
+        (Q(time_end__minutes_since__gte=schedule_time_start.minutes_since) & Q(
+            time_end__minutes_since__lte=schedule_time_end.minutes_since)) |
+        (Q(time_start__minutes_since__gte=schedule_time_start.minutes_since) & Q(
+            time_end__minutes_since__lte=schedule_time_end.minutes_since))
+    )

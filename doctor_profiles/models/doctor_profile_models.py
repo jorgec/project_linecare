@@ -211,8 +211,14 @@ class DoctorProfile(models.Model):
 
     def initialize_options(self):
         self.metadata['options'] = {
-            'checkup_duration': 60,
-            'checkup_gap': 15
+            'schedule_options': {
+                'checkup_duration': 60,
+                'checkup_gap': 15,
+                'followup_duration': 30,
+                'followup_gap': 5,
+                'lab_result_duration': 15,
+                'lab_result_gap': 5
+            }
         }
         self.save()
         return self.metadata['options']

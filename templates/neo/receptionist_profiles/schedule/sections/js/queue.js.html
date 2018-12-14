@@ -15,7 +15,6 @@
 
         $.get(url)
             .done(function(result){
-                console.log(result);
                 var queue = [];
                 for(var r in result){
                     var q = result[r];
@@ -33,7 +32,6 @@
 
                     queue.push(q);
                 }
-                console.log(queue);
                 $("#container-queue").loadTemplate($("#template-queue"), queue);
             })
             .fail(function(result){

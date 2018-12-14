@@ -45,7 +45,6 @@
 
         $.get(url)
             .done(function(result){
-                console.log(result);
 
                 if(result.length > 0){
                     containerSerp.loadTemplate(templateSerp, result);

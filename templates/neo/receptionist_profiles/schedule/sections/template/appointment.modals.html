@@ -13,23 +13,49 @@
                 <form method="post" id="frmScheduleAppointment">
                     {% csrf_token %}
                     <div class="form-group row">
-                        <label for="scheduleDate" class="col-4 col-form-label">Date</label>
+                        <label class="col">Time:</label>
                         <div class="col-8">
-                            <div class="input-group">
-                                <input type="text" name="scheduleDate" id="scheduleDate"
-                                                   class="scheduleDate form-control" required>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="scheduleOptionFirstAvailable" name="scheduleOption"
+                                       class="custom-control-input">
+                                <label class="m-0 p-0 custom-control-label" for="scheduleOptionFirstAvailable">First available</label>
                             </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="scheduleOptionUserChoice" name="scheduleOption"
+                                       class="custom-control-input">
+                                <label class="m-0 p-0 custom-control-label" for="scheduleOptionUserChoice">Let me choose</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row hide" id="scheduleTimePicker">
+                        <label for="scheduleTimeStart" class="col-4 col-form-label">Start Time</label>
+                        <div class="col-8">
+
+                            <input type="text" name="scheduleTimeStart" id="scheduleTimeStart"
+                                   class="scheduleTime form-control">
+
+                        </div>
+                        <label for="scheduleTimeEnd" class="col-4 col-form-label mt-2">End Time</label>
+                        <div class="col-8 mt-2">
+
+                            <input type="text" name="scheduleTimeEnd" id="scheduleTimeEnd"
+                                   class="scheduleTime form-control">
+
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="scheduleType" class="col-4 col-form-label">Type</label>
                         <div class="col-8">
                             <div class="input-group">
-                                <select name="scheduleType" id="scheduleType" class="form-control">
-                                    <option value="Check Up">Check Up</option>
-                                    <option value="Follow Up">Follow Up</option>
-                                    <option value="Lab Test">Lab Test</option>
+                                <select name="scheduleType" id="scheduleType" class="custom-select" required>
+                                    <option>---</option>
+                                    {% for at in appointment_types %}
+                                        <option value="{{ at.0 }}">{{ at.1 }}</option>
+                                    {% endfor %}
                                 </select>
+                                <div id="appointment_type_description" class="alert alert-info mt-1 help-text help-text-sm">
+                                    Please select an appointment type
+                                </div>
                             </div>
                         </div>
                     </div>
