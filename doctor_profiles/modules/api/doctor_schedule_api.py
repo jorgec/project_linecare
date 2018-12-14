@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.urls import reverse
 from rest_framework import status, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -381,41 +382,38 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
     ?doctor_id=doctor_id&year=int&month=int
     [optional]
     medical_institution_id=medical_institution_id
+    consumer=receptionist/doctor
     """
 
     permissions = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
 
-        bypass = request.GET.get('bypass', None)
+        result, profile_type = is_doctor_or_receptionist(request.user)
+        if not result:
+            return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
 
-        if bypass is not None:
-            doctor = DoctorProfile.objects.get(id=request.GET.get('doctor_id'))
-            medical_institution = None
+        doctor_id = request.GET.get('doctor_id', None)
+        doctor = get_object_or_404(DoctorProfile, id=doctor_id)
+
+        consumer = request.GET.get('consumer', 'receptionist')
+
+        if request.GET.get('medical_institution_id', None):
+            medical_institution = get_object_or_404(MedicalInstitution,
+                                                    id=request.GET.get('medical_institution_id', None))
+            mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
+                                              medical_institution=medical_institution, is_approved=True)
         else:
-            result, profile_type = is_doctor_or_receptionist(request.user)
-            if not result:
-                return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
+            medical_institution = None
 
-            doctor_id = request.GET.get('doctor_id', None)
-            doctor = get_object_or_404(DoctorProfile, id=doctor_id)
-
-            if request.GET.get('medical_institution_id', None):
-                medical_institution = get_object_or_404(MedicalInstitution,
-                                                        id=request.GET.get('medical_institution_id', None))
-                mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
-                                                  medical_institution=medical_institution, is_approved=True)
-            else:
-                medical_institution = None
-
-            if type(profile_type) != DoctorProfile:
-                """ person adding isn't the doctor, so check if receptionist is allowed """
-                connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile)
-                if not connection:
-                    return Response("Receptionist is not authorized by this doctor for this medical institution",
-                                    status=status.HTTP_403_FORBIDDEN)
-            elif profile_type.id != doctor.id:
-                return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
+        if type(profile_type) != DoctorProfile:
+            """ person adding isn't the doctor, so check if receptionist is allowed """
+            connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile)
+            if not connection:
+                return Response("Receptionist is not authorized by this doctor for this medical institution",
+                                status=status.HTTP_403_FORBIDDEN)
+        elif profile_type.id != doctor.id:
+            return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
 
         year = request.GET.get('year', None)
         if not year:
@@ -432,10 +430,17 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
         for schedule_day in schedule_days:
             start = f"{schedule_day.day}T{schedule_day.schedule.start_time}"
             end = f"{schedule_day.day}T{schedule_day.schedule.end_time}"
+            if consumer == 'receptionist':
+                base_url = reverse('receptionist_profile_doctor_calendar_month', kwargs={
+                    'doctor_id': doctor.id
+                })
+            else:
+                base_url = ''
             event = {
                 "title": str(schedule_day),
                 "start": start,
-                "end": end
+                "end": end,
+                "url": f"{base_url}?date={schedule_day.day}"
             }
             events.append(event)
 
