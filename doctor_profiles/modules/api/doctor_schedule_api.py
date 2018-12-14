@@ -432,4 +432,4 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
             }
             events.append(event)
 
-        return Response(json.dumps(events), status=status.HTTP_200_OK)
+        return Response(events, status=status.HTTP_200_OK)
