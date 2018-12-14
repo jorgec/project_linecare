@@ -318,4 +318,9 @@ urlpatterns += [
     path(f'{version}/private/queue/list',
          doctor_schedule_api.ApiPrivateDoctorScheduleQueueList.as_view(),
          name='api_private_queue_list'),
+
+    # calendar
+    path(f'{version}/private/calendar/month',
+         doctor_schedule_api.ApiPrivateDoctorScheduleCalendar.as_view(),
+         name='api_private_calendar_month'),
 ]

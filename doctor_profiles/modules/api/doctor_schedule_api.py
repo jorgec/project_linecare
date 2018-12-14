@@ -2,6 +2,7 @@ from django.db.models import Q
 from rest_framework import status, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from datesdim.models import TimeDim, DateDim
@@ -238,7 +239,6 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         """
         appointment_type = request.data.get('appointment_type', 'Check Up')
         if schedule_choice == 'user_select':
-            print(request.data)
             _schedule_time_start = request.data.get('appointment_time_start', None)
             if not _schedule_time_start:
                 return Response("Please set a start time", status=status.HTTP_400_BAD_REQUEST)
@@ -252,10 +252,6 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
 
 
         elif schedule_choice == 'first_available':
-            """
-            TODO:
-            figure out how to get the first available slot
-            """
             schedule_options = doctor.get_options('schedule_options')
             if not f'{appointment_type}_duration' in schedule_options:
                 return Response("Invalid appointment type", status=status.HTTP_400_BAD_REQUEST)
@@ -377,3 +373,63 @@ class ApiPrivateDoctorScheduleQueueList(APIView):
         serializer = PatientQueuePrivateSerializer(queue, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivateDoctorScheduleCalendar(APIView):
+    """
+    Get monthly schedule of doctor
+    ?doctor_id=doctor_id&year=int&month=int
+    [optional]
+    medical_institution_id=medical_institution_id
+    """
+
+    permissions = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        result, profile_type = is_doctor_or_receptionist(request.user)
+        if not result:
+            return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
+
+        doctor_id = request.GET.get('doctor_id', None)
+        doctor = get_object_or_404(DoctorProfile, id=doctor_id)
+
+        if request.GET.get('medical_institution_id', None):
+            medical_institution = get_object_or_404(MedicalInstitution,
+                                                    id=request.GET.get('medical_institution_id', None))
+            mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
+                                              medical_institution=medical_institution, is_approved=True)
+        else:
+            medical_institution = None
+
+        if type(profile_type) != DoctorProfile:
+            """ person adding isn't the doctor, so check if receptionist is allowed """
+            connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile)
+            if not connection:
+                return Response("Receptionist is not authorized by this doctor for this medical institution",
+                                status=status.HTTP_403_FORBIDDEN)
+        elif profile_type.id != doctor.id:
+            return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
+
+        year = request.GET.get('year', None)
+        if not year:
+            return Response("Year is required", status=status.HTTP_400_BAD_REQUEST)
+        month = request.GET.get('month', None)
+        if not month:
+            return Response("Month is required", status=status.HTTP_400_BAD_REQUEST)
+
+        events = []
+
+        schedule_days = doctor.get_schedule_days_for_month(year=year, month=month,
+                                                           medical_institution=medical_institution)
+
+        for schedule_day in schedule_days:
+            start = f"{schedule_day.day}T{schedule_day.schedule.start_time}"
+            end = f"{schedule_day.day}T{schedule_day.schedule.end_time}"
+            event = {
+                "title": schedule_day,
+                "start": start,
+                "end": end
+            }
+            events.append(event)
+
+        return Response(json.dumps(events), status=status.HTTP_200_OK)
