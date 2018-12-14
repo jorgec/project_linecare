@@ -426,7 +426,7 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
             start = f"{schedule_day.day}T{schedule_day.schedule.start_time}"
             end = f"{schedule_day.day}T{schedule_day.schedule.end_time}"
             event = {
-                "title": schedule_day,
+                "title": str(schedule_day),
                 "start": start,
                 "end": end
             }
