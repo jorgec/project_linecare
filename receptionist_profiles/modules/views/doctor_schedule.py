@@ -43,7 +43,13 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
         rel = get_object_or_404(ReceptionistConnection, receptionist=profile, doctor=doctor,
                                 medical_institution=medical_institution)
 
-        date = request.GET.get('date', DateDim.objects.today())
+        date = request.GET.get('date', None)
+        if not date:
+            date = DateDim.objects.today()
+        else:
+            date = DateDim.objects.parse_get(date)
+            if not date:
+                date = DateDim.objects.today()
 
         context = {
             'page_title': f'Queue for {doctor} in {rel.medical_institution}',
@@ -56,7 +62,11 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
             'medical_institution': medical_institution,
             'date': date,
             'appointment_types': APPOINTMENT_TYPES,
-            'doctor_sched_options': json.dumps(doctor.get_options('schedule_options'))
+            'doctor_sched_options': json.dumps(doctor.get_options('schedule_options')),
+            'today': DateDim.objects.today(),
+            'tomorrow': date.tomorrow(),
+            'yesterday': date.yesterday(),
+            'schedules': doctor.get_schedule_on_day(day=date, medical_institution=medical_institution)
         }
 
         return render(request, 'neo/receptionist_profiles/schedule/queue.html', context)

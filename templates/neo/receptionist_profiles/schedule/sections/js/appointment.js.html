@@ -13,7 +13,7 @@
 
     $(document).ready(function(){
         scheduleTime.bootstrapMaterialDatePicker({
-            format: "HH:mm a",
+            format: "h:mm a",
             time: true,
             date: false,
             shortTime: true
@@ -76,7 +76,7 @@
                     type: 'success'
                 });
 
-                getQueue(appointment_datetime);
+                getQueue('{{ date }}');
             })
             .fail(function(response){
                 $.notify({

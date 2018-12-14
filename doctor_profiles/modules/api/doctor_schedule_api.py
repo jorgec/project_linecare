@@ -209,7 +209,7 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         patient = get_object_or_404(BaseProfile, id=patient_id)
 
         schedule_choice = request.data.get('schedule_choice', 'first_available')
-        preferred_day = request.data.get('schedule_day', None)
+        preferred_day = request.data.get('appointment_day', None)
         if preferred_day:
             schedule_day = DateDim.objects.parse_get(preferred_day)
             if not schedule_day:
@@ -237,9 +237,8 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         appointment type
         """
         appointment_type = request.data.get('appointment_type', 'Check Up')
-
         if schedule_choice == 'user_select':
-
+            print(request.data)
             _schedule_time_start = request.data.get('appointment_time_start', None)
             if not _schedule_time_start:
                 return Response("Please set a start time", status=status.HTTP_400_BAD_REQUEST)
@@ -265,7 +264,7 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
                 schedules=existing_schedules,
                 appointments=existing_appointments,
                 duration=schedule_options[f'{appointment_type}_duration'],
-                gap=f'{appointment_type}_gap'
+                gap=schedule_options[f'{appointment_type}_gap']
             )
 
             if not first_available_result:

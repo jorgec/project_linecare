@@ -209,6 +209,20 @@ class DoctorProfile(models.Model):
 
         return self.doctor_schedule_days.filter(**filters)
 
+    def get_schedule_on_day(self, *, day=None, medical_institution=None):
+        DateDim = apps.get_model('datesdim.DateDim')
+        if not day:
+            day = DateDim.objects.today()
+
+        filters = {
+            'day': day
+        }
+
+        if medical_institution:
+            filters['medical_institution'] = medical_institution
+
+        return self.doctor_schedule_days.filter(**filters)
+
     def initialize_options(self):
         self.metadata['options'] = {
             'schedule_options': {

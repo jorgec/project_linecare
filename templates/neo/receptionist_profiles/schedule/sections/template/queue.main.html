@@ -1,9 +1,9 @@
 <div class="nav__page-control">
     <div class="form-group control-row m-0">
         <div class="nav__page-control-btns">
-            <a href="#!" class="btn">&laquo; Yesterday</a>
-            <a href="#!" class="btn active">Today</a>
-            <a href="#!" class="btn">Tomorrow &raquo;</a>
+            <a href="?date={{ yesterday }}" class="btn">&laquo; Yesterday</a>
+            <a href="?date={{ today }}" class="btn active">Today</a>
+            <a href="?date={{ tomorrow }}" class="btn">Tomorrow &raquo;</a>
         </div>
         <label for="queue-date">Date:
             <input type="text" class="form-control" id="queue-date" value="{{ date }}">
@@ -14,8 +14,23 @@
 <div class="connections__content">
     <div class="header">
         <h4 class="h6">
-            {{ page_title }}
+            {{ page_title }} &mdash; {{ date }}
         </h4>
+        {% if schedules %}
+        <ul>
+            {% for schedule_day in schedules %}
+                <li>
+                    <strong>{{ schedule_day.schedule.split_days }}</strong>:
+                    {{ schedule_day.schedule.start_time.format_12 }} to {{ schedule_day.schedule.end_time.format_12 }} <br>
+                    <small>({{ schedule_day.schedule.start_date }} to {{ schedule_day.schedule.end_date }})</small>
+                </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <div class="alert alert-danger">
+                {{ doctor }} does not have a schedule at {{ medical_institution }} on this day!
+            </div>
+        {% endif %}
     </div>
     <div class="body py-3">
         <table class="table table-bordered table-responsive-md medical-records__table">

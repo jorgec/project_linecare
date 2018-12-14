@@ -132,20 +132,19 @@ Doctor Schedule helper functions
 def find_gaps(*, schedules, appointments, duration, gap):
     TimeDim = apps.get_model('datesdim.TimeDim')
     for schedule in schedules:
-        start_time = schedule.start_time
-        end_time = TimeDim.objects.get(minutes_since=start_time.minutes_since + duration + gap)
-        while start_time.minutes_since <= (schedule.end_time.minutes_since - end_time):
+        start_time = schedule.schedule.start_time
+        end_time = TimeDim.objects.get(minutes_since=start_time.minutes_since + duration)
+        while end_time.minutes_since < schedule.schedule.end_time.minutes_since:
             collisions = check_collisions(
                 appointments=appointments,
                 schedule_time_start=start_time,
                 schedule_time_end=end_time
             )
-
             if collisions.count() == 0:
                 return True, start_time, end_time
-
-            start_time = end_time
-            end_time = TimeDim.objects.get(minutes_since=start_time.minutes_since + duration)
+            else:
+                start_time = TimeDim.objects.get(minutes_since=end_time.minutes_since + gap)
+                end_time = TimeDim.objects.get(minutes_since=start_time.minutes_since + duration)
     return False, None, None
 
 
