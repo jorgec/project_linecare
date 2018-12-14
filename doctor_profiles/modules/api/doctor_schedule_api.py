@@ -431,8 +431,9 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
             start = f"{schedule_day.day}T{schedule_day.schedule.start_time}"
             end = f"{schedule_day.day}T{schedule_day.schedule.end_time}"
             if consumer == 'receptionist':
-                base_url = reverse('receptionist_profile_doctor_calendar_month', kwargs={
-                    'doctor_id': doctor.id
+                base_url = reverse('receptionist_profile_doctor_queue', kwargs={
+                    'medical_institution': schedule_day.medical_institution.slug,
+                    'doctor_id': schedule_day.doctor_id
                 })
             else:
                 base_url = ''
