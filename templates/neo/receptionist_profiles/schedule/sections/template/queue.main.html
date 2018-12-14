@@ -1,11 +1,13 @@
 <div class="nav__page-control">
     <div class="form-group control-row m-0">
         <div class="nav__page-control-btns">
-            <a href="#!" class="btn">Yesterday</a>
+            <a href="#!" class="btn">&laquo; Yesterday</a>
             <a href="#!" class="btn active">Today</a>
-            <a href="#!" class="btn">Tomorrow</a>
+            <a href="#!" class="btn">Tomorrow &raquo;</a>
         </div>
-        <input type="text" class="form-control" id="queue-date" value="{{ date }}" placeholder="Select a date...">
+        <label for="queue-date">Date:
+            <input type="text" class="form-control" id="queue-date" value="{{ date }}">
+        </label>
     </div>
 </div>
 
