@@ -296,8 +296,9 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
 
         # all clear
 
-        schedule_day_object = DoctorScheduleDay.objects.get(doctor=doctor, medical_institution=medical_institution,
-                                                            day=schedule_day)
+        # schedule_day_object = DoctorScheduleDay.objects.get(doctor=doctor, medical_institution=medical_institution,
+        #                                                     day=schedule_day)
+        schedule_day_object = valid_times.first()
         appointment = PatientAppointment.objects.create(
             schedule_day=schedule_day,
             time_start=schedule_time_start,
