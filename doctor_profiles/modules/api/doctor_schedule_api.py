@@ -390,7 +390,7 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
         bypass = request.GET.get('bypass', None)
 
         if bypass is not None:
-            doctor = DoctorProfile.objects.get(id=request.GET.get('doctor_id'), None)
+            doctor = DoctorProfile.objects.get(id=request.GET.get('doctor_id'))
             medical_institution = None
         else:
             result, profile_type = is_doctor_or_receptionist(request.user)
