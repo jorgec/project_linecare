@@ -5,7 +5,6 @@
 {% block header_css %}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
-    <link rel="stylesheet" href="{% static '3rd-party/bootstrap-toggle-master/css/bootstrap-toggle.min.css' %}">
 
     <style type="text/css">
     .nav__page-control{
@@ -105,8 +104,6 @@
                 {% include 'neo/receptionist_profiles/schedule/sections/template/appointment.main.html' %}
                 {% include 'neo/receptionist_profiles/schedule/sections/template/appointment.modals.html' %}
                 {% include 'neo/receptionist_profiles/schedule/sections/template/appointment.templates.html' %}
-            </div>
-        </div>
     </div>
 
 {% endblock %}
@@ -114,7 +111,6 @@
 {% block home_scripts %}
     {% block inner_scripts %}
         <script type="text/javascript" src="{% static '3rd-party/moment.js' %}"></script>
-        <script type="text/javascript" src="{% static '3rd-party/bootstrap-toggle-master/js/bootstrap-toggle.min.js' %}"></script>
         <script type="text/javascript" src="{% static '3rd-party/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
         <script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'neo/js/stateManager.js' %}"></script>

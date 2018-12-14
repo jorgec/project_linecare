@@ -73,3 +73,23 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
 
     def test_func(self):
         return self.request.user.receptionist_profile()
+
+
+class ReceptionistProfileDoctorScheduleCalendarMonth(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        profile = get_object_or_404(ReceptionistProfile, user=request.user)
+        doctor = get_object_or_404(DoctorProfile, id=kwargs['doctor_id'])
+
+        context = {
+            'page_title': f'Calendar for {doctor}',
+            'location': 'receptionist_profile_manage_schedule',
+            'sublocation': 'detail',
+            'user': request.user,
+            'profile': profile,
+            'doctor': doctor,
+        }
+
+        return render(request, 'neo/receptionist_profiles/schedule/calendar.html', context)
+
+    def test_func(self):
+        return self.request.user.receptionist_profile()
