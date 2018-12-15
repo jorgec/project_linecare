@@ -79,6 +79,7 @@ DEBUG_TOOLBAR_CONFIG = {
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -103,7 +104,6 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'django_extensions',
-    'channels',
 
     # utilities
     'phonenumber_field',
@@ -205,7 +205,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("redis-server-name", 6379)],
+            "hosts": [("localhost", 6379)],
         },
     },
 }
@@ -321,4 +321,3 @@ TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# mapping
