@@ -117,10 +117,8 @@ class AccountLoginView(View):
                 if primary_profile:
                     if primary_profile['type'] == 'doctor':
                         return HttpResponseRedirect(reverse('doctor_profile_home'))
-                    elif primary_profile['type'] == 'patient':
-                        pass
                     elif primary_profile['type'] == 'receptionist':
-                        pass
+                        return HttpResponseRedirect(reverse('receptionist_profile_home'))
                     else:
                         return HttpResponseRedirect(reverse('base_profile_home_view'))
                 else:
