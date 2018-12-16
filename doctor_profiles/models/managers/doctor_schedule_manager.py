@@ -3,7 +3,8 @@ from django.db import models as models
 from django.apps import apps
 from django.db.models import Q
 
-from doctor_profiles.constants import QUEUE_DONE_CODES
+from doctor_profiles.constants import QUEUE_DONE_CODES, QUEUE_STATUS_MESSAGES
+from profiles.notifiers.patient_appointment_notifiers import patient_appointment_status_notify
 
 
 class PatientAppointmentQuerySet(models.QuerySet):
@@ -24,6 +25,14 @@ class PatientAppointmentManager(models.Manager):
             doctor=doctor,
             patient=patient,
         )
+
+    def update_status(self, *, id, status):
+        appointment = self.get(id=id)
+        appointment.status = status
+        appointment.save()
+        patient_appointment_status_notify(appointment,
+                                          QUEUE_STATUS_MESSAGES[status]['message'],
+                                          QUEUE_STATUS_MESSAGES[status]['color'])
 
 
 class DoctorScheduleManager(models.Manager):

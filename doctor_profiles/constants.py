@@ -1,28 +1,28 @@
 QUEUE_DISPLAY_CODES = (
-    'Pending',
-    'Queueing',
-    'In Progress',
-    'Finishing',
+    'queueing',
+    'pending',
+    'in_progress',
+    'finishing',
 )
 
 QUEUE_INACTIVE = (
-    'Pending',
+    'pending',
 )
 
 QUEUE_ACTIVE = (
-    'In Progress',
-    'Finishing',
+    'in_progress',
+    'finishing',
 )
 
 QUEUE_WAITING = (
-    'Queueing',
+    'queueing',
 )
 
 QUEUE_CANCELLED_CODES = (
-    'Cancelled by patient',
-    'Cancelled by doctor',
-    'Rescheduled by patient',
-    'Rescheduled by doctor',
+    'cancelled_by_patient',
+    'cancelled_by_doctor',
+    'rescheduled_by_patient',
+    'rescheduled_by_doctor',
 )
 
 QUEUE_DONE_CODES = (
@@ -30,16 +30,40 @@ QUEUE_DONE_CODES = (
 )
 
 QUEUE_STATUS_CODES = (
-    ('Pending', 'Pending'),
-    ('Queueing', 'Queueing'),
-    ('In Progress', 'In Progress'),
-    ('Finishing', 'Finishing'),
-    ('Done', 'Done'),
-    ('Cancelled by patient', 'Cancelled by patient'),
-    ('Cancelled by doctor', 'Cancelled by doctor'),
-    ('Rescheduled by patient', 'Rescheduled by patient'),
-    ('Rescheduled by doctor', 'Rescheduled by doctor'),
+    ('pending', 'Pending'),
+    ('queueing', 'Queueing'),
+    ('in_progress', 'In Progress'),
+    ('finishing', 'Finishing'),
+    ('done', 'Done'),
+    ('cancelled_by_patient', 'Cancelled by patient'),
+    ('cancelled_by_doctor', 'Cancelled by doctor'),
+    ('rescheduled_by_patient', 'Rescheduled by patient'),
+    ('rescheduled_by_doctor', 'Rescheduled by doctor'),
 )
+
+QUEUE_STATUS_MESSAGES = {
+    'pending': {
+        'message': 'In inactive queue. Please signify your arrival.',
+        'color': 'secondary'
+    },
+    'queueing': {
+        'message': 'Added to active queue; please wait to be called.',
+        'color': 'info'
+    },
+    'in_progress': {
+        'message': 'Please come in',
+        'color': 'success'
+    },
+    'finishing': '',
+    'done': {
+        'message': 'Thank you!',
+        'color': 'success'
+    },
+    'cancelled_by_patient': '',
+    'cancelled_by_doctor': '',
+    'rescheduled_by_patient': '',
+    'rescheduled_by_doctor': '',
+}
 
 
 APPOINTMENT_TYPES = (

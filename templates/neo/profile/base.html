@@ -8,29 +8,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Linecare &mdash; {{ page_title }}</title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+          crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'neo/css/styles.min.css' %}">
 
     {% block header_css %} {% endblock %}
     {% block header_js %} {% endblock %}
 
+    <script src="{% static 'channels/js/websocketbridge.js' %}" type="text/javascript"></script>
+
 </head>
 
 <body>
 
-    {% include 'neo/profile/common/nav__top.html' %}
-    {% include 'neo/profile/common/nav__main.html' %}
-    {% block nav_submain %}{% endblock %}
+{% include 'neo/profile/common/nav__top.html' %}
+{% include 'neo/profile/common/nav__main.html' %}
+{% block nav_submain %}{% endblock %}
 
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
 
-    {% include 'neo/profile/common/footer.html' %}
+{% include 'neo/profile/common/footer.html' %}
 
-    <script src="{% static 'neo/js/main.min.js' %}"></script>
-    {% block scripts %} {% endblock %}
+<script src="{% static 'neo/js/main.min.js' %}"></script>
+{% block scripts %} {% endblock %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var webSocketBridge = new channels.WebSocketBridge();
+        var boxGlobalAnnouncement = $("#global-announcement");
+
+        webSocketBridge.connect('/notifications/patient/appointment/status/');
+        webSocketBridge.listen(function (event) {
+            boxGlobalAnnouncement.addClass("alert-" + event.color);
+            boxGlobalAnnouncement.html(event.message);
+            alert(event.message);
+        });
+
+        document.ws = webSocketBridge;
+    });
+</script>
 
 </body>
 

@@ -1,0 +1,142 @@
+{% extends 'neo/doctor_profiles/schedule/base_fullwidth.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
+
+    <style type="text/css">
+    .nav__page-control{
+        margin: 0 auto .5rem auto;
+        padding: 1rem;
+        background-color: #ddd;
+    }
+
+    .nav__page--control *{
+        font-size: .8rem !important;
+    }
+
+    .nav__page-control .control-row{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        align-content: center;
+        border-bottom: 0;
+    }
+
+    .nav__page-control .control-row label{
+        width: 25%;
+        margin: 0;
+        padding: 0;
+    }
+    .nav__page-control .control-row .form-control{
+        width: 70%;
+    }
+
+    .queue-number{
+        font-size: 3rem;
+        font-weight: 900;
+    }
+    .queue-time{
+        font-size: .75rem;
+    }
+    .queue-status{
+        width: 80%;
+        margin: .5rem auto;
+        height: .6rem;
+    }
+    .queue-status.inactive{
+        background-color: grey;
+    }
+    .queue-status.active{
+        background-color: lime;
+    }
+    .queue-status.waiting{
+        background-color: powderblue;
+    }
+
+    .queue-img{
+        width: 80px;
+        height: auto;
+        margin: 0 !important;
+    }
+
+    .queue-img-block{
+        min-width: 90px;
+        max-width: 100px;
+        margin: auto;
+        overflow: hidden;
+    }
+
+    .queue-action-block{
+        min-width: 30% !important;
+    }
+
+    .hide{
+        display: none;
+    }
+
+    .help-text{
+        font-weight: 100;
+    }
+
+    .help-text-sm{
+        font-size: .85rem;
+    }
+    </style>
+
+
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+    <div class="two-column" id="schedule-section">
+                {% include 'neo/doctor_profiles/schedule/sections/template/queue.main.html' %}
+                {% include 'neo/doctor_profiles/schedule/sections/template/queue.modals.html' %}
+                {% include 'neo/doctor_profiles/schedule/sections/template/queue.templates.html' %}
+
+                {% include 'neo/doctor_profiles/schedule/sections/template/search.main.html' %}
+                {% include 'neo/doctor_profiles/schedule/sections/template/search.modals.html' %}
+                {% include 'neo/doctor_profiles/schedule/sections/template/search.templates.html' %}
+
+                {% include 'neo/doctor_profiles/schedule/sections/template/appointment.main.html' %}
+                {% include 'neo/doctor_profiles/schedule/sections/template/appointment.modals.html' %}
+                {% include 'neo/doctor_profiles/schedule/sections/template/appointment.templates.html' %}
+    </div>
+
+{% endblock %}
+
+{% block home_scripts %}
+    {% block inner_scripts %}
+        <script type="text/javascript" src="{% static '3rd-party/moment.js' %}"></script>
+        <script type="text/javascript" src="{% static '3rd-party/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
+        <script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'neo/js/stateManager.js' %}"></script>
+        <script type="text/javascript">
+            var model = {};
+        </script>
+
+        {% include 'neo/doctor_profiles/schedule/sections/js/queue.js.html' %}
+        {% include 'neo/doctor_profiles/schedule/sections/js/search.js.html' %}
+        {% include 'neo/doctor_profiles/schedule/sections/js/appointment.js.html' %}
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                bootUp(model);
+                var date_selector = $("#queue-date");
+                date_selector.bootstrapMaterialDatePicker({
+                    format: "YYYY-MM-DD",
+                    time: false
+                });
+                date_selector.on('change', function(e){
+                    window.location.replace("?date=" + $(this).val());
+                });
+
+
+
+            });
+        </script>
+    {% endblock %}
+{% endblock %}

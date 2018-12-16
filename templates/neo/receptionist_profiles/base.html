@@ -41,18 +41,5 @@
     {% block home_scripts %}
     {% endblock %}
 
-    <script type="text/javascript">
-        $(document).ready(function(){
-            var webSocketBridge = new channels.WebSocketBridge();
-
-            webSocketBridge.connect('/appointment-notifications/');
-            webSocketBridge.listen(function(action, stream){
-                console.log("RESPONSE:", action)
-            });
-
-            document.ws = webSocketBridge;
-        });
-    </script>
-</body>
 
 </html>

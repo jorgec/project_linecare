@@ -13,6 +13,8 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
     time_end = TimeDimSerializer()
     prior_visits = serializers.SerializerMethodField('repr_prior_visits')
     queue_status = serializers.SerializerMethodField('repr_queue_status')
+    status_display = serializers.SerializerMethodField('repr_status_display')
+    type = serializers.SerializerMethodField('repr_type')
 
     def repr_prior_visits(self, obj):
         return PatientAppointment.objects.prior_visits(
@@ -27,6 +29,12 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
             return 'active'
         else:
             return 'waiting'
+
+    def repr_type(self, obj):
+        return obj.get_type_display()
+
+    def repr_status_display(self, obj):
+        return obj.get_status_display()
 
     class Meta:
         model = PatientAppointment
@@ -44,5 +52,6 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
             'prior_visits',
             'type',
             'queue_status',
-            'queue_number'
+            'queue_number',
+            'status_display'
         )

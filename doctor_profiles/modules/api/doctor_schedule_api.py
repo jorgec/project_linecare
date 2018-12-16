@@ -13,7 +13,7 @@ from doctor_profiles.models import DoctorSchedule, DoctorProfile, MedicalInstitu
 from doctor_profiles.models.doctor_schedule_models import DoctorScheduleDay, PatientAppointment
 from doctor_profiles.models.managers.doctor_schedule_manager import check_collisions, find_gaps
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
-from doctor_profiles.modules.notifiers.appointment_notifier import notify_new_appointment
+from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_new_appointment
 from doctor_profiles.serializers import DoctorScheduleSerializer, \
     MedicalInstitutionSerializer, PatientQueuePrivateSerializer
 from profiles.models import BaseProfile
@@ -311,7 +311,7 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
             schedule_day_object=schedule_day_object
         )
 
-        notify_new_appointment(appointment)
+        doctor_notify_new_appointment(appointment)
 
         # update queue number
         appointments_on_this_day = PatientAppointment.objects.filter(

@@ -1,1 +1,1 @@
-from .appointment_consumers import AppointmentNotificationConsumer
+from .receptionist_appointment_consumers import ReceptionistAppointmentNotificationConsumer

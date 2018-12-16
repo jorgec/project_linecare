@@ -1,0 +1,91 @@
+<script type="text/javascript">
+    var scheduleTimeStart = $("#scheduleTimeStart");
+    var scheduleTimeEnd = $("#scheduleTimeEnd");
+    var scheduleTime = $(".scheduleTime");
+    var frmScheduleAppointment = $("#frmScheduleAppointment");
+    var selectScheduleType = $("#scheduleType");
+    var btnScheduleFirstAvailable = $("#scheduleOptionFirstAvailable");
+    var btnScheduleUserChoice = $("#scheduleOptionUserChoice");
+    var schedule_choice = "first_available";
+    var scheduleTimePicker = $("#scheduleTimePicker");
+
+    var schedule_options = {{ doctor_sched_options|safe }};
+
+    $(document).ready(function(){
+        scheduleTime.bootstrapMaterialDatePicker({
+            format: "h:mm a",
+            time: true,
+            date: false,
+            shortTime: true
+        });
+
+        selectScheduleType.on('change', function(){
+            var value = $("option:selected", this).val();
+            var desc = "Please select an appointment type";
+            if(value + "_duration" in schedule_options){
+                var duration = schedule_options[value + "_duration"];
+                var gap = schedule_options[value + "_gap"];
+                desc = "Estimated duration: " + duration + "mins, give or take " + gap + "mins. If you feel your appointment could take longer or shorter, please set your preferred times above.";
+            }
+            $("#appointment_type_description").html(desc);
+
+        });
+
+        frmScheduleAppointment.on('submit', function(e){
+            e.preventDefault();
+            var profile_id = $("#profile_id").val();
+            var appointment_time_start = scheduleTimeStart.val();
+            var appointment_time_end = scheduleTimeEnd.val();
+            var appointment_type = $("#scheduleType").val();
+
+            scheduleAppointment(profile_id, appointment_time_start, appointment_time_end, appointment_type);
+        });
+
+        btnScheduleFirstAvailable.click(function(e){
+            schedule_choice = "first_available";
+            scheduleTimePicker.addClass("hide");
+        });
+
+        btnScheduleUserChoice.click(function(e){
+            schedule_choice = "user_select";
+            scheduleTimePicker.removeClass("hide");
+        });
+
+
+
+    });
+
+    function scheduleAppointment(profile_id, appointment_time_start, appointment_time_end, appointment_type){
+        var url = "{% url 'api_private_appointment_create' %}?doctor_id={{ doctor.id }}&medical_institution_id={{ medical_institution.id }}";
+
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            schedule_choice: schedule_choice,
+            appointment_time_start: appointment_time_start,
+            appointment_time_end: appointment_time_end,
+            appointment_day: '{{ date }}',
+            profile_id: profile_id,
+            appointment_type: appointment_type
+        };
+
+        $.post(url, formData)
+            .done(function(response){
+                $.notify({
+                    message: response
+                }, {
+                    type: 'success'
+                });
+
+                getQueue('{{ date }}');
+            })
+            .fail(function(response){
+                $.notify({
+                    message: response.responseText
+                }, {
+                    type: 'danger'
+                });
+            });
+        $("#modalScheduleAppointment").modal('hide');
+
+    }
+</script>

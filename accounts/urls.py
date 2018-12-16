@@ -1,6 +1,6 @@
 from django.urls import path
 
-from accounts.modules.api import auth, retrieve
+from accounts.modules.api import auth, retrieve, create
 from .modules.views import auth as auth_views
 from .modules.views import postlogin as postlogin_views
 
@@ -26,7 +26,10 @@ urlpatterns = [
 
     # Authentication
     path('api/login', auth.ApiLogin.as_view(), name='api_login'),
-    path('api/register', auth.ApiRegister.as_view(), name='api_register')
+    path('api/register', auth.ApiRegister.as_view(), name='api_register'),
+
+    # Create
+    path('api/subuser/create', create.ApiPatientSubAccountCreate.as_view(), name='api_account_subuser_create'),
 ]
 
 

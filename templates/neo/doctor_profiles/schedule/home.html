@@ -1,0 +1,37 @@
+{% extends 'neo/doctor_profiles/schedule/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+    <link rel="stylesheet" href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+        {% include 'neo/doctor_profiles/schedule/sections/template/schedule.main.html' %}
+        {% include 'neo/doctor_profiles/schedule/sections/template/schedule.modals.html' %}
+        {% include 'neo/doctor_profiles/schedule/sections/template/schedule.templates.html' %}
+
+{% endblock %}
+
+{% block home_scripts %}
+{% block inner_scripts %}
+<script type="text/javascript" src="{% static '3rd-party/moment.js' %}"></script>
+<script type="text/javascript" src="{% static '3rd-party/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
+<script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'neo/js/stateManager.js' %}"></script>
+<script type="text/javascript">
+    var model = {};
+</script>
+
+{% include 'neo/doctor_profiles/schedule/sections/js/schedule.js.html' %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        bootUp(model);
+    });
+</script>
+{% endblock %}
+{% endblock %}

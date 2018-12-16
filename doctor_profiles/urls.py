@@ -3,6 +3,7 @@ from django.urls import path
 from .modules.views import home as home_views
 from .modules.views import settings as setting_views
 from .modules.views import medical_institutions as institution_views
+from .modules.views import schedule as schedule_views
 
 from .modules.views import snippets
 
@@ -14,6 +15,7 @@ from .modules.api import medical_institutions_api
 from .modules.api import doctor_profile_api
 from .modules.api import doctor_schedule_api
 from .modules.api import patient_connection_api
+from .modules.api import patient_appointment_api
 
 #############################################################################
 # Views
@@ -59,7 +61,20 @@ urlpatterns = [
          name='doctor_profile_settings_medical_institution_create_connection'),
     path('medical_institution/<slug>',
          institution_views.DoctorProfileMedicalInstitutionManageConnectionView.as_view(),
-         name='doctor_profile_medical_institution_home')
+         name='doctor_profile_medical_institution_home'),
+
+    #############################################################################
+    # Schedule
+    #############################################################################
+    path('schedule/<medical_institution>',
+         schedule_views.DoctorProfileMedicalInstitutionScheduleList.as_view(),
+         name='doctor_profile_medical_institution_schedule_list'),
+    path('queue/<medical_institution>',
+         schedule_views.DoctorProfileScheduleDetail.as_view(),
+         name='doctor_profile_schedule_detail'),
+    path('calendar',
+         schedule_views.DoctorProfileScheduleCalendarMonth.as_view(),
+         name='doctor_profile_calendar'),
 
 ]
 
@@ -318,6 +333,9 @@ urlpatterns += [
     path(f'{version}/private/queue/list',
          doctor_schedule_api.ApiPrivateDoctorScheduleQueueList.as_view(),
          name='api_private_queue_list'),
+    path(f'{version}/private/appointment/status/update',
+         patient_appointment_api.ApiPatientAppointmentUpdateStatus.as_view(),
+         name='api_private_patient_appointment_status_update'),
 
     # calendar
     path(f'{version}/private/calendar/month',

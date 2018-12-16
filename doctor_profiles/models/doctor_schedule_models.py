@@ -100,8 +100,8 @@ class PatientAppointment(models.Model):
     admin
     """
     is_approved = models.BooleanField(default=True)
-    status = models.CharField(choices=QUEUE_STATUS_CODES, max_length=50, default='Pending')
-    type = models.CharField(choices=APPOINTMENT_TYPES, max_length=50, default='Check Up')
+    status = models.CharField(choices=QUEUE_STATUS_CODES, max_length=50, default='pending')
+    type = models.CharField(choices=APPOINTMENT_TYPES, max_length=50, default='check_up')
     queue_number = models.PositiveSmallIntegerField(null=True, blank=True, default=1)
 
     # Relationship fields

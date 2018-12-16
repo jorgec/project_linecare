@@ -1,0 +1,29 @@
+{% extends 'neo/doctor_profiles/schedule/base_fullwidth.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+<link rel="stylesheet" href="{% static 'react/receptionist_profile/calendar/css/1.chunk.css' %}">
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+    <div class="two-column" id="schedule-section">
+        <div id="linecare-calendar-app"></div>
+    </div>
+
+{% endblock %}
+
+{% block home_scripts %}
+    {% block inner_scripts %}
+    <script type="text/javascript">
+        var appContext = {
+            doctor_id: '{{ doctor.id }}',
+        };
+    </script>
+    <script src="{% static 'react/receptionist_profile/calendar/js/1.chunk.js' %}"></script>
+    <script src="{% static 'react/receptionist_profile/calendar/js/main.chunk.js' %}"></script>
+    <script src="{% static 'react/receptionist_profile/calendar/js/runtime-main.js' %}"></script>
+    {% endblock %}
+{% endblock %}

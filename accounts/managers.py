@@ -50,7 +50,7 @@ class AccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_sub_user(self, first_name, last_name, parent, user_type=USER_SUBACCOUNT):
+    def create_sub_user(self, first_name, last_name, parent, user_type=USER_SUBACCOUNT, date_of_birth=None, gender_id=None):
         username = slugify('{} {} {}'.format(first_name, last_name, parent.email))
         username = '{}-{}'.format(username[:32], get_random_string(length=8))
         email = '{}@dummy.linecare.com'.format(username)
@@ -61,14 +61,10 @@ class AccountManager(BaseUserManager):
             parent=parent,
             user_type=user_type
         )
-        sub_user = self.create_user(
-            username=username,
-            email=email,
-            parent=parent,
-            user_type=user_type
-        )
         profile = sub_user.base_profile()
         profile.first_name = first_name
         profile.last_name = last_name
+        profile.date_of_birth = date_of_birth
+        profile.gender_id = gender_id
         profile.save()
         return sub_user

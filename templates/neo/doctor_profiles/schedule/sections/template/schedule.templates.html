@@ -1,0 +1,50 @@
+<script type="text/html" id="my_schedules_template">
+    <div class="schedules__container mt-2">
+    <div class="schedules__item">
+        <a href="#!" class="delete-schedule" data-template-bind='[{"attribute": "data-schedule-id", "value": "id"}]' >
+            <i class="fas fa-times"></i>
+        </a>
+        <div class="days">
+            <h6 class="h6" data-content="days_split"></h6>
+        </div>
+        <div class="wrapper">
+            <div class="dates">
+                <span>
+                    <i class="far fa-calendar-alt fa-fw"></i>
+                    <span data-content="start_date.month_name_short"></span>
+                    <span data-content="start_date.day"></span>
+                    <span data-content="start_date.year"></span>
+                </span>
+                <span>&mdash;</span>
+                <span>
+                    <i class="far fa-calendar-alt fa-fw"></i>
+                    <span data-content="end_date.month_name_short"></span>
+                    <span data-content="end_date.day"></span>
+                    <span data-content="end_date.year"></span>
+                </span>
+            </div>
+            <div class="time">
+                <span>
+                    <i class="fas fa-clock fa-fw"></i>
+                    <span data-content="start_time.format_12"></span>
+                </span>
+                <span>&mdash;</span>
+                <span>
+                    <i class="fas fa-clock fa-fw"></i>
+                    <span data-content="end_time.format_12"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+<script type="text/html" id="schedule_errors_template">
+    <div class="alert alert-danger my-1">
+        <h6>Conflicts with schedule at <span data-content="medical_institution.name"></span></h6>
+        <p>
+            <strong><span data-content="day.day_name"></span>, <span data-content="day.date_obj"></span></strong>:
+            <span data-content="start_time.format_12"></span> to
+            <span data-content="end_time.format_12"></span>
+        </p>
+    </div>
+</script>

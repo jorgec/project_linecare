@@ -5,9 +5,11 @@ from django.urls import reverse
 from django.views import View
 from rest_framework.utils import json
 
+from biometrics.forms import BiometricForm
 from datesdim.models import DateDim
 from doctor_profiles.constants import APPOINTMENT_TYPES
 from doctor_profiles.models import DoctorProfile, MedicalInstitution
+from profiles.models import Gender
 from receptionist_profiles.models import ReceptionistProfile
 from receptionist_profiles.models.receptionist_profile_model import ReceptionistConnection
 
@@ -51,6 +53,8 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
             if not date:
                 date = DateDim.objects.today()
 
+        biometrics_form = BiometricForm
+
         context = {
             'page_title': f'Queue for {doctor} in {rel.medical_institution}',
             'location': 'receptionist_profile_manage_schedule',
@@ -66,7 +70,9 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
             'today': DateDim.objects.today(),
             'tomorrow': date.tomorrow(),
             'yesterday': date.yesterday(),
-            'schedules': doctor.get_schedule_on_day(day=date, medical_institution=medical_institution)
+            'schedules': doctor.get_schedule_on_day(day=date, medical_institution=medical_institution),
+            'genders': Gender.objects.all(),
+            'biometrics_form': biometrics_form
         }
 
         return render(request, 'neo/receptionist_profiles/schedule/queue.html', context)
