@@ -1,9 +1,13 @@
 <div class="connections__content">
     <h4 class="h6">Schedules</h4>
+      {% for schedule in profile.get_schedules %}
         <div class="item">
+          <div class="image"
+                 style="background-image: url({{ schedule.doctor.user.base_profile.get_profile_photo }})">
+
+            </div>
             <div class="info">
                 <ul>
-                    {% for schedule in profile.get_schedules %}
                         <li>
                             {{ schedule }}
                         </li>
@@ -21,6 +25,7 @@
                         <i class="fa fa-edit"></i>
                         Update Schedule
                     </a>
+
                 </div>
                     {% endfor %}
                 </ul>
