@@ -1,6 +1,7 @@
 {% if profile.get_schedules %}
 <div class="connections__content mb-4">
     <h4 class="h6">Schedules</h4>        
+        <div class="item no-shadow">
             <div class="info">
             {% for schedule in profile.get_schedules %}
             <span class="info-location">
@@ -29,5 +30,6 @@
             </div>
         {% endfor %}
         </div>
+    </div>
 </div>
 {% endif %}
