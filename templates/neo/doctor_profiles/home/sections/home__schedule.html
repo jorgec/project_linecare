@@ -1,9 +1,9 @@
 {% if profile.get_schedules %}
 <div class="connections__content mb-4">
     <h4 class="h6">Schedules</h4>        
+     {% for schedule in profile.get_schedules %}
         <div class="item no-shadow">
             <div class="info">
-            {% for schedule in profile.get_schedules %}
                 <h5>
                     {{ schedule.medical_institution }}
                 </h5>
@@ -26,8 +26,8 @@
                         Update Schedule
                 </a>
             </div>
-        {% endfor %}
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endif %}
