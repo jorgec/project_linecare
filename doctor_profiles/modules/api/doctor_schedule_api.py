@@ -444,8 +444,7 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
                 })
             else:
                 base_url = reverse('doctor_profile_schedule_detail', kwargs={
-                    'medical_institution': schedule_day.medical_institution.slug,
-                    'doctor_id': schedule_day.doctor_id
+                    'medical_institution': schedule_day.medical_institution.slug
                 })
             event = {
                 "title": str(schedule_day),
