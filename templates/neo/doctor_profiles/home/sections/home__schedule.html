@@ -7,14 +7,61 @@
                         <li>
                             {{ schedule }}
                         </li>
+                  <div class="btn-group btn-group-sm">
+                    <a class="btn btn-sm btn-outline-info"
+                       href="{% url 'receptionist_profile_doctor_calendar_month' rel.doctor_id %}">
+                        <i class="fa fa-calendar"></i> Calendar
+                    </a>
+                    <a class="btn btn-sm btn-outline-primary"
+                       href="{% url 'receptionist_profile_doctor_queue' rel.medical_institution.slug rel.doctor.id %}">
+                        <i class="fa fa-list"></i> Queue
+                    </a>
+                    <a class="btn btn-sm btn-outline-warning"
+                       href="{% url 'receptionist_profile_doctor_schedules' rel.medical_institution.slug  rel.doctor.id %}">
+                        <i class="fa fa-edit"></i>
+                        Update Schedule
+                    </a>
+                </div>
                 <div class="btn-group btn-group-sm">
-                        <a href="{% url 'doctor_profile_calendar' %}">Calendar</a>
-                        <a href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}">Queue</a>
-                        <a href="{% url 'doctor_profile_medical_institution_schedule_list' schedule.medical_institution.slug %}">Update Schedule</a>
-                        </a>
+                <a class="btn btn-sm btn-outline-info"
+                       href="{% url 'doctor_profile_calendar' %}">
+                        <i class="fa fa-calendar"></i> Calendar
+                    </a>
+                     <a class="btn btn-sm btn-outline-primary"
+                       href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}">
+                        <i class="fa fa-list"></i> Queue
+                    </a>
+                    <a class="btn btn-sm btn-outline-warning"
+                       href="{% url 'doctor_profile_medical_institution_schedule_list' schedule.medical_institution.slug %}">
+                        <i class="fa fa-edit"></i>
+                        Update Schedule
+                    </a>
                 </div>
                     {% endfor %}
                 </ul>
             </div>
         </div>
 </div>
+
+<!-- HERE -->
+<ul>
+{% for schedule in profile.get_schedules %}
+    <li>{{ schedule }}
+        <ul>
+            <li>{{ schedule.medical_institution }}</li>
+            <li>{{ schedule.days }}</li>
+            <li>{{ schedule.start_date }} to {{ schedule.end_date }}</li>
+            <li>{{ schedule.start_time }} to {{ schedule.end_time }}</li>
+            <li>
+                <a href="{% url 'doctor_profile_medical_institution_schedule_list' schedule.medical_institution.slug %}">Update Schedule</a>
+            </li>
+            <li>
+                <a href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}">Queue</a>
+            </li>
+            <li>
+                <a href="{% url 'doctor_profile_calendar' %}">Calendar</a>
+            </li>
+        </ul>
+    </li>
+{% endfor %}
+</ul>
