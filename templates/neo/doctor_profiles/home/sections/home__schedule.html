@@ -1,9 +1,7 @@
 {% if profile.get_schedules %}
 <div class="connections__content mb-4">
-    <h4 class="h6">Schedules</h4>
-        {% for schedule in profile.get_schedules %}
+    <h4 class="h6">Schedules</h4>        
         <div class="item">
-            <div class="image" style="background-image: url({{ schedule.doctor.user.base_profile.get_profile_photo }})"></div>
             <div class="info">
                 <p>
                     <span class="info-name">
@@ -16,6 +14,7 @@
                         </a>
                     </span>
                 </p>
+            {% for schedule in profile.get_schedules %}
             <ul>
                 <li>
                     <strong>{{ schedule.split_days }}</strong>:
