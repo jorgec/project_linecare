@@ -5,7 +5,9 @@
         <div class="item no-shadow">
             <div class="info">
                 <h5 class="h5">
-                    {{ schedule.medical_institution }}
+                    <a href="{% url 'doctor_profile_medical_institution_home' mi.slug %}">
+                        {{ schedule.medical_institution }}
+                    </a>
                 </h5>
             <ul>
                 <li>
