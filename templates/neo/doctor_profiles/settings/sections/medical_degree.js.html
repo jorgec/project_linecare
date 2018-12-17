@@ -293,19 +293,29 @@
         $("#editRelatedEntity").modal('hide');
     }
 
-    function addRelatedEntity(){
+    function addRelatedEntity() {
         var postData = {
-            csrfmiddlewaretoken: '{{ csrf_token }}'
+            csrfmiddlewaretoken: "{{ csrf_token }}"
         };
 
-        for(var i in model.relatedEntity.objectCreate.fields){
-            postData[model.relatedEntity.objectCreate.fields[i]["fieldName"]] = $(model.relatedEntity.objectCreate.fields[i]["elementId"]).val();
+        for (var i in model.relatedEntity.objectCreate.fields) {
+            postData[model.relatedEntity.objectCreate.fields[i]["fieldName"]] = $(
+            model.relatedEntity.objectCreate.fields[i]["elementId"]
+            ).val();
         }
 
-        postForm(model.relatedEntity.objectCreate.url, postData, onSuccess=[
+        postForm(
+            model.relatedEntity.objectCreate.url,
+            postData,
+            (onSuccess = [
             loadRelatedEntity,
-            function(){resetForm(model.relatedEntity.objectCreate.fields)},
-            function(){loadProfileProgress($("#profile-progress-snippet"))}
-        ]);
+            function() {
+                resetForm(model.relatedEntity.objectCreate.fields);
+            },
+            function() {
+                loadProfileProgress($("#profile-progress-snippet"));
+            }
+            ])
+        );
     }
 </script>
