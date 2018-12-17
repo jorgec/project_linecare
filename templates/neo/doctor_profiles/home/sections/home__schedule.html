@@ -4,9 +4,9 @@
         <div class="item no-shadow">
             <div class="info">
             {% for schedule in profile.get_schedules %}
-                <a href="#">
+                <h6>
                     {{ schedule.medical_institution }}
-                </a>
+                </h6>
             <ul>
                 <li>
                     <strong>{{ schedule.split_days }}</strong>:
