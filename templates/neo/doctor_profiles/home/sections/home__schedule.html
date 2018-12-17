@@ -4,11 +4,11 @@
      {% for schedule in profile.get_schedules %}
         <div class="item no-shadow">
             <div class="info">
-                <h5 class="h5">
+                <h6 class="h6">
                     <a href="{% url 'doctor_profile_medical_institution_home' schedule.medical_institution.slug %}">
                         {{ schedule.medical_institution }}
                     </a>
-                </h5>
+                </h6>
             <ul>
                 <li>
                     <strong>{{ schedule.split_days }}</strong>:
