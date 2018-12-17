@@ -2,53 +2,57 @@
 
 <div class="connections__content">
     <h4 class="h6">Connections</h4>
-    {% for rel in profile.get_doctor_connections %}
-        <div class="item">
-            <div class="image"
-                 style="background-image: url({{ rel.doctor.user.base_profile.get_profile_photo }})">
+    {% if profile.get_doctor_connections %}
+        {% for rel in profile.get_doctor_connections %}
+            <div class="item">
+                <div class="image"
+                    style="background-image: url({{ rel.doctor.user.base_profile.get_profile_photo }})">
 
-            </div>
-            <div class="info">
-                <p>
-                    <span class="info-name">
-                        <a href="#">{{ rel.doctor }}</a>
-                    </span>
+                </div>
+                <div class="info">
+                    <p>
+                        <span class="info-name">
+                            <a href="#">{{ rel.doctor }}</a>
+                        </span>
 
-                    &mdash; <span class="info-location">
-                        <a href="#">
-                            {{ rel.medical_institution }}
+                        &mdash; <span class="info-location">
+                            <a href="#">
+                                {{ rel.medical_institution }}
+                            </a>
+                        </span>
+                    </p>
+
+                    <ul>
+                        {% for schedule in rel.get_doctor_schedules %}
+                            <li>
+                                <strong>{{ schedule.split_days }}</strong>:
+                                {{ schedule.start_time.format_12 }} to {{ schedule.end_time.format_12 }} <br>
+                                <small>({{ schedule.start_date }} to {{ schedule.end_date }})</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="btn-group btn-group-sm">
+                        <a class="btn btn-sm btn-outline-info"
+                        href="{% url 'receptionist_profile_doctor_calendar_month' rel.doctor_id %}">
+                            <i class="fa fa-calendar"></i> Calendar
                         </a>
-                    </span>
-                </p>
-
-                <ul>
-                    {% for schedule in rel.get_doctor_schedules %}
-                        <li>
-                            <strong>{{ schedule.split_days }}</strong>:
-                            {{ schedule.start_time.format_12 }} to {{ schedule.end_time.format_12 }} <br>
-                            <small>({{ schedule.start_date }} to {{ schedule.end_date }})</small>
-                        </li>
-                    {% endfor %}
-                </ul>
-
-                <div class="btn-group btn-group-sm">
-                    <a class="btn btn-sm btn-outline-info"
-                       href="{% url 'receptionist_profile_doctor_calendar_month' rel.doctor_id %}">
-                        <i class="fa fa-calendar"></i> Calendar
-                    </a>
-                    <a class="btn btn-sm btn-outline-primary"
-                       href="{% url 'receptionist_profile_doctor_queue' rel.medical_institution.slug rel.doctor.id %}">
-                        <i class="fa fa-list"></i> Queue
-                    </a>
-                    <a class="btn btn-sm btn-outline-warning"
-                       href="{% url 'receptionist_profile_doctor_schedules' rel.medical_institution.slug  rel.doctor.id %}">
-                        <i class="fa fa-edit"></i>
-                        Update Schedule
-                    </a>
+                        <a class="btn btn-sm btn-outline-primary"
+                        href="{% url 'receptionist_profile_doctor_queue' rel.medical_institution.slug rel.doctor.id %}">
+                            <i class="fa fa-list"></i> Queue
+                        </a>
+                        <a class="btn btn-sm btn-outline-warning"
+                        href="{% url 'receptionist_profile_doctor_schedules' rel.medical_institution.slug  rel.doctor.id %}">
+                            <i class="fa fa-edit"></i>
+                            Update Schedule
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+        {% else %}
+            <h6><em>You have no connections</em></h6>
+    {% endif %}
 </div>
 
 {% block inner_scripts %}
