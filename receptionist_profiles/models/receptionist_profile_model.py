@@ -85,4 +85,7 @@ class ReceptionistConnection(models.Model):
 
         return schedules
 
+    def get_doctor_receptionists(self):
+        return
+
 

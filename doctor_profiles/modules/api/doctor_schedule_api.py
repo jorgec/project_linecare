@@ -400,7 +400,10 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
         doctor_id = request.GET.get('doctor_id', None)
         doctor = get_object_or_404(DoctorProfile, id=doctor_id)
 
-        consumer = request.GET.get('consumer', 'receptionist')
+        if profile_type == doctor:
+            consumer = 'doctor'
+        else:
+            consumer = 'receptionist'
 
         if request.GET.get('medical_institution_id', None):
             medical_institution = get_object_or_404(MedicalInstitution,
@@ -440,7 +443,10 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
                     'doctor_id': schedule_day.doctor_id
                 })
             else:
-                base_url = ''
+                base_url = reverse('doctor_profile_schedule_detail', kwargs={
+                    'medical_institution': schedule_day.medical_institution.slug,
+                    'doctor_id': schedule_day.doctor_id
+                })
             event = {
                 "title": str(schedule_day),
                 "start": start,

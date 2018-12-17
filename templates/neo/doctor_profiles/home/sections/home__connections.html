@@ -1,0 +1,12 @@
+<ul>
+{% for mi in profile.get_medical_institutions %}
+    <li>
+        {{ mi }}
+    </li>
+    <li>
+        {{ mi.get_address }}
+    </li>
+
+
+{% endfor %}
+</ul>
