@@ -16,8 +16,8 @@
         
     {% if medical_institutions %}
     <div class="hospital-list__container">
-        {% for mi in medical_institutions %}
-            {% if mi %}
+        {% if mi %}
+            {% for mi in medical_institutions %}
                 <div class="hospital-list__item-wrapper">
                     <div class="hospital-list__item">
                         <h6 class="h6">
@@ -34,8 +34,8 @@
                         <h6><em>You are not connected to any medical institutions</h6></em>
                     </div>
                 </div>
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
+        {% endif %}
     </div>
 </div>
 {% endif %}
