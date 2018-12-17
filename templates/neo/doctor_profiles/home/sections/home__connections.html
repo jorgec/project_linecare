@@ -1,12 +1,18 @@
-<ul>
-{% for mi in profile.get_medical_institutions %}
-    <li>
-        <a href="{% url 'doctor_profile_medical_institution_home' mi.slug %}">{{ mi }}</a>
-    </li>
-    <li>
-        {{ mi.address }}
-    </li>
+<div class="two-column__right--settings">
+    <div class="header">
+        <h5 class="h5">My Medical Institutions</h5>
+    </div>
 
-
-{% endfor %}
-</ul>
+    <div class="hospital-list__container">
+    {% for mi in profile.get_medical_institutions %}
+        <div class="hospital-list__item-wrapper">
+            <div class="hospital-list__item">
+                <h6 class="h6">
+                    <a href="{% url 'doctor_profile_medical_institution_home' mi.slug %}">{{ mi }}</a>
+                </h6>
+                <p>{{ mi.address.address }}</p>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
