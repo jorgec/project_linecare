@@ -11,7 +11,15 @@
                 <li>
                     <strong>{{ schedule.split_days }}</strong>:
                             {{ schedule.start_time.format_12 }} to {{ schedule.end_time.format_12 }} <br>
-                    <small>({{ schedule.start_date }} to {{ schedule.end_date }})</small>
+                    <small>
+                    ({{ schedule.start_date.month_name_short }}
+                    ({{ schedule.start_date.day }}
+                    ({{ schedule.start_date.year }}
+                    to 
+                    {{ schedule.end_date.month_name_short }})
+                    {{ schedule.end_date.day }})
+                    {{ schedule.end_date.year }})
+                    </small>
                 </li>
             </ul>
             <div class="btn-group btn-group-sm mb-2">
