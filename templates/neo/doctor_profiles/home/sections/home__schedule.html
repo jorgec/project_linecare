@@ -42,26 +42,3 @@
             </div>
         </div>
 </div>
-
-<!-- HERE -->
-<ul>
-{% for schedule in profile.get_schedules %}
-    <li>{{ schedule }}
-        <ul>
-            <li>{{ schedule.medical_institution }}</li>
-            <li>{{ schedule.days }}</li>
-            <li>{{ schedule.start_date }} to {{ schedule.end_date }}</li>
-            <li>{{ schedule.start_time }} to {{ schedule.end_time }}</li>
-            <li>
-                <a href="{% url 'doctor_profile_medical_institution_schedule_list' schedule.medical_institution.slug %}">Update Schedule</a>
-            </li>
-            <li>
-                <a href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}">Queue</a>
-            </li>
-            <li>
-                <a href="{% url 'doctor_profile_calendar' %}">Calendar</a>
-            </li>
-        </ul>
-    </li>
-{% endfor %}
-</ul>
