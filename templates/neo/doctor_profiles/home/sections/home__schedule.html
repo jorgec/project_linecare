@@ -5,19 +5,16 @@
                 <ul>
                     {% for schedule in profile.get_schedules %}
                         <li>
-                            <strong>{{ schedule.split_days }}</strong>:
-                            {{ schedule.start_time.format_12 }} to {{ schedule.end_time.format_12 }} <br>
-                            <small>({{ schedule.start_date }} to {{ schedule.end_date }})</small>
+                            {{ schedule }}
                         </li>
+                <div class="btn-group btn-group-sm">
+                        <a href="{% url 'doctor_profile_calendar' %}">Calendar</a>
+                        <a href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}">Queue</a>
+                        <a href="{% url 'doctor_profile_medical_institution_schedule_list' schedule.medical_institution.slug %}">Update Schedule</a>
+                        </a>
+                </div>
                     {% endfor %}
                 </ul>
-
-                <div class="btn-group btn-group-sm">
-                     <a href="{% url 'doctor_profile_calendar' %}">Calendar</a>
-                     <a href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}">Queue</a>
-                     <a href="{% url 'doctor_profile_medical_institution_schedule_list' schedule.medical_institution.slug %}">Update Schedule</a>
-                    </a>
-                </div>
             </div>
         </div>
 </div>
