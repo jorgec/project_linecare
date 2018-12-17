@@ -17,6 +17,7 @@ from .modules.api import doctor_profile_api
 from .modules.api import doctor_schedule_api
 from .modules.api import patient_connection_api
 from .modules.api import patient_appointment_api
+from .modules.api import symptoms_api
 
 #############################################################################
 # Views
@@ -349,4 +350,18 @@ urlpatterns += [
     path(f'{version}/private/calendar/month',
          doctor_schedule_api.ApiPrivateDoctorScheduleCalendar.as_view(),
          name='api_private_calendar_month'),
+
+    # symptoms
+    path(f'{version}/private/symptom/create',
+         symptoms_api.ApiPrivateSymptomCreate.as_view(),
+         name='api_private_symptom_create'),
+    path(f'{version}/private/appointment/symptom/create',
+         symptoms_api.ApiPrivatePatientSymptomCreate.as_view(),
+         name='api_private_appointment_symptom_create'),
+    path(f'{version}/public/symptoms/list',
+         symptoms_api.ApiPublicSymptomList.as_view(),
+         name='api_public_symptoms_list'),
+    path(f'{version}/private/appointment/sytmptom/list',
+         symptoms_api.ApiPrivatePatientSymptomList.as_view(),
+         name='api_private_appointment_symptom_list'),
 ]

@@ -1,0 +1,94 @@
+<script type="text/javascript">
+    var btnAddSymptomsModal = $("#btnAddSymptomsModal");
+    var modalSaveSymptom = $("#modalSaveSymptom");
+    var frmSaveSymptom = $("#frmSaveSymptom");
+    var txtSymptomSearch = $("#txtSymptomSearch");
+    $(document).ready(function () {
+        loadSymptoms();
+
+        btnAddSymptomsModal.on('click', function (e) {
+            e.preventDefault();
+
+            modalSaveSymptom.modal('show');
+        });
+
+        frmSaveSymptom.on('submit', function (e) {
+            e.preventDefault();
+            saveSymptom();
+        });
+
+        txtSymptomSearch.on('keydown', function(e){
+            searchSymptoms();
+        });
+
+    });
+
+    function loadSymptoms(){
+        var url = "{% url 'api_private_appointment_symptom_list' %}?appointment_id={{ appointment.id }}";
+            $.get(url)
+                .done(function(result){
+                    $("#symptoms-container").loadTemplate($("#symptoms-template"), result);
+                });
+    }
+
+    function searchSymptoms() {
+        var term = txtSymptomSearch.val();
+        var url = "{% url 'api_public_symptoms_list' %}?s=" + term;
+        if (term.length >= 2) {
+            $.get(url)
+                .done(function(result){
+                    console.log(result);
+
+                    $("#symptoms-list-container").loadTemplate($("#symptoms-list-template"), result);
+
+                    $(".add-symptom").on('click', function(e){
+                        e.preventDefault();
+                        var symptom_id = $(this).attr("data-symptom-id");
+                        addSymptom(symptom_id);
+
+                    });
+                })
+                .fail(function(result){
+                    console.log(result);
+                });
+        }
+    }
+
+    function addSymptom(symptom_id){
+        var url = "{% url 'api_private_appointment_symptom_create' %}";
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            appointment: '{{ appointment.id }}',
+            symptom: symptom_id
+        };
+
+        $.post(url, formData)
+            .done(function(result){
+                console.log(result);
+                loadSymptoms();
+            })
+            .fail(function(result){
+                console.log(result);
+            })
+    }
+
+    function saveSymptom() {
+        var url = "{% url 'api_private_symptom_create' %}";
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            name: $("#id_symptom_name").val(),
+            descroption: $("#id_symptom_description").val()
+        };
+
+        $.post(url, formData)
+            .done(function (result) {
+                console.log(result);
+                addSymptom(result.id);
+                $.notify({
+                    message: "Symptom created!"
+                }, {
+                    type: 'success'
+                });
+            })
+    }
+</script>

@@ -1,0 +1,36 @@
+<div class="modal fade" id="modalSaveSymptom" tabindex="-1" role="dialog" aria-labelledby="modalSaveSymptomTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form id="frmSaveSymptom" method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add a new Symptom</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label for="id_symptom_name" class="col-4 col-form-label">Symptom name</label>
+                        <div class="col-8">
+                            <input id="id_symptom_name" name="id_symptom_name" type="text" class="form-control here" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="id_symptom_description" class="col-4 col-form-label">Description (optional)</label>
+                        <div class="col-8">
+                            <textarea id="id_symptom_description" name="id_symptom_description" cols="40" rows="5" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="btnSaveSymptom">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

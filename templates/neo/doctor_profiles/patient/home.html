@@ -45,13 +45,16 @@
 {% block subcontent %}
     {% include 'neo/doctor_profiles/patient/sections/template/basic_info/main.html' %}
 
+    {% include 'neo/doctor_profiles/patient/sections/template/symptoms/main.html' %}
+    {% include 'neo/doctor_profiles/patient/sections/template/symptoms/modals.html' %}
+    {% include 'neo/doctor_profiles/patient/sections/template/symptoms/template.html' %}
+
 {% endblock %}
 
 {% block home_scripts %}
 {% block inner_scripts %}
-
-<script type="text/javascript">
+    <script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
     {% include 'neo/doctor_profiles/patient/sections/js/basic_info.js.html' %}
-</script>
+    {% include 'neo/doctor_profiles/patient/sections/js/symptoms.js.html' %}
 {% endblock %}
 {% endblock %}

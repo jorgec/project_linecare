@@ -8,4 +8,4 @@ from .medical_institution_location_models import MedicalInstitutionLocation, Med
 from .medical_institution_phone_models import MedicalInstitutionPhone, MedicalInstitutionPhoneVote
 from .doctor_schedule_models import DoctorSchedule, DoctorScheduleDay, PatientAppointment
 from .patient_connection_models import PatientConnection
-
+from .patient_checkup_models import Symptom, PatientSymptom

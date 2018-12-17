@@ -1,0 +1,19 @@
+<script type="text/html" id="symptoms-list-template">
+<li class="list-group-item">
+    <a href="#!" data-template-bind='[{"attribute": "data-symptom-id", "value": "id"}]' class="float-right btn btn-sm btn-primary add-symptom">
+        <i class="fa fa-plus"></i>
+    </a>
+    <span data-content="name"></span>
+</li>
+</script>
+
+<script type="text/html" id="symptoms-template">
+    <span class="badge badge-pill badge-info">
+        <span data-content="symptom.name"></span>
+        <span style="margin: 5px 0 5px 5px">
+            <a href="#!" class="btn btn-danger btn-sm">
+                <i class="fa fa-times"></i>
+            </a>
+        </span>
+    </span>
+</script>

@@ -138,6 +138,9 @@ class PatientAppointment(models.Model):
     def nice_name(self):
         return f'{self.schedule_day.nice_name()} {self.time_start.format_12()}'
 
+    def get_symptoms(self):
+        return self.appointment_symptoms.all()
+
 
 @receiver(post_save, sender=PatientAppointment)
 def add_new_to_patient_connection(sender, instance, created=False, **kwargs):

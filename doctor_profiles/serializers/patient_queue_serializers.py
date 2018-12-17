@@ -5,6 +5,30 @@ from doctor_profiles.constants import QUEUE_INACTIVE, QUEUE_ACTIVE
 from doctor_profiles.models import PatientAppointment
 from profiles.serializers import BaseProfilePrivateSerializerFull
 
+class PatientAppointmentSerializer(serializers.ModelSerializer):
+    patient = BaseProfilePrivateSerializerFull()
+    schedule_day = DateDimSerializer()
+    time_start = TimeDimSerializer()
+    time_end = TimeDimSerializer()
+    type = serializers.SerializerMethodField('repr_type')
+
+    def repr_type(self, obj):
+        return obj.get_type_display()
+
+    class Meta:
+        model = PatientAppointment
+        fields = (
+            'id',
+            'schedule_day',
+            'time_start',
+            'time_end',
+            'patient',
+            'doctor',
+            'medical_institution',
+            'schedule_day_object',
+            'type',
+        )
+
 
 class PatientQueuePrivateSerializer(serializers.ModelSerializer):
     patient = BaseProfilePrivateSerializerFull()
