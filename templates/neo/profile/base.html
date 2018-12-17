@@ -42,6 +42,7 @@
 
         webSocketBridge.connect('/notifications/patient/appointment/status/');
         webSocketBridge.listen(function (event) {
+            boxGlobalAnnouncement.addClass("alert");
             boxGlobalAnnouncement.addClass("alert-" + event.color);
             boxGlobalAnnouncement.html(event.message);
             alert(event.message);
