@@ -3,18 +3,12 @@
     <h4 class="h6">Schedules</h4>        
         <div class="item">
             <div class="info">
-                <p>
-                    <span class="info-name">
-                        <a href="#">{{ schedule.doctor }}</a>
-                    </span>
-                    &mdash; 
-                    <span class="info-location">
-                        <a href="#">
-                            {{ schedule.medical_institution }}
-                        </a>
-                    </span>
-                </p>
             {% for schedule in profile.get_schedules %}
+            <span class="info-location">
+                <a href="#">
+                    {{ schedule.medical_institution }}
+                </a>
+            </span>
             <ul>
                 <li>
                     <strong>{{ schedule.split_days }}</strong>:
