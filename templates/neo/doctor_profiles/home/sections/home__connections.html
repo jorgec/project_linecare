@@ -1,7 +1,7 @@
 <ul>
 {% for mi in profile.get_medical_institutions %}
     <li>
-        {{ mi }}
+        <a href="{% url 'doctor_profile_medical_institution_home' mi.slug %}">{{ mi }}</a>
     </li>
     <li>
         {{ mi.address }}
