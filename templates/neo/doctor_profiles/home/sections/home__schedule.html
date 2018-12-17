@@ -1,47 +1,39 @@
 <div class="connections__content">
     <h4 class="h6">Schedules</h4>
-      {% for schedule in profile.get_schedules %}
+        {% for schedule in profile.get_schedules %}
         <div class="item">
-          <div class="image"
-                 style="background-image: url({{ schedule.doctor.user.base_profile.get_profile_photo }})">
-
-            </div>
+            <div class="image" style="background-image: url({{ schedule.doctor.user.base_profile.get_profile_photo }})"></div>
             <div class="info">
-            <p>
+                <p>
                     <span class="info-name">
                         <a href="#">{{ schedule.doctor }}</a>
                     </span>
-
-                    &mdash; <span class="info-location">
+                    &mdash; 
+                    <span class="info-location">
                         <a href="#">
                             {{ schedule.medical_institution }}
                         </a>
                     </span>
                 </p>
-                <ul>
-                 <li>
-                            <strong>{{ schedule.split_days }}</strong>:
+            <ul>
+                <li>
+                    <strong>{{ schedule.split_days }}</strong>:
                             {{ schedule.start_time.format_12 }} to {{ schedule.end_time.format_12 }} <br>
-                            <small>({{ schedule.start_date }} to {{ schedule.end_date }})</small>
-                        </li>
-                </ul>
-                <div class="btn-group btn-group-sm">
-                <a class="btn btn-sm btn-outline-info"
-                       href="{% url 'doctor_profile_calendar' %}">
-                        <i class="fa fa-calendar"></i> Calendar
-                    </a>
-                     <a class="btn btn-sm btn-outline-primary"
-                       href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}">
-                        <i class="fa fa-list"></i> Queue
-                    </a>
-                    <a class="btn btn-sm btn-outline-warning"
-                       href="{% url 'doctor_profile_medical_institution_schedule_list' schedule.medical_institution.slug %}">
-                        <i class="fa fa-edit"></i>
+                    <small>({{ schedule.start_date }} to {{ schedule.end_date }})</small>
+                </li>
+            </ul>
+            <div class="btn-group btn-group-sm">
+                <a class="btn btn-sm btn-outline-info" href="{% url 'doctor_profile_calendar' %}">
+                    <i class="fa fa-calendar"></i> Calendar
+                </a>
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}">
+                    <i class="fa fa-list"></i> Queue
+                </a>
+                <a class="btn btn-sm btn-outline-warning" href="{% url 'doctor_profile_medical_institution_schedule_list' schedule.medical_institution.slug %}">
+                    <i class="fa fa-edit"></i>
                         Update Schedule
-                    </a>
-
-                </div>
-                    {% endfor %}
+                </a>
             </div>
+        {% endfor %}
         </div>
 </div>
