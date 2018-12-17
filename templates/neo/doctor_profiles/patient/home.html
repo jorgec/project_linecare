@@ -1,0 +1,57 @@
+{% extends 'neo/doctor_profiles/patient/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+    <style type="text/css">
+    .info-bar{
+        padding: 1rem 0;
+        margin: 0 0 1rem 0;
+        border-bottom: 1px solid #eee;
+    }
+    .info-data .info-name .h4{
+        font-weight: 900;
+        font-size: 1.1rem;
+    }
+    .info-data .info-date{
+        font-weight: 900;
+        font-size: .9rem;
+        color: #4b4b4b;
+        text-align: right;
+    }
+
+    .info-data .info-details .col{
+        border: 1px solid #eee;
+    }
+
+    .info-label{
+        background-color: #4da21f;
+        color: white;
+        text-align: center;
+        padding: .5rem;
+        font-size: .8rem;
+    }
+    .info-value{
+        padding: .5rem;
+        text-align: center;
+        font-size: .8rem;
+    }
+
+    </style>
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+    {% include 'neo/doctor_profiles/patient/sections/template/basic_info/main.html' %}
+
+{% endblock %}
+
+{% block home_scripts %}
+{% block inner_scripts %}
+
+<script type="text/javascript">
+    {% include 'neo/doctor_profiles/patient/sections/js/basic_info.js.html' %}
+</script>
+{% endblock %}
+{% endblock %}

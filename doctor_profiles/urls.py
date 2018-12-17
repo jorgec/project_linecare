@@ -4,6 +4,7 @@ from .modules.views import home as home_views
 from .modules.views import settings as setting_views
 from .modules.views import medical_institutions as institution_views
 from .modules.views import schedule as schedule_views
+from .modules.views import patient as patient_views
 
 from .modules.views import snippets
 
@@ -75,6 +76,13 @@ urlpatterns = [
     path('calendar',
          schedule_views.DoctorProfileScheduleCalendarMonth.as_view(),
          name='doctor_profile_calendar'),
+
+    #############################################################################
+    # Appointment
+    #############################################################################
+    path('appointment/detail',
+         patient_views.DoctorProfilePatientAppointmentDetail.as_view(),
+         name='doctor_profile_patient_appointment_detail'),
 
 ]
 

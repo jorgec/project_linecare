@@ -28,16 +28,16 @@ class Biometric(models.Model):
     blood_type = models.CharField(choices=BLOOD_TYPE_CHOICES, max_length=3, null=True, blank=True)
 
     # Relationship Fields
-    user = models.OneToOneField('accounts.Account', related_name='user_biometrics', on_delete=models.SET_NULL,
+    profile = models.OneToOneField('profiles.BaseProfile', related_name='profile_biometrics', on_delete=models.SET_NULL,
                                 null=True, blank=True)
 
     objects = BiometricManager()
 
     class Meta:
-        ordering = ('user',)
+        ordering = ('profile',)
 
     def __str__(self):
-        return f"{self.user} biometrics"
+        return f"{self.profile} biometrics"
 
     def as_html(self):
         html_display = {

@@ -175,7 +175,7 @@ class BaseProfile(models.Model):
     # Biometrics
     def get_biometrics(self):
         try:
-            return self.user.user_biometrics
+            return self.profile_biometrics
         except ObjectDoesNotExist:
             return None
 

@@ -133,7 +133,10 @@ class PatientAppointment(models.Model):
         unique_together = ('patient', 'doctor', 'medical_institution', 'schedule_day', 'time_start', 'time_end')
 
     def __str__(self):
-        return f'{self.schedule_day} - {self.patient}'
+        return f'{self.schedule_day} - {self.time_start.format_12()}'
+
+    def nice_name(self):
+        return f'{self.schedule_day.nice_name()} {self.time_start.format_12()}'
 
 
 @receiver(post_save, sender=PatientAppointment)

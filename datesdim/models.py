@@ -24,6 +24,15 @@ class DateDim(models.Model):
         ordering = ('-year', '-month', '-day')
         unique_together = ('year', 'month', 'day')
 
+    def __str__(self):
+        return "{}-{}-{}".format(self.year, self.month_str(), self.day_str())
+
+    def __sub__(self, other):
+        x = self.obj()
+        y = other.obj()
+
+        return x - y
+
     def day_str(self):
         if self.day < 10:
             return '0{}'.format(self.day)
@@ -40,14 +49,9 @@ class DateDim(models.Model):
     def obj(self):
         return arrow.get(self.datestr())
 
-    def __str__(self):
-        return "{}-{}-{}".format(self.year, self.month_str(), self.day_str())
-
-    def __sub__(self, other):
-        x = self.obj()
-        y = other.obj()
-
-        return x - y
+    def nice_name(self):
+        month_name = self.get_month_display()
+        return f'{self.day_name}, {month_name} {self.day}, {self.year}'
 
     def get_weeks(self):
         c = calendar.Calendar(calendar.MONDAY)

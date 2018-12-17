@@ -154,7 +154,7 @@ class BiometricsCreateView(LoginRequiredMixin, View):
                 height=bm_response['height'],
                 weight=bm_response['weight'],
                 blood_type=bm_response['blood_type'],
-                user=request.user
+                profile=request.user.base_profile()
             )
             bm.save()
             messages.success(request, "Biometrics saved", extra_tags='success')

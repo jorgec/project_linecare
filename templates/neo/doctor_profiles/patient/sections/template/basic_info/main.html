@@ -1,0 +1,77 @@
+<div class="info-bar">
+    <div class="row">
+        <div class="col-sm-6 col-md-2" id="info-photo">
+            <img class="thumbnail img-fluid" src="{{ patient.get_profile_photo }}">
+        </div>
+        <div class="col-sm-6 col-md-10 info-data">
+            <div class="row mb-2">
+                <div class="col info-name">
+                    <h4 class="h4">{{ patient.get_full_name }}</h4>
+                </div>
+                <div class="col info-date">
+                    {{ appointment.nice_name }}
+                </div>
+            </div>
+            <div class="row mb-2 no-gutters info-details">
+                <div class="col">
+                    <div class="info-label">
+                        Birth Date
+                    </div>
+                    <div class="info-value">
+                        {{ patient.date_of_birth }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-label">
+                        Sex
+                    </div>
+                    <div class="info-value">
+                        {{ patient.gender.name }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-label">
+                        Blood Type
+                    </div>
+                    <div class="info-value">
+                        {{ patient.profile_biometrics.blood_type }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-label">
+                        Height
+                    </div>
+                    <div class="info-value">
+                        {{ patient.profile_biometrics.height }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-label">
+                        Weight
+                    </div>
+                    <div class="info-value">
+                        {{ patient.profile_biometrics.weight }}
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2 no-gutters info-details">
+                <div class="col">
+                    <div class="info-label">
+                        Phone
+                    </div>
+                    <div class="info-value">
+                        {{ patient.get_primary_phone }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="info-label">
+                        Address
+                    </div>
+                    <div class="info-value">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
