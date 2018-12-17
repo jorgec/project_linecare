@@ -1,3 +1,4 @@
+{% if schedule in profile.get_schedyles %}
 <div class="connections__content mb-4">
     <h4 class="h6">Schedules</h4>
         {% for schedule in profile.get_schedules %}
@@ -38,3 +39,4 @@
         </div>
     </div>
 </div>
+{% endif %}
