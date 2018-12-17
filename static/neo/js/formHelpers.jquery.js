@@ -42,31 +42,44 @@ function loadFormData(formFields, response){
     }
 }
 
-function postForm(url, postData, onSuccess=[], onFail=[], failSilently=false){
-    $.post(url, postData)
-        .done(function (response) {
-            $.notify({
+function postForm(url, postData) {
+        var onSuccess =
+        arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+        var onFail =
+        arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+        var failSilently =
+        arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+    
+        $.post(url, postData)
+        .done(function(response) {
+            $.notify(
+            {
                 message: "Success"
-            }, {
-                type: 'success'
-            });
-            for(var i in onSuccess){
-                onSuccess[i]();
+            },
+            {
+                type: "success"
+            }
+            );
+            for (var i in onSuccess) {
+            onSuccess[i]();
             }
             return true;
         })
-        .fail(function (jqXHR, textStatus, errorThrown) {
-            if(!failSilently) {
-                Object.keys(jqXHR.responseJSON).forEach(function (k) {
-                    $.notify({
-                        message: jqXHR.responseJSON[k]
-                    }, {
-                        type: 'danger'
-                    });
-                });
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            if (!failSilently) {
+            Object.keys(jqXHR.responseJSON).forEach(function(k) {
+                $.notify(
+                {
+                    message: jqXHR.responseJSON[k]
+                },
+                {
+                    type: "danger"
+                }
+                );
+            });
             }
-            for(var i in onFail){
-                onFail[i]();
+            for (var i in onFail) {
+            onFail[i]();
             }
             return false;
         });
