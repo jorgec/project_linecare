@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from doctor_profiles.models import Specialization, InsuranceProvider, MedicalDegree, MedicalAssociation, DoctorProfile, \
     DoctorDegree, MedicalInstitution, MedicalInstitutionType, MedicalInstitutionLocation, \
-    MedicalInstitutionLocationVote, MedicalInstitutionPhone, MedicalInstitutionPhoneVote
+    MedicalInstitutionLocationVote, MedicalInstitutionPhone, MedicalInstitutionPhoneVote, LabTest
 
 
 class SpecializationAdmin(admin.ModelAdmin):
@@ -49,10 +49,17 @@ class DoctorDegreeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DoctorDegree, DoctorDegreeAdmin)
-
 admin.site.register(MedicalInstitution)
 admin.site.register(MedicalInstitutionType)
 admin.site.register(MedicalInstitutionLocation)
 admin.site.register(MedicalInstitutionLocationVote)
 admin.site.register(MedicalInstitutionPhone)
 admin.site.register(MedicalInstitutionPhoneVote)
+
+
+class LabTestAdmin(admin.ModelAdmin):
+    list_display = ('name', 'aliases')
+    search_fields = ('name', 'aliases')
+
+
+admin.site.register(LabTest, LabTestAdmin)

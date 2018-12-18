@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django_extensions.db.fields.json import JSONField
 from django_extensions.db import fields as extension_fields
@@ -71,11 +72,59 @@ class PatientCheckupRecordAccess(models.Model):
         return f'{self.checkup.appointment}'
 
 
+class LabTest(models.Model):
+    # Fields
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    metadata = JSONField(default=dict, null=True, blank=True)
+    is_approved = models.BooleanField(default=True)
+
+    name = models.CharField(max_length=120, unique=True)
+    slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
+    aliases = ArrayField(models.CharField(max_length=1024), blank=True, null=True, default=list)
+
+    description = models.TextField(max_length=4096, blank=True, null=True)
+    purpose = models.TextField(max_length=2048, blank=True, null=True)
+    indication = models.TextField(max_length=2048, blank=True, null=True)
+    sample = models.TextField(max_length=2048, blank=True, null=True)
+    preparation = models.TextField(max_length=2048, blank=True, null=True)
+    usage = models.TextField(max_length=4096, blank=True, null=True)
+    interpretation = models.TextField(max_length=4096, blank=True, null=True)
+    notes = models.TextField(max_length=4096, blank=True, null=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+
+class PatientLabTestRequest(models.Model):
+    # Fields
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    metadata = JSONField(default=dict, null=True, blank=True)
+    is_approved = models.BooleanField(default=True)
+
+    # Relationship Fields
+    lab_test = models.ForeignKey(LabTest, on_delete=models.CASCADE, related_name='tested_patients')
+    checkup = models.ForeignKey('doctor_profiles.PatientCheckupRecord', on_delete=models.CASCADE,
+                                related_name='checkup_tests')
+
+    class Meta:
+        ordering = ('checkup',)
+        unique_together = ('lab_test', 'checkup')
+
+    def __str__(self):
+        return f'{self.lab_test}: {self.checkup}'
+
+
 class Symptom(models.Model):
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, null=True, blank=True)
+    is_approved = models.BooleanField(default=True)
 
     name = models.CharField(max_length=120, unique=True)
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
@@ -123,6 +172,7 @@ class Finding(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, null=True, blank=True)
+    is_approved = models.BooleanField(default=True)
 
     name = models.CharField(max_length=120, unique=True)
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
@@ -170,6 +220,7 @@ class Diagnosis(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, null=True, blank=True)
+    is_approved = models.BooleanField(default=True)
 
     name = models.CharField(max_length=120, unique=True)
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
