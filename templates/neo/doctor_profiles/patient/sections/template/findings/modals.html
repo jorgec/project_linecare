@@ -1,11 +1,11 @@
-<div class="modal fade" id="modalSaveSymptom" tabindex="-1" role="dialog" aria-labelledby="modalSaveSymptomTitle"
+<div class="modal fade" id="modalSaveFinding" tabindex="-1" role="dialog" aria-labelledby="modalSaveFindingTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form id="frmSaveSymptom" method="post">
+        <form id="frmSaveFinding" method="post">
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add a new Symptom</h5>
+                    <h5 class="modal-title">Add a new Finding</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -13,47 +13,47 @@
                 <div class="modal-body">
 
                     <div class="form-group row">
-                        <label for="id_symptom_name" class="col-4 col-form-label">Symptom name</label>
+                        <label for="id_finding_name" class="col-4 col-form-label">Finding name</label>
                         <div class="col-8">
-                            <input id="id_symptom_name" name="id_symptom_name" type="text" class="form-control here" required>
+                            <input id="id_finding_name" name="id_finding_name" type="text" class="form-control here" required>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="id_symptom_description" class="col-4 col-form-label">Description (optional)</label>
+                        <label for="id_finding_description" class="col-4 col-form-label">Description (optional)</label>
                         <div class="col-8">
-                            <textarea id="id_symptom_description" name="id_symptom_description" cols="40" rows="5" class="form-control"></textarea>
+                            <textarea id="id_finding_description" name="id_finding_description" cols="40" rows="5" class="form-control"></textarea>
                         </div>
                     </div>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="btnSaveSymptom">Save changes</button>
+                    <button type="submit" class="btn btn-primary" id="btnSaveFinding">Save changes</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
 
-<div id="modalSymptomDetail" class="popup-modal card">
+<div id="modalFindingDetail" class="popup-modal card">
     <div class="card-body">
-        <h5 class="h5" id="modalSymptomDetailTitle"></h5>
+        <h5 class="h5" id="modalFindingDetailTitle"></h5>
         <hr>
 
         <h6 class="h6">Description</h6>
-        <div id="modalSymptomDetailDescription"></div>
+        <div id="modalFindingDetailDescription"></div>
         <hr>
 
         <h6 class="h6">Common diagnoses</h6>
-        <div id="modalSymptomDetailCommonDiagnoses">
+        <div id="modalFindingDetailCommonDiagnoses">
             <div class="alert alert-secondary">Feature coming soon</div>
         </div>
     </div>
 </div>
 
-<div id="modalDismissedSymptoms" class="popup-modal card">
+<div id="modalDismissedFindings" class="popup-modal card">
     <div class="card-body">
-        <h5 class="h5">Dismissed symptoms</h5>
-        <ul id="dismissed-symptoms-container" class="list-group list-group-flush"></ul>
+        <h5 class="h5">Dismissed findings</h5>
+        <ul id="dismissed-findings-container" class="list-group list-group-flush"></ul>
     </div>
 </div>

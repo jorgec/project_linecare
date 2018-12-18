@@ -101,3 +101,5 @@ package\.json
 yarn\.lock
 
 drug_information/migrations/
+
+biometrics/migrations/

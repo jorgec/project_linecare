@@ -1,10 +1,11 @@
 from django.contrib.postgres.search import SearchVector
+from django.db import IntegrityError
 from rest_framework import permissions, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from doctor_profiles.models import Symptom, PatientAppointment
+from doctor_profiles.models import Symptom, PatientAppointment, PatientCheckupRecord, PatientSymptom
 from doctor_profiles.serializers.symptom_serializers import SymptomSerializer, SymptomCreateSerializer, \
     PatientSymptomCreateSerializer, PatientSymptomSerializer
 
@@ -14,19 +15,27 @@ class ApiPublicSymptomList(APIView):
     List of symptoms
     [optional]
     ?s=str
+    ?page=n
     """
 
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
         s = request.GET.get('s', None)
-
+        page = request.GET.get('page', None)
         if s:
             symptoms = Symptom.objects.annotate(
                 search=SearchVector('name', 'description')
             ).filter(search__icontains=s)
         else:
             symptoms = Symptom.objects.all()
+
+        if not page:
+            symptoms = symptoms[:10]
+        else:
+            start = page * 10
+            end = start + 10
+            symptoms = symptoms[start:end]
 
         serializer = SymptomSerializer(symptoms, many=True)
 
@@ -54,14 +63,29 @@ class ApiPrivateSymptomCreate(APIView):
 class ApiPrivatePatientSymptomList(APIView):
     """
     Load symptoms from checkup
-    ?appointment_id=id
+    ?checkup_id=id
     """
 
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        appointment = get_object_or_404(PatientAppointment, id=request.GET.get('appointment_id', None))
-        serializer = PatientSymptomSerializer(appointment.get_symptoms(), many=True)
+        checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
+        serializer = PatientSymptomSerializer(checkup.get_symptoms(), many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivatePatientDismissedSymptomList(APIView):
+    """
+    Load dismissed symptoms from checkup
+    ?checkup_id=id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
+        serializer = PatientSymptomSerializer(checkup.get_dismissed_symptoms(), many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -74,12 +98,48 @@ class ApiPrivatePatientSymptomCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
         serializer = PatientSymptomCreateSerializer(data=request.data)
-
         if serializer.is_valid():
-            serializer.save()
+            checkup = serializer.validated_data['checkup']
+            doctor = request.user.doctor_profile()
+            if not doctor:
+                return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
+            if not checkup.doctor_has_access(doctor):
+                return Response(f"{doctor} does not have access privileges for this record",
+                                status=status.HTTP_403_FORBIDDEN)
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                patient_symptoms = PatientSymptom.objects.create(
+                    added_by=doctor,
+                    symptom=serializer.validated_data.get('symptom'),
+                    checkup=serializer.validated_data.get('checkup')
+                )
+            except IntegrityError:
+                return Response("That symptom has already been added! If you don't see it, check the dismissed list.",
+                                status=status.HTTP_409_CONFLICT)
+
+            response_serializer = PatientSymptomSerializer(patient_symptoms)
+
+            return Response(response_serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ApiPrivatePatientSymptomRemove(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        patient_symptom = get_object_or_404(PatientSymptom, symptom_id=request.GET.get('id', None),
+                                            checkup_id=request.GET.get('checkup_id'))
+        doctor = request.user.doctor_profile()
+        if not doctor:
+            return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
+        if not patient_symptom.checkup.doctor_has_access(doctor):
+            return Response(f"{doctor} does not have access privileges for this record",
+                            status=status.HTTP_403_FORBIDDEN)
+
+        patient_symptom.is_deleted = True
+        patient_symptom.removed_by = doctor
+        patient_symptom.save()
+        response_serializer = PatientSymptomSerializer(patient_symptom)
+        return Response(response_serializer.data, status=status.HTTP_200_OK)

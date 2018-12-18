@@ -1,0 +1,23 @@
+<script type="text/html" id="findings-list-template">
+<li class="list-group-item">
+    <a href="#!" data-template-bind='[{"attribute": "data-finding-id", "value": "id"}]' class="float-right btn btn-sm btn-primary add-finding">
+        <i class="fa fa-plus"></i>
+    </a>
+    <span data-content="name"></span>
+</li>
+</script>
+
+<script type="text/html" id="findings-template">
+    <span class="badge badge-pill badge-secondary mr-1 mb-1">
+        <a href="#!" data-content="finding.name" class="text-white py-0 px-2 modalFindingDetail_open finding-detail" data-template-bind='[{"attribute": "data-finding-id", "value": "finding.id"}, {"attribute": "data-finding-name", "value": "finding.name"}, {"attribute": "data-finding-description", "value": "finding.description"}]'></a>
+        <a href="#!" class="btn btn-danger btn-sm btn-round remove-finding ml-3" data-template-bind='[{"attribute": "data-finding-id", "value": "finding.id"}]'>
+            <i class="fa fa-times"></i>
+        </a>
+    </span>
+</script>
+
+<script type="text/html" id="dismissed-findings-template">
+    <li class="list-group-item">
+        <span data-content="finding.name"></span> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
+    </li>
+</script>

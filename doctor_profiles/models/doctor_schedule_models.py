@@ -139,7 +139,7 @@ class PatientAppointment(models.Model):
         return f'{self.schedule_day.nice_name()} {self.time_start.format_12()}'
 
     def get_symptoms(self):
-        return self.appointment_symptoms.all()
+        return self.appointment_checkup.checkup_symptoms.all()
 
 
 @receiver(post_save, sender=PatientAppointment)
@@ -153,6 +153,27 @@ def add_new_to_patient_connection(sender, instance, created=False, **kwargs):
                 metadata={
                     'initial_day': str(instance.schedule_day),
                 }
+            )
+        except IntegrityError:
+            pass
+
+
+@receiver(post_save, sender=PatientAppointment)
+def create_checkup_record(sender, instance, created=False, **kwargs):
+    if created:
+        CheckupRecord = apps.get_model('doctor_profiles.PatientCheckupRecord')
+        CheckupRecordAccess = apps.get_model('doctor_profiles.PatientCheckupRecordAccess')
+        try:
+            record = CheckupRecord.objects.create(
+                appointment=instance
+            )
+        except IntegrityError:
+            record = CheckupRecord.objects.get(appointment=instance)
+
+        try:
+            access = CheckupRecordAccess.objects.create(
+                checkup=record,
+                doctor=instance.doctor
             )
         except IntegrityError:
             pass

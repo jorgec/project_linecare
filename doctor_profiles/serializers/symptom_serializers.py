@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
-from doctor_profiles.models import Symptom, PatientSymptom
+from doctor_profiles.models import Symptom, PatientSymptom, PatientCheckupRecord
 from doctor_profiles.serializers import PatientQueuePrivateSerializer
+from doctor_profiles.serializers.doctor_profile_serializers import DoctorProfilePrivateSerializer
 
 
 class SymptomSerializer(serializers.ModelSerializer):
@@ -22,24 +23,38 @@ class SymptomCreateSerializer(serializers.ModelSerializer):
         )
 
 
-class PatientSymptomSerializer(serializers.ModelSerializer):
-    symptom = SymptomSerializer()
-    appointment = PatientQueuePrivateSerializer()
-
-    class Meta:
-        model = PatientSymptom
-        fields = (
-            'id',
-            'symptom',
-            'appointment'
-        )
-
-
 class PatientSymptomCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientSymptom
         fields = (
+            'symptom',
+            'checkup'
+        )
+
+
+class PatientCheckupRecordSerializer(serializers.ModelSerializer):
+    appointment = PatientQueuePrivateSerializer()
+
+    class Meta:
+        model = PatientCheckupRecord
+        fields = (
+            'id',
+            'appointment'
+        )
+
+
+class PatientSymptomSerializer(serializers.ModelSerializer):
+    symptom = SymptomSerializer()
+    checkup = PatientCheckupRecordSerializer()
+    added_by = DoctorProfilePrivateSerializer()
+    removed_by = DoctorProfilePrivateSerializer()
+    class Meta:
+        model = PatientSymptom
+        fields = (
             'id',
             'symptom',
-            'appointment'
+            'checkup',
+            'is_deleted',
+            'added_by',
+            'removed_by'
         )

@@ -1,0 +1,37 @@
+<script type="text/javascript">
+    var btnAddFindingsModal = $("#btnAddFindingsModal");
+    var modalSaveFinding = $("#modalSaveFinding");
+    var modalFindingDetail = $("#modalFindingDetail");
+    var modalDismissedFindings = $("#modalDismissedFindings");
+    var frmSaveFinding = $("#frmSaveFinding");
+    var txtFindingSearch = $("#txtFindingSearch");
+    
+    $(document).ready(function () {
+        //loadFindings();
+        modalFindingDetail.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+        modalDismissedFindings.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+
+        btnAddFindingsModal.on('click', function (e) {
+            e.preventDefault();
+
+            modalSaveFinding.modal('show');
+        });
+
+        frmSaveFinding.on('submit', function (e) {
+            e.preventDefault();
+            //saveFinding();
+        });
+
+        txtFindingSearch.on('keydown', function(e){
+            //searchFindings();
+        });
+
+    });
+    
+</script>    

@@ -4,38 +4,77 @@
 
 {% block header_css %}
     <style type="text/css">
-    .info-bar{
-        padding: 1rem 0;
-        margin: 0 0 1rem 0;
-        border-bottom: 1px solid #eee;
-    }
-    .info-data .info-name .h4{
-        font-weight: 900;
-        font-size: 1.1rem;
-    }
-    .info-data .info-date{
-        font-weight: 900;
-        font-size: .9rem;
-        color: #4b4b4b;
-        text-align: right;
-    }
+        .info-bar {
+            padding: 1rem 0;
+            margin: 0 0 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
 
-    .info-data .info-details .col{
-        border: 1px solid #eee;
-    }
+        .info-data .info-name .h4 {
+            font-weight: 900;
+            font-size: 1.1rem;
+        }
 
-    .info-label{
-        background-color: #4da21f;
-        color: white;
-        text-align: center;
-        padding: .5rem;
-        font-size: .8rem;
-    }
-    .info-value{
-        padding: .5rem;
-        text-align: center;
-        font-size: .8rem;
-    }
+        .info-data .info-date {
+            font-weight: 900;
+            font-size: .9rem;
+            color: #4b4b4b;
+            text-align: right;
+        }
+
+        .info-data .info-details .col {
+            border: 1px solid #eee;
+        }
+
+        .info-label {
+            background-color: #4da21f;
+            color: white;
+            text-align: center;
+            padding: .5rem;
+            font-size: .8rem;
+        }
+
+        .info-value {
+            padding: .5rem;
+            text-align: center;
+            font-size: .8rem;
+        }
+
+        .btn-round {
+            border-radius: 50%;
+            padding-top: 0.375rem;
+            padding-right: 0.75rem;
+            padding-bottom: 0.375rem;
+            padding-left: 0.75rem;
+        }
+
+        .popup-modal {
+            background-color: white;
+        }
+
+        @media (max-width: 500px) {
+            .popup-modal {
+                width: 95%;
+            }
+        }
+
+        @media (min-width: 501px) and (max-width: 768px) {
+            .popup-modal {
+                width: 80%;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .popup-modal {
+                width: 70%;
+            }
+        }
+
+        @media (min-width: 1201px) {
+            .popup-modal {
+                width: 60%;
+            }
+        }
 
     </style>
 {% endblock %}
@@ -48,13 +87,18 @@
     {% include 'neo/doctor_profiles/patient/sections/template/symptoms/main.html' %}
     {% include 'neo/doctor_profiles/patient/sections/template/symptoms/modals.html' %}
     {% include 'neo/doctor_profiles/patient/sections/template/symptoms/template.html' %}
-
+    <hr>
+    {% include 'neo/doctor_profiles/patient/sections/template/findings/main.html' %}
+    {% include 'neo/doctor_profiles/patient/sections/template/findings/modals.html' %}
+    {% include 'neo/doctor_profiles/patient/sections/template/findings/template.html' %}
 {% endblock %}
 
 {% block home_scripts %}
-{% block inner_scripts %}
-    <script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
-    {% include 'neo/doctor_profiles/patient/sections/js/basic_info.js.html' %}
-    {% include 'neo/doctor_profiles/patient/sections/js/symptoms.js.html' %}
-{% endblock %}
+    {% block inner_scripts %}
+        <script type="text/javascript"
+                src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+        {% include 'neo/doctor_profiles/patient/sections/js/basic_info.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/symptoms.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/findings.js.html' %}
+    {% endblock %}
 {% endblock %}

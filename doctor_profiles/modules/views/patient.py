@@ -1,14 +1,19 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 
-from doctor_profiles.models import PatientAppointment
+from doctor_profiles.models import PatientAppointment, PatientCheckupRecord
 
 
 class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
         doctor = request.user.doctor_profile()
         appointment = get_object_or_404(PatientAppointment, id=request.GET.get('appointment', None))
+        checkup = appointment.appointment_checkup
+
+        if not checkup.doctor_has_access(doctor):
+            return HttpResponseRedirect('/403/Forbidden')
 
         context = {
             'page_title': f'Appointment for {appointment.patient} on {appointment.schedule_day.nice_name} at {appointment.medical_institution}',
@@ -16,7 +21,8 @@ class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMi
             'sublocation': 'detail',
             'doctor': doctor,
             'patient': appointment.patient,
-            'appointment': appointment
+            'appointment': appointment,
+            'checkup': checkup
         }
 
         return render(request, 'neo/doctor_profiles/patient/home.html', context)
