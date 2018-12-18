@@ -26,20 +26,19 @@
                 </h6>
                 <p>{{ mi.medical_institution.address.address }}</p>
             </div>
-
         </div>
         {% endfor %}
     </div>
 {% else %}
-<div class="hospital-list__container">
+    <div class="hospital-list__container">
         <div class="hospital-list__item-wrapper">
             <div class="hospital-list__item">
                 <h6><em>You are not connected to any medical institutions</h6></em>
             </div>
         </div>
     </div>
-</div>
 {% endif %}
+</div>
 <div class="two-column__right--settings">
     <div class="header">
         <h5 class="h5">Connect to Medical Institutions</h5>
