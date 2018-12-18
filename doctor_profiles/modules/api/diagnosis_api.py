@@ -70,6 +70,12 @@ class ApiPrivatePatientDiagnosisList(APIView):
 
     def get(self, request, *args, **kwargs):
         checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
+        doctor = request.user.doctor_profile()
+        if not doctor:
+            return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
+        if not checkup.doctor_has_access(doctor):
+            return Response(f"{doctor} does not have access privileges for this record",
+                            status=status.HTTP_403_FORBIDDEN)
         serializer = PatientDiagnoseserializer(checkup.get_diagnoses(), many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -85,6 +91,13 @@ class ApiPrivatePatientDismissedDiagnosisList(APIView):
 
     def get(self, request, *args, **kwargs):
         checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
+        doctor = request.user.doctor_profile()
+        if not doctor:
+            return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
+        if not checkup.doctor_has_access(doctor):
+            return Response(f"{doctor} does not have access privileges for this record",
+                            status=status.HTTP_403_FORBIDDEN)
+
         serializer = PatientDiagnoseserializer(checkup.get_dismissed_diagnoses(), many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -38,12 +38,10 @@
         var url = "{% url 'api_private_appointment_diagnosis_list' %}?checkup_id={{ checkup.id }}";
         $.get(url)
             .done(function(result){
-                console.log(result);
                 $("#diagnoses-container").loadTemplate($("#diagnoses-template"), result);
 
                 $(".diagnosis-detail").on('click', function(e){
                     e.preventDefault();
-                    console.log($(this).attr("data-diagnosis-name"));
                     $("#modalDiagnosisDetailTitle").html($(this).attr("data-diagnosis-name"));
                     $("#modalDiagnosisDetailDescription").html($(this).attr("data-diagnosis-description"));
                 });

@@ -1,0 +1,54 @@
+<script type="text/javascript">
+    var btnAddNotesModal = $("#btnAddNotesModal");
+    var modalSaveNote = $("#modalSaveNote");
+    var frmSaveNote = $("#frmSaveNote");
+
+    $(document).ready(function () {
+        loadNotes();
+
+        btnAddNotesModal.on('click', function (e) {
+            e.preventDefault();
+
+            modalSaveNote.modal('show');
+        });
+
+        frmSaveNote.on('submit', function (e) {
+            e.preventDefault();
+            saveNote();
+        });
+
+    });
+
+    function loadNotes(){
+        var url = "{% url 'api_private_appointment_note_list' %}?checkup_id={{ checkup.id }}";
+        $.get(url)
+            .done(function(result){
+                $("#notes-container").loadTemplate($("#notes-template"), result);
+
+            });
+    }
+
+    function saveNote(){
+        var url = "{% url 'api_private_appointment_note_create' %}?checkup_id={{ checkup.id }}";
+        console.log(url);
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            note: $("#id_note_content").val(),
+            checkup: {{ checkup.id }},
+            added_by: {{ doctor.id }}
+        };
+
+        $.post(url, formData)
+            .done(function(result){
+                loadNotes();
+                modalSaveNote.modal('hide');
+                $.notify({
+                    message: "Note added!"
+                }, {
+                    type: "success"
+                })
+            });
+    }
+
+    
+</script>

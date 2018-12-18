@@ -20,6 +20,7 @@ from .modules.api import patient_appointment_api
 from .modules.api import symptoms_api
 from .modules.api import findings_api
 from .modules.api import diagnosis_api
+from .modules.api import checkup_api
 
 #############################################################################
 # Views
@@ -413,4 +414,11 @@ urlpatterns += [
          diagnosis_api.ApiPrivatePatientDiagnosisRemove.as_view(),
          name='api_private_appointment_diagnosis_delete'),
 
+    # notes
+    path(f'{version}/private/appointment/note/list',
+         checkup_api.ApiCheckupNoteList.as_view(),
+         name='api_private_appointment_note_list'),
+    path(f'{version}/private/appointment/note/create',
+         checkup_api.ApiCheckupNoteCreate.as_view(),
+         name='api_private_appointment_note_create'),
 ]

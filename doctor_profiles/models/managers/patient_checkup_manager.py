@@ -20,6 +20,12 @@ class PatientFindingManager(models.Manager):
     def create(self, *args, **kwargs):
         return super(PatientFindingManager, self).create(*args, **kwargs)
 
+
 class PatientDiagnosisManager(models.Manager):
     def create(self, *args, **kwargs):
         return super(PatientDiagnosisManager, self).create(*args, **kwargs)
+
+
+class CheckupNoteManager(models.Manager):
+    def create(self, *args, **kwargs):
+        return super(CheckupNoteManager, self).create(*args, **kwargs)

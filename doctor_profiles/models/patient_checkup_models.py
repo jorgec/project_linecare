@@ -3,7 +3,8 @@ from django_extensions.db.fields.json import JSONField
 from django_extensions.db import fields as extension_fields
 
 from doctor_profiles.models.managers.patient_checkup_manager import PatientCheckupRecordManager, \
-    PatientCheckupRecordAccessManager, PatientSymptomManager, PatientFindingManager, PatientDiagnosisManager
+    PatientCheckupRecordAccessManager, PatientSymptomManager, PatientFindingManager, PatientDiagnosisManager, \
+    CheckupNoteManager
 
 
 class PatientCheckupRecord(models.Model):
@@ -35,7 +36,7 @@ class PatientCheckupRecord(models.Model):
 
     def get_dismissed_findings(self):
         return self.checkup_findings.filter(is_deleted=True)
-    
+
     def get_diagnoses(self):
         return self.checkup_diagnoses.filter(is_deleted=False)
 
@@ -78,7 +79,8 @@ class Symptom(models.Model):
 
     name = models.CharField(max_length=120, unique=True)
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
-    synonym = models.ForeignKey("self", null=True, blank=True, related_name="synonymous_symptoms", on_delete=models.SET_NULL)
+    synonym = models.ForeignKey("self", null=True, blank=True, related_name="synonymous_symptoms",
+                                on_delete=models.SET_NULL)
 
     description = models.TextField(max_length=512, blank=True, null=True)
 
@@ -124,7 +126,8 @@ class Finding(models.Model):
 
     name = models.CharField(max_length=120, unique=True)
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
-    synonym = models.ForeignKey("self", null=True, blank=True, related_name="synonymous_findings", on_delete=models.SET_NULL)
+    synonym = models.ForeignKey("self", null=True, blank=True, related_name="synonymous_findings",
+                                on_delete=models.SET_NULL)
 
     description = models.TextField(max_length=512, blank=True, null=True)
 
@@ -170,7 +173,8 @@ class Diagnosis(models.Model):
 
     name = models.CharField(max_length=120, unique=True)
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
-    synonym = models.ForeignKey("self", null=True, blank=True, related_name="synonymous_diagnoses", on_delete=models.SET_NULL)
+    synonym = models.ForeignKey("self", null=True, blank=True, related_name="synonymous_diagnoses",
+                                on_delete=models.SET_NULL)
 
     description = models.TextField(max_length=512, blank=True, null=True)
 
@@ -208,3 +212,25 @@ class PatientDiagnosis(models.Model):
     def __str__(self):
         return f'{self.diagnosis}: {self.checkup.appointment.patient}'
 
+
+class CheckupNote(models.Model):
+    # Fields
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    metadata = JSONField(default=dict, null=True, blank=True)
+
+    note = models.TextField(max_length=1024)
+
+    # Relationship Fields
+    checkup = models.ForeignKey(PatientCheckupRecord, related_name="checkup_notes",
+                                on_delete=models.CASCADE, null=True)
+    added_by = models.ForeignKey('doctor_profiles.DoctorProfile', on_delete=models.SET_NULL, null=True,
+                                 related_name='notes_added')
+
+    objects = CheckupNoteManager()
+
+    class Meta:
+        ordering = ('checkup',)
+
+    def __str__(self):
+        return f'{self.checkup}: {self.note[:30]}'
