@@ -1,0 +1,23 @@
+<script type="text/html" id="diagnoses-list-template">
+<li class="list-group-item">
+    <a href="#!" data-template-bind='[{"attribute": "data-diagnosis-id", "value": "id"}]' class="float-right btn btn-sm btn-primary add-diagnosis">
+        <i class="fa fa-plus"></i>
+    </a>
+    <span data-content="name"></span>
+</li>
+</script>
+
+<script type="text/html" id="diagnoses-template">
+    <span class="badge badge-pill badge-secondary mr-1 mb-1">
+        <a href="#!" data-content="diagnosis.name" class="text-white py-0 px-2 modalDiagnosisDetail_open diagnosis-detail" data-template-bind='[{"attribute": "data-diagnosis-id", "value": "diagnosis.id"}, {"attribute": "data-diagnosis-name", "value": "diagnosis.name"}, {"attribute": "data-diagnosis-description", "value": "diagnosis.description"}]'></a>
+        <a href="#!" class="btn btn-danger btn-sm btn-round remove-diagnosis ml-3" data-template-bind='[{"attribute": "data-diagnosis-id", "value": "diagnosis.id"}]'>
+            <i class="fa fa-times"></i>
+        </a>
+    </span>
+</script>
+
+<script type="text/html" id="dismissed-diagnoses-template">
+    <li class="list-group-item">
+        <span data-content="diagnosis.name"></span> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
+    </li>
+</script>

@@ -18,6 +18,8 @@ from .modules.api import doctor_schedule_api
 from .modules.api import patient_connection_api
 from .modules.api import patient_appointment_api
 from .modules.api import symptoms_api
+from .modules.api import findings_api
+from .modules.api import diagnosis_api
 
 #############################################################################
 # Views
@@ -370,4 +372,45 @@ urlpatterns += [
     path(f'{version}/private/appointment/symptom/delete',
          symptoms_api.ApiPrivatePatientSymptomRemove.as_view(),
          name='api_private_appointment_symptom_delete'),
+    
+    # findings
+    path(f'{version}/private/finding/create',
+         findings_api.ApiPrivateFindingCreate.as_view(),
+         name='api_private_finding_create'),
+    path(f'{version}/private/appointment/finding/create',
+         findings_api.ApiPrivatePatientFindingCreate.as_view(),
+         name='api_private_appointment_finding_create'),
+    path(f'{version}/public/findings/list',
+         findings_api.ApiPublicFindingList.as_view(),
+         name='api_public_findings_list'),
+    path(f'{version}/private/appointment/finding/list',
+         findings_api.ApiPrivatePatientFindingList.as_view(),
+         name='api_private_appointment_finding_list'),
+    path(f'{version}/private/appointment/finding/dismissed_list',
+         findings_api.ApiPrivatePatientDismissedFindingList.as_view(),
+         name='api_private_appointment_finding_dismissed_list'),
+    path(f'{version}/private/appointment/finding/delete',
+         findings_api.ApiPrivatePatientFindingRemove.as_view(),
+         name='api_private_appointment_finding_delete'),
+
+    # diagnoses
+    path(f'{version}/private/diagnosis/create',
+         diagnosis_api.ApiPrivateDiagnosisCreate.as_view(),
+         name='api_private_diagnosis_create'),
+    path(f'{version}/private/appointment/diagnosis/create',
+         diagnosis_api.ApiPrivatePatientDiagnosisCreate.as_view(),
+         name='api_private_appointment_diagnosis_create'),
+    path(f'{version}/public/diagnoses/list',
+         diagnosis_api.ApiPublicDiagnosisList.as_view(),
+         name='api_public_diagnoses_list'),
+    path(f'{version}/private/appointment/diagnosis/list',
+         diagnosis_api.ApiPrivatePatientDiagnosisList.as_view(),
+         name='api_private_appointment_diagnosis_list'),
+    path(f'{version}/private/appointment/diagnosis/dismissed_list',
+         diagnosis_api.ApiPrivatePatientDismissedDiagnosisList.as_view(),
+         name='api_private_appointment_diagnosis_dismissed_list'),
+    path(f'{version}/private/appointment/diagnosis/delete',
+         diagnosis_api.ApiPrivatePatientDiagnosisRemove.as_view(),
+         name='api_private_appointment_diagnosis_delete'),
+
 ]

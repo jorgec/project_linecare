@@ -5,14 +5,14 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from doctor_profiles.models import Symptom, PatientCheckupRecord, PatientSymptom
-from doctor_profiles.serializers.symptom_serializers import SymptomSerializer, SymptomCreateSerializer, \
-    PatientSymptomCreateSerializer, PatientSymptomSerializer
+from doctor_profiles.models import Finding, PatientCheckupRecord, PatientFinding
+from doctor_profiles.serializers.finding_serializers import FindingSerializer, FindingCreateSerializer, \
+    PatientFindingCreateSerializer, PatientFindingSerializer
 
 
-class ApiPublicSymptomList(APIView):
+class ApiPublicFindingList(APIView):
     """
-    List of symptoms
+    List of findings
     [optional]
     ?s=str
     ?page=n
@@ -24,33 +24,33 @@ class ApiPublicSymptomList(APIView):
         s = request.GET.get('s', None)
         page = request.GET.get('page', None)
         if s:
-            symptoms = Symptom.objects.annotate(
+            findings = Finding.objects.annotate(
                 search=SearchVector('name', 'description')
             ).filter(search__icontains=s)
         else:
-            symptoms = Symptom.objects.all()
+            findings = Finding.objects.all()
 
         if not page:
-            symptoms = symptoms[:10]
+            findings = findings[:10]
         else:
             start = page * 10
             end = start + 10
-            symptoms = symptoms[start:end]
+            findings = findings[start:end]
 
-        serializer = SymptomSerializer(symptoms, many=True)
+        serializer = FindingSerializer(findings, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ApiPrivateSymptomCreate(APIView):
+class ApiPrivateFindingCreate(APIView):
     """
-    Add a new symptom
+    Add a new finding
     """
 
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        serializer = SymptomCreateSerializer(data=request.data)
+        serializer = FindingCreateSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -60,9 +60,9 @@ class ApiPrivateSymptomCreate(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiPrivatePatientSymptomList(APIView):
+class ApiPrivatePatientFindingList(APIView):
     """
-    Load symptoms from checkup
+    Load findings from checkup
     ?checkup_id=id
     """
 
@@ -70,14 +70,14 @@ class ApiPrivatePatientSymptomList(APIView):
 
     def get(self, request, *args, **kwargs):
         checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
-        serializer = PatientSymptomSerializer(checkup.get_symptoms(), many=True)
+        serializer = PatientFindingSerializer(checkup.get_findings(), many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ApiPrivatePatientDismissedSymptomList(APIView):
+class ApiPrivatePatientDismissedFindingList(APIView):
     """
-    Load dismissed symptoms from checkup
+    Load dismissed findings from checkup
     ?checkup_id=id
     """
 
@@ -85,20 +85,20 @@ class ApiPrivatePatientDismissedSymptomList(APIView):
 
     def get(self, request, *args, **kwargs):
         checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
-        serializer = PatientSymptomSerializer(checkup.get_dismissed_symptoms(), many=True)
+        serializer = PatientFindingSerializer(checkup.get_dismissed_findings(), many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ApiPrivatePatientSymptomCreate(APIView):
+class ApiPrivatePatientFindingCreate(APIView):
     """
-    Attach symptom to patient
+    Attach finding to patient
     """
 
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        serializer = PatientSymptomCreateSerializer(data=request.data)
+        serializer = PatientFindingCreateSerializer(data=request.data)
         if serializer.is_valid():
             checkup = serializer.validated_data['checkup']
             doctor = request.user.doctor_profile()
@@ -109,37 +109,37 @@ class ApiPrivatePatientSymptomCreate(APIView):
                                 status=status.HTTP_403_FORBIDDEN)
 
             try:
-                patient_symptoms = PatientSymptom.objects.create(
+                patient_findings = PatientFinding.objects.create(
                     added_by=doctor,
-                    symptom=serializer.validated_data.get('symptom'),
+                    finding=serializer.validated_data.get('finding'),
                     checkup=serializer.validated_data.get('checkup')
                 )
             except IntegrityError:
-                return Response("That symptom has already been added! If you don't see it, check the dismissed list.",
+                return Response("That finding has already been added! If you don't see it, check the dismissed list.",
                                 status=status.HTTP_409_CONFLICT)
 
-            response_serializer = PatientSymptomSerializer(patient_symptoms)
+            response_serializer = PatientFindingSerializer(patient_findings)
 
             return Response(response_serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiPrivatePatientSymptomRemove(APIView):
+class ApiPrivatePatientFindingRemove(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        patient_symptom = get_object_or_404(PatientSymptom, symptom_id=request.GET.get('id', None),
+        patient_finding = get_object_or_404(PatientFinding, finding_id=request.GET.get('id', None),
                                             checkup_id=request.GET.get('checkup_id'))
         doctor = request.user.doctor_profile()
         if not doctor:
             return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
-        if not patient_symptom.checkup.doctor_has_access(doctor):
+        if not patient_finding.checkup.doctor_has_access(doctor):
             return Response(f"{doctor} does not have access privileges for this record",
                             status=status.HTTP_403_FORBIDDEN)
 
-        patient_symptom.is_deleted = True
-        patient_symptom.removed_by = doctor
-        patient_symptom.save()
-        response_serializer = PatientSymptomSerializer(patient_symptom)
+        patient_finding.is_deleted = True
+        patient_finding.removed_by = doctor
+        patient_finding.save()
+        response_serializer = PatientFindingSerializer(patient_finding)
         return Response(response_serializer.data, status=status.HTTP_200_OK)
