@@ -45,7 +45,7 @@ class ApiPatientSubAccountCreate(APIView):
                 height=bm_response['height'],
                 weight=bm_response['weight'],
                 blood_type=bm_response['blood_type'],
-                user=user
+                profile=user.base_profile()
             )
             bm.save()
             serializer = AccountWithProfileSerializerPrivate(user)
