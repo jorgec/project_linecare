@@ -45,6 +45,10 @@ class LabTestSerializer(serializers.ModelSerializer):
         words = ' '.join(obj.notes.split(' ')[:20])
         return f'{words}...'
 
+    def repr_interpretation(self, obj):
+        words = ' '.join(obj.interpretation.split(' ')[:20])
+        return f'{words}...'
+
     class Meta:
         model = LabTest
         fields = (
