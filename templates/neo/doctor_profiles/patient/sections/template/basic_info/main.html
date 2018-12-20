@@ -6,7 +6,11 @@
         <div class="col-sm-6 col-md-10 info-data">
             <div class="row mb-2">
                 <div class="col info-name">
-                    <h4 class="h4">{{ patient.get_full_name }}</h4>
+                    <h4 class="h4">
+                        <a href="{% url 'doctor_profile_patient_detail' patient.id %}">
+                            {{ patient.get_full_name }}
+                        </a>
+                    </h4>
                 </div>
                 <div class="col info-date">
                     {{ appointment.nice_name }}
