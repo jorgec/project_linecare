@@ -35,7 +35,7 @@ class DoctorProfilePatientDetail(LoginRequiredMixin, UserPassesTestMixin, View):
             checkup__appointment__patient=patient,
             is_approved=True
         ).order_by(
-            '-checkup__appointment__schedule_day'
+            '-checkup__appointment__schedule_day__date_obj'
         )
 
         context = {

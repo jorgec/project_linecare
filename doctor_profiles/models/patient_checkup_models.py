@@ -68,7 +68,7 @@ class PatientCheckupRecordAccess(models.Model):
     objects = PatientCheckupRecordAccessManager()
 
     class Meta:
-        ordering = ('-checkup__appointment__schedule_day',)
+        ordering = ('-checkup__appointment__schedule_day__date_obj',)
         unique_together = ('checkup', 'doctor')
 
     def __str__(self):
