@@ -29,6 +29,7 @@
 
         $.get(url)
             .done(function (result) {
+                console.log(result);
                 labtests_loader.addClass('hide');
                 labtests_container.loadTemplate(labtests_template, result);
             })
