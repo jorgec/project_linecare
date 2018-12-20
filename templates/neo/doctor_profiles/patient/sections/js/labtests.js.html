@@ -86,6 +86,7 @@
                         var labtest_id = $(this).attr("data-labtest-id");
                         $.each(result, function(i, item){
                             if(parseInt(labtest_id) === item.id){
+                                $("#modalAddLabTestDescriptionPane").removeClass("hide");
                                 $("#modalAddLabTest_title").html(item.name);
                                 $("#modalAddLabTest_description").html(item.description);
                                 $("#modalAddLabTest_purpose").html(item.purpose);
