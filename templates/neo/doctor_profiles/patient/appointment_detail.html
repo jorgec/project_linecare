@@ -55,6 +55,10 @@
 {% block subcontent %}
     {% include 'neo/doctor_profiles/patient/sections/template/basic_info/main.html' %}
 
+    {% include 'neo/doctor_profiles/patient/sections/template/next_steps/main.html' %}
+    {% include 'neo/doctor_profiles/patient/sections/template/next_steps/modals.html' %}
+    {% include 'neo/doctor_profiles/patient/sections/template/next_steps/template.html' %}
+
     <div class="row no-gutters">
         <div class="col-sm-12 col-md-4">
             {% include 'neo/doctor_profiles/patient/sections/template/symptoms/main.html' %}
@@ -94,6 +98,7 @@
         <script type="text/javascript"
                 src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
         {% include 'neo/doctor_profiles/patient/sections/js/basic_info.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/next_steps.js.html' %}
         {% include 'neo/doctor_profiles/patient/sections/js/symptoms.js.html' %}
         {% include 'neo/doctor_profiles/patient/sections/js/findings.js.html' %}
         {% include 'neo/doctor_profiles/patient/sections/js/diagnoses.js.html' %}
