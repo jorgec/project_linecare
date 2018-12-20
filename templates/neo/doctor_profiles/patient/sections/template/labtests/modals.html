@@ -3,9 +3,40 @@
         <div class="row">
             <div class="col-sm-12 col-md-4">
                 <div class="form-group mb-2">
-                    <input type="text" class="form-control" placeholder="Search..." name="txtLabTestsearch" id="txtLabTestSearch">
+                    <input type="text" class="form-control" placeholder="Search..." name="txtLabTestsearch" id="txtLabTestsearch">
                 </div>
                 <ul class="list-group list-group-flush" id="labtests-container"></ul>
+            </div>
+            <div class="col-sm-12 col-md-8">
+                <h4 id="modalAddLabTest_title" class="h4"></h4>
+                <hr>
+                <h5 class="h5">Description</h5>
+                <p id="modalAddLabTest_description"></p>
+                <h5 class="h5">Purpose</h5>
+                <p id="modalAddLabTest_purpose"></p>
+                <h5 class="h5">Indication</h5>
+                <p id="modalAddLabTest_indication"></p>
+                <h5 class="h5">Notes</h5>
+                <p id="modalAddLabTest_notes"></p>
+                <hr>
+                <a id="btnAddLabTestPatient" class="btn btn-primary" href="#!">
+                    Request for this test
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalLabTestRequestDetail" class="popup-modal popup-modal-wide card">
+    <div class="card-body">
+        <div class="card-header">
+            <h5 class="h5" id="modalLabTestRequestDetail_title"></h5>
+        </div>
+        <div class="card-body">
+            <div id="modalLabTestRequestDetail_description"></div>
+
+            <div class="alert alert-secondary">
+                Lab test results placeholder
             </div>
         </div>
     </div>

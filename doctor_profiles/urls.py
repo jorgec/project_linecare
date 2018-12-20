@@ -433,4 +433,10 @@ urlpatterns += [
     path(f'{version}/public/labtest/list',
          labtest_api.ApiPublicLabtestList.as_view(),
          name='api_public_labtest_list'),
+    path(f'{version}/private/appointment/labtest/create',
+         labtest_api.ApiPrivatePatientLabTestCreate.as_view(),
+         name='api_private_patient_labtest_create'),
+    path(f'{version}/private/appointment/labtest/list',
+         labtest_api.ApiPrivatePatientLabTestList.as_view(),
+         name='api_rpivate_patient_labtest_list'),
 ]

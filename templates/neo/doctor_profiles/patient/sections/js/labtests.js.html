@@ -3,38 +3,104 @@
     var labtests_template = $("#labtests-template");
     var labtests_loader = $("#labtests-wrapper .donut-spinner");
     var modalAddLabTest = $("#modalAddLabTest");
+    var btnAddLabTestPatient = $("#btnAddLabTestPatient");
+    var patient_labtests_container = $("#patient-labtests-container");
+    var patient_labtests_template = $("#patient-labtests-template");
+    var modalLabTestRequestDetail = $("#modalLabTestRequestDetail");
 
     var txtLabTestsearch = $("#txtLabTestsearch");
     $(document).ready(function () {
         loadLabTests('');
+        loadPatientLabTests();
         modalAddLabTest.popup({
             autozindex: true,
             scrolllock: true
         });
+        modalLabTestRequestDetail.popup({
+            autozindex: true,
+            scrolllock: true
+        });
 
-        txtLabTestsearch.on('keydown', function (e) {
+        txtLabTestsearch.on('keyup', function (e) {
             var term = $(this).val();
-
+            console.log(term);
             loadLabTests(term);
         });
+
+        btnAddLabTestPatient.on('click', function(e){
+            var labtest_id = $(this).attr("data-labtest-id");
+            addLabTest(labtest_id);
+        });
     });
+
+    function addLabTest(labtest_id){
+        var url = "{% url 'api_private_patient_labtest_create' %}";
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            checkup: '{{ checkup.id }}',
+            lab_test: labtest_id
+        };
+
+        $.post(url, formData)
+            .done(function(result){
+                loadPatientLabTests();
+                modalAddLabTest.popup('hide');
+            })
+            .fail(function(result){
+                console.log(result);
+            });
+    }
+
+    function loadPatientLabTests(){
+        var url = "{% url 'api_rpivate_patient_labtest_list' %}?checkup_id={{ checkup.id }}";
+        $.get(url)
+            .done(function(result){
+                patient_labtests_container.loadTemplate(patient_labtests_template, result);
+                $(".patient-labtest-detail").on('click', function(e){
+                    e.preventDefault();
+                    $("#modalLabTestRequestDetail_title").html($(this).attr("data-labtest-name"));
+                    $("#modalLabTestRequestDetail_description").html($(this).attr("data-labtest-description"));
+                });
+            })
+            .fail(function(result){
+                console.log(fail);
+            })
+    }
 
 
     function loadLabTests(term) {
         labtests_loader.removeClass('hide');
         var url = "{% url 'api_public_labtest_list' %}";
         if (term.length >= 2) {
-            url = url + "&s=" + term;
+            url = url + "?s=" + term;
         }
+        if(term.length >= 3 || term.length === 0){
+            $.get(url)
+                .done(function (result) {
+                    console.log(result);
+                    labtests_loader.addClass('hide');
+                    labtests_container.loadTemplate(labtests_template, result);
 
-        $.get(url)
-            .done(function (result) {
-                console.log(result);
-                labtests_loader.addClass('hide');
-                labtests_container.loadTemplate(labtests_template, result);
-            })
-            .fail(function (result) {
-                console.log(result);
-            });
+                    $('.labtest-item').on('click', function(e){
+                        e.preventDefault();
+                        var labtest_id = $(this).attr("data-labtest-id");
+                        $.each(result, function(i, item){
+                            if(parseInt(labtest_id) === item.id){
+                                $("#modalAddLabTest_title").html(item.name);
+                                $("#modalAddLabTest_description").html(item.description);
+                                $("#modalAddLabTest_purpose").html(item.purpose);
+                                $("#modalAddLabTest_indication").html(item.indication);
+                                $("#modalAddLabTest_notes").html(item.notes);
+                                $("#btnAddLabTestPatient").attr("data-labtest-id", item.id);
+                            }
+
+                        });
+
+                    });
+                })
+                .fail(function (result) {
+                    console.log(result);
+                });
+        }
     }
 </script>

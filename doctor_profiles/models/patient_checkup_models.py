@@ -5,7 +5,7 @@ from django_extensions.db import fields as extension_fields
 
 from doctor_profiles.models.managers.patient_checkup_manager import PatientCheckupRecordManager, \
     PatientCheckupRecordAccessManager, PatientSymptomManager, PatientFindingManager, PatientDiagnosisManager, \
-    CheckupNoteManager
+    CheckupNoteManager, PatientLabTestRequestManager, LabTestManager
 
 
 class PatientCheckupRecord(models.Model):
@@ -43,6 +43,9 @@ class PatientCheckupRecord(models.Model):
 
     def get_dismissed_diagnoses(self):
         return self.checkup_diagnoses.filter(is_deleted=True)
+
+    def get_requested_tests(self):
+        return self.checkup_tests.filter(is_approved=True)
 
     def doctor_has_access(self, doctor):
         allowed = self.checkup_access.filter(is_approved=True, doctor=doctor)
@@ -92,6 +95,8 @@ class LabTest(models.Model):
     interpretation = models.TextField(max_length=4096, blank=True, null=True)
     notes = models.TextField(max_length=4096, blank=True, null=True)
 
+    objects = LabTestManager()
+
     class Meta:
         ordering = ('name',)
 
@@ -110,6 +115,10 @@ class PatientLabTestRequest(models.Model):
     lab_test = models.ForeignKey(LabTest, on_delete=models.CASCADE, related_name='tested_patients')
     checkup = models.ForeignKey('doctor_profiles.PatientCheckupRecord', on_delete=models.CASCADE,
                                 related_name='checkup_tests')
+    requested_by = models.ForeignKey('doctor_profiles.DoctorProfile', on_delete=models.SET_NULL, null=True,
+                                 related_name='labtests_requested')
+
+    objects = PatientLabTestRequestManager()
 
     class Meta:
         ordering = ('checkup',)

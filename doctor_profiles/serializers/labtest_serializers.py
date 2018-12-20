@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from doctor_profiles.models import LabTest
+from doctor_profiles.models import LabTest, PatientLabTestRequest
 
 
 class LabTestSerializer(serializers.ModelSerializer):
@@ -15,39 +15,57 @@ class LabTestSerializer(serializers.ModelSerializer):
     aliases = serializers.SerializerMethodField('repr_aliases')
 
     def repr_aliases(self, obj):
-        return ', '.join(obj.aliases)
+        if obj.aliases:
+            return ', '.join(obj.aliases)
+        return None
 
     def repr_description(self, obj):
-        words = ' '.join(obj.description.split(' ')[:30])
-        return f'{words}...'
+        if obj.description:
+            words = ' '.join(obj.description.split(' ')[:30])
+            return f'{words}...'
+        return None
 
     def repr_purpose(self, obj):
-        words = ' '.join(obj.purpose.split(' ')[:20])
-        return f'{words}...'
+        if obj.purpose:
+            words = ' '.join(obj.purpose.split(' ')[:20])
+            return f'{words}...'
+        return None
 
     def repr_indication(self, obj):
-        words = ' '.join(obj.indication.split(' ')[:30])
-        return f'{words}...'
+        if obj.indication:
+            words = ' '.join(obj.indication.split(' ')[:30])
+            return f'{words}...'
+        return None
 
     def repr_sample(self, obj):
-        words = ' '.join(obj.sample.split(' ')[:10])
-        return f'{words}...'
+        if obj.sample:
+            words = ' '.join(obj.sample.split(' ')[:10])
+            return f'{words}...'
+        return None
 
     def repr_preparation(self, obj):
-        words = ' '.join(obj.preparation.split(' ')[:10])
-        return f'{words}...'
+        if obj.preparation:
+            words = ' '.join(obj.preparation.split(' ')[:10])
+            return f'{words}...'
+        return None
 
     def repr_usage(self, obj):
-        words = ' '.join(obj.usage.split(' ')[:20])
-        return f'{words}...'
+        if obj.usage:
+            words = ' '.join(obj.usage.split(' ')[:20])
+            return f'{words}...'
+        return None
 
     def repr_notes(self, obj):
-        words = ' '.join(obj.notes.split(' ')[:20])
-        return f'{words}...'
+        if obj.notes:
+            words = ' '.join(obj.notes.split(' ')[:20])
+            return f'{words}...'
+        return None
 
     def repr_interpretation(self, obj):
-        words = ' '.join(obj.interpretation.split(' ')[:20])
-        return f'{words}...'
+        if obj.interpretation:
+            words = ' '.join(obj.interpretation.split(' ')[:20])
+            return f'{words}...'
+        return None
 
     class Meta:
         model = LabTest
@@ -65,3 +83,19 @@ class LabTestSerializer(serializers.ModelSerializer):
             'interpretation',
             'notes',
         )
+
+
+class PatientLabTestRequestCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientLabTestRequest
+        fields = (
+            'checkup',
+            'lab_test'
+        )
+
+
+class PatientLabTestRequestSerializer(serializers.ModelSerializer):
+    lab_test = LabTestSerializer()
+    class Meta:
+        model = PatientLabTestRequest
+        fields = '__all__'

@@ -39,7 +39,6 @@ class ApiCheckupNoteCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        print(request.GET)
         checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
         doctor = request.user.doctor_profile()
         if not doctor:

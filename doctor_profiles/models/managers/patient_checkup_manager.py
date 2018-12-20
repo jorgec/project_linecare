@@ -29,3 +29,13 @@ class PatientDiagnosisManager(models.Manager):
 class CheckupNoteManager(models.Manager):
     def create(self, *args, **kwargs):
         return super(CheckupNoteManager, self).create(*args, **kwargs)
+
+
+class LabTestManager(models.Manager):
+    def create(self, *args, **kwargs):
+        return super(LabTestManager, self).create(*args, **kwargs)
+
+
+class PatientLabTestRequestManager(models.Manager):
+    def create(self, *args, **kwargs):
+        return super(PatientLabTestRequestManager, self).create(*args, **kwargs)

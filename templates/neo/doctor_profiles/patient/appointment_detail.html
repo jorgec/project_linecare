@@ -72,17 +72,15 @@
             {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/template.html' %}
         </div>
     </div>
-    <div class="row no-gutters">
-        <div class="col-sm-12 col-md-6">
-            {% include 'neo/doctor_profiles/patient/sections/template/labtests/main.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/labtests/modals.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/labtests/template.html' %}
-        </div>
-        <div class="col-sm-12 col-md-6">
-            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/main.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/modals.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/template.html' %}
-        </div>
+    <div>
+        {% include 'neo/doctor_profiles/patient/sections/template/labtests/main.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/template/labtests/modals.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/template/labtests/template.html' %}
+    </div>
+    <div>
+        {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/main.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/modals.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/template.html' %}
     </div>
     <div>
         {% include 'neo/doctor_profiles/patient/sections/template/notes/main.html' %}
