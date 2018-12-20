@@ -21,6 +21,7 @@ from .modules.api import symptoms_api
 from .modules.api import findings_api
 from .modules.api import diagnosis_api
 from .modules.api import checkup_api
+from .modules.api import labtest_api
 
 #############################################################################
 # Views
@@ -427,4 +428,9 @@ urlpatterns += [
     path(f'{version}/private/appointment/note/create',
          checkup_api.ApiCheckupNoteCreate.as_view(),
          name='api_private_appointment_note_create'),
+
+    # labtests
+    path(f'{version}/public/labtest/list',
+         labtest_api.ApiPublicLabtestList.as_view(),
+         name='api_public_labtest_list'),
 ]

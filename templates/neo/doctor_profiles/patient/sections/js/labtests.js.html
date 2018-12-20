@@ -1,0 +1,39 @@
+<script type="text/javascript">
+    var labtests_container = $("#labtests-container");
+    var labtests_template = $("#labtests-template");
+    var labtests_loader = $("#labtests-wrapper .donut-spinner");
+    var modalAddLabTest = $("#modalAddLabTest");
+
+    var txtLabTestsearch = $("#txtLabTestsearch");
+    $(document).ready(function () {
+        loadLabTests('');
+        modalAddLabTest.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+
+        txtLabTestsearch.on('keydown', function (e) {
+            var term = $(this).val();
+
+            loadLabTests(term);
+        });
+    });
+
+
+    function loadLabTests(term) {
+        labtests_loader.removeClass('hide');
+        var url = "{% url 'api_public_labtest_list' %}";
+        if (term.length >= 2) {
+            url = url + "&s=" + term;
+        }
+
+        $.get(url)
+            .done(function (result) {
+                labtests_loader.addClass('hide');
+                labtests_container.loadTemplate(labtests_template, result);
+            })
+            .fail(function (result) {
+                console.log(result);
+            });
+    }
+</script>

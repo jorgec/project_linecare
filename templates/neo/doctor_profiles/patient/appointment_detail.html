@@ -48,21 +48,33 @@
     {% include 'neo/doctor_profiles/patient/sections/template/basic_info/main.html' %}
 
     <div class="row no-gutters">
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-4">
             {% include 'neo/doctor_profiles/patient/sections/template/symptoms/main.html' %}
             {% include 'neo/doctor_profiles/patient/sections/template/symptoms/modals.html' %}
             {% include 'neo/doctor_profiles/patient/sections/template/symptoms/template.html' %}
         </div>
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-4">
             {% include 'neo/doctor_profiles/patient/sections/template/findings/main.html' %}
             {% include 'neo/doctor_profiles/patient/sections/template/findings/modals.html' %}
             {% include 'neo/doctor_profiles/patient/sections/template/findings/template.html' %}
         </div>
+        <div class="col-sm-12 col-md-4">
+            {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/main.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/modals.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/template.html' %}
+        </div>
     </div>
-    <div>
-        {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/main.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/modals.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/template.html' %}
+    <div class="row no-gutters">
+        <div class="col-sm-12 col-md-6">
+            {% include 'neo/doctor_profiles/patient/sections/template/labtests/main.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/labtests/modals.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/labtests/template.html' %}
+        </div>
+        <div class="col-sm-12 col-md-6">
+            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/main.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/modals.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/template.html' %}
+        </div>
     </div>
     <div>
         {% include 'neo/doctor_profiles/patient/sections/template/notes/main.html' %}
@@ -79,6 +91,8 @@
         {% include 'neo/doctor_profiles/patient/sections/js/symptoms.js.html' %}
         {% include 'neo/doctor_profiles/patient/sections/js/findings.js.html' %}
         {% include 'neo/doctor_profiles/patient/sections/js/diagnoses.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/labtests.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/prescriptions.js.html' %}
         {% include 'neo/doctor_profiles/patient/sections/js/notes.js.html' %}
     {% endblock %}
 {% endblock %}
