@@ -10,7 +10,7 @@
 <script type="text/html" id="diagnoses-template">
     <span class="badge--gray mr-1 mb-1">
         <a href="#!" data-content="diagnosis.name" class="py-0 px-2 modalDiagnosisDetail_open diagnosis-detail" data-template-bind='[{"attribute": "data-diagnosis-id", "value": "diagnosis.id"}, {"attribute": "data-diagnosis-name", "value": "diagnosis.name"}, {"attribute": "data-diagnosis-description", "value": "diagnosis.description"}]'></a>
-        <a href="#!" class="remove-diagnosis ml-3" data-template-bind='[{"attribute": "data-diagnosis-id", "value": "diagnosis.id"}]'>
+        <a href="#!" class="remove-diagnosis ml-3 remove-button" data-template-bind='[{"attribute": "data-diagnosis-id", "value": "diagnosis.id"}]'>
             <i class="fa fa-times"></i>
         </a>
     </span>
