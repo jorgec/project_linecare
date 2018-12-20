@@ -3,7 +3,44 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 
-from doctor_profiles.models import PatientAppointment, PatientCheckupRecord
+from doctor_profiles.models import PatientAppointment, PatientCheckupRecord, PatientConnection
+from profiles.models import BaseProfile
+
+
+class DoctorProfilePatientList(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        doctor = request.user.doctor_profile()
+        context = {
+            'page_title': f'Patients list for {doctor}',
+            'location': 'doctor_profile_patients',
+            'sublocation': 'list',
+            'doctor': doctor,
+        }
+
+        return render(request, 'neo/doctor_profiles/patient/home.html', context)
+
+    def test_func(self):
+        return self.request.user.doctor_profile()
+
+
+class DoctorProfilePatientDetail(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        doctor = request.user.doctor_profile()
+        patient = get_object_or_404(BaseProfile, id=kwargs['patient_id'])
+        connection = get_object_or_404(PatientConnection, doctor=doctor, patient=patient)
+
+        context = {
+            'page_title': f'Patient profile for {patient}',
+            'location': 'doctor_profile_patients',
+            'sublocation': 'detail',
+            'doctor': doctor,
+            'patient': patient
+        }
+
+        return render(request, 'neo/doctor_profiles/patient/patient_detail.html', context)
+
+    def test_func(self):
+        return self.request.user.doctor_profile()
 
 
 class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -25,7 +62,7 @@ class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMi
             'checkup': checkup
         }
 
-        return render(request, 'neo/doctor_profiles/patient/home.html', context)
+        return render(request, 'neo/doctor_profiles/patient/appointment_detail.html', context)
 
     def test_func(self):
         return self.request.user.doctor_profile()

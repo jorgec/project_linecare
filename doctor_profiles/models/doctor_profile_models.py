@@ -7,6 +7,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models as models
 
 from doctor_profiles.models.managers.doctor_profile_manager import DoctorProfileManager
+from helpers import search
 
 
 class DoctorProfile(models.Model):
@@ -269,3 +270,9 @@ class DoctorProfile(models.Model):
         self.metadata['options'][key] = value
         self.save()
         return value
+
+    def get_patients(self, s=None):
+        if s:
+            patients_query = search.get_query(s, ['patient__first_name', 'patient__last_name'])
+            return self.doctor_patients.filter(patients_query).order_by('patient__last_name')
+        return self.doctor_patients.all()

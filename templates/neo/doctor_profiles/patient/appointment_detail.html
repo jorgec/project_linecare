@@ -1,0 +1,84 @@
+{% extends 'neo/doctor_profiles/patient/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+    <style type="text/css">
+
+        @media (max-width: 500px) {
+            .popup-modal {
+                width: 95%;
+            }
+        }
+        @media (min-width: 501px) and (max-width: 768px) {
+            .popup-modal {
+                width: 80%;
+            }
+        }
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .popup-modal {
+                width: 70%;
+            }
+        }
+        @media (min-width: 1201px) {
+            .popup-modal {
+                width: 60%;
+            }
+        }
+        .popup-modal {
+            background-color: white;
+        }
+        .btn-round {
+            border-radius: 50%;
+            padding-top: 0.375rem;
+            padding-right: 0.75rem;
+            padding-left: 0.75rem;
+            padding-bottom: 0.375rem;
+        }
+
+    </style>
+
+
+
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+    {% include 'neo/doctor_profiles/patient/sections/template/basic_info/main.html' %}
+
+    <div class="row no-gutters">
+        <div class="col-sm-12 col-md-6">
+            {% include 'neo/doctor_profiles/patient/sections/template/symptoms/main.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/symptoms/modals.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/symptoms/template.html' %}
+        </div>
+        <div class="col-sm-12 col-md-6">
+            {% include 'neo/doctor_profiles/patient/sections/template/findings/main.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/findings/modals.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/findings/template.html' %}
+        </div>
+    </div>
+    <div>
+        {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/main.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/modals.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/template.html' %}
+    </div>
+    <div>
+        {% include 'neo/doctor_profiles/patient/sections/template/notes/main.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/template/notes/modals.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/template/notes/template.html' %}
+    </div>
+{% endblock %}
+
+{% block home_scripts %}
+    {% block inner_scripts %}
+        <script type="text/javascript"
+                src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+        {% include 'neo/doctor_profiles/patient/sections/js/basic_info.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/symptoms.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/findings.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/diagnoses.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/notes.js.html' %}
+    {% endblock %}
+{% endblock %}

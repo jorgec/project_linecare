@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    var patients_container = $("#patients-container");
+    var patients_template = $("#patients-template");
+    var patients_loader = $("#patients-wrapper .donut-spinner");
+
+    var txtPatientSearch = $("#txtPatientSearch");
+    $(document).ready(function () {
+        loadPatients('');
+
+        txtPatientSearch.on('keydown', function (e) {
+            var term = $(this).val();
+
+            loadPatients(term);
+        });
+    });
+
+
+    function loadPatients(term) {
+        patients_loader.removeClass('hide');
+        var url = "{% url 'api_private_patient_connection_search' %}?doctor_id={{ doctor.id }}";
+        if (term.length >= 2) {
+            url = url + "&s=" + term;
+        }
+
+        $.get(url)
+            .done(function (result) {
+                patients_loader.addClass('hide');
+
+                patients_container.loadTemplate(patients_template, result);
+            })
+            .fail(function (result) {
+                console.log(result);
+            });
+    }
+</script>

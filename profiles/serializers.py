@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import serializers
 
 from albums.models import Photo
@@ -103,6 +104,7 @@ class BaseProfilePrivateSerializerFull(serializers.ModelSerializer):
     profile_photo_css = serializers.SerializerMethodField('repr_profile_photo_css')
     gender = GenderSerializer()
     full_name = serializers.SerializerMethodField('repr_full_name')
+    patient_detail_url = serializers.SerializerMethodField('repr_patient_url')
 
     def repr_profile_photo(self, obj):
         if type(obj.get_profile_photo()) == Photo:
@@ -118,6 +120,12 @@ class BaseProfilePrivateSerializerFull(serializers.ModelSerializer):
 
         return f"background-image: url({photo})"
 
+    def repr_patient_url(self, obj):
+        url = reverse('doctor_profile_patient_detail', kwargs={
+            'patient_id': obj.id
+        })
+        return url
+
     def repr_full_name(self, obj):
         return obj.get_full_name()
 
@@ -131,5 +139,6 @@ class BaseProfilePrivateSerializerFull(serializers.ModelSerializer):
             'date_of_birth',
             'profile_photo',
             'profile_photo_css',
-            'full_name'
+            'full_name',
+            'patient_detail_url'
         )
