@@ -3,7 +3,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 
-from doctor_profiles.models import PatientAppointment, PatientCheckupRecord, PatientConnection
+from doctor_profiles.models import PatientAppointment, PatientCheckupRecord, PatientConnection, \
+    PatientCheckupRecordAccess
 from profiles.models import BaseProfile
 
 
@@ -29,12 +30,19 @@ class DoctorProfilePatientDetail(LoginRequiredMixin, UserPassesTestMixin, View):
         patient = get_object_or_404(BaseProfile, id=kwargs['patient_id'])
         connection = get_object_or_404(PatientConnection, doctor=doctor, patient=patient)
 
+        checkups = PatientCheckupRecordAccess.objects.filter(
+            doctor=doctor,
+            checkup__appointment__patient=patient,
+            is_approved=True
+        )
+
         context = {
             'page_title': f'Patient profile for {patient}',
             'location': 'doctor_profile_patients',
             'sublocation': 'detail',
             'doctor': doctor,
-            'patient': patient
+            'patient': patient,
+            'checkups': checkups
         }
 
         return render(request, 'neo/doctor_profiles/patient/patient_detail.html', context)

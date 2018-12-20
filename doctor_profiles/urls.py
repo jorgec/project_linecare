@@ -87,12 +87,12 @@ urlpatterns = [
     path('patients',
          patient_views.DoctorProfilePatientList.as_view(),
          name='doctor_profile_patient_list'),
-    path('patients/<patient_id>/detail',
-         patient_views.DoctorProfilePatientDetail.as_view(),
-         name='doctor_profile_patient_detail'),
     path('patients/appointment/detail',
          patient_views.DoctorProfilePatientAppointmentDetail.as_view(),
          name='doctor_profile_patient_appointment_detail'),
+    path('patients/<patient_id>/detail',
+         patient_views.DoctorProfilePatientDetail.as_view(),
+         name='doctor_profile_patient_detail'),
 
 ]
 

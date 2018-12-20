@@ -60,9 +60,9 @@ class ApiPrivatePatientConnectionSearchList(APIView):
             qs = PatientConnection.objects.annotate(fullname=Concat('patient__first_name', Value(' '), 'patient__last_name')).filter(**filters)
             connections = qs.filter(
                 Q(patient__last_name__icontains=s) | Q(patient__first_name__icontains=s) | Q(fullname__icontains=s)
-            )
+            ).order_by('patient__last_name')
         else:
-            connections = PatientConnection.objects.filter(**filters)
+            connections = PatientConnection.objects.filter(**filters).order_by('patient__last_name')
 
         patients = {c.patient for c in connections}
         serializer = BaseProfilePrivateSerializerFull(patients, many=True)

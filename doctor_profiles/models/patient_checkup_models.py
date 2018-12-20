@@ -212,7 +212,7 @@ class PatientFinding(models.Model):
         unique_together = ('finding', 'checkup')
 
     def __str__(self):
-        return f'{self.finding}: {self.checkup.appointment.patient}'
+        return f'{self.finding}'
 
 
 class Diagnosis(models.Model):
@@ -261,7 +261,7 @@ class PatientDiagnosis(models.Model):
         unique_together = ('diagnosis', 'checkup')
 
     def __str__(self):
-        return f'{self.diagnosis}: {self.checkup.appointment.patient}'
+        return f'{self.diagnosis}'
 
 
 class CheckupNote(models.Model):
