@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'doctor_profile_medical_institution_schedule_list' appointment.medical_institution.slug %}">
+    <a class="navbar-brand" href="{% url 'doctor_profile_schedule_detail' appointment.medical_institution.slug %}">
         {{ appointment.medical_institution }}
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
