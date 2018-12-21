@@ -2,6 +2,7 @@
     var modalPrescriptionDetail = $("#modalPrescriptionDetail");
     var modalAddMedicine = $("#modalAddMedicine");
     var modalDismissedPrescriptions = $("#modalDismissedPrescriptions");
+    var modalAddPrescription = $("#modalAddPrescription");
     var id_generic_name = $("#id_generic_name");
 
     $(document).ready(function () {
@@ -14,6 +15,11 @@
             scrolllock: true
         });
         modalAddMedicine.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+
+        modalAddPrescription.popup({
             autozindex: true,
             scrolllock: true
         });
