@@ -28,7 +28,7 @@
         id_generic_name.on('keyup', function(e){
             e.preventDefault();
             var s = $(this).val();
-            if(s.length >=4){
+            if(s.length >=3){
                 loadGenerics(s);
             }else{
                 $("#generics-list-container").html('');
@@ -38,7 +38,7 @@
         txtMedicineSearch.on('keyup', function(e){
             e.preventDefault();
             var s = $(this).val();
-            if(s.length >=4){
+            if(s.length >=3){
                 loadDrugs(s);
             }else{
                 $("#drugs-list-container").html('');
@@ -50,7 +50,13 @@
         var url = "{% url 'api_public_generics_list' %}?s=" + s;
         $.get(url)
             .done(function(result){
-                $("#generics-list-container").loadTemplate($("#generics-list-template"), result);
+                if(result.length > 0){
+                    $("#generics-list-container").loadTemplate($("#generics-list-template"), result);
+                }else{
+                    $("#generics-list-container").html(
+                        "<div class='alert alert-warning'>No results</a>"
+                    )
+                }
 
                 $(".generic-name-item").on('click', function(e){
                     e.preventDefault();
@@ -67,7 +73,13 @@
         var url = "{% url 'api_public_drugs_list' %}?s=" + s;
         $.get(url)
             .done(function(result){
-                $("#drugs-list-container").loadTemplate($("#drugs-list-template"), result);
+                if(result.length > 0) {
+                    $("#drugs-list-container").loadTemplate($("#drugs-list-template"), result);
+                }else{
+                    $("#drugs-list-container").html(
+                        "<div class='alert alert-warning'>No results</a>"
+                    )
+                }
 
                 $(".drug-item").on('click', function(e){
                     e.preventDefault();
