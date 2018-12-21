@@ -40,7 +40,7 @@ class Drug(models.Model):
     product_type = models.CharField(choices=DRUG_MARKETING_STATUS, default="HUMAN OTC DRUG", max_length=64,
                                         null=True, blank=True)
 
-    openfda = JSONField(defailt=dict)
+    openfda = JSONField(default=dict)
     packaging = JSONField(default=dict)
 
     # Relationship Fields
