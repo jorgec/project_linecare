@@ -43,6 +43,9 @@ for med in data['results']:
 
         if _generic_name:
             generic_names = [x.strip for x in _generic_name.split(',')]
+            data['meta'] = {
+                'generic_names': generic_names
+            }
             try:
                 data['generic_name'] = GenericName.objects.create(
                     name=generic_names[0]
