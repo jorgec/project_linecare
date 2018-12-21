@@ -57,8 +57,8 @@ for med in data['results']:
             drug = False
 
         if _dosage_form:
-            dosage_form = [x.strip() for x in _dosage_form.split(',')]
-            for df in dosage_form:
+            for df in _dosage_form:
+                df = df.strip()
                 try:
                     _df = DosageForm.objects.get(name=df)
                 except DosageForm.DoesNotExist:
@@ -74,8 +74,8 @@ for med in data['results']:
                     pass
         
         if _pharm_class:
-            pharm_class = [x.strip() for x in _pharm_class.split(',')]
-            for df in pharm_class:
+            for df in _pharm_class:
+                df = df.strip()
                 try:
                     _df = PharmaceuticalClass.objects.get(name=df)
                 except PharmaceuticalClass.DoesNotExist:
@@ -91,8 +91,8 @@ for med in data['results']:
                     pass
         
         if _route:
-            route = [x.strip() for x in _route.split(',')]
-            for df in route:
+            for df in _route:
+                df = df.strip()
                 try:
                     _df = DrugRoute.objects.get(name=df)
                 except DrugRoute.DoesNotExist:
