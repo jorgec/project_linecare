@@ -59,16 +59,16 @@ class DrugDetailSerializer(serializers.ModelSerializer):
         return ", ".join(generic_names)
 
     def repr_active_ingredients(self, obj):
-        return ", ".join(obj.drug_ingredients.all())
+        return ", ".join([x.active_ingredient.name for x in obj.drug_ingredients.all()])
 
     def repr_routes(self, obj):
-        return ", ".join(obj.drug_routes.all())
+        return ", ".join([x.route.name for x in obj.drug_routes.all()])
 
     def repr_pharm_class(self, obj):
-        return ", ".join(obj.drug_pharmclass.all())
+        return ", ".join([x.pharm_class.name for x in obj.drug_pharmclass.all()])
 
     def repr_dosage_forms(self, obj):
-        return ", ".join(obj.drug_dosageforms.all())
+        return ", ".join([x.dosage_form.name for x in obj.drug_dosageforms.all()])
 
     class Meta:
         model = Drug
