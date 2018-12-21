@@ -37,8 +37,11 @@ class Drug(models.Model):
 
     is_generic = models.BooleanField(default=False)
 
-    marketing_status = models.CharField(choices=DRUG_MARKETING_STATUS, default="HUMAN OTC DRUG", max_length=64,
+    product_type = models.CharField(choices=DRUG_MARKETING_STATUS, default="HUMAN OTC DRUG", max_length=64,
                                         null=True, blank=True)
+
+    openfda = JSONField(defailt=dict)
+    packaging = JSONField(default=dict)
 
     # Relationship Fields
     generic_name = models.ForeignKey(GenericName, on_delete=models.SET_NULL, null=True, blank=True)

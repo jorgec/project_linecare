@@ -28,13 +28,16 @@ for med in data['results']:
     _active_ingredients = med.get('active_ingredients', None)
     _pharm_class = med.get('pharm_class', None)
     _dosage_form = med.get('dosage_form', None)
+    _openfda = med.get('openfda', {})
+    _packaging = med.get('packaging', {})
 
     if _name and (_marketing_status == 'HUMAN OTC DRUG' or _marketing_status == 'HUMAN PRESCRIPTION DRUG'):
         print(f'{_name}...')
 
         data = {
             'name': _name,
-            'marketing_status': _marketing_status,
+            'product_type': _marketing_status,
+            'base_name': _base_name
         }
 
 
@@ -47,6 +50,12 @@ for med in data['results']:
                 data['generic_name'] = GenericName.objects.get(name__iexact=_generic_name)
         else:
             data['generic_name'] = None
+
+        if _openfda:
+            data['openfsa'] = _openfda
+
+        if _packaging:
+            data['packaging'] = _packaging
 
         try:
             drug = Drug.objects.create(**data)
