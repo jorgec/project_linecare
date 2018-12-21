@@ -1,24 +1,3 @@
-<script type="text/html" id="prescriptions-list-template">
-<li class="list-group-item">
-    <a href="#!" data-template-bind='[{"attribute": "data-prescription-id", "value": "id"}]' class="float-right btn btn-sm btn-primary add-prescription">
-        <i class="fa fa-plus"></i>
-    </a>
-    <span data-content="name"></span>
-</li>
-</script>
-
-<script type="text/html" id="prescriptions-template">
-    <span class="badge--gray mr-1 mb-1">
-        <a href="#!" data-content="prescription.name" class="py-0 px-2 modalPrescriptionDetail_open prescription-detail"
-        data-template-bind='[{"attribute": "data-prescription-id", "value": "prescription.id"}, {"attribute": "data-prescription-name", "value": "prescription.name"}, {"attribute": "data-prescription-description", "value": "prescription.description"}]'></a>
-        <a href="#!" class="remove-prescription ml-3 remove-button" data-template-bind='[{"attribute": "data-prescription-id", "value": "prescription.id"}]'>
-        <i class="fa fa-times"></i>
-        </a>
-    </span>
-</script>
-
-<script type="text/html" id="dismissed-prescriptions-template">
-    <li class="list-group-item">
-        <span data-content="prescription.name"></span> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
-    </li>
+<script type="text/html" id="generics-list-template">
+    <option data-value="id" data-content="name"></option>
 </script>

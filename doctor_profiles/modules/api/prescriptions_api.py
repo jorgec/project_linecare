@@ -9,36 +9,6 @@ from drug_information.models import Drug
 from drug_information.serializers.drug_serializers import DrugSerializer
 
 
-class ApiPublicPrescriptionList(APIView):
-    """
-    List of prescriptions
-    [optional]
-    ?s=str
-    ?page=n
-    """
-
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request, *args, **kwargs):
-        s = request.GET.get('s', None)
-        page = request.GET.get('page', None)
-        if s:
-            prescriptions = Drug.objects.annotate(
-                search=SearchVector('name', 'base_name', 'generic_name__name')
-            ).filter(search__icontains=s)
-        else:
-            prescriptions = Drug.objects.all()
-
-        if not page:
-            prescriptions = prescriptions[:10]
-        else:
-            start = page * 10
-            end = start + 10
-            prescriptions = prescriptions[start:end]
-
-        serializer = DrugSerializer(prescriptions, many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ApiPrivatePrescriptionCreate(APIView):

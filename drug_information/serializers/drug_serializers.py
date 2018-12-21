@@ -20,11 +20,12 @@ class DrugSerializer(serializers.ModelSerializer):
             'base_name',
             'slug',
             'is_generic',
-            'marketing_status',
-            'route',
-            'pharm_class',
-            'dosage_form',
-            'generic_name'
+            'product_type',
+            'generic_name',
+            'drug_ingredients',
+            'drug_routes',
+            'drug_pharmclass',
+            'drug_dosageforms'
         )
 
 
@@ -32,5 +33,9 @@ class DrugCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Drug
         fields = (
-
+            'name',
+            'base_name',
+            'generic_name',
+            'is_generic',
+            'product_type'
         )

@@ -42,12 +42,13 @@ for med in data['results']:
 
 
         if _generic_name:
+            generic_names = [x.strip for x in _generic_name.split(',')]
             try:
                 data['generic_name'] = GenericName.objects.create(
-                    name=_generic_name.lower()
+                    name=generic_names[0].lower()
                 )
             except IntegrityError:
-                data['generic_name'] = GenericName.objects.get(name__iexact=_generic_name)
+                data['generic_name'] = GenericName.objects.get(name__iexact=generic_names[0])
         else:
             data['generic_name'] = None
 

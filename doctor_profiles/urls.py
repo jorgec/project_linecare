@@ -442,22 +442,4 @@ urlpatterns += [
          name='api_rpivate_patient_labtest_list'),
     
     # prescriptions
-    path(f'{version}/private/prescription/create',
-         prescriptions_api.ApiPrivatePrescriptionCreate.as_view(),
-         name='api_private_prescription_create'),
-    path(f'{version}/private/appointment/prescription/create',
-         prescriptions_api.ApiPrivatePatientPrescriptionCreate.as_view(),
-         name='api_private_appointment_prescription_create'),
-    path(f'{version}/public/prescriptions/list',
-         prescriptions_api.ApiPublicPrescriptionList.as_view(),
-         name='api_public_prescriptions_list'),
-    path(f'{version}/private/appointment/prescription/list',
-         prescriptions_api.ApiPrivatePatientPrescriptionList.as_view(),
-         name='api_private_appointment_prescription_list'),
-    path(f'{version}/private/appointment/prescription/dismissed_list',
-         prescriptions_api.ApiPrivatePatientDismissedPrescriptionList.as_view(),
-         name='api_private_appointment_prescription_dismissed_list'),
-    path(f'{version}/private/appointment/prescription/delete',
-         prescriptions_api.ApiPrivatePatientPrescriptionRemove.as_view(),
-         name='api_private_appointment_prescription_delete'),
 ]
