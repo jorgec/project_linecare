@@ -47,11 +47,12 @@ for med in data['results']:
                 'generic_names': generic_names
             }
             try:
+                data['generic_name'] = GenericName.objects.get(name__iexact=generic_names[0])
+            except GenericName.DoesNotExist:
                 data['generic_name'] = GenericName.objects.create(
                     name=generic_names[0]
                 )
-            except IntegrityError:
-                data['generic_name'] = GenericName.objects.get(name__iexact=generic_names[0])
+
         else:
             data['generic_name'] = None
 
