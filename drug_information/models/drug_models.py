@@ -171,7 +171,7 @@ class DrugDosageForm(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     drug = models.ForeignKey(Drug, related_name='drug_dosageforms', on_delete=models.CASCADE)
-    dosage_form = models.ForeignKey(Route, related_name='dosageform_drugs', on_delete=models.CASCADE)
+    dosage_form = models.ForeignKey(DosageForm, related_name='dosageform_drugs', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('dosage_form',)
