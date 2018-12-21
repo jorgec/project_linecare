@@ -4,6 +4,7 @@
     var modalDismissedPrescriptions = $("#modalDismissedPrescriptions");
     var modalAddPrescription = $("#modalAddPrescription");
     var id_generic_name = $("#id_generic_name");
+    var txtMedicineSearch = $("#txtMedicineSearch");
 
     $(document).ready(function () {
         modalPrescriptionDetail.popup({
@@ -34,7 +35,15 @@
             }
         });
 
-
+        txtMedicineSearch.on('keyup', function(e){
+            e.preventDefault();
+            var s = $(this).val();
+            if(s.length >=4){
+                loadDrugs(s);
+            }else{
+                $("#drugs-list-container").html('');
+            }
+        });
     });
 
     function loadGenerics(s){
