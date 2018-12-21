@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block header_css %}
-<link rel="stylesheet" href="{% static 'react/receptionist_profile/calendar/css/1.chunk.css' %}">
+<link rel="stylesheet" href="{% static 'react/receptionist_profile/calendar/css/receptionist-calendar-1.css' %}">
 {% endblock %}
 {% block header_js %}
 {% endblock %}
@@ -22,8 +22,8 @@
             doctor_id: '{{ doctor.id }}',
         };
     </script>
-    <script src="{% static 'react/receptionist_profile/calendar/js/1.chunk.js' %}"></script>
-    <script src="{% static 'react/receptionist_profile/calendar/js/main.chunk.js' %}"></script>
-    <script src="{% static 'react/receptionist_profile/calendar/js/runtime-main.js' %}"></script>
+    <script src="{% static 'react/receptionist_profile/calendar/js/calendar-1.js' %}"></script>
+    <script src="{% static 'react/receptionist_profile/calendar/js/calendar-main.js' %}"></script>
+    <script src="{% static 'react/receptionist_profile/calendar/js/calendar-runtime.js' %}"></script>
     {% endblock %}
 {% endblock %}
