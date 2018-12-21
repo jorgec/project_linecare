@@ -23,6 +23,8 @@
             var s = $(this).val();
             if(s.length >=4){
                 loadGenerics(s);
+            }else{
+                $("#generics-list-container").html('');
             }
         });
 
@@ -34,6 +36,31 @@
         $.get(url)
             .done(function(result){
                 $("#generics-list-container").loadTemplate($("#generics-list-template"), result);
+
+                $(".generic-name-item").on('click', function(e){
+                    e.preventDefault();
+                    var generic_id = $(this).attr("data-generic-id");
+                    var generic_name = $(this).attr("data-generic-name");
+                    $("#id_generic_name_id").val(generic_id);
+                    $("#id_generic_name").val(generic_name);
+                });
+            });
+    }
+
+    function loadDrugs(s){
+        var url = "{% url 'api_public_drugs_list' %}?s=" + s;
+        $.get(url)
+            .done(function(result){
+                $("#drugs-list-container").loadTemplate($("#drugs-list-template"), result);
+
+                $(".drug-item").on('click', function(e){
+                    e.preventDefault();
+                    var drug_id = $(this).attr("data-drug-id");
+                    var drug_name = $(this).attr("data-drug-name");
+                    $("#modalAddPrescriptionDrugName").html(drug_name);
+                    $("#modalAddPrescriptionDrugId").val(drug_id);
+                });
+
             });
     }
 

@@ -1,5 +1,11 @@
 <script type="text/html" id="generics-list-template">
-    <li class="list-item px-0 py-1 mb-1">
-        <a class="generic-name-item" href="#!" data-content="name" data-template-bind='[{"attribute": "data-generic-id", "value": "id"}]'></a>
+    <li class="list-group-item px-0 py-1 mb-1">
+        <a class="generic-name-item" href="#!" data-content="name" data-template-bind='[{"attribute": "data-generic-id", "value": "id"}, {"attribute": "data-generic-name", "value": "name"}]'></a>
+    </li>
+</script>
+
+<script type="text/html" id="drugs-list-template">
+    <li class="list-group-item px-0 py-1 mb-1">
+        <a class="drug-item modalAddPrescription_open" href="#!" data-content="name" data-template-bind='[{"attribute": "data-drug-id", "value": "id"}, {"attribute": "data-drug-name", "value": "name"}]'></a>
     </li>
 </script>
