@@ -1,7 +1,7 @@
 import sys, os, django
 
-# sys.path.append("/home/ubuntu/linecare/linecare_core/")  # here store is root folder(means parent).
-sys.path.append("/home/linecare/project_linecare/")  # here store is root folder(means parent).
+sys.path.append("/home/ubuntu/linecare/linecare_core/")  # here store is root folder(means parent).
+# sys.path.append("/home/linecare/project_linecare/")  # here store is root folder(means parent).
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "linecare_core.settings")
 django.setup()
@@ -13,8 +13,8 @@ from drug_information.models import GenericName, Drug
 from drug_information.models.drug_models import ActiveIngredient, DrugActiveIngredient, DosageForm, DrugDosageForm, \
     PharmaceuticalClass, DrugPharmaceuticalClass, DrugRoute, DrugRouteDelivery
 
-# json_src = '/home/ubuntu/linecare/documentation/drugs/openfda/endpoints/drug-ndc-0001-of-0001.json'
-json_src = '/home/linecare/documentation/drugs/openfda/endpoints/sample.json'
+json_src = '/home/ubuntu/linecare/documentation/drugs/openfda/endpoints/drug-ndc-0001-of-0001.json'
+# json_src = '/home/linecare/documentation/drugs/openfda/endpoints/sample.json'
 
 with open(json_src) as j:
     data = json.load(j)
@@ -35,7 +35,5 @@ for med in data['results']:
         print(f'{type(_route)}: {_route}')
 
         if _generic_name:
-            generic_names = [x.strip for x in _generic_name.split(',')]
-            data['meta'] = {
-                'generic_names': json.dumps(generic_names)
-            }
+            generic_names = [x.strip() for x in _generic_name.split(',')]
+            print(generic_names)
