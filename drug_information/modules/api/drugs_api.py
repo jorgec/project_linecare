@@ -2,11 +2,13 @@ from django.contrib.postgres.search import SearchVector
 from django.db import IntegrityError
 from django.db.models import Q
 from rest_framework import permissions, status
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from drug_information.models import Drug, GenericName
-from drug_information.serializers.drug_serializers import DrugSerializer, GenericNameSerializer, DrugCreateSerializer
+from drug_information.serializers.drug_serializers import DrugSerializer, GenericNameSerializer, DrugCreateSerializer, \
+    DrugDetailSerializer
 
 
 class ApiPublicGenericNameList(APIView):
@@ -118,3 +120,18 @@ class ApiPrivateDrugCreate(APIView):
         serializer = DrugSerializer(drug)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPublicDrugDetail(APIView):
+    """
+    Drug detail
+    ?id=drug_id
+    """
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        drug = get_object_or_404(Drug, id=request.GET.get('id', None))
+        serializer = DrugDetailSerializer(drug)
+
+        return Response(serializer.data, satus=status.HTTP_200_OK)

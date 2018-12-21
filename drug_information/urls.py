@@ -17,4 +17,7 @@ urlpatterns = [
     path(f'{version}/private/drugs/create',
          drugs_api.ApiPrivateDrugCreate.as_view(),
          name='api_private_drugs_create'),
+    path(f'{version}/public/drug/detail',
+         drugs_api.ApiPublicDrugDetail.as_view(),
+         name='api_public_drug_detail'),
 ]

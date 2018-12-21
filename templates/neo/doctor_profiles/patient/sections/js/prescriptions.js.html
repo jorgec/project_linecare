@@ -3,6 +3,7 @@
     var modalAddDrug = $("#modalAddDrug");
     var modalDismissedPrescriptions = $("#modalDismissedPrescriptions");
     var modalAddPrescription = $("#modalAddPrescription");
+    var modalPreviewDrug = $("#modalPreviewDrug");
     var id_generic_name = $("#id_drug_generic_name");
     var txtDrugSearch = $("#txtDrugSearch");
     var formAddDrug = $("#formAddDrug");
@@ -25,6 +26,11 @@
             autozindex: true,
             scrolllock: true
         });
+
+        modalPreviewDrug.popup({
+            autozindex: true,
+            scrolllock: true
+        })
         
         formAddDrug.on('submit', function(e){
             e.preventDefault();
@@ -107,10 +113,26 @@
 
                 $(".drug-item").on('click', function(e){
                     e.preventDefault();
+
+
                     var drug_id = $(this).attr("data-drug-id");
                     var drug_name = $(this).attr("data-drug-name");
+
+                    /*
                     $("#id_prescription_drug_name").html(drug_name);
                     $("#id_prescription_drug_id").val(drug_id);
+                    */
+
+                    $("#id_drug_preview_name").html(drug_name);
+
+                    var detail_url = "{% url 'api_public_drug_detail' %}?id=" + drug_id;
+
+                    $.get(detail_url)
+                        .done(function(detail_result){
+                            console.log(detail_result);
+                            $("#drug-preview-container").loadTemplate($("#drug-preview-template"), detail_result);
+                        });
+
                 });
 
             });

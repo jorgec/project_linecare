@@ -39,3 +39,49 @@ class DrugCreateSerializer(serializers.ModelSerializer):
             'is_generic',
             'product_type'
         )
+
+
+class DrugDetailSerializer(serializers.ModelSerializer):
+    generic_name_list = serializers.SerializerMethodField('repr_generic_name_list')
+    active_ingredients = serializers.SerializerMethodField('repr_active_ingredients')
+    routes = serializers.SerializerMethodField('repr_routes')
+    pharm_class = serializers.SerializerMethodField('repr_pharm_class')
+    dosage_forms = serializers.SerializerMethodField('repr_dosage_forms')
+
+    def repr_generic_name_list(self, obj):
+        generic_names = []
+
+        meta = obj.meta.get('generic_names', None)
+        if meta:
+            for gn in meta:
+                generic_names.append(gn)
+
+        return ", ".join(generic_names)
+
+    def repr_active_ingredients(self, obj):
+        return ", ".join(obj.drug_ingredients.all())
+
+    def repr_routes(self, obj):
+        return ", ".join(obj.drug_routes.all())
+
+    def repr_pharm_class(self, obj):
+        return ", ".join(obj.drug_pharmclass.all())
+
+    def repr_dosage_forms(self, obj):
+        return ", ".join(obj.drug_dosageforms.all())
+
+    class Meta:
+        model = Drug
+        fields = (
+            'id',
+            'name',
+            'base_name',
+            'slug',
+            'is_generic',
+            'product_type',
+            "generic_name_list",
+            "active_ingredients",
+            "routes",
+            "pharm_class",
+            "dosage_forms"
+        )
