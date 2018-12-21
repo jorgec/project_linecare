@@ -60,7 +60,7 @@ for med in data['results']:
         try:
             drug = Drug.objects.create(**data)
         except IntegrityError:
-            drug = Drug.objects.get(name=_name)
+            drug = Drug.objects.get(base_name=_base_name)
         except DataError:
             print(f'{_name}')
             drug = False

@@ -28,7 +28,7 @@ class GenericName(models.Model):
 class Drug(models.Model):
     # Fields
     name = models.CharField(max_length=512)
-    base_name = models.CharField(max_length=512)
+    base_name = models.CharField(max_length=512, unique=True)
     slug = extension_fields.AutoSlugField(populate_from="name", blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
