@@ -58,6 +58,7 @@
                     var generic_name = $(this).attr("data-generic-name");
                     $("#id_generic_name_id").val(generic_id);
                     $("#id_generic_name").val(generic_name);
+                    $("#generics-list-container").html("");
                 });
             });
     }
@@ -66,6 +67,7 @@
         var url = "{% url 'api_public_drugs_list' %}?s=" + s;
         $.get(url)
             .done(function(result){
+                console.log(result);
                 $("#drugs-list-container").loadTemplate($("#drugs-list-template"), result);
 
                 $(".drug-item").on('click', function(e){
