@@ -45,7 +45,7 @@ for med in data['results']:
             generic_names = [x.strip for x in _generic_name.split(',')]
             try:
                 data['generic_name'] = GenericName.objects.create(
-                    name=generic_names[0].lower()
+                    name=generic_names[0]
                 )
             except IntegrityError:
                 data['generic_name'] = GenericName.objects.get(name__iexact=generic_names[0])
