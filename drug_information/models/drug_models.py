@@ -3,7 +3,8 @@ from django.contrib.postgres.fields import JSONField, ArrayField
 from django_extensions.db import fields as extension_fields
 
 from drug_information.models.constants import DRUG_MARKETING_STATUS
-from drug_information.models.managers.drug_managers import GenericNameManager, ActiveIngredientManager, DrugManager
+from drug_information.models.managers.drug_managers import GenericNameManager, ActiveIngredientManager, DrugManager, \
+    DosageFormManager, PharmaceuticalClassManager, DrugRouteManager
 
 
 class GenericName(models.Model):
@@ -26,7 +27,7 @@ class GenericName(models.Model):
 
 class Drug(models.Model):
     # Fields
-    name = models.CharField(max_length=512, unique=True)
+    name = models.CharField(max_length=512)
     base_name = models.CharField(max_length=512)
     slug = extension_fields.AutoSlugField(populate_from="name", blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -38,11 +39,6 @@ class Drug(models.Model):
 
     marketing_status = models.CharField(choices=DRUG_MARKETING_STATUS, default="HUMAN OTC DRUG", max_length=64,
                                         null=True, blank=True)
-    route = ArrayField(base_field=models.CharField(max_length=64), default=list, null=True, blank=True)
-    # active_ingredients = JSONField(default=dict, null=True, blank=True)
-    pharm_class = JSONField(default=dict, null=True, blank=True)
-    dosage_form = ArrayField(base_field=models.CharField(max_length=64, null=True, blank=True), blank=True, null=True,
-                             default=list)
 
     # Relationship Fields
     generic_name = models.ForeignKey(GenericName, on_delete=models.SET_NULL, null=True, blank=True)
@@ -92,3 +88,93 @@ class DrugActiveIngredient(models.Model):
 
     def __str__(self):
         return f'{self.drug}, {self.active_ingredient} {self.strength}'
+
+
+class DrugRoute(models.Model):
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    name = models.CharField(max_length=512, unique=True)
+    slug = extension_fields.AutoSlugField(populate_from="name", blank=True)
+
+    objects = DrugRouteManager()
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+
+class DrugRouteDelivery(models.Model):
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    drug = models.ForeignKey(Drug, related_name='drug_routes', on_delete=models.CASCADE)
+    route = models.ForeignKey(DrugRoute, related_name='route_drugs', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('route',)
+
+    def __str__(self):
+        return f'{self.route} - {self.drug}'
+
+
+class PharmaceuticalClass(models.Model):
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    name = models.CharField(max_length=512, unique=True)
+    slug = extension_fields.AutoSlugField(populate_from="name", blank=True)
+
+    objects = PharmaceuticalClassManager()
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+
+class DrugPharmaceuticalClass(models.Model):
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    drug = models.ForeignKey(Drug, related_name='drug_pharmclass', on_delete=models.CASCADE)
+    pharm_class = models.ForeignKey(PharmaceuticalClass, related_name='pharmclass_drugs', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('pharm_class',)
+
+    def __str__(self):
+        return f'{self.pharm_class} - {self.drug}'
+
+
+class DosageForm(models.Model):
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    name = models.CharField(max_length=512, unique=True)
+    slug = extension_fields.AutoSlugField(populate_from="name", blank=True)
+
+    objects = DosageFormManager()
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+
+class DrugDosageForm(models.Model):
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    drug = models.ForeignKey(Drug, related_name='drug_dosageforms', on_delete=models.CASCADE)
+    dosage_form = models.ForeignKey(Route, related_name='dosageform_drugs', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('dosage_form',)
+
+    def __str__(self):
+        return f'{self.dosage_form} - {self.drug}'

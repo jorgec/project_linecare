@@ -10,7 +10,8 @@ import json
 from django.db import IntegrityError, DataError
 
 from drug_information.models import GenericName, Drug
-from drug_information.models.drug_models import ActiveIngredient, DrugActiveIngredient
+from drug_information.models.drug_models import ActiveIngredient, DrugActiveIngredient, DosageForm, DrugDosageForm, \
+    PharmaceuticalClass, DrugPharmaceuticalClass, DrugRoute, DrugRouteDelivery
 
 # json_src = '/home/ubuntu/linecare/documentation/drugs/openfda/endpoints/drug-ndc-0001-of-0001.json'
 json_src = '/home/linecare/documentation/drugs/openfda/endpoints/drug-ndc-0001-of-0001.json'
@@ -34,13 +35,8 @@ for med in data['results']:
         data = {
             'name': _name,
             'marketing_status': _marketing_status,
-            'route': _route,
-            'pharm_class': _pharm_class,
         }
 
-        if _dosage_form:
-            dosage_form = [x.strip() for x in _dosage_form.split(',')]
-            data['dosage_form'] = dosage_form
 
         if _generic_name:
             try:
@@ -59,6 +55,57 @@ for med in data['results']:
         except DataError:
             print(f'{_name}')
             drug = False
+
+        if _dosage_form:
+            dosage_form = [x.strip() for x in _dosage_form.split(',')]
+            for df in dosage_form:
+                try:
+                    _df = DosageForm.objects.get(name=df)
+                except DosageForm.DoesNotExist:
+                    _df = DosageForm.objects.create(
+                        name=df
+                    )
+                try:
+                    DrugDosageForm.objects.create(
+                        drug=drug,
+                        dosage_form=_df
+                    )
+                except IntegrityError:
+                    pass
+        
+        if _pharm_class:
+            pharm_class = [x.strip() for x in _pharm_class.split(',')]
+            for df in pharm_class:
+                try:
+                    _df = PharmaceuticalClass.objects.get(name=df)
+                except PharmaceuticalClass.DoesNotExist:
+                    _df = PharmaceuticalClass.objects.create(
+                        name=df
+                    )
+                try:
+                    DrugPharmaceuticalClass.objects.create(
+                        drug=drug,
+                        pharm_class=_df
+                    )
+                except IntegrityError:
+                    pass
+        
+        if _route:
+            route = [x.strip() for x in _route.split(',')]
+            for df in route:
+                try:
+                    _df = DrugRoute.objects.get(name=df)
+                except DrugRoute.DoesNotExist:
+                    _df = DrugRoute.objects.create(
+                        name=df
+                    )
+                try:
+                    DrugRouteDelivery.objects.create(
+                        drug=drug,
+                        route=_df
+                    )
+                except IntegrityError:
+                    pass
 
         if _active_ingredients and drug:
             for active_ingredient in _active_ingredients:

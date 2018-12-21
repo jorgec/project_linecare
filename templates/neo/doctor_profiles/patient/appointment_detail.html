@@ -15,37 +15,41 @@
     {% include 'neo/doctor_profiles/patient/sections/template/next_steps/modals.html' %}
     {% include 'neo/doctor_profiles/patient/sections/template/next_steps/template.html' %}
 
-    <div class="card-group no-gutters row">
-        <div class="col-sm-12 col-md-4">
+    <div class="card-group">
+        <div class="card">
             {% include 'neo/doctor_profiles/patient/sections/template/symptoms/main.html' %}
             {% include 'neo/doctor_profiles/patient/sections/template/symptoms/modals.html' %}
             {% include 'neo/doctor_profiles/patient/sections/template/symptoms/template.html' %}
         </div>
-        <div class="col-sm-12 col-md-4">
+        <div class="card">
             {% include 'neo/doctor_profiles/patient/sections/template/findings/main.html' %}
             {% include 'neo/doctor_profiles/patient/sections/template/findings/modals.html' %}
             {% include 'neo/doctor_profiles/patient/sections/template/findings/template.html' %}
         </div>
-        <div class="col-sm-12 col-md-4">
+        <div class="card">
             {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/main.html' %}
             {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/modals.html' %}
             {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/template.html' %}
         </div>
     </div>
-    <div>
-        {% include 'neo/doctor_profiles/patient/sections/template/labtests/main.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/template/labtests/modals.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/template/labtests/template.html' %}
+    <div class="card-group">
+        <div class="card">
+            {% include 'neo/doctor_profiles/patient/sections/template/labtests/main.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/labtests/modals.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/labtests/template.html' %}
+        </div>
+        <div class="card">
+            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/main.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/modals.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/template.html' %}
+        </div>
     </div>
-    <div>
-        {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/main.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/modals.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/template.html' %}
-    </div>
-    <div>
-        {% include 'neo/doctor_profiles/patient/sections/template/notes/main.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/template/notes/modals.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/template/notes/template.html' %}
+    <div class="card-group">
+        <div class="card">
+            {% include 'neo/doctor_profiles/patient/sections/template/notes/main.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/notes/modals.html' %}
+            {% include 'neo/doctor_profiles/patient/sections/template/notes/template.html' %}
+        </div>
     </div>
 {% endblock %}
 
