@@ -43,6 +43,9 @@ class Drug(models.Model):
     openfda = JSONField(default=dict)
     packaging = JSONField(default=dict)
 
+    # Relationship Fields
+    generic_name = models.ForeignKey(GenericName, on_delete=models.SET_NULL, null=True, blank=True)
+
     objects = DrugManager()
 
     class Meta:
