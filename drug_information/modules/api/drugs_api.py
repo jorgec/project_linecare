@@ -134,4 +134,4 @@ class ApiPublicDrugDetail(APIView):
         drug = get_object_or_404(Drug, id=request.GET.get('id', None))
         serializer = DrugDetailSerializer(drug)
 
-        return Response(serializer.data, satus=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
