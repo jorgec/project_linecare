@@ -1,50 +1,50 @@
 <div id="modalAddPrescription" class="popup-modal card">
     <div class="card-header">
-        <h4 class="h4">Prescribe <span id="modalAddPrescriptionDrugName"></span></h4>
+        <h4 class="h4">Prescribe <span id="id_prescription_drug_name"></span></h4>
     </div>
     <div class="card-body">
 
         <form>
-            <input type="hidden" id="modalAddPrescriptionDrugId">
+            <input type="hidden" id="id_prescription_drug_id">
             <div class="form-group row">
-                <label for="id_dosage" class="col-3 col-form-label">Dosage/Strength</label>
+                <label for="id_prescription_dosage" class="col-3 col-form-label">Dosage/Strength</label>
                 <div class="col-9">
-                    <input id="id_dosage" name="id_dosage" placeholder="ex: 500mg" type="text" class="form-control here"
+                    <input id="id_prescription_dosage" name="id_prescription_dosage" placeholder="ex: 500mg" type="text" class="form-control here"
                            required="required">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="id_amount" class="col-3 col-form-label">Amount</label>
+                <label for="id_prescription_amount" class="col-3 col-form-label">Amount</label>
                 <div class="col-9">
-                    <input id="id_amount" name="id_amount" placeholder="ex: 1 tab" type="text" class="form-control here"
+                    <input id="id_prescription_amount" name="id_prescription_amount" placeholder="ex: 1 tab" type="text" class="form-control here"
                            required="required">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="id_route" class="col-3 col-form-label">Route</label>
+                <label for="id_prescription_route" class="col-3 col-form-label">Route</label>
                 <div class="col-9">
-                    <input id="id_route" name="id_route" placeholder="ex: oral" type="text" class="form-control here"
+                    <input id="id_prescription_route" name="id_prescription_route" placeholder="ex: oral" type="text" class="form-control here"
                            required="required">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="id_frequency" class="col-3 col-form-label">Frequency</label>
+                <label for="id_prescription_frequency" class="col-3 col-form-label">Frequency</label>
                 <div class="col-9">
-                    <input id="id_frequency" name="id_frequency" placeholder="ex: 3x daily" type="text"
+                    <input id="id_prescription_frequency" name="id_prescription_frequency" placeholder="ex: 3x daily" type="text"
                            class="form-control here" required="required">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="id_dispense_qty" class="col-3 col-form-label">Dispense Qty</label>
+                <label for="id_prescription_dispense_qty" class="col-3 col-form-label">Dispense Qty</label>
                 <div class="col-9">
-                    <input id="id_dispense_qty" name="id_dispense_qty" placeholder="ex: 30" type="text"
+                    <input id="id_prescription_dispense_qty" name="id_prescription_dispense_qty" placeholder="ex: 30" type="text"
                            class="form-control here" required="required">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="id_notes" class="col-3 col-form-label">Notes</label>
+                <label for="id_prescription_notes" class="col-3 col-form-label">Notes</label>
                 <div class="col-9">
-                    <textarea id="id_notes" name="id_notes" cols="40" rows="5" class="form-control"></textarea>
+                    <textarea id="id_prescription_notes" name="id_prescription_notes" cols="40" rows="5" class="form-control"></textarea>
                 </div>
             </div>
             <div class="form-group row">
@@ -56,31 +56,31 @@
     </div>
 </div>
 
-<div id="modalAddMedicine" class="popup-modal card">
+<div id="modalAddDrug" class="popup-modal card">
     <div class="card-header">
-        <h4 class="h4">Add a medicine/drug</h4>
+        <h4 class="h4">Add a drug/drug</h4>
     </div>
     <div class="card-body">
-        <form>
+        <form id="formAddDrug">
             <div class="form-group row">
-                <label for="id_name" class="col-3 col-form-label">Name</label>
+                <label for="id_drug_name" class="col-3 col-form-label">Name</label>
                 <div class="col-9">
-                    <input id="id_name" name="id_name" placeholder="ex: Junior Strength Advil" type="text"
+                    <input id="id_drug_name" name="id_drug_name" placeholder="ex: Junior Strength Advil" type="text"
                            class="form-control here" required="required">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="id_base_name" class="col-3 col-form-label">Base Name</label>
+                <label for="id_drug_base_name" class="col-3 col-form-label">Base Name</label>
                 <div class="col-9">
-                    <input id="id_base_name" name="id_base_name" placeholder="ex: Advil" type="text"
+                    <input id="id_drug_base_name" name="id_drug_base_name" placeholder="ex: Advil" type="text"
                            class="form-control here">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="id_generic_name" class="col-3 col-form-label">Generic Name</label>
+                <label for="id_drug_generic_name" class="col-3 col-form-label">Generic Name</label>
                 <div class="col-9">
-                    <input type="text" id="id_generic_name" name="id_generic_name" class="form-control">
-                    <input type="hidden" id="id_generic_name_id">
+                    <input type="text" id="id_drug_generic_name" name="id_drug_generic_name" class="form-control">
+                    <input type="hidden" id="id_drug_generic_name_id">
                     <ul class="list-group list-group-flush p-1 m-1" id="generics-list-container"></ul>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                 <div class="col-9">
                     <div class="form-check form-check-inline">
                         <label class="form-check-label">
-                            <input name="id_is_generic" type="checkbox" class="form-check-input" value="yes">
+                            <input name="id_drug_is_generic" type="checkbox" class="form-check-input" value="yes">
                             Yes
                         </label>
                     </div>
@@ -100,14 +100,14 @@
                 <div class="col-9">
                     <div class="form-check form-check-inline">
                         <label class="form-check-label">
-                            <input name="id_product_type" type="radio" required="required" class="form-check-input"
+                            <input name="id_drug_product_type" type="radio" required="required" class="form-check-input"
                                    value="HUMAN OTC DRUG">
                             Over the counter
                         </label>
                     </div>
                     <div class="form-check form-check-inline">
                         <label class="form-check-label">
-                            <input name="id_product_type" type="radio" required="required" class="form-check-input"
+                            <input name="id_drug_product_type" type="radio" required="required" class="form-check-input"
                                    value="HUMAN PRESCRIPTION DRUG">
                             Prescription
                         </label>

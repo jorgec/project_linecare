@@ -1,10 +1,11 @@
 <script type="text/javascript">
     var modalPrescriptionDetail = $("#modalPrescriptionDetail");
-    var modalAddMedicine = $("#modalAddMedicine");
+    var modalAddDrug = $("#modalAddDrug");
     var modalDismissedPrescriptions = $("#modalDismissedPrescriptions");
     var modalAddPrescription = $("#modalAddPrescription");
-    var id_generic_name = $("#id_generic_name");
-    var txtMedicineSearch = $("#txtMedicineSearch");
+    var id_generic_name = $("#id_drug_generic_name");
+    var txtDrugSearch = $("#txtDrugSearch");
+    var formAddDrug = $("#formAddDrug");
 
     $(document).ready(function () {
         modalPrescriptionDetail.popup({
@@ -15,7 +16,7 @@
             autozindex: true,
             scrolllock: true
         });
-        modalAddMedicine.popup({
+        modalAddDrug.popup({
             autozindex: true,
             scrolllock: true
         });
@@ -23,6 +24,11 @@
         modalAddPrescription.popup({
             autozindex: true,
             scrolllock: true
+        });
+        
+        formAddDrug.on('submit', function(e){
+            e.preventDefault();
+            addDrug();
         });
 
         id_generic_name.on('keyup', function(e){
@@ -35,7 +41,7 @@
             }
         });
 
-        txtMedicineSearch.on('keyup', function(e){
+        txtDrugSearch.on('keyup', function(e){
             e.preventDefault();
             var s = $(this).val();
             if(s.length >=3){
@@ -45,6 +51,24 @@
             }
         });
     });
+    
+    function addDrug(){
+        var url = "{% url 'api_private_drugs_create' %}";
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            name: $("#id_drug_name").val(),
+            base_name: $("#id_drug_base_name").val(),
+            generic_name_id: $("#id_drug_generic_name_id").val(),
+            is_generic: $("input[name=id_drug_is_generic]").attr("checked", true).val(),
+            product_type: $("input[name=id_drug_product_type]:checked").val()
+        };
+
+        $.post(url, formData)
+            .done(function(result){
+                console.log(result);
+            })
+
+    }
 
     function loadGenerics(s){
         var url = "{% url 'api_public_generics_list' %}?s=" + s;
@@ -62,8 +86,8 @@
                     e.preventDefault();
                     var generic_id = $(this).attr("data-generic-id");
                     var generic_name = $(this).attr("data-generic-name");
-                    $("#id_generic_name_id").val(generic_id);
-                    $("#id_generic_name").val(generic_name);
+                    $("#id_drug_generic_name_id").val(generic_id);
+                    $("#id_drug_generic_name").val(generic_name);
                     $("#generics-list-container").html("");
                 });
             });
@@ -85,8 +109,8 @@
                     e.preventDefault();
                     var drug_id = $(this).attr("data-drug-id");
                     var drug_name = $(this).attr("data-drug-name");
-                    $("#modalAddPrescriptionDrugName").html(drug_name);
-                    $("#modalAddPrescriptionDrugId").val(drug_id);
+                    $("#id_prescription_drug_name").html(drug_name);
+                    $("#id_prescription_drug_id").val(drug_id);
                 });
 
             });

@@ -38,7 +38,6 @@
         var url = "{% url 'api_private_appointment_symptom_list' %}?checkup_id={{ checkup.id }}";
         $.get(url)
             .done(function(result){
-                console.log(result);
                 $("#symptoms-container").loadTemplate($("#symptoms-template"), result);
 
                 $(".symptom-detail").on('click', function(e){
