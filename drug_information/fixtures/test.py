@@ -33,3 +33,9 @@ for med in data['results']:
         print(f'{_name}...')
 
         print(f'{type(_route)}: {_route}')
+
+        if _generic_name:
+            generic_names = [x.strip for x in _generic_name.split(',')]
+            data['meta'] = {
+                'generic_names': json.dumps(generic_names)
+            }
