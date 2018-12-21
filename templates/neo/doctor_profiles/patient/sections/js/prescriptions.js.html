@@ -67,7 +67,6 @@
         var url = "{% url 'api_public_drugs_list' %}?s=" + s;
         $.get(url)
             .done(function(result){
-                console.log(result);
                 $("#drugs-list-container").loadTemplate($("#drugs-list-template"), result);
 
                 $(".drug-item").on('click', function(e){
