@@ -16,10 +16,18 @@ class ApiPublicGenericNameList(APIView):
 
     def get(self, request, *args, **kwargs):
         s = request.GET.get('s', None)
+        page = request.GET.get('page', None)
         if s:
             drugs = GenericName.objects.filter(name__icontains=s)
         else:
             drugs = GenericName.objects.all()
+
+        if not page:
+            drugs = drugs[:10]
+        else:
+            start = page * 10
+            end = start + 10
+            drugs = drugs[start:end]
 
         serializer = GenericNameSerializer(drugs, many=True)
 

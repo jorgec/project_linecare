@@ -2,7 +2,7 @@
     var modalPrescriptionDetail = $("#modalPrescriptionDetail");
     var modalAddMedicine = $("#modalAddMedicine");
     var modalDismissedPrescriptions = $("#modalDismissedPrescriptions");
-
+    var id_generic_name = $("#id_generic_name");
 
     $(document).ready(function () {
         modalPrescriptionDetail.popup({
@@ -18,14 +18,22 @@
             scrolllock: true
         });
 
+        id_generic_name.on('keyup', function(e){
+            e.preventDefault();
+            var s = $(this).val();
+            if(s.length >=4){
+                loadGenerics(s);
+            }
+        });
+
 
     });
 
-    function loadGenerics(){
-        var url = "{% url 'api_public_generics_list' %}";
+    function loadGenerics(s){
+        var url = "{% url 'api_public_generics_list' %}?s=" + s;
         $.get(url)
             .done(function(result){
-                $("#id_generic_name").loadTemplate($("#generics-list-template"), result);
+                $("#generics-list-container").loadTemplate($("#generics-list-template"), result);
             });
     }
 
