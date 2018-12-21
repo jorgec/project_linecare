@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block header_css %}
-<link rel="stylesheet" href="{% static 'react/base_profile/home/css/1.chunk.css' %}">
+<link rel="stylesheet" href="{% static 'react/base_profile/home/css/base-profile.css' %}">
 {% endblock %}
 {% block header_js %}
 {% endblock %}
@@ -24,7 +24,7 @@
         cover_photo_album_id: '{{ request.user.base_profile.get_cover_album.id }}',
     };
 </script>
-<script src="{% static 'react/base_profile/home/js/1.chunk.js' %}"></script>
-<script src="{% static 'react/base_profile/home/js/main.chunk.js' %}"></script>
-<script src="{% static 'react/base_profile/home/js/runtime-main.js' %}"></script>
+<script src="{% static 'react/base_profile/home/js/base-profile-1.js' %}"></script>
+<script src="{% static 'react/base_profile/home/js/base-profile-main.js' %}"></script>
+<script src="{% static 'react/base_profile/home/js/base-profile-runtime.js' %}"></script>
 {% endblock %}
