@@ -52,7 +52,7 @@ for med in data['results']:
             data['generic_name'] = None
 
         if _openfda:
-            data['openfsa'] = _openfda
+            data['openfda'] = _openfda
 
         if _packaging:
             data['packaging'] = _packaging
