@@ -99,6 +99,10 @@ INSTALLED_APPS = [
     'datesdim',
     'appglobals',
 
+    # search
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
+
     'accounts',
     'profiles',
     'albums',
@@ -107,6 +111,7 @@ INSTALLED_APPS = [
     'locations',
     'receptionist_profiles',
     'drug_information',
+    'search_indexes',
 ]
 
 # User Model
@@ -240,7 +245,11 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 50,
+    'ORDERING_PARAM': 'ordering',
 }
 
 CORS_ALLOW_CREDENTIALS = True
@@ -272,6 +281,17 @@ CORS_ORIGIN_WHITELIST = (
     '192.168.10.189',
     '192.168.33.1',
 )
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': '0.0.0.0:9200'
+    },
+}
+
+ELASTICSEARCH_INDEX_NAMES = {
+    'search_indexes.documents.drug': 'drug',
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
