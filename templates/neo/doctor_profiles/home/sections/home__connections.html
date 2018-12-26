@@ -1,19 +1,25 @@
-    <div class="header">
-        <h4 class="h6">My Medical Institutions</h4>
-    </div>
+<div class="header">
+    <h4 class="h6">My Medical Institutions</h4>
+</div>
 
-    <div class="hospital-list__container">
+<div class="hospital-list__container">
     {% if profile.get_medical_institutions %}
-    {% for mi in profile.get_medical_institutions %}
-        <div class="hospital-list__item-wrapper">
-            <div class="hospital-list__item">
-                <h6 class="h6">
-                    <a href="{% url 'doctor_profile_medical_institution_home' mi.slug %}">{{ mi }}</a>
-                </h6>
-                <p>{{ mi.address.address }}</p>
+        {% for mi in profile.get_medical_institutions %}
+            <div class="hospital-list__item-wrapper">
+                <div class="hospital-list__item">
+                    <h6 class="h6">
+                        <a href="{% url 'doctor_profile_medical_institution_home' mi.slug %}">{{ mi }}</a>
+                    </h6>
+                    <p>{{ mi.address.address }}</p>
+
+                    <a class="btn btn-sm btn-outline-warning"
+                       href="{% url 'doctor_profile_medical_institution_schedule_list' mi.slug %}">
+                        <i class="fa fa-edit"></i>
+                        Update Schedule
+                    </a>
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
     {% else %}
         <div class="hospital-list__item-wrapper">
             <div class="hospital-list__item">
@@ -21,4 +27,4 @@
             </div>
         </div>
     {% endif %}
-    </div>
+</div>

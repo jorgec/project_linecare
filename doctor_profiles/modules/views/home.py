@@ -4,15 +4,22 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from datesdim.models import DateDim
+
 
 class DoctorProfileHomeView(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
+        doctor = request.user.doctor_profile()
+        date = DateDim.objects.today()
         context = {
             'page_title': 'Home',
             'location': 'doctor_profile_home',
             'sublocation': 'home',
             'user': request.user,
-            'profile': request.user.doctor_profile()
+            'profile': doctor,
+            'doctor': doctor,
+            'schedules': doctor.get_schedule_on_day(day=date),
+            'date': date
         }
 
         return render(request, 'neo/doctor_profiles/home/home.html', context)

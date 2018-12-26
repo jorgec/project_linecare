@@ -42,6 +42,7 @@ class DrugCreateSerializer(serializers.ModelSerializer):
 
 
 class DrugDetailSerializer(serializers.ModelSerializer):
+    generic_name = GenericNameSerializer()
     generic_name_list = serializers.SerializerMethodField('repr_generic_name_list')
     active_ingredients = serializers.SerializerMethodField('repr_active_ingredients')
     routes = serializers.SerializerMethodField('repr_routes')
@@ -49,26 +50,19 @@ class DrugDetailSerializer(serializers.ModelSerializer):
     dosage_forms = serializers.SerializerMethodField('repr_dosage_forms')
 
     def repr_generic_name_list(self, obj):
-        generic_names = []
-
-        meta = obj.meta.get('generic_names', None)
-        if meta:
-            for gn in meta:
-                generic_names.append(gn)
-
-        return ", ".join(generic_names)
+        return obj.get_generic_names()
 
     def repr_active_ingredients(self, obj):
-        return ", ".join([x.active_ingredient.name for x in obj.drug_ingredients.all()])
+        return obj.get_active_ingredients()
 
     def repr_routes(self, obj):
-        return ", ".join([x.route.name for x in obj.drug_routes.all()])
+        return obj.get_routes()
 
     def repr_pharm_class(self, obj):
-        return ", ".join([x.pharm_class.name for x in obj.drug_pharmclass.all()])
+        return obj.get_pharm_class()
 
     def repr_dosage_forms(self, obj):
-        return ", ".join([x.dosage_form.name for x in obj.drug_dosageforms.all()])
+        return obj.get_dosage_forms()
 
     class Meta:
         model = Drug
@@ -83,5 +77,6 @@ class DrugDetailSerializer(serializers.ModelSerializer):
             "active_ingredients",
             "routes",
             "pharm_class",
-            "dosage_forms"
+            "dosage_forms",
+            "generic_name"
         )

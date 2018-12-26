@@ -1,0 +1,1 @@
+from .drug_search_serializers import DrugDocumentSerializer

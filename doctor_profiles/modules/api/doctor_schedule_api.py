@@ -330,9 +330,11 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
 class ApiPrivateDoctorScheduleQueueList(APIView):
     """
     Queue of doctor at medical institution on day
-    ?doctor_id=doctor_id&medical_institution_id=medical_institution_id
+    ?doctor_id=doctor_id
     [optional]
+    medical_institution_id=medical_institution_id
     date=YYYY-MM-DD
+    count=n
     """
 
     permission_classes = [permissions.IsAuthenticated]
@@ -344,18 +346,22 @@ class ApiPrivateDoctorScheduleQueueList(APIView):
 
         doctor_id = request.GET.get('doctor_id', None)
         doctor = get_object_or_404(DoctorProfile, id=doctor_id)
-        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution_id', None))
 
-        mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
+        if request.GET.get('medical_institution_id', None):
+            medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution_id', None))
+            mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
                                           medical_institution=medical_institution, is_approved=True)
-        if type(profile_type) != DoctorProfile:
+        else:
+            medical_institution = None
+
+        if type(profile_type) != DoctorProfile and medical_institution:
             """ person adding isn't the doctor, so check if receptionist is allowed """
             connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
                                                     medical_institution=medical_institution)
             if not connection:
                 return Response("Receptionist is not authorized by this doctor for this medical institution",
                                 status=status.HTTP_403_FORBIDDEN)
-        elif profile_type.id != doctor.id:
+        if type(profile_type) == DoctorProfile and profile_type.id != doctor.id:
             return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
 
         __queue_date = request.GET.get('date', None)
@@ -368,12 +374,23 @@ class ApiPrivateDoctorScheduleQueueList(APIView):
             if not queue_date:
                 return Response(f"{__queue_date} is an invalid date", status=status.HTTP_400_BAD_REQUEST)
 
-        queue = PatientAppointment.objects.filter(
-            status__in=QUEUE_DISPLAY_CODES,
-            doctor=doctor,
-            medical_institution=medical_institution,
-            schedule_day=queue_date
-        ).order_by('time_start__minutes_since')
+
+        if medical_institution:
+            queue = PatientAppointment.objects.filter(
+                status__in=QUEUE_DISPLAY_CODES,
+                doctor=doctor,
+                medical_institution=medical_institution,
+                schedule_day=queue_date
+            ).order_by('time_start__minutes_since')
+        else:
+            queue = PatientAppointment.objects.filter(
+                status__in=QUEUE_DISPLAY_CODES,
+                doctor=doctor,
+                schedule_day=queue_date
+            ).order_by('time_start__minutes_since')
+
+        if request.GET.get('count', None):
+            queue = queue[:int(request.GET.get('count', 1))]
 
         serializer = PatientQueuePrivateSerializer(queue, many=True)
 

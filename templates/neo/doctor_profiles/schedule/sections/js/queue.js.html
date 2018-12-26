@@ -15,10 +15,10 @@
 
         $.get(url)
             .done(function(result){
+                console.log(result);
                 var queue = [];
                 for(var r in result){
                     var q = result[r];
-                    console.log(q);
                     var btnAction = "";
                     var subAction = "";
                     var base_url = "{% url 'api_private_patient_appointment_status_update' %}?appointment_id=" + q.id;

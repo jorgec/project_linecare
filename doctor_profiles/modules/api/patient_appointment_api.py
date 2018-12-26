@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 
 from doctor_profiles.constants import QUEUE_STATUS_MESSAGES
 from doctor_profiles.models import PatientAppointment
+from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_update_queue
 from profiles.notifiers.patient_appointment_notifiers import patient_appointment_status_notify
 
 UPDATE_STATUS_PERMISSIONS_MATRIX = {
@@ -82,5 +83,7 @@ class ApiPatientAppointmentUpdateStatus(APIView):
                             status=status.HTTP_403_FORBIDDEN)
 
         PatientAppointment.objects.update_status(id=appointment.id, status=queue_status)
+
+        doctor_notify_update_queue(appointment.doctor, appointment.medical_institution)
 
         return Response(f"Status of {appointment} changed to {queue_status}", status=status.HTTP_200_OK)

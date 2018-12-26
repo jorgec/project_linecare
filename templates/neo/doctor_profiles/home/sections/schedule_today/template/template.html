@@ -1,0 +1,37 @@
+<script type="text/html" id="template-queue">
+    <tr>
+        <td>
+            <span class="queue-number" data-content="queue_number"></span>
+            <div class="queue-time">
+                <span class="queue-time-start" data-content="time_start.format_12"></span>
+                <br>&mdash; to &mdash;<br>
+                <span class="queue-time-end" data-content="time_end.format_12"></span>
+            </div>
+
+            <div data-class="queue_status" class="queue-status"></div>
+        </td>
+        <td class="queue-img-block">
+            <img class="img-thumbnail queue-img" data-alt="patient.full_name" data-src="patient.profile_photo"><br>
+            <small>Prior visits: <span data-content="prior_visits"></span></small><br>
+            <small>Last visit: <a data-href="last_visit.url"><span data-content="last_visit.date"></span></a></small>
+        </td>
+        <td>
+            <span data-content="patient.full_name"></span>
+            <br>
+            <span data-content="patient.date_of_birth"></span>
+            <br>
+            <span data-content="patient.gender.name"></span>
+            <br>
+            <strong data-content="type"></strong>
+        </td>
+        <td>
+            <a data-href="mi_url" data-content="medical_institution.name"></a>
+        </td>
+        <td class="queue-action-block">
+            <div class="queue-action-buttons" data-content="button_action">
+
+            </div>
+            <div class="subaction-block" data-content="subactions"></div>
+        </td>
+    </tr>
+</script>

@@ -38,7 +38,7 @@ class Drug(models.Model):
     is_generic = models.BooleanField(default=False)
 
     product_type = models.CharField(choices=DRUG_MARKETING_STATUS, default="HUMAN OTC DRUG", max_length=64,
-                                        null=True, blank=True)
+                                    null=True, blank=True)
 
     openfda = JSONField(default=dict)
     packaging = JSONField(default=dict)
@@ -53,6 +53,94 @@ class Drug(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+    def get_generic_names(self):
+        generic_names = []
+
+        meta = self.meta.get('generic_names', None)
+        if meta:
+            for gn in meta:
+                generic_names.append(gn)
+
+            return ", ".join(generic_names)
+        else:
+            try:
+                return self.generic_name.name
+            except AttributeError:
+                return ''
+
+    def get_generic_names_rel(self):
+        generic_names = []
+
+        meta = self.meta.get('generic_names', None)
+        if meta:
+            for gn in meta:
+                generic_names.append(gn)
+            return meta
+        try:
+            return self.generic_name.name
+        except AttributeError:
+            return ''
+
+    def get_active_ingredients(self):
+        if self.drug_ingredients.all().count() > 0:
+            return ", ".join([x.active_ingredient.name for x in self.drug_ingredients.all()])
+        return []
+
+    def get_routes(self):
+        if self.drug_routes.all().count() > 0:
+            return ", ".join([x.route.name for x in self.drug_routes.all()])
+        return []
+
+    def get_pharm_class(self):
+        if self.drug_pharmclass.all().count() > 0:
+            return ", ".join([x.pharm_class.name for x in self.drug_pharmclass.all()])
+        return []
+
+    def get_dosage_forms(self):
+        if self.drug_dosageforms.all().count() > 0:
+            return ", ".join([x.dosage_form.name for x in self.drug_dosageforms.all()])
+        return []
+
+    def get_active_ingredients_rel(self):
+        return [x.active_ingredient for x in self.drug_ingredients.all()]
+
+    def get_routes_rel(self):
+        return [x.route for x in self.drug_routes.all()]
+
+    def get_pharm_class_rel(self):
+        return [x.pharm_class for x in self.drug_pharmclass.all()]
+
+    def get_dosage_forms_rel(self):
+        return [x.dosage_form for x in self.drug_dosageforms.all()]
+
+    @property
+    def name_indexing(self):
+        return self.name
+
+    @property
+    def generic_name_indexing(self):
+        return self.get_generic_names_rel()
+
+    @property
+    def active_ingredients_indexing(self):
+        rel = self.get_active_ingredients_rel()
+        return [r.name for r in rel]
+
+    @property
+    def routes_indexing(self):
+        rel = self.get_routes_rel()
+        return [r.name for r in rel]
+
+    @property
+    def pharm_class_indexing(self):
+        rel = self.get_pharm_class_rel()
+        return [r.name for r in rel]
+
+    @property
+    def dosage_forms_indexing(self):
+        rel = self.get_dosage_forms_rel()
+        return [r.name for r in rel]
 
 
 class ActiveIngredient(models.Model):

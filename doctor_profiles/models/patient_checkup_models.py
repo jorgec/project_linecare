@@ -294,3 +294,10 @@ class CheckupNote(models.Model):
 
     def __str__(self):
         return f'{self.checkup}: {self.note[:30]}'
+
+
+class Prescription(models.Model):
+    # Fields
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    metadata = JSONField(default=dict, null=True, blank=True)

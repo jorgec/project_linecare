@@ -7,6 +7,8 @@
     var id_generic_name = $("#id_drug_generic_name");
     var txtDrugSearch = $("#txtDrugSearch");
     var formAddDrug = $("#formAddDrug");
+    var formDrugSearch = $("#formDrugSearch");
+    var btnAddDrugToPrescriptionModal = $(".btnAddDrugToPrescriptionModal");
 
     $(document).ready(function () {
         modalPrescriptionDetail.popup({
@@ -30,7 +32,7 @@
         modalPreviewDrug.popup({
             autozindex: true,
             scrolllock: true
-        })
+        });
         
         formAddDrug.on('submit', function(e){
             e.preventDefault();
@@ -50,13 +52,38 @@
         txtDrugSearch.on('keyup', function(e){
             e.preventDefault();
             var s = $(this).val();
-            if(s.length >=3){
+            if(s.length > 4){
                 loadDrugs(s);
             }else{
                 $("#drugs-list-container").html('');
             }
         });
+
+        formDrugSearch.on('submit', function(e){
+            e.preventDefault();
+            var s = txtDrugSearch.val();
+            if(s.length > 2){
+                loadDrugs(s);
+            }else{
+                $.notify({
+                    message: "Search term is too short"
+                }, {
+                    type: "danger"
+                })
+            }
+        });
+
+        btnAddDrugToPrescriptionModal.on('click', function(e){
+            e.preventDefault();
+            var drug_id = $(this).attr("data-drug-id");
+            addDrugToPrescription(drug_id);
+        });
     });
+
+    function addDrugToPrescription(drug_id){
+        //modalAddPrescription.modal('hide');
+        console.log(drug_id);
+    }
     
     function addDrug(){
         var url = "{% url 'api_private_drugs_create' %}";
@@ -100,9 +127,10 @@
     }
 
     function loadDrugs(s){
-        var url = "{% url 'api_public_drugs_list' %}?s=" + s;
+        var url = "{% url 'api_es_drugs_search' %}?q=" + s;
         $.get(url)
             .done(function(result){
+                console.log(result);
                 if(result.length > 0) {
                     $("#drugs-list-container").loadTemplate($("#drugs-list-template"), result);
                 }else{
@@ -124,17 +152,22 @@
                     */
 
                     $("#id_drug_preview_name").html(drug_name);
+                    $("#id_drug_preview_id").attr("data-drug-id", drug_id);
+                    previewDrug(drug_id);
 
-                    var detail_url = "{% url 'api_public_drug_detail' %}?id=" + drug_id;
-
-                    $.get(detail_url)
-                        .done(function(detail_result){
-                            console.log(detail_result);
-                            $("#drug-preview-container").loadTemplate($("#drug-preview-template"), detail_result);
-                        });
 
                 });
 
+            });
+    }
+
+    function previewDrug(drug_id){
+        var detail_url = "{% url 'api_public_drug_detail' %}?id=" + drug_id;
+
+        $.get(detail_url)
+            .done(function(detail_result){
+                console.log(detail_result);
+                $("#drug-preview-container").loadTemplate($("#drug-preview-template"), detail_result);
             });
     }
 

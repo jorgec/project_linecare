@@ -37,7 +37,9 @@ urlpatterns = [
     path('album/', include('albums.urls')),
     path('doctor/', include('doctor_profiles.urls')),
     path('receptionist/', include('receptionist_profiles.urls')),
-    path('drug/', include('drug_information.urls'))
+    path('drug/', include('drug_information.urls')),
+
+    path('search/', include('search_indexes.urls'))
 ]
 
 if settings.DEBUG:

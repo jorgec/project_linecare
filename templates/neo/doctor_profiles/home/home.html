@@ -4,8 +4,10 @@
 
 {% block header_css %}
 <link rel="stylesheet" href="{% static 'react/base_profile/home/css/base-profile.css' %}">
+
 {% endblock %}
 {% block header_js %}
+
 {% endblock %}
 
 {% block subcontent %}
@@ -21,6 +23,10 @@
             </div>
             <div class="col-sm-12 col-md-9">
                 <div class="two-column__right--settings">
+                    {% include 'neo/doctor_profiles/home/sections/schedule_today/template/main.html' %}
+                    {% include 'neo/doctor_profiles/home/sections/schedule_today/template/modals.html' %}
+                    {% include 'neo/doctor_profiles/home/sections/schedule_today/template/template.html' %}
+
                     {% include 'neo/doctor_profiles/home/sections/home__schedule.html' %}
                 </div>
                 <div class="two-column__right--settings">
@@ -33,17 +39,21 @@
 {% endblock %}
 
 {% block home_scripts %}
-<script type="text/javascript">
-    var appContext = {
-        doctor_id: '{{request.user.doctorprofile.id}}',
-        profile_id: '{{request.user.base_profile.id}}',
-        user_id: '{{ request.user.id }}',
-        profile_photo_album_id: '{{ request.user.base_profile.get_profile_album.id }}',
-        cover_photo_album_id: '{{ request.user.base_profile.get_cover_album.id }}',
-    };
-</script>
-<script src="{% static 'react/base_profile/home/js/base-profile-1.js' %}"></script>
-<script src="{% static 'react/base_profile/home/js/base-profile-main.js' %}"></script>
-<script src="{% static 'react/base_profile/home/js/base-profile-runtime.js' %}"></script>
+
+    <script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+    <script type="text/javascript">
+        var appContext = {
+            doctor_id: '{{request.user.doctorprofile.id}}',
+            profile_id: '{{request.user.base_profile.id}}',
+            user_id: '{{ request.user.id }}',
+            profile_photo_album_id: '{{ request.user.base_profile.get_profile_album.id }}',
+            cover_photo_album_id: '{{ request.user.base_profile.get_cover_album.id }}',
+        };
+    </script>
+    <script src="{% static 'react/base_profile/home/js/base-profile-1.js' %}"></script>
+    <script src="{% static 'react/base_profile/home/js/base-profile-main.js' %}"></script>
+    <script src="{% static 'react/base_profile/home/js/base-profile-runtime.js' %}"></script>
+
+    {% include 'neo/doctor_profiles/home/sections/schedule_today/js/schedule_today.js.html' %}
 
 {% endblock %}

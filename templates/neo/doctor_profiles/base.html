@@ -45,6 +45,9 @@
     <script src="{% static 'neo/js/snippetProfileProgress.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function(){
+
+
+
             {% if request.user.doctorprofile.display_profile_progress_status %}
                 var snippet_location = $("#profile-progress-snippet");
                 loadProfileProgress(snippet_location);

@@ -35,7 +35,10 @@ class DoctorProfileMedicalInstitutionScheduleList(LoginRequiredMixin, UserPasses
 class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
         doctor = request.user.doctor_profile()
-        medical_institution = get_object_or_404(MedicalInstitution, slug=kwargs['medical_institution'])
+        if 'medical_institution' in kwargs:
+            medical_institution = get_object_or_404(MedicalInstitution, slug=kwargs['medical_institution'])
+        else:
+            medical_institution = get_object_or_404(MedicalInstitution, slug=request.GET.get('medical_institution', None))
         rel = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor, medical_institution=medical_institution)
 
         date = request.GET.get('date', None)

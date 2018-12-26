@@ -12,7 +12,6 @@ class PatientAppointmentQuerySet(models.QuerySet):
         return self.filter(
             doctor=doctor,
             patient=patient,
-            status__in=QUEUE_DONE_CODES
         )
 
 
