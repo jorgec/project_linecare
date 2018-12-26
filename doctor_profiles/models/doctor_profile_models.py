@@ -38,7 +38,10 @@ class DoctorProfile(models.Model):
         fellowships = ", ".join([a.get_abbreviation() for a in self.get_fellowships_rel()])
         diplomates = ", ".join([a.get_abbreviation() for a in self.get_diplomates_rel()])
 
-        title = f"Dr. {self.user.base_profile().get_name()} {degrees} {fellowships} {diplomates}"
+        try:
+            title = f"Dr. {self.user.base_profile().get_name()} {degrees} {fellowships} {diplomates}"
+        except AttributeError:
+            return 'NoBaseProfile'
 
         return title
 
@@ -276,3 +279,36 @@ class DoctorProfile(models.Model):
             patients_query = search.get_query(s, ['patient__first_name', 'patient__last_name'])
             return self.doctor_patients.filter(patients_query).order_by('patient__last_name')
         return self.doctor_patients.all()
+
+    def name_indexing(self):
+        return self.__str__()
+
+    def specializations_indexing(self):
+        return [x.specialization.name for x in self.get_specializations_rel()]
+
+    def degrees_indexing(self):
+        return [x.degree.name for x in self.get_degrees_rel()]
+
+    def associations_indexing(self):
+        return [x.association.name for x in self.get_associations_rel()]
+
+    def diplomates_indexing(self):
+        return [x.association.name for x in self.get_diplomates_rel()]
+
+    def fellowships_indexing(self):
+        return [x.association.name for x in self.get_fellowships_rel()]
+
+    def insurance_providers_indexing(self):
+        return [x.insurance.name for x in self.get_insurance_providers_rel()]
+
+    def medical_institutions_indexing(self):
+        return [x.medical_institution.name for x in self.get_medical_institutions_rel()]
+
+    def addresses_indexing(self):
+        medical_institutions = self.get_medical_institutions()
+        addresses = []
+        for mi in medical_institutions:
+            a = mi.address()
+            if a:
+                addresses.append(str(a['address']))
+        return addresses

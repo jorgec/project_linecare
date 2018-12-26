@@ -127,7 +127,10 @@ class MedicalInstitutionSerializer(serializers.ModelSerializer):
 
     def repr_address(self, obj):
         address = obj.address()
-        return str(address)
+        if address:
+            serializer = MedicalInstitutionLocationPublicSerializer(address['address'])
+            return serializer.data
+        return None
 
     class Meta:
         model = MedicalInstitution
@@ -146,6 +149,23 @@ class MedicalInstitutionSerializer(serializers.ModelSerializer):
 
 class MedicalInstitutionPublicSerializer(serializers.ModelSerializer):
     type = MedicalInstitutionTypePublicSerializer()
+    coords = serializers.SerializerMethodField('repr_get_coords')
+    address = serializers.SerializerMethodField('repr_address')
+
+    def repr_get_coords(self, obj):
+        coords = obj.coordinates()
+        if coords:
+            serializer = MedicalInstitutionCoordinateSerializer(coords['coordinates'])
+            return serializer.data
+        return None
+
+    def repr_address(self, obj):
+        address = obj.address()
+        if address:
+            serializer = MedicalInstitutionLocationPublicSerializer(address['address'])
+            return serializer.data
+        return None
+
 
     class Meta:
         model = MedicalInstitution
@@ -153,7 +173,9 @@ class MedicalInstitutionPublicSerializer(serializers.ModelSerializer):
             'id',
             'slug',
             'name',
-            'type'
+            'type',
+            'coords',
+            'address'
         )
 
 

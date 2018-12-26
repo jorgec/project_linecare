@@ -12,10 +12,14 @@ def update_document(sender, **kwargs):
     model_name = sender._meta.model_name
     instance = kwargs['instance']
 
-    print(app_label)
-
     if app_label == 'drug_information':
         if model_name == 'Drug':
+            instances = instance.objects.all()
+            for _instance in instances:
+                registry.update(_instance)
+
+    if app_label == 'doctor_profiles':
+        if model_name == 'DoctorProfile':
             instances = instance.objects.all()
             for _instance in instances:
                 registry.update(_instance)
@@ -31,7 +35,14 @@ def delete_document(sender, **kwargs):
     instance = kwargs['instance']
 
     if app_label == 'drug_information':
-        if model_name == 'drug':
+        if model_name == 'Drug':
+            instances = instance.objects.all()
+            for _instance in instances:
+                registry.update(_instance)
+                # registry.delete(_instance, raise_on_error=False)
+
+    if app_label == 'doctor_profiles':
+        if model_name == 'DoctorProfile':
             instances = instance.objects.all()
             for _instance in instances:
                 registry.update(_instance)

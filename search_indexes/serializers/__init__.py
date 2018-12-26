@@ -1,1 +1,2 @@
 from .drug_search_serializers import DrugDocumentSerializer
+from .doctor_search_serializers import DoctorDocumentSerializer

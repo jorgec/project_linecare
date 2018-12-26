@@ -2,13 +2,69 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.utils import json
 
 from albums.serializers import SinglePhotoSerializer
+from datesdim.models import DateDim
 from doctor_profiles.serializers import MedicalDegreePublicSerializer, InsuranceProviderPublicSerializer, \
     SpecializationPublicSerializer, MedicalAssociationPublicSerializer, \
     MedicalInstitutionPublicSerializer
+from doctor_profiles.serializers.doctor_schedule_serializer import DoctorScheduleDaySerializer
 from profiles.serializers import GenderSerializer
 
 
 def public_doctor_profile_template(*, user, as_json=False):
+    try:
+        doctor_profile = user.doctor_profile()
+    except ObjectDoesNotExist:
+        return False
+
+    profile = user.base_profile()
+    if not profile:
+        return False
+
+    try:
+        profile_photo = profile.get_profile_photo()
+    except AttributeError:
+        profile_photo = None
+    _profile_photo = {'photo': None}
+    try:
+        cover_photo = profile.get_cover_photo()
+    except AttributeError:
+        cover_photo = None
+    _cover_photo = {'photo': None}
+
+    if profile_photo:
+        _profile_photo = SinglePhotoSerializer({'photo': profile_photo}).data
+    if cover_photo:
+        _cover_photo = SinglePhotoSerializer({'photo': cover_photo}).data
+
+    today = DateDim.objects.today()
+    _schedule_today = doctor_profile.get_schedule_on_day(day=today)
+    if _schedule_today:
+        schedule_today = DoctorScheduleDaySerializer(_schedule_today, many=True).data
+    else:
+        schedule_today = None
+
+    insurance_providers = InsuranceProviderPublicSerializer(doctor_profile.get_insurance_providers(), many=True).data
+    medical_institutions = MedicalInstitutionPublicSerializer(doctor_profile.get_medical_institutions(), many=True).data
+
+    data = {
+        'id': user.id,
+        'doctor_id': doctor_profile.id,
+        'full_name': str(doctor_profile),
+        'first_name': profile.first_name,
+        'last_name': profile.last_name,
+        'profile_photo': _profile_photo,
+        'cover_photo': _cover_photo,
+        'insurance_providers': insurance_providers,
+        'medical_institutions': medical_institutions,
+        'schedule_today': schedule_today
+    }
+
+    if as_json:
+        return json.dumps(data)
+    return data
+
+
+def private_doctor_profile_template(*, user, as_json=False):
     try:
         doctor_profile = user.doctor_profile()
     except ObjectDoesNotExist:

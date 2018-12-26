@@ -304,6 +304,7 @@ ELASTICSEARCH_DSL = {
 
 ELASTICSEARCH_INDEX_NAMES = {
     'search_indexes.documents.drug': 'drug',
+    'search_indexes.documents.doctor': 'doctor',
 }
 
 # Internationalization
