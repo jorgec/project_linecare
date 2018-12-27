@@ -10,8 +10,9 @@ class DoctorAppointmentNotificationConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         if self.user.is_authenticated:
             doctor = self.user.doctor_profile()
+            print(doctor)
             if doctor:
-                medical_institutions = doctor.get_medical_institutions()
+                medical_institutions = await doctor.get_medical_institutions()
                 await self.accept()
 
                 for mi in medical_institutions:
@@ -23,7 +24,7 @@ class DoctorAppointmentNotificationConsumer(AsyncJsonWebsocketConsumer):
         if self.user.is_authenticated:
             doctor = self.user.doctor_profile()
             if doctor:
-                medical_institutions = doctor.get_medical_institutions()
+                medical_institutions = await doctor.get_medical_institutions()
                 for mi in medical_institutions:
                     await self.channel_layer.group_discard(f'doctor-queue-{doctor.id}-{mi.id}', self.channel_name)
 
