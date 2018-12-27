@@ -13,19 +13,16 @@ class DoctorAppointmentNotificationConsumer(AsyncJsonWebsocketConsumer):
             if doctor:
 
                 await self.accept()
-                medical_institutions = doctor.get_medical_institutions()
-                for mi in medical_institutions:
-                    await self.channel_layer.group_add(
-                        f'doctor-queue-{doctor.id}-{mi.id}', self.channel_name
-                    )
+
+                await self.channel_layer.group_add(
+                    f'doctor-queue-{doctor.id}', self.channel_name
+                )
 
     async def disconnect(self, code):
         if self.user.is_authenticated:
             doctor = self.user.doctor_profile()
             if doctor:
-                medical_institutions = await doctor.get_medical_institutions()
-                for mi in medical_institutions:
-                    await self.channel_layer.group_discard(f'doctor-queue-{doctor.id}-{mi.id}', self.channel_name)
+                await self.channel_layer.group_discard(f'doctor-queue-{doctor.id}', self.channel_name)
 
     async def queue_update(self, event):
         await self.send_json(event)
