@@ -290,8 +290,8 @@ ELASTICSEARCH_DSL = {
 
 ELASTICSEARCH_INDEX_NAMES = {
     'search_indexes.documents.drug': 'drug',
+    'search_indexes.documents.doctor': 'doctor',
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
