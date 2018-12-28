@@ -52,7 +52,7 @@
     }
 
     function loadPatientLabTests(){
-        var url = "{% url 'api_rpivate_patient_labtest_list' %}?checkup_id={{ checkup.id }}";
+        var url = "{% url 'api_private_patient_labtest_list' %}?checkup_id={{ checkup.id }}";
         $.get(url)
             .done(function(result){
                 patient_labtests_container.loadTemplate(patient_labtests_template, result);

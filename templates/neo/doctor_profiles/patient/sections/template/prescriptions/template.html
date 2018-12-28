@@ -44,3 +44,77 @@
         </tr>
     </table>
 </script>
+
+<script type="text/html" id="drug-routes-template">
+    <option data-value="id" data-content="name"></option>
+</script>
+
+
+<script type="text/html" id="prescriptions-template">
+    <span class="badge--gray mr-1 mb-1">
+        <a href="#!" data-content="drug.name" class="py-0 px-2 modalPrescriptionDetail_open prescription-detail"
+           data-template-bind='[{"attribute": "data-prescription-id", "value": "id"}]'></a>
+        <a href="#!" class="remove-prescription ml-3 remove-button"
+           data-template-bind='[{"attribute": "data-prescription-id", "value": "id"}]'>
+            <i class="fa fa-times"></i>
+        </a>
+    </span>
+</script>
+
+<script type="text/html" id="dismissed-prescriptions-template">
+    <li class="list-group-item">
+        <span data-content="diagnosis.name"></span> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
+    </li>
+</script>
+
+<script type="text/html" id="prescription-detail-template">
+    <div class="card-header">
+        <h4 class="h4" data-content="drug.name"></h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tr>
+                <th>Base Name</th>
+                <td data-content="drug.base_name"></td>
+                <th>Generic Name</th>
+                <td data-content="drug.generic_name_list"></td>
+            </tr>
+            <tr>
+                <th>Active Ingredient</th>
+                <td data-content="drug.active_ingredients"></td>
+                <th>Product Type</th>
+                <td data-content="drug.product_type"></td>
+            </tr>
+            <tr>
+                <th>Dosage/Strength</th>
+                <td>
+                    <span data-content="prescription_dosage"></span>
+                    <span data-content="prescription_dosage_unit"></span>
+
+                    <span data-content="prescription_frequency"></span>
+                </td>
+                <th>Amount</th>
+                <td>
+                    <span data-content="prescription_amount"></span>
+                    <span data-content="prescription_amount_unit"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Route</th>
+                <td>
+                    <span data-content="prescription_route.name"></span>
+                </td>
+                <th>Dispense Quantity</th>
+                <td>
+                    <span data-content="prescription_dispense_qty"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Notes</th>
+                <td colspan="3">
+                    <span data-content="prescription_notes"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</script>

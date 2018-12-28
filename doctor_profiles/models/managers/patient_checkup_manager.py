@@ -39,3 +39,8 @@ class LabTestManager(models.Manager):
 class PatientLabTestRequestManager(models.Manager):
     def create(self, *args, **kwargs):
         return super(PatientLabTestRequestManager, self).create(*args, **kwargs)
+
+
+class PatientPrescriptionManager(models.Manager):
+    def create(self, *args, **kwargs):
+        return super(PatientPrescriptionManager, self).create(*args, **kwargs)

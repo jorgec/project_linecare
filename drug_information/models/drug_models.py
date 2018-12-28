@@ -103,16 +103,16 @@ class Drug(models.Model):
         return []
 
     def get_active_ingredients_rel(self):
-        return [x.active_ingredient for x in self.drug_ingredients.all()]
+        return {x.active_ingredient for x in self.drug_ingredients.all()}
 
     def get_routes_rel(self):
-        return [x.route for x in self.drug_routes.all()]
+        return {x.route for x in self.drug_routes.all()}
 
     def get_pharm_class_rel(self):
-        return [x.pharm_class for x in self.drug_pharmclass.all()]
+        return {x.pharm_class for x in self.drug_pharmclass.all()}
 
     def get_dosage_forms_rel(self):
-        return [x.dosage_form for x in self.drug_dosageforms.all()]
+        return {x.dosage_form for x in self.drug_dosageforms.all()}
 
     @property
     def name_indexing(self):

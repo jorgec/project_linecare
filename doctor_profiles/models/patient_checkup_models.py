@@ -5,7 +5,7 @@ from django_extensions.db import fields as extension_fields
 
 from doctor_profiles.models.managers.patient_checkup_manager import PatientCheckupRecordManager, \
     PatientCheckupRecordAccessManager, PatientSymptomManager, PatientFindingManager, PatientDiagnosisManager, \
-    CheckupNoteManager, PatientLabTestRequestManager, LabTestManager
+    CheckupNoteManager, PatientLabTestRequestManager, LabTestManager, PatientPrescriptionManager
 
 
 class PatientCheckupRecord(models.Model):
@@ -24,7 +24,7 @@ class PatientCheckupRecord(models.Model):
         ordering = ('appointment__patient',)
 
     def __str__(self):
-        return f'{self.appointment.patient}'
+        return f'{self.appointment.patient} on {self.appointment.schedule_day}'
 
     def get_symptoms(self):
         return self.checkup_symptoms.filter(is_deleted=False)
@@ -52,6 +52,12 @@ class PatientCheckupRecord(models.Model):
         if allowed.count() > 0:
             return True
         return False
+
+    def get_prescriptions(self):
+        return self.checkup_prescriptions.filter(is_deleted=False)
+
+    def get_dismissed_prescriptions(self):
+        return self.checkup_prescriptions.filter(is_deleted=True)
 
 
 class PatientCheckupRecordAccess(models.Model):
@@ -116,7 +122,7 @@ class PatientLabTestRequest(models.Model):
     checkup = models.ForeignKey('doctor_profiles.PatientCheckupRecord', on_delete=models.CASCADE,
                                 related_name='checkup_tests')
     requested_by = models.ForeignKey('doctor_profiles.DoctorProfile', on_delete=models.SET_NULL, null=True,
-                                 related_name='labtests_requested')
+                                     related_name='labtests_requested')
 
     objects = PatientLabTestRequestManager()
 
@@ -300,4 +306,34 @@ class Prescription(models.Model):
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
+    is_deleted = models.BooleanField(default=False)
     metadata = JSONField(default=dict, null=True, blank=True)
+
+    prescription_dosage = models.FloatField(blank=True, null=True)
+    prescription_dosage_unit = models.CharField(max_length=256, blank=True, null=True)
+    prescription_amount = models.FloatField(blank=True, null=True)
+    prescription_amount_unit = models.CharField(max_length=256, blank=True, null=True)
+
+    prescription_frequency = models.CharField(max_length=256, blank=True, null=True)
+    prescription_dispense_qty = models.FloatField(blank=True, null=True)
+    prescription_notes = models.TextField(max_length=2048, blank=True, null=True)
+
+    # Relationship Fields
+    drug = models.ForeignKey('drug_information.Drug', on_delete=models.SET_NULL, null=True, blank=True,
+                             related_name='drug_prescriptions')
+    doctor = models.ForeignKey('doctor_profiles.DoctorProfile', on_delete=models.SET_NULL, null=True, blank=True,
+                               related_name='doctor_prescriptions')
+    checkup = models.ForeignKey(PatientCheckupRecord, related_name="checkup_prescriptions",
+                                on_delete=models.CASCADE, null=True)
+
+    prescription_route = models.ForeignKey('drug_information.DrugRoute', on_delete=models.SET_NULL, null=True,
+                                           blank=True, related_name='prescription_routes')
+
+    objects = PatientPrescriptionManager()
+
+    class Meta:
+        ordering = ('checkup',)
+        unique_together = ('drug', 'checkup')
+
+    def __str__(self):
+        return f'{self.drug} for {self.checkup.appointment.patient}'

@@ -1,11 +1,13 @@
-<div id="modalAddLabTest" class="popup-modal popup-modal-wide card">
+<div id="modalAddLabTest" class="popup-modal popup-modal card">
     <div class="card-body">
         <div class="row">
             <div class="col-sm-12 col-md-4">
                 <div class="form-group mb-2">
                     <input type="text" class="form-control" placeholder="Search..." name="txtLabTestsearch" id="txtLabTestsearch">
                 </div>
-                <ul class="list-group list-group-flush" id="labtests-container"></ul>
+                <div style="height: 70vh; overflow: scroll">
+                    <ul class="list-group list-group-flush" id="labtests-container"></ul>
+                </div>
             </div>
             <div class="col-sm-12 col-md-8 hide" id="modalAddLabTestDescriptionPane">
                 <h4 id="modalAddLabTest_title" class="h4"></h4>

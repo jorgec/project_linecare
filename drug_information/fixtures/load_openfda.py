@@ -13,7 +13,8 @@ from drug_information.models import GenericName, Drug
 from drug_information.models.drug_models import ActiveIngredient, DrugActiveIngredient, DosageForm, DrugDosageForm, \
     PharmaceuticalClass, DrugPharmaceuticalClass, DrugRoute, DrugRouteDelivery
 
-json_src = '/home/ubuntu/linecare/documentation/drugs/openfda/endpoints/drug-ndc-0001-of-0001.json'
+json_src = '/home/ubuntu/linecare/documentation/drugs/openfda/endpoints/sample.json'
+# json_src = '/home/ubuntu/linecare/documentation/drugs/openfda/endpoints/drug-ndc-0001-of-0001.json'
 # json_src = '/home/linecare/documentation/drugs/openfda/endpoints/drug-ndc-0001-of-0001.json'
 
 with open(json_src) as j:

@@ -1,6 +1,8 @@
 from django.urls import path
 
 from .modules.api import drugs_api
+from .modules.api import drug_routes_api
+
 
 #############################################################################
 # API
@@ -20,4 +22,8 @@ urlpatterns = [
     path(f'{version}/public/drug/detail',
          drugs_api.ApiPublicDrugDetail.as_view(),
          name='api_public_drug_detail'),
+
+    path(f'{version}/public/drug_routes/list',
+         drug_routes_api.ApiDrugRouteList.as_view(),
+         name='api_public_drug_route_list'),
 ]

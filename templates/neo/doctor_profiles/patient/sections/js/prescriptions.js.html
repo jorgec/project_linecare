@@ -8,7 +8,10 @@
     var txtDrugSearch = $("#txtDrugSearch");
     var formAddDrug = $("#formAddDrug");
     var formDrugSearch = $("#formDrugSearch");
+    var formAddPrescription = $("#formAddPrescription");
     var btnAddDrugToPrescriptionModal = $(".btnAddDrugToPrescriptionModal");
+    var btnAddPrescription = $("#btnAddPrescription");
+    var currentDrug = null;
 
     $(document).ready(function () {
         modalPrescriptionDetail.popup({
@@ -33,38 +36,43 @@
             autozindex: true,
             scrolllock: true
         });
-        
-        formAddDrug.on('submit', function(e){
+
+        modalPrescriptionDetail.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+
+        formAddDrug.on('submit', function (e) {
             e.preventDefault();
             addDrug();
         });
 
-        id_generic_name.on('keyup', function(e){
+        id_generic_name.on('keyup', function (e) {
             e.preventDefault();
             var s = $(this).val();
-            if(s.length >=3){
+            if (s.length >= 3) {
                 loadGenerics(s);
-            }else{
+            } else {
                 $("#generics-list-container").html('');
             }
         });
 
-        txtDrugSearch.on('keyup', function(e){
+        txtDrugSearch.on('keyup', function (e) {
             e.preventDefault();
             var s = $(this).val();
-            if(s.length > 4){
+            if (s.length > 4) {
                 loadDrugs(s);
-            }else{
+            } else {
                 $("#drugs-list-container").html('');
             }
         });
 
-        formDrugSearch.on('submit', function(e){
+        formDrugSearch.on('submit', function (e) {
             e.preventDefault();
             var s = txtDrugSearch.val();
-            if(s.length > 2){
+            if (s.length > 2) {
                 loadDrugs(s);
-            }else{
+            } else {
                 $.notify({
                     message: "Search term is too short"
                 }, {
@@ -73,19 +81,99 @@
             }
         });
 
-        btnAddDrugToPrescriptionModal.on('click', function(e){
+        btnAddDrugToPrescriptionModal.on('click', function (e) {
             e.preventDefault();
-            var drug_id = $(this).attr("data-drug-id");
-            addDrugToPrescription(drug_id);
+
+            addDrugToPrescription();
         });
+
+        formAddPrescription.on('submit', function(e){
+            e.preventDefault();
+            savePrescription();
+        });
+
+        loadPrescriptions();
     });
 
-    function addDrugToPrescription(drug_id){
-        //modalAddPrescription.modal('hide');
-        console.log(drug_id);
+    function addDrugToPrescription() {
+        if (currentDrug) {
+            $("#id_prescription_route").loadTemplate($("#drug-routes-template"), currentDrug['routes_rel']);
+            $("#id_prescription_drug_name").html(currentDrug['name']);
+        } else {
+            $.notify({
+                message: "No drug selected!"
+            }, {
+                type: "danger"
+            })
+        }
     }
-    
-    function addDrug(){
+
+    function loadPrescriptions(){
+        var url = "{% url 'api_private_patient_prescription_list' %}?checkup_id={{ checkup.id }}";
+        $.get(url)
+            .done(function(result){
+                console.log(result);
+                $("#prescriptions-container").loadTemplate($("#prescriptions-template"), result);
+                $(".prescription-detail").on('click', function(e){
+                    e.preventDefault();
+                    var id = $(this).attr("data-prescription-id");
+                    loadPrescription(id)
+                });
+            })
+            .fail(function(result){
+                console.log(result);
+            });
+    }
+
+    function loadPrescription(prescription_id){
+        var url = "{% url 'api_private_prescription_detail' %}?id=" + prescription_id;
+        $.get(url)
+            .done(function(result){
+                $("#prescription-detail-container").loadTemplate($("#prescription-detail-template"), result);
+
+            })
+            .fail(function(result){
+                console.log(result);
+            });
+    }
+
+    function savePrescription() {
+        if (currentDrug) {
+            var formData = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                drug: currentDrug.id,
+                doctor: {{ doctor.id }},
+                checkup: {{ checkup.id }},
+                prescription_dosage: $("#id_prescription_dosage").val(),
+                prescription_dosage_unit: $("#id_prescription_dosage_unit").val(),
+                prescription_amount: $("#id_prescription_amount").val(),
+                prescription_amount_unit: $("#id_prescription_amount_unit").val(),
+                prescription_route: $("#id_prescription_route").val(),
+                prescription_frequency: $("#id_prescription_frequency").val(),
+                prescription_dispense_qty: $("#id_prescription_dispense_qty").val(),
+                prescription_notes: $("#id_prescription_notes").val(),
+            };
+
+            var url = "{% url 'api_private_patient_prescription_create' %}";
+            $.post(url, formData)
+                .done(function(result){
+                    loadPrescriptions();
+                })
+                .fail(function(result){
+                    console.log(result);
+                });
+
+        } else {
+            $.notify({
+                message: "No drug selected!"
+            }, {
+                type: "danger"
+            })
+        }
+        modalAddPrescription.popup('hide');
+    }
+
+    function addDrug() {
         var url = "{% url 'api_private_drugs_create' %}";
         var formData = {
             csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -97,25 +185,25 @@
         };
 
         $.post(url, formData)
-            .done(function(result){
+            .done(function (result) {
                 console.log(result);
             })
 
     }
 
-    function loadGenerics(s){
+    function loadGenerics(s) {
         var url = "{% url 'api_public_generics_list' %}?s=" + s;
         $.get(url)
-            .done(function(result){
-                if(result.length > 0){
+            .done(function (result) {
+                if (result.length > 0) {
                     $("#generics-list-container").loadTemplate($("#generics-list-template"), result);
-                }else{
+                } else {
                     $("#generics-list-container").html(
                         "<div class='alert alert-warning'>No results</a>"
                     )
                 }
 
-                $(".generic-name-item").on('click', function(e){
+                $(".generic-name-item").on('click', function (e) {
                     e.preventDefault();
                     var generic_id = $(this).attr("data-generic-id");
                     var generic_name = $(this).attr("data-generic-name");
@@ -126,20 +214,20 @@
             });
     }
 
-    function loadDrugs(s){
+    function loadDrugs(s) {
         var url = "{% url 'api_es_drugs_search' %}?q=" + s;
         $.get(url)
-            .done(function(result){
+            .done(function (result) {
                 console.log(result);
-                if(result.length > 0) {
+                if (result.length > 0) {
                     $("#drugs-list-container").loadTemplate($("#drugs-list-template"), result);
-                }else{
+                } else {
                     $("#drugs-list-container").html(
                         "<div class='alert alert-warning'>No results</a>"
                     )
                 }
 
-                $(".drug-item").on('click', function(e){
+                $(".drug-item").on('click', function (e) {
                     e.preventDefault();
 
 
@@ -161,12 +249,12 @@
             });
     }
 
-    function previewDrug(drug_id){
+    function previewDrug(drug_id) {
         var detail_url = "{% url 'api_public_drug_detail' %}?id=" + drug_id;
 
         $.get(detail_url)
-            .done(function(detail_result){
-                console.log(detail_result);
+            .done(function (detail_result) {
+                currentDrug = detail_result;
                 $("#drug-preview-container").loadTemplate($("#drug-preview-template"), detail_result);
             });
     }

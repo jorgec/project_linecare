@@ -384,7 +384,7 @@ urlpatterns += [
     path(f'{version}/private/appointment/symptom/delete',
          symptoms_api.ApiPrivatePatientSymptomRemove.as_view(),
          name='api_private_appointment_symptom_delete'),
-    
+
     # findings
     path(f'{version}/private/finding/create',
          findings_api.ApiPrivateFindingCreate.as_view(),
@@ -442,7 +442,17 @@ urlpatterns += [
          name='api_private_patient_labtest_create'),
     path(f'{version}/private/appointment/labtest/list',
          labtest_api.ApiPrivatePatientLabTestList.as_view(),
-         name='api_rpivate_patient_labtest_list'),
-    
+         name='api_private_patient_labtest_list'),
+
     # prescriptions
+    path(f'{version}/private/appointment/prescription/create',
+         prescriptions_api.ApiPrivatePrescriptionCreate.as_view(),
+         name='api_private_patient_prescription_create'),
+    path(f'{version}/private/appointment/prescription/list',
+         prescriptions_api.ApiPrivatePatientPrescriptionList.as_view(),
+         name='api_private_patient_prescription_list'),
+    path(f'{version}/private/prescription/detail',
+         prescriptions_api.ApiPrivatePatientPrescriptionDetail.as_view(),
+         name='api_private_prescription_detail'),
+
 ]
