@@ -39,15 +39,15 @@ def update_status_permissions_check(appointment, request, queue_status):
     is_allowed = False
     actor = request.user
 
-    if queue_status in UPDATE_STATUS_PERMISSIONS_MATRIX['doctor']:
-        if actor.doctor_profile() and appointment.doctor == actor.doctor_profile():
+    if actor.doctor_profile() and appointment.doctor == actor.doctor_profile():
+        if queue_status in UPDATE_STATUS_PERMISSIONS_MATRIX['doctor']:
             is_allowed = True
-    elif queue_status in UPDATE_STATUS_PERMISSIONS_MATRIX['receptionist']:
-        if actor.receptionist_profile() and actor.receptionist_profile() in appointment.doctor.get_receptionists(
-                medical_institution=appointment.medical_institution):
+    if actor.receptionist_profile() and actor.receptionist_profile() in appointment.doctor.get_receptionists(
+            medical_institution=appointment.medical_institution):
+        if queue_status in UPDATE_STATUS_PERMISSIONS_MATRIX['receptionist']:
             is_allowed = True
-    elif queue_status in UPDATE_STATUS_PERMISSIONS_MATRIX['patient']:
-        if actor.base_profile() == appointment.patient:
+    if actor.base_profile() == appointment.patient:
+        if queue_status in UPDATE_STATUS_PERMISSIONS_MATRIX['patient']:
             is_allowed = True
 
     return is_allowed
