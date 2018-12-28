@@ -10,9 +10,7 @@ application = ProtocolTypeRouter({
     "websocket" : AuthMiddlewareStack(
         URLRouter([
             path("notifications/receptionist/appointments/", ReceptionistAppointmentNotificationConsumer),
-
             path('notifications/patient/appointment/status/', PatientAppointmentNotificationConsumer),
-
             path('notifications/doctor/queue/status_update/', DoctorAppointmentNotificationConsumer)
         ])
     )

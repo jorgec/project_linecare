@@ -84,6 +84,6 @@ class ApiPatientAppointmentUpdateStatus(APIView):
 
         PatientAppointment.objects.update_status(id=appointment.id, status=queue_status)
 
-        doctor_notify_update_queue(appointment.doctor, appointment.medical_institution)
+        doctor_notify_update_queue(appointment.doctor)
 
         return Response(f"Status of {appointment} changed to {queue_status}", status=status.HTTP_200_OK)
