@@ -186,8 +186,13 @@
 
         $.post(url, formData)
             .done(function (result) {
-                console.log(result);
-            })
+                $.notify({
+                    message: result.name + " added to list!"
+                },{
+                    type: "success"
+                })
+            });
+        modalAddDrug.popup('close');
 
     }
 
