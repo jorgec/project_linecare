@@ -13,7 +13,8 @@ from doctor_profiles.models import DoctorSchedule, DoctorProfile, MedicalInstitu
 from doctor_profiles.models.doctor_schedule_models import DoctorScheduleDay, PatientAppointment
 from doctor_profiles.models.managers.doctor_schedule_manager import check_collisions, find_gaps
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
-from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_new_appointment
+from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_new_appointment, \
+    doctor_notify_update_queue
 from doctor_profiles.serializers import DoctorScheduleSerializer, \
     MedicalInstitutionSerializer, PatientQueuePrivateSerializer
 from profiles.models import BaseProfile
@@ -85,6 +86,7 @@ class ApiDoctorScheduleCreate(APIView):
         result, message, schedule = DoctorSchedule.objects.create(**schedule_data)
         if result:
             schedule_serializer = DoctorScheduleSerializer(schedule)
+            doctor_notify_update_queue(doctor)
             return Response(schedule_serializer.data, status.HTTP_200_OK)
         else:
             if message == "Schedule Conflict":
