@@ -1,0 +1,52 @@
+{% load static %}
+<ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+        <a {% if location == 'doctor_profile_patients' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_patient_list' %}">Patients</a>
+    </li>
+    <li class="sidebar-nav-separator"></li>
+    <li class="sidebar-nav-item">
+        <a {% if location == 'detail_home' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_patient_detail' patient.id %}">
+            <i class="fa fa-user mr-3"></i>
+            Patient Information
+        </a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a {% if location == 'appointment_history' %}class="active"{% endif %} href="">
+            <i class="fas fa-history mr-3"></i>
+            Appointment History
+        </a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a {% if location == 'appointment_timeline' %}class="active"{% endif %} href="">
+            <i class="fas fa-chart-area mr-3"></i>
+            Timeline
+        </a>
+    </li>
+    <li class="sidebar-nav-separator"></li>
+    <li class="sidebar-nav-item">
+        <a {% if location == 'findings' %}class="active"{% endif %} href="">
+            <i class="fas fa-bug mr-3"></i>
+            Symptoms and Findings
+        </a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a {% if location == 'diagnoses' %}class="active"{% endif %} href="">
+            <i class="fas fa-diagnoses mr-3"></i>
+            Diagnoses
+        </a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a {% if location == 'prescriptions' %}class="active"{% endif %} href="">
+            <i class="fas fa-prescription mr-3"></i>
+            Medication
+        </a>
+    </li>
+    <li class="sidebar-nav-item">
+        <a {% if location == 'labs' %}class="active"{% endif %} href="">
+            <i class="fas fa-vials mr-3"></i>
+            Medication
+        </a>
+    </li>
+</ul>

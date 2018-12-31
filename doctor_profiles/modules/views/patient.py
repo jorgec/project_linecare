@@ -41,7 +41,7 @@ class DoctorProfilePatientDetail(LoginRequiredMixin, UserPassesTestMixin, View):
         context = {
             'page_title': f'Patient profile for {patient}',
             'location': 'doctor_profile_patients',
-            'sublocation': 'detail',
+            'sublocation': 'detail_home',
             'doctor': doctor,
             'patient': patient,
             'checkups': checkups

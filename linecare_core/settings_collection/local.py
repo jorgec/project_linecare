@@ -102,6 +102,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_framework_swagger',
     'corsheaders',
+    'graphene_django',
 
     'django_extensions',
 
@@ -295,6 +296,14 @@ CORS_ORIGIN_WHITELIST = (
     '192.168.10.189',
     '192.168.33.1',
 )
+
+GRAPHENE = {
+    'SCHEMA': 'linecare_core.schema.schema',
+    'MIDDLEWARE': (
+        'graphene_django.debug.DjangoDebugMiddleware',
+    )
+}
+
 
 ELASTICSEARCH_DSL = {
     'default': {

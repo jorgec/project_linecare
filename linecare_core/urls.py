@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
+from graphene_django.views import GraphQLView
 
 from accounts.modules.api.auth import ApiFacebookLogin
 from rest_framework_swagger.views import get_swagger_view
@@ -39,7 +40,8 @@ urlpatterns = [
     path('receptionist/', include('receptionist_profiles.urls')),
     path('drug/', include('drug_information.urls')),
 
-    path('search/', include('search_indexes.urls'))
+    path('search/', include('search_indexes.urls')),
+    path('graphql/', GraphQLView.as_view(graphiql=True))
 ]
 
 if settings.DEBUG:

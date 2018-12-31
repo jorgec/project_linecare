@@ -15,42 +15,94 @@
     {% include 'neo/doctor_profiles/patient/sections/template/next_steps/modals.html' %}
     {% include 'neo/doctor_profiles/patient/sections/template/next_steps/template.html' %}
 
-    <div class="card-group">
-        <div class="card">
-            {% include 'neo/doctor_profiles/patient/sections/template/symptoms/main.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/symptoms/modals.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/symptoms/template.html' %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'doctor_profile_schedule_detail' appointment.medical_institution.slug %}">
+            {{ appointment.medical_institution }}
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav nav-tabs mr-auto" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="symptoms-tab" data-toggle="tab" href="#symptoms" role="tab" aria-controls="symptoms"
+                       aria-selected="true">Symptoms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="findings-tab" data-toggle="tab" href="#findings" role="tab" aria-controls="findings"
+                       aria-selected="false">Findings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="diagnosis-tab" data-toggle="tab" href="#diagnosis" role="tab" aria-controls="diagnosis"
+                       aria-selected="false">Diagnosis</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="labs-tab" data-toggle="tab" href="#labs" role="tab" aria-controls="labs"
+                       aria-selected="false">Labs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="prescriptions-tab" data-toggle="tab" href="#prescriptions" role="tab" aria-controls="prescriptions"
+                       aria-selected="false">Prescriptions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="notes-tab" data-toggle="tab" href="#notes" role="tab" aria-controls="notes"
+                       aria-selected="false">Notes</a>
+                </li>
+            </ul>
         </div>
-        <div class="card">
-            {% include 'neo/doctor_profiles/patient/sections/template/findings/main.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/findings/modals.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/findings/template.html' %}
+    </nav>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="symptoms" role="tabpanel" aria-labelledby="symptoms-tab">
+            <div class="card">
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/symptoms/main.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/symptoms/modals.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/symptoms/template.html' %}
+            </div>
         </div>
-        <div class="card">
-            {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/main.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/modals.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/diagnoses/template.html' %}
+        <div class="tab-pane" id="findings" role="tabpanel" aria-labelledby="findings-tab">
+            <div class="card">
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/findings/main.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/findings/modals.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/findings/template.html' %}
+            </div>
+        </div>
+        <div class="tab-pane" id="diagnosis" role="tabpanel" aria-labelledby="diagnosis-tab">
+            <div class="card">
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/diagnoses/main.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/diagnoses/modals.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/diagnoses/template.html' %}
+            </div>
+        </div>
+        <div class="tab-pane" id="labs" role="tabpanel" aria-labelledby="labs-tab">
+            <div class="card">
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/labtests/main.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/labtests/modals.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/labtests/template.html' %}
+            </div>
+        </div>
+        <div class="tab-pane" id="prescriptions" role="tabpanel" aria-labelledby="prescriptions-tab">
+            <div class="card">
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/prescriptions/main.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/prescriptions/modals.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/prescriptions/template.html' %}
+            </div>
+        </div>
+        <div class="tab-pane" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+            <div class="card">
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/notes/main.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/notes/modals.html' %}
+                {% include 'neo/doctor_profiles/patient/sections/template/appointment_detail/notes/template.html' %}
+            </div>
         </div>
     </div>
-    <div class="card-group">
-        <div class="card">
-            {% include 'neo/doctor_profiles/patient/sections/template/labtests/main.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/labtests/modals.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/labtests/template.html' %}
-        </div>
-        <div class="card">
-            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/main.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/modals.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/prescriptions/template.html' %}
-        </div>
-    </div>
-    <div class="card-group">
-        <div class="card">
-            {% include 'neo/doctor_profiles/patient/sections/template/notes/main.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/notes/modals.html' %}
-            {% include 'neo/doctor_profiles/patient/sections/template/notes/template.html' %}
-        </div>
-    </div>
+
 {% endblock %}
 
 {% block home_scripts %}
@@ -59,11 +111,11 @@
                 src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
         {% include 'neo/doctor_profiles/patient/sections/js/basic_info.js.html' %}
         {% include 'neo/doctor_profiles/patient/sections/js/next_steps.js.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/js/symptoms.js.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/js/findings.js.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/js/diagnoses.js.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/js/labtests.js.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/js/prescriptions.js.html' %}
-        {% include 'neo/doctor_profiles/patient/sections/js/notes.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/appointment_detail/symptoms.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/appointment_detail/findings.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/appointment_detail/diagnoses.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/appointment_detail/labtests.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/appointment_detail/prescriptions.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/appointment_detail/notes.js.html' %}
     {% endblock %}
 {% endblock %}
