@@ -8,28 +8,45 @@
     <li class="sidebar-nav-separator"></li>
     <li class="sidebar-nav-item">
         <a {% if sublocation == 'degree' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_settings_medical_degree' %}">Medical Degree</a>
+           href="{% url 'doctor_profile_settings_medical_degree' %}">
+            <i class="fas fa-graduation-cap mr-3"></i>
+            Medical Degree
+        </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if sublocation == 'specialization' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_settings_specialization' %}">Specializations</a>
+           href="{% url 'doctor_profile_settings_specialization' %}">
+            <i class="fas fa-user-md mr-3"></i>
+            Specializations
+        </a>
     </li>
     <li class="sidebar-nav-item">
-        <a {% if sublocation == 'subspecialization' %}class="active"{% endif %} href="">Sub Specializations</a>
+        <a {% if sublocation == 'subspecialization' %}class="active"{% endif %} href="">
+            <i class="fas fa-user-md mr-3"></i>
+            Sub Specializations
+        </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if sublocation == 'associations' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_settings_association' %}">Medical Association</a>
+           href="{% url 'doctor_profile_settings_association' %}">
+            <i class="fas fa-cubes mr-3"></i>
+            Medical Association
+        </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if sublocation == 'insurance' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_settings_insurance' %}">Insurance
-            Providers</a>
+           href="{% url 'doctor_profile_settings_insurance' %}">
+            <i class="fas fa-user-injured mr-3"></i>
+            Insurance Providers
+        </a>
     </li>
     <li class="sidebar-nav-separator"></li>
     <li class="sidebar-nav-item">
         <a {% if sublocation == 'institution' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_settings_medical_institution' %}">Medical Institution Linkages</a>
+           href="{% url 'doctor_profile_settings_medical_institution' %}">
+            <i class="fas fa-hospital mr-3"></i>
+            Medical Institution Linkages
+        </a>
 
     </li>
 </ul>
