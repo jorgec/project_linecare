@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
-from graphene_django.views import GraphQLView
+# from graphene_django.views import GraphQLView
 
 from accounts.modules.api.auth import ApiFacebookLogin
 from rest_framework_swagger.views import get_swagger_view
