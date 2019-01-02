@@ -5,6 +5,7 @@ from .modules.views import settings as setting_views
 from .modules.views import medical_institutions as institution_views
 from .modules.views import schedule as schedule_views
 from .modules.views import patient as patient_views
+from .modules.views import analytics as analytics_views
 
 from .modules.views import snippets
 
@@ -24,6 +25,8 @@ from .modules.api import diagnosis_api
 from .modules.api import checkup_api
 from .modules.api import labtest_api
 from .modules.api import prescriptions_api
+
+from .modules.analytics_api import patient_analytics_api
 
 #############################################################################
 # Views
@@ -100,6 +103,12 @@ urlpatterns = [
          patient_views.DoctorProfilePatientDetail.as_view(),
          name='doctor_profile_patient_detail'),
 
+    #############################################################################
+    # Analytics
+    #############################################################################
+    path('analytics/checkups/aggregate',
+         analytics_views.DoctorProfileAnalyticsPatientByCheckupAggregateView.as_view(),
+         name='doctor_profile_analytics_checkups_aggregate'),
 ]
 
 #############################################################################
@@ -464,4 +473,12 @@ urlpatterns += [
          prescriptions_api.ApiPrivatePatientPrescriptionDetail.as_view(),
          name='api_private_prescription_detail'),
 
+    #############################################################################
+    # Analytics
+    #############################################################################
+
+    # patient analytics
+    path(f'{version}/analytics/agg/patient/by_checkup/counts',
+         patient_analytics_api.ApiAnalyticsPatientByCheckupAggregateCounts.as_view(),
+         name='api_private_doctor_patient_analytics_by_checkup_aggregate_counts'),
 ]

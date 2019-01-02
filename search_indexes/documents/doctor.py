@@ -73,6 +73,7 @@ class DoctorDocument(DocType):
             'raw': fields.StringField(analyzer='keyword')
         }
     )
+
     addresses = fields.StringField(
         attr='addresses_indexing',
         analyzer=html_strip,
