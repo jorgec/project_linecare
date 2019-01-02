@@ -13,6 +13,7 @@ from .modules.api import specializations_api
 from .modules.api import medical_associations_api
 from .modules.api import insurance_providers_api
 from .modules.api import medical_institutions_api
+from .modules.api import medical_institution_doctors_api
 from .modules.api import doctor_profile_api
 from .modules.api import doctor_schedule_api
 from .modules.api import patient_connection_api
@@ -281,6 +282,14 @@ urlpatterns += [
     path(f'{version}/private/medical_institution/create',
          medical_institutions_api.ApiPrivateMedicalInstitutionCreate.as_view(),
          name='api_private_medical_institution_create'),
+
+    # connection meta
+    path(f'{version}/public/medical_institution_doctor/meta/list',
+         medical_institution_doctors_api.ApiMedicalInstitutionDoctorMetaList.as_view(),
+         name='api_public_medical_institution_doctor_meta_list'),
+    path(f'{version}/private/medical_institution_doctor/meta/update',
+         medical_institution_doctors_api.ApiMedicalInstitutionDoctorMetaUpdate.as_view(),
+         name='api_private_medical_institution_doctor_meta_update'),
 
     # location
     path(f'{version}/public/medical_institution/location/list',

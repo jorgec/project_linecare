@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
 
+from doctor_profiles.constants import APPOINTMENT_TYPES
 from doctor_profiles.forms import MedicalInstitutionLocationForm
 from doctor_profiles.models import MedicalInstitution
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
@@ -70,7 +71,8 @@ class DoctorProfileMedicalInstitutionManageConnectionView(LoginRequiredMixin, Us
             'location': 'doctor_profile_medical_institution',
             'sublocation': 'connection',
             'rel': rel,
-            'submit_location_form': MedicalInstitutionLocationForm
+            'submit_location_form': MedicalInstitutionLocationForm,
+            'appointment_types': APPOINTMENT_TYPES
         }
 
         return render(request, 'neo/doctor_profiles/medical_institutions/manage_connection.html', context)

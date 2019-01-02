@@ -41,7 +41,7 @@ urlpatterns = [
     path('drug/', include('drug_information.urls')),
 
     path('search/', include('search_indexes.urls')),
-    path('graphql/', GraphQLView.as_view(graphiql=True))
+    # path('graphql/', GraphQLView.as_view(graphiql=True))
 ]
 
 if settings.DEBUG:

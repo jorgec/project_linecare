@@ -70,4 +70,5 @@ APPOINTMENT_TYPES = (
     ('checkup', 'Check Up'),
     ('followup', 'Follow Up'),
     ('lab_result', 'Lab Result'),
+    ('consultation', 'Consultation'),
 )

@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    var formFeesMeta = $("#formFeesMeta");
+    var fees_meta = null;
+
+    $(document).ready(function () {
+        loadFeeMeta();
+
+        formFeesMeta.on('submit', function (e) {
+            e.preventDefault();
+            saveMeta("fees", fees_meta);
+        })
+    });
+
+    function loadFeeMeta() {
+        $("#fee-meta-container").html("<div class='donut-spinner'></div>");
+        var url = "{% url 'api_public_medical_institution_doctor_meta_list' %}?id={{ rel.id }}&key=fees";
+        $.get(url)
+            .done(function (result) {
+                fees_meta = result;
+                $("#fee-meta-container").loadTemplate($("#fee-meta-template"), fees_meta);
+            })
+            .fail(function (result) {
+                console.log(result);
+            });
+    }
+</script>

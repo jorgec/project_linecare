@@ -1,0 +1,12 @@
+<script type="text/html" id="fee-meta-template">
+    {% for at in appointment_types %}
+        <div class="row mb-1">
+            <div class="col-sm-6 col-md-4">
+                <label for="fees_{{ at.0 }}">{{ at.1 }}</label>
+            </div>
+            <div class="col-sm-6 col-md-8">
+                <input class="form-control" type="number" id="fees_{{ at.0 }}" name="fees_{{ at.0 }}" data-value="{{ at.0 }}">
+            </div>
+        </div>
+    {% endfor %}
+</script>

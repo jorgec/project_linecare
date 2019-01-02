@@ -1,0 +1,60 @@
+<script type="text/javascript">
+    var formDurationsMeta = $("#formDurationsMeta");
+    var durations_meta = null;
+
+    $(document).ready(function () {
+        loadDurationMeta();
+
+        formDurationsMeta.on('submit', function (e) {
+            e.preventDefault();
+            saveMeta("durations", durations_meta);
+        })
+    });
+
+    function saveMeta(key, meta) {
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            rel_id: {{ rel.id }},
+            key: key
+        };
+
+        $.each(meta, function (i, v) {
+            formData["payload__" + i] = $("#" + key + "_" + i).val();
+        });
+
+        var url = "{% url 'api_private_medical_institution_doctor_meta_update' %}";
+
+        $.post(url, formData)
+
+            .done(function (result) {
+                loadDurationMeta();
+                $.notify({
+                    message: "Meta saved!"
+                }, {
+                    type: "success"
+                })
+            })
+            .fail(function (result) {
+                $.notify({
+                    message: result.responseText
+                }, {
+                    type: "danger"
+                })
+            });
+
+    }
+
+    function loadDurationMeta() {
+        $("#duration-meta-container").html("<div class='donut-spinner'></div>");
+        var url = "{% url 'api_public_medical_institution_doctor_meta_list' %}?id={{ rel.id }}&key=durations";
+        $.get(url)
+            .done(function (result) {
+                console.log(result);
+                durations_meta = result;
+                $("#duration-meta-container").loadTemplate($("#duration-meta-template"), durations_meta);
+            })
+            .fail(function (result) {
+                console.log(result);
+            });
+    }
+</script>
