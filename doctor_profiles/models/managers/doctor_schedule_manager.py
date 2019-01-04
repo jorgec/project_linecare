@@ -33,6 +33,16 @@ class PatientAppointmentManager(models.Manager):
                                           QUEUE_STATUS_MESSAGES[status]['message'],
                                           QUEUE_STATUS_MESSAGES[status]['color'])
 
+    def create(self, *args, **kwargs):
+        obj = super(PatientAppointmentManager, self).create(*args, **kwargs)
+        meta = obj.doctor.get_medical_institution_meta(obj.medical_institution)
+        try:
+            fee = float(meta['fees'][obj.type])
+        except KeyError:
+            fee = 0.0
+        obj.fee = fee
+        obj.save()
+        return obj
 
 class DoctorScheduleManager(models.Manager):
     @staticmethod

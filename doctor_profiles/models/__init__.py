@@ -11,3 +11,4 @@ from .doctor_schedule_models import DoctorSchedule, DoctorScheduleDay, PatientAp
 from .patient_connection_models import PatientConnection
 from .patient_checkup_models import Symptom, PatientSymptom, PatientCheckupRecord, PatientCheckupRecordAccess, Finding, \
     PatientFinding, Diagnosis, PatientDiagnosis, CheckupNote, LabTest, PatientLabTestRequest
+from .medical_institution_doctor_models import MedicalInstitutionDoctor

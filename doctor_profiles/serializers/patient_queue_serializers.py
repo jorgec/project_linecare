@@ -43,12 +43,18 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField('repr_type')
     medical_institution = MedicalInstitutionSerializer()
     last_visit = serializers.SerializerMethodField('repr_last_visit')
+    patient_url = serializers.SerializerMethodField('repr_patient_url')
 
     def repr_prior_visits(self, obj):
         return PatientAppointment.objects.prior_visits(
             doctor=obj.doctor,
             patient=obj.patient
         ).count()
+
+    def repr_patient_url(self, obj):
+        return reverse('doctor_profile_patient_detail', kwargs={
+            'patient_id': obj.patient.id
+        })
 
     def repr_last_visit(self, obj):
         visit = PatientAppointment.objects.filter(
@@ -57,7 +63,7 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
             schedule_day__date_obj__lte=obj.schedule_day.date_obj,
         ).exclude(
             id=obj.id
-        ).first()
+        ).order_by('-schedule_day__date_obj').first()
 
         if visit:
             return {
@@ -103,5 +109,6 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
             'queue_status',
             'queue_number',
             'status_display',
-            'last_visit'
+            'last_visit',
+            'patient_url'
         )

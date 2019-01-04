@@ -103,6 +103,7 @@ class PatientAppointment(models.Model):
     status = models.CharField(choices=QUEUE_STATUS_CODES, max_length=50, default='pending')
     type = models.CharField(choices=APPOINTMENT_TYPES, max_length=50, default='check_up')
     queue_number = models.PositiveSmallIntegerField(null=True, blank=True, default=1)
+    fee = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
     # Relationship fields
     schedule_day = models.ForeignKey('datesdim.DateDim', on_delete=models.SET_NULL,

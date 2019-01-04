@@ -14,13 +14,8 @@ def patient_appointment_earnings(queryset):
     fees = {}
     for row in queryset:
         try:
-            connection = MedicalInstitutionDoctor.objects.get(doctor=row.doctor,
-                                                              medical_institution=row.medical_institution)
-        except MedicalInstitutionDoctor.DoesNotExist:
-            break
-
-        try:
-            fee = connection.metadata['fees'][row.type]
+            # fee = connection.metadata['fees'][row.type]
+            fee = row.fee
             fee_name = row.get_type_display()
 
             if row.type in fees:

@@ -274,6 +274,18 @@ class DoctorProfile(models.Model):
         self.save()
         return value
 
+    def get_medical_institution_meta(self, medical_institution):
+        MedicalInstitutionDoctor = apps.get_model('doctor_profiles.MedicalInstitutionDoctor')
+        try:
+            connection = MedicalInstitutionDoctor.objects.get(
+                is_approved=True,
+                doctor=self,
+                medical_institution=medical_institution
+            )
+            return connection.metadata
+        except MedicalInstitutionDoctor.DoesNotExist:
+            return []
+
     def get_patients(self, s=None):
         if s:
             patients_query = search.get_query(s, ['patient__first_name', 'patient__last_name'])

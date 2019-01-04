@@ -102,6 +102,9 @@ urlpatterns = [
     path('patients/<patient_id>/detail',
          patient_views.DoctorProfilePatientDetail.as_view(),
          name='doctor_profile_patient_detail'),
+    path('patients/detail',
+         patient_views.DoctorProfilePatientQSDetail.as_view(),
+         name='doctor_profile_patient_qs_detail'),
 
     #############################################################################
     # Analytics

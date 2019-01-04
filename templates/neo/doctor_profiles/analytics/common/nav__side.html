@@ -5,31 +5,31 @@
     <li class="sidebar-nav-item">
         <a {% if location == 'patient_checkup_overview' %}class="active"{% endif %}
            href="{% url 'doctor_profile_analytics_checkups_aggregate'%}">
-            <i class="fa fa-user-md mr-3"></i>
+            <i class="fas fw fa-user-md mr-3"></i>
             Checkups and Consultations
         </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if location == 'findings' %}class="active"{% endif %} href="">
-            <i class="fas fa-bug mr-3"></i>
+            <i class="fas fws fa-bug mr-3"></i>
             Symptoms
         </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if location == 'diagnoses' %}class="active"{% endif %} href="">
-            <i class="fas fa-diagnoses mr-3"></i>
+            <i class="fas fws fa-diagnoses mr-3"></i>
             Findings and Diagnoses
         </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if location == 'prescriptions' %}class="active"{% endif %} href="">
-            <i class="fas fa-prescription mr-3"></i>
+            <i class="fas fws fa-prescription mr-3"></i>
             Medication
         </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if location == 'labs' %}class="active"{% endif %} href="">
-            <i class="fas fa-vials mr-3"></i>
+            <i class="fas fws fa-vials mr-3"></i>
             Lab Requests
         </a>
     </li>

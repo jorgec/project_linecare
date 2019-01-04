@@ -52,6 +52,34 @@ class DoctorProfilePatientDetail(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         return self.request.user.doctor_profile()
 
+class DoctorProfilePatientQSDetail(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        doctor = request.user.doctor_profile()
+        patient = get_object_or_404(BaseProfile, id=request.GET.get('patient_id'))
+        connection = get_object_or_404(PatientConnection, doctor=doctor, patient=patient)
+
+        checkups = PatientCheckupRecordAccess.objects.filter(
+            doctor=doctor,
+            checkup__appointment__patient=patient,
+            is_approved=True
+        ).order_by(
+            '-checkup__appointment__schedule_day__date_obj'
+        )
+
+        context = {
+            'page_title': f'Patient profile for {patient}',
+            'location': 'doctor_profile_patients',
+            'sublocation': 'detail_home',
+            'doctor': doctor,
+            'patient': patient,
+            'checkups': checkups
+        }
+
+        return render(request, 'neo/doctor_profiles/patient/patient_detail.html', context)
+
+    def test_func(self):
+        return self.request.user.doctor_profile()
+
 
 class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
