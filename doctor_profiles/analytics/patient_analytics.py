@@ -123,11 +123,12 @@ def patient_appointment_slice_by_year(queryset):
             splits = dict(df.groupby('type').type.count())
 
             for dk in dataset_keys:
-                dataset[dk[0]] = {
-                    'label': dk[1],
-                    'slug': dk[0],
-                    'count': splits[dk[0]]
-                }
+                if dk[0] in splits:
+                    dataset[dk[0]] = {
+                        'label': dk[1],
+                        'slug': dk[0],
+                        'count': splits[dk[0]]
+                    }
         else:
             for dk in dataset_keys:
                 dataset[dk[0]] = {
@@ -155,11 +156,12 @@ def patient_appointment_slice_by_week(queryset):
 
             splits = dict(df.groupby('type').type.count())
             for dk in dataset_keys:
-                dataset[dk[0]] = {
-                    'label': dk[1],
-                    'slug': dk[0],
-                    'count': splits[dk[0]]
-                }
+                if dk[0] in splits:
+                    dataset[dk[0]] = {
+                        'label': dk[1],
+                        'slug': dk[0],
+                        'count': splits[dk[0]]
+                    }
         else:
             for dk in dataset_keys:
                 dataset[dk[0]] = {
