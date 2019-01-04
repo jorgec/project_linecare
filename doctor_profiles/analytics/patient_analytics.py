@@ -1,3 +1,4 @@
+import pandas as pd
 from django.db.models import Count
 
 from datesdim.constants import MONTH_CHOICES
@@ -41,6 +42,7 @@ def patient_appointment_earnings(queryset):
 
 
 def patient_appointment_checkup_counts(queryset):
+    total = queryset.count()
     aggregated = queryset.values(
         'type'
     ).annotate(
@@ -49,61 +51,125 @@ def patient_appointment_checkup_counts(queryset):
         'type'
     )
 
-    count_serializer = PatientByCheckupAggregateSerializer(
-        list(aggregated.values('type', 'type_count')),
-        many=True
-    )
+    if aggregated.count() > 0:
 
-    return count_serializer.data
+        count_serializer = PatientByCheckupAggregateSerializer(
+            list(aggregated.values('type', 'type_count')),
+            many=True
+        )
+
+        return {
+            'items': count_serializer.data,
+            'total': total
+        }
+    else:
+        return {
+            'items': [],
+            'total': 0
+        }
 
 
 def patient_appointment_slice_by_month(queryset):
     month = queryset.first().schedule_day.month
     year = queryset.first().schedule_day.year
 
-    days = DateDim.objects.days_in_month(month=month, year=year)
+    days = DateDim.objects.days_in_month(month=month, year=year).order_by('day')
 
-    data = {}
+    labels = []
+    datasets = {}
 
+    dataset_keys = {(c.type, c.get_type_display()) for c in queryset}
     for day in days:
+        labels.append(str(day))
+
         queryset_on_day = queryset.filter(schedule_day=day)
 
-        data[str(day)] = {
-            'earnings': patient_appointment_earnings(queryset_on_day),
-            'counts': patient_appointment_checkup_counts(queryset_on_day)
-        }
+        dataset = {}
+        if queryset_on_day.count() > 0:
+            df = pd.DataFrame(list(queryset_on_day.values()))
 
-    return data
+            splits = dict(df.groupby('type').type.count())
+            for dk in dataset_keys:
+                dataset[dk[0]] = {
+                        'label': dk[1],
+                        'slug': dk[0],
+                        'count': splits[dk[0]]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk[0]] = {
+                'label': dk[1],
+                'slug': dk[0],
+                'count': 0
+            }
+
+        datasets[str(day)] = dataset
+
+    return datasets, labels, dataset_keys
 
 
 def patient_appointment_slice_by_year(queryset):
-    data = {}
+    datasets = {}
+    labels = []
     year = queryset.first().schedule_day.year
+    dataset_keys = {(c.type, c.get_type_display()) for c in queryset}
     for month in MONTH_CHOICES:
         queryset_on_month = queryset.filter(schedule_day__month=month[0])
+        labels.append(month[1])
+        dataset = {}
+        if queryset_on_month.count() > 0:
+            df = pd.DataFrame(list(queryset_on_month.values()))
+            splits = dict(df.groupby('type').type.count())
 
-        data[month[1]] = {
-            'month_numeric': month[0],
-            'month_name': month[1],
-            'year': year,
-            'earnings': patient_appointment_earnings(queryset_on_month),
-            'counts': patient_appointment_checkup_counts(queryset_on_month)
-        }
-    return data
+            for dk in dataset_keys:
+                dataset[dk[0]] = {
+                    'label': dk[1],
+                    'slug': dk[0],
+                    'count': splits[dk[0]]
+                }
+        else:
+            for dk in dataset_keys:
+                dataset[dk[0]] = {
+                    'label': dk[1],
+                    'slug': dk[0],
+                    'count': 0
+                }
+        datasets[month[1]] = dataset
+    return datasets, labels, dataset_keys
 
 def patient_appointment_slice_by_week(queryset):
-    data = {}
+    labels = []
     days = queryset.first().schedule_day.get_week()
+    datasets = {}
 
+    dataset_keys = {(c.type, c.get_type_display()) for c in queryset}
     for day in days:
+        labels.append(str(day))
+
         queryset_on_day = queryset.filter(schedule_day=day)
 
-        data[str(day)] = {
-            'earnings': patient_appointment_earnings(queryset_on_day),
-            'counts': patient_appointment_checkup_counts(queryset_on_day)
-        }
+        dataset = {}
+        if queryset_on_day.count() > 0:
+            df = pd.DataFrame(list(queryset_on_day.values()))
 
-    return data
+            splits = dict(df.groupby('type').type.count())
+            for dk in dataset_keys:
+                dataset[dk[0]] = {
+                    'label': dk[1],
+                    'slug': dk[0],
+                    'count': splits[dk[0]]
+                }
+        else:
+            for dk in dataset_keys:
+                dataset[dk[0]] = {
+                    'label': dk[1],
+                    'slug': dk[0],
+                    'count': 0
+                }
+
+        datasets[str(day)] = dataset
+
+    return datasets, labels, dataset_keys
 
 
 def patient_appointment_slice_by_day(queryset):

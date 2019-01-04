@@ -191,7 +191,7 @@ class DoctorProfile(models.Model):
     def settings_progress(self):
         return self.calculate_settings_progress()
 
-    def get_schedules(self, *, medical_institution=None, include_past=False):
+    def get_schedules(self, *, medical_institution=None, include_past=True):
         DateDim = apps.get_model('datesdim.DateDim')
         filters = {
             'is_approved': True

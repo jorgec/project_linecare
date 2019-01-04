@@ -1,0 +1,36 @@
+<div class="row control-bar align-items-center">
+    <div class="col-sm-12 col-md-6 mb-1">
+        <label>
+            Medical Institution:
+            <select name="selectMedicalInstitution" id="selectMedicalInstitution" class="form-control">
+                <option>---</option>
+                {% for mi in medical_institutions %}
+                    <option value="{{ mi.id }}">
+                        {{ mi.name }}
+                        <small>
+                            {{ mi.address.address }}
+                        </small>
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+    <div class="col-sm-4 col-md-2">
+        <label>
+            Date:
+            <input type="text" class="form-control" id="dateCheckup" value="{{ date }}">
+        </label>
+    </div>
+    <div class="col-sm-4 col-md-2">
+        Show by: <br>
+        <a href="#!" id="slice_week" class="btnSliceSelect" data-slice="week">Week</a> |
+        <a href="#!" id="slice_month" class="btnSliceSelect active" data-slice="month">Month</a> |
+        <a href="#!" id="slice_year" class="btnSliceSelect" data-slice="year">Year</a>
+    </div>
+    <div class="col-sm-4 col-md-2">
+        <button type="button" class="btn btn-outline-primary btn-sm" id="btnFilter">
+            <i class="fas fa-filter"></i>
+            Filter
+        </button>
+    </div>
+</div>

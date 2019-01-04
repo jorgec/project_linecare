@@ -1,0 +1,168 @@
+<script type="text/javascript">
+    var selectedSlice = 'month';
+    var selectedDay = '{{ date }}';
+    var selectedMedicalInstitution = null;
+
+    var btnSliceSelect = $(".btnSliceSelect");
+    var dateCheckup = $("#dateCheckup");
+    var selectMedicalInstitution = $("#selectMedicalInstitution");
+    var btnFilter = $("#btnFilter");
+
+    var chartData = {};
+
+
+    $(document).ready(function(){
+
+        loadCheckupAggregate();
+
+        btnSliceSelect.on('click', function(e){
+            e.preventDefault();
+            var slice = $(this).attr("data-slice");
+            selectSlice(slice);
+        });
+
+        dateCheckup.bootstrapMaterialDatePicker({
+            format: "YYYY-MM-DD",
+            time: false
+        });
+
+        dateCheckup.on('change', function(){
+            selectedDay = $(this).val();
+        });
+
+        selectMedicalInstitution.on("change", function(){
+            var sel = $(this).val();
+            if(sel !== "---"){
+                selectedMedicalInstitution = sel;
+            }else{
+                selectedMedicalInstitution = null;
+            }
+        });
+
+        btnFilter.on("click", function(e){
+            e.preventDefault();
+            loadCheckupAggregate();
+        })
+
+    });
+
+    function buildQS(){
+        var params = {
+            doctor_id: {{ doctor.id }},
+            slice: selectedSlice,
+            day: selectedDay,
+        };
+
+        if(selectedMedicalInstitution){
+            params['medical_institution_id'] = selectedMedicalInstitution;
+        }
+
+        return $.param(params);
+    }
+
+    function selectSlice(slice){
+        btnSliceSelect.each(function(i){
+            $(this).removeClass("active");
+        });
+        selectedSlice = slice;
+        $("#slice_" + slice).addClass("active");
+    }
+
+    function buildChart(data){
+        $("#chartVisit").empty();
+        var chartData = {
+            labels: data.labels
+        };
+
+        var datasets = [];
+
+        for(var k in data.dataset_keys){
+            var tempdata = [];
+            var dataset = {
+                label: data.dataset_keys[k][1],
+                stack: "Visits",
+                backgroundColor: materialColor()
+            };
+            for(var j in data['slice']){
+                tempdata.push(
+                    data['slice'][j][data.dataset_keys[k][0]]['count']
+                )
+            }
+            dataset['data'] = tempdata;
+            datasets.push(dataset);
+        }
+
+        chartData['datasets'] = datasets;
+
+        var ctx = document.getElementById('chartVisit').getContext('2d');
+
+        if(window.chartVisitGraph && (window.chartVisitGraph != null || window.chartVisitGraph !== undefined)){
+            window.chartVisitGraph.destroy();
+        }
+
+        window.chartVisitGraph = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                title: {
+                    display: true,
+                    text: 'Checkups'
+                },
+                tooltips: {
+                    //mode: 'index',
+                    intersect: false,
+
+                },
+                responsive: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
+
+    }
+
+    function loadCheckupAggregate(){
+        var params = buildQS();
+        var url = "{% url 'api_private_doctor_patient_analytics_by_checkup_aggregate_counts' %}?" + params;
+
+        $.get(url)
+            .done(function(result){
+                console.log(result);
+                $("#checkup-counts-container").loadTemplate(
+                    $("#checkup-counts-template"),
+                    result['counts']['data']['items']
+                );
+
+                var fees = result['earnings']['data']['fees'];
+                var fee_arr = [];
+
+                for(var key in fees){
+                    fee_arr.push(fees[key]);
+                }
+
+                $("#checkup-earnings-container").loadTemplate(
+                    $("#checkup-earnings-template"),
+                    fee_arr
+                );
+
+                $("#checkup-counts-total-container").loadTemplate(
+                    $("#checkup-counts-total-template"),
+                    result['counts']
+                );
+
+                $("#checkup-earnings-total-container").loadTemplate(
+                    $("#checkup-earnings-total-template"),
+                    result['earnings']
+                );
+
+                buildChart(result);
+
+            })
+    }
+</script>

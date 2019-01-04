@@ -75,7 +75,7 @@ class ApiAnalyticsPatientByCheckupAggregateCounts(APIView):
             'doctor_id': request.GET.get('doctor_id'),
             'slice': request.GET.get('slice', 'month'),
             'day': request.GET.get('day', None),
-            'medical_institution_id': request.GET.get('doctor_institution_id', None),
+            'medical_institution_id': request.GET.get('medical_institution_id', None),
         }
         time_slice = request.GET.get('slice', 'month')
         """
@@ -83,6 +83,28 @@ class ApiAnalyticsPatientByCheckupAggregateCounts(APIView):
         """
 
         filters = patient_analytics.patient_appointment_build_filters(params)
+
+        serialized = {
+            'counts': {
+                'data': {
+                    'items': [],
+                    'total': 0
+                },
+                'label': 'Appointments',
+                'key': 'counts'
+            },
+            'earnings': {
+                'data': {
+                    'fees': {},
+                    'total': 0
+                },
+                'label': 'Earnings',
+                'key': 'earnings'
+            },
+            'slice': [],
+            'labels': [],
+            'dataset_keys': []
+        }
 
         if filters:
             checkups = PatientAppointment.objects.filter(
@@ -95,22 +117,32 @@ class ApiAnalyticsPatientByCheckupAggregateCounts(APIView):
 
 
                 if time_slice == 'month':
-                    sliced_data = patient_appointment_slice_by_month(checkups)
+                    sliced_data, labels, dataset_keys = patient_appointment_slice_by_month(checkups)
                 elif time_slice == 'year':
-                    sliced_data = patient_appointment_slice_by_year(checkups)
+                    sliced_data, labels, dataset_keys = patient_appointment_slice_by_year(checkups)
                 elif time_slice == 'week':
-                    sliced_data = patient_appointment_slice_by_week(checkups)
+                    sliced_data, labels, dataset_keys = patient_appointment_slice_by_week(checkups)
                 elif time_slice == 'day':
-                    sliced_data = patient_appointment_slice_by_day(checkups)
+                    sliced_data, labels, dataset_keys = patient_appointment_slice_by_day(checkups)
                 else:
-                    sliced_data = patient_appointment_slice_by_month(checkups)
+                    sliced_data, labels, dataset_keys = patient_appointment_slice_by_month(checkups)
 
                 serialized = {
-                    'counts': checkup_counts,
-                    'earnings': checkup_earnings,
-                    'slice': sliced_data
+                    'counts': {
+                        'data': checkup_counts,
+                        'label': 'Appointments',
+                        'key': 'counts'
+                    },
+                    'earnings': {
+                        'data': checkup_earnings,
+                        'label': 'Earnings',
+                        'key': 'earnings'
+                    },
+                    'slice': sliced_data,
+                    'labels': labels,
+                    'dataset_keys': dataset_keys
                 }
 
                 return Response(serialized, status=status.HTTP_200_OK)
-            return Response(None, status=status.HTTP_404_NOT_FOUND)
+            return Response(serialized, status=status.HTTP_200_OK)
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
