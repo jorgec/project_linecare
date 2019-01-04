@@ -106,7 +106,7 @@ urlpatterns = [
     #############################################################################
     # Analytics
     #############################################################################
-    path('analytics/checkups/aggregate',
+    path('analytics/checkups',
          analytics_views.DoctorProfileAnalyticsPatientByCheckupAggregateView.as_view(),
          name='doctor_profile_analytics_checkups_aggregate'),
 ]

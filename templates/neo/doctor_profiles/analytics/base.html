@@ -9,11 +9,20 @@
 
 {% block content %}
 
-<div class="two-column">
-    {% block subcontent %}
-        {% include 'neo/doctor_profiles/analytics/common/nav__side.html' %}
-    {% endblock %}
-</div>
+    <div class="two-column">
+        <div class="row">
+            <div class="col-lg-3 col-sm-12">
+                <div class="two-column__left--nav">
+                    {% include 'neo/doctor_profiles/analytics/common/nav__side.html' %}
+                </div>
+            </div>
+            <div class="col-lg-9 col-sm-12">
+                {% block subcontent %}
+                    {% include 'neo/doctor_profiles/analytics/common/nav__side.html' %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
