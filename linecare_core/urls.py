@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 # from graphene_django.views import GraphQLView
 
 from accounts.modules.api.auth import ApiFacebookLogin
@@ -24,6 +25,7 @@ schema_view = get_swagger_view(title='Linecare Core API')
 
 urlpatterns = [
     path('mHBvVWdpEY/', admin.site.urls),
+    path('', TemplateView.as_view(template_name='neo/front_page/base.html')),
 
     # auths
     path('accounts/', include('accounts.urls')),

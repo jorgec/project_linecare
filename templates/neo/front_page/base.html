@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Linecare &mdash; Doctor Profile &mdash; {{ page_title }}</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'neo/css/styles.min.css' %}">
+    <link rel="stylesheet" href="{% static 'react/front-page/css/linecare-front-page.css' %}">
+
+    {% block header_css %} {% endblock %}
+    {% block header_js %} {% endblock %}
+
+    <script src="{% static 'channels/js/websocketbridge.js' %}" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="linecare-front-page"></div>
+
+<script src="{% static 'react/front-page/js/linecare-front-page-1.js' %}"></script>
+<script src="{% static 'react/front-page/js/linecare-front-page-main.js' %}"></script>
+<script src="{% static 'react/front-page/js/linecare-front-page-runtime.js' %}"></script>
+
+</body>
+</html>
