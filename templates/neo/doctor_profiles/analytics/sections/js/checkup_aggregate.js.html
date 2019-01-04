@@ -84,9 +84,11 @@
                 backgroundColor: materialColor()
             };
             for(var j in data['slice']){
-                tempdata.push(
-                    data['slice'][j][data.dataset_keys[k][0]]['count']
-                )
+                if(data['slice'][j][data.dataset_keys[k][0]]){
+                    tempdata.push(
+                        data['slice'][j][data.dataset_keys[k][0]]['count']
+                    )
+                }
             }
             dataset['data'] = tempdata;
             datasets.push(dataset);
