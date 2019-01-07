@@ -466,7 +466,7 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
                     'medical_institution': schedule_day.medical_institution.slug
                 })
             event = {
-                "title": str(schedule_day),
+                "title": schedule_day.short(),
                 "start": start,
                 "end": end,
                 "url": f"{base_url}?date={schedule_day.day}"

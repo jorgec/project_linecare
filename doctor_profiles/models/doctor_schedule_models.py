@@ -85,6 +85,9 @@ class DoctorScheduleDay(models.Model):
     def __str__(self):
         return f'{self.day} - {self.schedule}'
 
+    def short(self):
+        return f'{self.medical_institution}'
+
 
 class PatientAppointment(models.Model):
     """

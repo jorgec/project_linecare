@@ -3,7 +3,7 @@
     {% if profile.get_schedules %}
         <div class="row no-gutters">
             {% for schedule in profile.get_schedules %}
-                <div class="no-shadow col-sm-12 col-md-6">
+                <div class="no-shadow col-sm-12 col-md-6 mb-3">
                     <div class="info">
                         <h6 class="h6">
                             <a href="{% url 'doctor_profile_medical_institution_home' schedule.medical_institution.slug %}">
@@ -21,10 +21,10 @@
                                 </small>
                             </li>
                         </ul>
-                        <div class="btn-group btn-group-sm mb-2">
+                        <div class="card-actions>
 
                             <a href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}">
-                                <i class="fa fa-list"></i> Queue
+                                <i class="fa fa-list"></i> Go to Queue
                             </a>
 
                         </div>
