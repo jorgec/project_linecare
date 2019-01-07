@@ -70,6 +70,56 @@
         };
 
         var datasets = [];
+        for(var k in data.dataset_keys){
+            var tempdata = [];
+            var dataset = {
+                label: data.dataset_keys[k],
+                stack: "Symptoms",
+                backgroundColor: materialColor()
+            };
+            for(var j in data['slice']){
+                var key = data.dataset_keys[k];
+                if(data['slice'][j][key]){
+                    tempdata.push(data['slice'][j][key]['count'])
+                }
+            }
+            dataset['data'] = tempdata;
+            datasets.push(dataset);
+        }
+
+        chartData['datasets'] = datasets;
+        console.log(datasets);
+
+        var ctx = document.getElementById('chartSymptoms').getContext('2d');
+
+        if(window.chartVisitGraph && (window.chartVisitGraph != null || window.chartVisitGraph !== undefined)){
+            window.chartVisitGraph.destroy();
+        }
+
+        window.chartVisitGraph = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                title: {
+                    display: true,
+                    text: 'Symptoms'
+                },
+                tooltips: {
+                    //mode: 'index',
+                    intersect: false,
+
+                },
+                responsive: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
     }
 
     function loadSymptomsAggregate(){
@@ -78,7 +128,14 @@
 
         $.get(url)
             .done(function(result) {
-                console.log(result);
+                $("#symptoms-breakdown-container").loadTemplate(
+                    $("#symptoms-breakdown-template"),
+                    result['counts']['data']['items']
+                );
+                $("#symptoms-total-container").loadTemplate(
+                    $("#symptoms-total-template"),
+                    result['counts']
+                );
 
                 buildChart(result);
             });

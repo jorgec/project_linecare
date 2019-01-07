@@ -6,7 +6,8 @@ from doctor_profiles.analytics import patient_analytics
 from doctor_profiles.analytics.patient_analytics import patient_appointment_earnings, \
     patient_appointment_slice_by_month, \
     patient_appointment_checkup_counts, patient_appointment_slice_by_year, patient_appointment_slice_by_week, \
-    patient_appointment_slice_by_day, patient_symptoms_counts
+    patient_appointment_slice_by_day, patient_symptoms_counts, patient_symptoms_slice_by_month, \
+    patient_symptoms_slice_by_year, patient_symptoms_slice_by_week
 from doctor_profiles.models import DoctorProfile, PatientAppointment
 from receptionist_profiles.models import ReceptionistProfile
 
@@ -182,37 +183,16 @@ class ApiAnalyticsPatientByCheckupSymptomsAggregateCounts(APIView):
             'doctor_id': request.GET.get('doctor_id'),
             'slice': request.GET.get('slice', 'month'),
             'day': request.GET.get('day', None),
-            'medical_institution_id': request.GET.get('medical_institution_id', None),
         }
+        if request.GET.get('medical_institution_id', None):
+            params['medical_institution_id'] = request.GET.get('medical_institution_id', None)
         time_slice = request.GET.get('slice', 'month')
         """
         /params
         """
-
         filters = patient_analytics.patient_appointment_build_filters(params)
 
-        serialized = {
-            'counts': {
-                'data': {
-                    'items': [],
-                    'total': 0
-                },
-                'label': 'Appointments',
-                'key': 'counts'
-            },
-            'earnings': {
-                'data': {
-                    'fees': {},
-                    'total': 0
-                },
-                'label': 'Earnings',
-                'key': 'earnings'
-            },
-            'slice': [],
-            'labels': [],
-            'dataset_keys': []
-        }
-
+        serialized = {}
         if filters:
             checkups = PatientAppointment.objects.filter(
                 **filters
@@ -221,17 +201,15 @@ class ApiAnalyticsPatientByCheckupSymptomsAggregateCounts(APIView):
             if checkups.count() > 0:
 
                 if time_slice == 'month':
-                    sliced_data, labels, dataset_keys = patient_appointment_slice_by_month(checkups)
+                    sliced_data, labels, dataset_keys = patient_symptoms_slice_by_month(checkups)
                 elif time_slice == 'year':
-                    sliced_data, labels, dataset_keys = patient_appointment_slice_by_year(checkups)
+                    sliced_data, labels, dataset_keys = patient_symptoms_slice_by_year(checkups)
                 elif time_slice == 'week':
-                    sliced_data, labels, dataset_keys = patient_appointment_slice_by_week(checkups)
-                elif time_slice == 'day':
-                    sliced_data, labels, dataset_keys = patient_appointment_slice_by_day(checkups)
+                    sliced_data, labels, dataset_keys = patient_symptoms_slice_by_week(checkups)
                 else:
-                    sliced_data, labels, dataset_keys = patient_appointment_slice_by_month(checkups)
+                    sliced_data, labels, dataset_keys = patient_symptoms_slice_by_month(checkups)
 
-                symptom_counts = patient_symptoms_counts(sliced_data)
+                symptom_counts = patient_symptoms_counts(checkups)
                 serialized = {
                     'counts': {
                         'data': symptom_counts,
@@ -242,6 +220,7 @@ class ApiAnalyticsPatientByCheckupSymptomsAggregateCounts(APIView):
                     'labels': labels,
                     'dataset_keys': dataset_keys
                 }
+
 
                 return Response(serialized, status=status.HTTP_200_OK)
             return Response(serialized, status=status.HTTP_200_OK)

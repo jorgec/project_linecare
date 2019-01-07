@@ -209,6 +209,115 @@ def patient_appointment_slice_by_day(queryset):
     return data
 
 
+def patient_symptoms_slice_by_month(queryset):
+    month = queryset.first().schedule_day.month
+    year = queryset.first().schedule_day.year
+
+    days = DateDim.objects.days_in_month(month=month, year=year).order_by('day')
+
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    symptoms = PatientSymptom.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.symptom.name for c in symptoms}
+
+    for day in days:
+        labels.append(str(day))
+
+        queryset_on_day = checkups.filter(appointment__schedule_day=day)
+        symptoms_on_day = PatientSymptom.objects.filter(checkup__in=queryset_on_day)
+        dataset = {}
+        if symptoms_on_day.count() > 0:
+            df = pd.DataFrame(list(symptoms_on_day.values('symptom', 'symptom__name')))
+
+            splits = dict(df.groupby('symptom__name').symptom.count())
+
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[str(day)] = dataset
+    return datasets, labels, dataset_keys
+
+
+def patient_symptoms_slice_by_week(queryset):
+    days = queryset.first().schedule_day.get_week()
+
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    symptoms = PatientSymptom.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.symptom.name for c in symptoms}
+
+    for day in days:
+        labels.append(str(day))
+
+        queryset_on_day = checkups.filter(appointment__schedule_day=day)
+        symptoms_on_day = PatientSymptom.objects.filter(checkup__in=queryset_on_day)
+        dataset = {}
+        if symptoms_on_day.count() > 0:
+            df = pd.DataFrame(list(symptoms_on_day.values('symptom', 'symptom__name')))
+
+            splits = dict(df.groupby('symptom__name').symptom.count())
+
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[str(day)] = dataset
+    return datasets, labels, dataset_keys
+
+
+def patient_symptoms_slice_by_year(queryset):
+    datasets = {}
+    labels = []
+    year = queryset.first().schedule_day.year
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    symptoms = PatientSymptom.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.symptom.name for c in symptoms}
+
+    for month in MONTH_CHOICES:
+        queryset_on_month = checkups.filter(appointment__schedule_day__month=month[0])
+        symptoms_on_month = PatientSymptom.objects.filter(checkup__in=queryset_on_month)
+        labels.append(month[1])
+        dataset = {}
+        if symptoms_on_month.count() > 0:
+            df = pd.DataFrame(list(symptoms_on_month.values('symptom', 'symptom__name')))
+            splits = dict(df.groupby('symptom__name').symptom.count())
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[month[1]] = dataset
+    return datasets, labels, dataset_keys
+
+
 def patient_appointment_build_filters(params):
     try:
         doctor = DoctorProfile.objects.get(id=params.get('doctor_id', None))
