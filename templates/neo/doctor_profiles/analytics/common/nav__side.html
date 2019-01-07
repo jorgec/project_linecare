@@ -10,7 +10,7 @@
         </a>
     </li>
     <li class="sidebar-nav-item">
-        <a {% if location == 'findings' %}class="active"{% endif %} href="">
+        <a {% if location == 'patient_symptoms_overview' %}class="active"{% endif %} href="{% url 'doctor_profile_analytics_symptoms_aggregate' %}">
             <i class="fas fws fa-bug mr-3"></i>
             Symptoms
         </a>

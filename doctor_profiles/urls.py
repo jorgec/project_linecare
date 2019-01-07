@@ -112,6 +112,9 @@ urlpatterns = [
     path('analytics/checkups',
          analytics_views.DoctorProfileAnalyticsPatientByCheckupAggregateView.as_view(),
          name='doctor_profile_analytics_checkups_aggregate'),
+    path('analytics/symptoms',
+         analytics_views.DoctorProfileAnalyticsPatientBySymptomAggregateView.as_view(),
+         name='doctor_profile_analytics_symptoms_aggregate'),
 ]
 
 #############################################################################
@@ -484,4 +487,7 @@ urlpatterns += [
     path(f'{version}/analytics/agg/patient/by_checkup/counts',
          patient_analytics_api.ApiAnalyticsPatientByCheckupAggregateCounts.as_view(),
          name='api_private_doctor_patient_analytics_by_checkup_aggregate_counts'),
+    path(f'{version}/analytics/agg/symptoms/by_checkup/counts',
+         patient_analytics_api.ApiAnalyticsPatientByCheckupSymptomsAggregateCounts.as_view(),
+         name='api_private_doctor_patient_analytics_by_symptoms_aggregate_counts'),
 ]

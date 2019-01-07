@@ -3,7 +3,7 @@ from django.db.models import Count
 
 from datesdim.constants import MONTH_CHOICES
 from datesdim.models import DateDim
-from doctor_profiles.models import DoctorProfile, MedicalInstitution
+from doctor_profiles.models import DoctorProfile, MedicalInstitution, PatientCheckupRecord, PatientSymptom
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
 from doctor_profiles.modules.analytics_api.serializers.patient_analytics_serializers import \
     PatientByCheckupAggregateSerializer
@@ -64,6 +64,30 @@ def patient_appointment_checkup_counts(queryset):
         }
 
 
+def patient_symptoms_counts(queryset):
+    records = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    patient_symptoms = PatientSymptom.objects.filter(checkup__in=records)
+    total = patient_symptoms.count()
+
+    aggregate = patient_symptoms.values('symptom__name').annotate(scount=Count('symptom')).order_by('symptom__name')
+
+    if total > 0:
+        return {
+            'items': list(
+                aggregate.values(
+                    'symptom__name',
+                    'scount'
+                )
+            ),
+            'total': total
+        }
+    else:
+        return {
+            'items': [],
+            'total': 0
+        }
+
+
 def patient_appointment_slice_by_month(queryset):
     month = queryset.first().schedule_day.month
     year = queryset.first().schedule_day.year
@@ -87,17 +111,17 @@ def patient_appointment_slice_by_month(queryset):
             for dk in dataset_keys:
                 if dk[0] in splits:
                     dataset[dk[0]] = {
-                            'label': dk[1],
-                            'slug': dk[0],
-                            'count': splits[dk[0]]
-                        }
+                        'label': dk[1],
+                        'slug': dk[0],
+                        'count': splits[dk[0]]
+                    }
         else:
             for dk in dataset_keys:
                 dataset[dk[0]] = {
-                'label': dk[1],
-                'slug': dk[0],
-                'count': 0
-            }
+                    'label': dk[1],
+                    'slug': dk[0],
+                    'count': 0
+                }
 
         datasets[str(day)] = dataset
 
@@ -133,6 +157,7 @@ def patient_appointment_slice_by_year(queryset):
                 }
         datasets[month[1]] = dataset
     return datasets, labels, dataset_keys
+
 
 def patient_appointment_slice_by_week(queryset):
     labels = []
@@ -182,7 +207,6 @@ def patient_appointment_slice_by_day(queryset):
     }
 
     return data
-
 
 
 def patient_appointment_build_filters(params):
