@@ -152,6 +152,21 @@
                 }, {
                     type: 'success'
                 });
+            })
+            .fail(function(result){
+                if(result.status === 409){
+                    $.notify({
+                        message: result.responseText
+                    }, {
+                        type: "danger"
+                    });
+                }else{
+                    $.notify({
+                        message: "That symptom already exists; please search for it and click to add"
+                    }, {
+                        type: "danger"
+                    });
+                }
             });
         modalSaveSymptom.modal('hide');
     }
