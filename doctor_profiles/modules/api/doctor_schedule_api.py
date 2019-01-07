@@ -450,8 +450,7 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
 
         events = []
 
-        schedule_days = doctor.get_schedule_days_for_month(year=year, month=month,
-                                                           medical_institution=medical_institution)
+        schedule_days = doctor.get_schedule_days_for_month(year=year, month=month)
 
         for schedule_day in schedule_days:
             start = f"{schedule_day.day}T{schedule_day.schedule.start_time}"
