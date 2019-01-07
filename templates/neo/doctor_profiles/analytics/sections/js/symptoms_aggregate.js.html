@@ -128,14 +128,24 @@
 
         $.get(url)
             .done(function(result) {
-                $("#symptoms-breakdown-container").loadTemplate(
-                    $("#symptoms-breakdown-template"),
-                    result['counts']['data']['items']
-                );
-                $("#symptoms-total-container").loadTemplate(
-                    $("#symptoms-total-template"),
-                    result['counts']
-                );
+
+                if(result['counts']) {
+                    $("#symptoms-breakdown-container").loadTemplate(
+                        $("#symptoms-breakdown-template"),
+                        result['counts']['data']['items']
+                    );
+                    $("#symptoms-total-container").loadTemplate(
+                        $("#symptoms-total-template"),
+                        result['counts']
+                    );
+                }else{
+                    $.notify({
+                        message: 'No results!'
+                    },{
+                        type: 'danger'
+                    })
+                }
+
 
                 buildChart(result);
             });

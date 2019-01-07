@@ -135,33 +135,41 @@
 
         $.get(url)
             .done(function(result){
-                console.log(result);
-                $("#checkup-counts-container").loadTemplate(
-                    $("#checkup-counts-template"),
-                    result['counts']['data']['items']
-                );
 
-                var fees = result['earnings']['data']['fees'];
-                var fee_arr = [];
+                if(result['counts'] && result['earnings']){
+                    $("#checkup-counts-container").loadTemplate(
+                        $("#checkup-counts-template"),
+                        result['counts']['data']['items']
+                    );
 
-                for(var key in fees){
-                    fee_arr.push(fees[key]);
+                    var fees = result['earnings']['data']['fees'];
+                    var fee_arr = [];
+
+                    for(var key in fees){
+                        fee_arr.push(fees[key]);
+                    }
+
+                    $("#checkup-earnings-container").loadTemplate(
+                        $("#checkup-earnings-template"),
+                        fee_arr
+                    );
+
+                    $("#checkup-counts-total-container").loadTemplate(
+                        $("#checkup-counts-total-template"),
+                        result['counts']
+                    );
+
+                    $("#checkup-earnings-total-container").loadTemplate(
+                        $("#checkup-earnings-total-template"),
+                        result['earnings']
+                    );
+                }else{
+                    $.notify({
+                        message: 'No results!'
+                    },{
+                        type: 'danger'
+                    })
                 }
-
-                $("#checkup-earnings-container").loadTemplate(
-                    $("#checkup-earnings-template"),
-                    fee_arr
-                );
-
-                $("#checkup-counts-total-container").loadTemplate(
-                    $("#checkup-counts-total-template"),
-                    result['counts']
-                );
-
-                $("#checkup-earnings-total-container").loadTemplate(
-                    $("#checkup-earnings-total-template"),
-                    result['earnings']
-                );
 
                 buildChart(result);
 
