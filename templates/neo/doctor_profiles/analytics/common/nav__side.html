@@ -4,21 +4,28 @@
     <li class="sidebar-nav-separator"></li>
     <li class="sidebar-nav-item">
         <a {% if location == 'patient_checkup_overview' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_analytics_checkups_aggregate'%}">
+           href="{% url 'doctor_profile_analytics_checkups_aggregate' %}">
             <i class="fas fw fa-user-md mr-3"></i>
             Checkups and Consultations
         </a>
     </li>
     <li class="sidebar-nav-item">
-        <a {% if location == 'patient_symptoms_overview' %}class="active"{% endif %} href="{% url 'doctor_profile_analytics_symptoms_aggregate' %}">
+        <a {% if location == 'patient_symptoms_overview' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_analytics_symptoms_aggregate' %}">
             <i class="fas fws fa-bug mr-3"></i>
             Symptoms
         </a>
     </li>
     <li class="sidebar-nav-item">
+        <a {% if location == 'findings' %}class="active"{% endif %} href="">
+            <i class="fas fws fa-diagnoses mr-3"></i>
+            Findings
+        </a>
+    </li>
+    <li class="sidebar-nav-item">
         <a {% if location == 'diagnoses' %}class="active"{% endif %} href="">
             <i class="fas fws fa-diagnoses mr-3"></i>
-            Findings and Diagnoses
+            Diagnoses
         </a>
     </li>
     <li class="sidebar-nav-item">
