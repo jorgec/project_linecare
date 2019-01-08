@@ -24,7 +24,7 @@
         </a>
     </li>
     <li class="sidebar-nav-item">
-        <a {% if location == 'diagnoses' %}class="active"{% endif %} href="">
+        <a {% if location == 'patient_diagnoses_overview' %}class="active"{% endif %} href="{% url 'doctor_profile_analytics_diagnoses_aggregate' %}">
             <i class="fas fws fa-diagnoses mr-3"></i>
             Diagnoses
         </a>
