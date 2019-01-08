@@ -1,3 +1,5 @@
+import arrow
+from django.conf import settings
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models as models, IntegrityError
 from django.db.models.signals import post_save, post_delete, pre_save
@@ -181,6 +183,57 @@ def create_checkup_record(sender, instance, created=False, **kwargs):
             )
         except IntegrityError:
             pass
+
+
+@receiver(pre_save, sender=PatientAppointment)
+def update_start_time(sender, instance, created=False, **kwargs):
+    if not created and instance.status == 'in_progress':
+        TimeDim = apps.get_model('datesdim.TimeDim')
+        original_time_start = instance.time_start
+        now = arrow.utcnow().to(settings.TIME_ZONE)
+        time_start = TimeDim.objects.parse(now.datetime)
+        instance.time_start = time_start
+        difference = time_start.minutes_since - original_time_start.minutes_since
+        try:
+            instance.time_end = TimeDim.objects.get(minutes_since=difference)
+        except TimeDim.DoesNotExist:
+            pass
+
+@receiver(pre_save, sender=PatientAppointment)
+def update_queue_times(sender, instance, created=False, **kwargs):
+    if not created and instance.status == 'done':
+        TimeDim = apps.get_model('datesdim.TimeDim')
+        original_time_end = instance.time_end
+        now = arrow.utcnow().to(settings.TIME_ZONE)
+        time_end = TimeDim.objects.parse(now.datetime)
+        instance.time_end = time_end
+
+        difference = (time_end.minutes_since - original_time_end.minutes_since) + 10
+
+        other_appointments = PatientAppointment.objects.filter(
+            schedule_day=instance.schedule_day,
+            doctor=instance.doctor
+        ).exclude(
+            status='done',
+            id=instance.id
+        )
+
+        for appt in other_appointments:
+            new_start_diff = appt.time_start.minutes_since + difference
+            try:
+                new_start_time = TimeDim.objects.get(minutes_since=new_start_diff)
+            except TimeDim.DoesNotExist:
+                new_start_time = appt.time_start
+
+            new_end_diff = appt.time_end.minutes_since + difference
+            try:
+                new_end_time = TimeDim.objects.get(minutes_since=new_end_diff)
+            except TimeDim.DoesNotExist:
+                new_end_time = appt.time_end
+
+            appt.time_start = new_start_time
+            appt.time_end = new_end_time
+            appt.save()
 
 
 @receiver(post_save, sender=DoctorSchedule)

@@ -379,14 +379,14 @@ class ApiPrivateDoctorScheduleQueueList(APIView):
 
         if medical_institution:
             queue = PatientAppointment.objects.filter(
-                status__in=QUEUE_DISPLAY_CODES,
+                # status__in=QUEUE_DISPLAY_CODES,
                 doctor=doctor,
                 medical_institution=medical_institution,
                 schedule_day=queue_date
             ).order_by('time_start__minutes_since')
         else:
             queue = PatientAppointment.objects.filter(
-                status__in=QUEUE_DISPLAY_CODES,
+                # status__in=QUEUE_DISPLAY_CODES,
                 doctor=doctor,
                 schedule_day=queue_date
             ).order_by('time_start__minutes_since')
