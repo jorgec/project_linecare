@@ -752,7 +752,7 @@ def patient_labtests_slice_by_month(queryset):
     datasets = {}
     checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
     labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups)
-    dataset_keys = {c.labtest.name for c in labtests}
+    dataset_keys = {c.lab_test.name for c in labtests}
 
     for day in days:
         labels.append(str(day))
