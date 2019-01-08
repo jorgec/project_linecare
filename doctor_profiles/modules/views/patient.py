@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views import View
 
 from doctor_profiles.models import PatientAppointment, PatientCheckupRecord, PatientConnection, \
-    PatientCheckupRecordAccess
+    PatientCheckupRecordAccess, PatientSymptom, PatientFinding
 from profiles.models import BaseProfile
 
 
@@ -148,6 +148,38 @@ class DoctorProfilePatientAppointmentHistoryDetail(LoginRequiredMixin, UserPasse
         }
 
         return render(request, 'neo/doctor_profiles/patient/appointment_history_detail.html', context)
+
+    def test_func(self):
+        return self.request.user.doctor_profile()
+
+
+class DoctorProfilePatientSymptomsFindingsList(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        doctor = request.user.doctor_profile()
+        patient = get_object_or_404(BaseProfile, id=kwargs['patient_id'])
+        connection = get_object_or_404(PatientConnection, doctor=doctor, patient=patient)
+
+        symptoms = PatientSymptom.objects.filter(
+            doctor=doctor,
+            patient=patient
+        )
+
+        findings = PatientFinding.objects.filter(
+            doctor=doctor,
+            patient=patient
+        )
+
+        context = {
+            'page_title': f'Symptoms and Findings for {patient}',
+            'location': 'doctor_profile_patients',
+            'sublocation': 'findings_symptoms',
+            'doctor': doctor,
+            'patient': patient,
+            'symptoms': symptoms,
+            'findings': findings
+        }
+
+        return render(request, 'neo/doctor_profiles/patient/patient_detail.html', context)
 
     def test_func(self):
         return self.request.user.doctor_profile()

@@ -3,7 +3,7 @@ from django.db import models as models
 from django.apps import apps
 from django.db.models import Q
 
-from doctor_profiles.constants import QUEUE_DONE_CODES, QUEUE_STATUS_MESSAGES
+from doctor_profiles.constants import QUEUE_DONE_CODES, QUEUE_STATUS_MESSAGES, QUEUE_CANCELLED_CODES
 from profiles.notifiers.patient_appointment_notifiers import patient_appointment_status_notify
 
 
@@ -176,4 +176,6 @@ def check_collisions(*, appointments, schedule_time_start, schedule_time_end):
             time_end__minutes_since__lte=schedule_time_end.minutes_since)) |
         (Q(time_start__minutes_since__gte=schedule_time_start.minutes_since) & Q(
             time_end__minutes_since__lte=schedule_time_end.minutes_since))
+    ).exclude(
+        status__in=QUEUE_CANCELLED_CODES
     )

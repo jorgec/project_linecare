@@ -11,6 +11,7 @@ from django.apps import apps
 
 from doctor_profiles.constants import QUEUE_STATUS_CODES, APPOINTMENT_TYPES
 from doctor_profiles.models.managers.doctor_schedule_manager import DoctorScheduleManager, PatientAppointmentManager
+from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_update_queue
 
 
 class DoctorSchedule(models.Model):
@@ -184,6 +185,10 @@ def create_checkup_record(sender, instance, created=False, **kwargs):
         except IntegrityError:
             pass
 
+@receiver(post_save, sender=PatientAppointment)
+def notify_queue_consumers(sender, instance, created=False, **kwargs):
+    if instance:
+        doctor_notify_update_queue(instance.doctor)
 
 @receiver(pre_save, sender=PatientAppointment)
 def update_start_time(sender, instance, created=False, **kwargs):

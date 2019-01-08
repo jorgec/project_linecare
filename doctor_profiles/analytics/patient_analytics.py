@@ -3,6 +3,7 @@ from django.db.models import Count
 
 from datesdim.constants import MONTH_CHOICES
 from datesdim.models import DateDim
+from doctor_profiles.constants import QUEUE_DONE_CODES
 from doctor_profiles.models import DoctorProfile, MedicalInstitution, PatientCheckupRecord, PatientSymptom, \
     PatientFinding, PatientDiagnosis
 from doctor_profiles.models.patient_checkup_models import Prescription, PatientLabTestRequest
@@ -1056,7 +1057,8 @@ def patient_appointment_build_filters(params):
     gender = params.get('gender', None)
 
     filters = {
-        'doctor': doctor
+        'doctor': doctor,
+        'status__in': QUEUE_DONE_CODES
     }
 
     if day_str:

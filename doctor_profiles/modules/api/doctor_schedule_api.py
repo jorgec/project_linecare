@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from datesdim.models import TimeDim, DateDim
 from datesdim.serializers import DateDimSerializer, TimeDimSerializer
-from doctor_profiles.constants import QUEUE_DISPLAY_CODES
+from doctor_profiles.constants import QUEUE_DISPLAY_CODES, QUEUE_CANCELLED_CODES
 from doctor_profiles.models import DoctorSchedule, DoctorProfile, MedicalInstitution
 from doctor_profiles.models.doctor_schedule_models import DoctorScheduleDay, PatientAppointment
 from doctor_profiles.models.managers.doctor_schedule_manager import check_collisions, find_gaps
@@ -86,7 +86,7 @@ class ApiDoctorScheduleCreate(APIView):
         result, message, schedule = DoctorSchedule.objects.create(**schedule_data)
         if result:
             schedule_serializer = DoctorScheduleSerializer(schedule)
-            doctor_notify_update_queue(doctor)
+
             return Response(schedule_serializer.data, status.HTTP_200_OK)
         else:
             if message == "Schedule Conflict":
@@ -383,12 +383,16 @@ class ApiPrivateDoctorScheduleQueueList(APIView):
                 doctor=doctor,
                 medical_institution=medical_institution,
                 schedule_day=queue_date
+            ).exclude(
+                status__in=QUEUE_CANCELLED_CODES
             ).order_by('time_start__minutes_since')
         else:
             queue = PatientAppointment.objects.filter(
                 # status__in=QUEUE_DISPLAY_CODES,
                 doctor=doctor,
                 schedule_day=queue_date
+            ).exclude(
+                status__in=QUEUE_CANCELLED_CODES
             ).order_by('time_start__minutes_since')
 
         if request.GET.get('count', None):
