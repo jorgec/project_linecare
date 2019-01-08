@@ -38,7 +38,7 @@
         </a>
     </li>
     <li class="sidebar-nav-item">
-        <a {% if location == 'labs' %}class="active"{% endif %} href="">
+        <a {% if location == 'patient_labtests_overview' %}class="active"{% endif %} href="{% url 'doctor_profile_analytics_labtests_aggregate' %}">
             <i class="fas fws fa-vials mr-3"></i>
             Lab Requests
         </a>
