@@ -197,17 +197,72 @@ def patient_appointment_slice_by_week(queryset):
 
 
 def patient_appointment_slice_by_day(queryset):
-    data = {}
+    labels = [hour for hour in range(0, 24)]
     day = queryset.first().schedule_day
+    datasets = {}
 
-    queryset_on_day = queryset.filter(schedule_day=day)
+    dataset_keys = {(c.type, c.get_type_display()) for c in queryset}
 
-    data[str(day)] = {
-        'earnings': patient_appointment_earnings(queryset_on_day),
-        'counts': patient_appointment_checkup_counts(queryset_on_day)
-    }
+    for hour in labels:
+        queryset_on_hour = queryset.filter(time_start__hour=hour)
+        dataset = {}
+        if queryset_on_hour.count() > 0:
+            df = pd.DataFrame(list(queryset_on_hour.values()))
 
-    return data
+            splits = dict(df.groupby('type').type.count())
+            for dk in dataset_keys:
+                if dk[0] in splits:
+                    dataset[dk[0]] = {
+                        'label': dk[1],
+                        'slug': dk[0],
+                        'count': splits[dk[0]]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk[0]] = {
+                    'label': dk[1],
+                    'slug': dk[0],
+                    'count': 0
+                }
+
+        datasets[str(hour)] = dataset
+
+    return datasets, labels, dataset_keys
+
+
+def patient_symptoms_slice_by_day(queryset):
+    labels = [hour for hour in range(0, 24)]
+    day = queryset.first().schedule_day
+    datasets = {}
+
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    symptoms = PatientSymptom.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.symptom.name for c in symptoms}
+
+    for hour in labels:
+        queryset_on_hour = PatientSymptom.objects.filter(checkup__in=checkups.filter(appointment__time_start__hour=hour))
+
+        dataset = {}
+        if queryset_on_hour.count() > 0:
+            df = pd.DataFrame(list(queryset_on_hour.values('symptom', 'symptom__name')))
+
+            splits = dict(df.groupby('symptom__name').symptom.count())
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+
+        datasets[str(hour)] = dataset
+
+    return datasets, labels, dataset_keys
 
 
 def patient_symptoms_slice_by_month(queryset):
@@ -343,6 +398,41 @@ def patient_findings_counts(queryset):
         }
 
 
+def patient_findings_slice_by_day(queryset):
+    labels = [hour for hour in range(0, 24)]
+    day = queryset.first().schedule_day
+    datasets = {}
+
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    findings = PatientFinding.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.finding.name for c in findings}
+
+    for hour in labels:
+        queryset_on_hour = PatientFinding.objects.filter(checkup__in=checkups.filter(appointment__time_start__hour=hour))
+
+        dataset = {}
+        if queryset_on_hour.count() > 0:
+            df = pd.DataFrame(list(queryset_on_hour.values('finding', 'finding__name')))
+
+            splits = dict(df.groupby('finding__name').finding.count())
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+
+        datasets[str(hour)] = dataset
+
+    return datasets, labels, dataset_keys
+
+
 def patient_findings_slice_by_month(queryset):
     month = queryset.first().schedule_day.month
     year = queryset.first().schedule_day.year
@@ -474,6 +564,41 @@ def patient_diagnoses_counts(queryset):
             'items': [],
             'total': 0
         }
+
+
+def patient_diagnoses_slice_by_day(queryset):
+    labels = [hour for hour in range(0, 24)]
+    day = queryset.first().schedule_day
+    datasets = {}
+
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    diagnoses = PatientDiagnosis.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.diagnosis.name for c in diagnoses}
+
+    for hour in labels:
+        queryset_on_hour = PatientDiagnosis.objects.filter(checkup__in=checkups.filter(appointment__time_start__hour=hour))
+
+        dataset = {}
+        if queryset_on_hour.count() > 0:
+            df = pd.DataFrame(list(queryset_on_hour.values('diagnosis', 'diagnosis__name')))
+
+            splits = dict(df.groupby('diagnosis__name').diagnosis.count())
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+
+        datasets[str(hour)] = dataset
+
+    return datasets, labels, dataset_keys
 
 
 def patient_diagnoses_slice_by_month(queryset):
@@ -609,6 +734,40 @@ def patient_prescriptions_counts(queryset):
         }
 
 
+def patient_prescriptions_slice_by_day(queryset):
+    labels = [hour for hour in range(0, 24)]
+    day = queryset.first().schedule_day
+    datasets = {}
+
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    prescriptions = Prescription.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.drug.name for c in prescriptions}
+
+    for hour in labels:
+        queryset_on_hour = Prescription.objects.filter(checkup__in=checkups.filter(appointment__time_start__hour=hour))
+
+        dataset = {}
+        if queryset_on_hour.count() > 0:
+            df = pd.DataFrame(list(queryset_on_hour.values('drug', 'drug__name')))
+
+            splits = dict(df.groupby('drug__name').drug.count())
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+
+        datasets[str(hour)] = dataset
+
+    return datasets, labels, dataset_keys
+
 def patient_prescriptions_slice_by_month(queryset):
     month = queryset.first().schedule_day.month
     year = queryset.first().schedule_day.year
@@ -741,6 +900,40 @@ def patient_labtests_counts(queryset):
             'total': 0
         }
 
+
+def patient_labtests_slice_by_day(queryset):
+    labels = [hour for hour in range(0, 24)]
+    day = queryset.first().schedule_day
+    datasets = {}
+
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.lab_test.name for c in labtests}
+
+    for hour in labels:
+        queryset_on_hour = PatientLabTestRequest.objects.filter(checkup__in=checkups.filter(appointment__time_start__hour=hour))
+
+        dataset = {}
+        if queryset_on_hour.count() > 0:
+            df = pd.DataFrame(list(queryset_on_hour.values('lab_test', 'lab_test__name')))
+
+            splits = dict(df.groupby('lab_test__name').lab_test.count())
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+
+        datasets[str(hour)] = dataset
+
+    return datasets, labels, dataset_keys
 
 def patient_labtests_slice_by_month(queryset):
     month = queryset.first().schedule_day.month

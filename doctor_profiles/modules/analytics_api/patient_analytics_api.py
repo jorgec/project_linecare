@@ -12,7 +12,9 @@ from doctor_profiles.analytics.patient_analytics import patient_appointment_earn
     patient_diagnoses_slice_by_month, patient_diagnoses_slice_by_year, patient_diagnoses_slice_by_week, \
     patient_diagnoses_counts, patient_prescriptions_slice_by_month, patient_prescriptions_slice_by_year, \
     patient_prescriptions_slice_by_week, patient_prescriptions_counts, patient_labtests_slice_by_month, \
-    patient_labtests_slice_by_year, patient_labtests_slice_by_week, patient_labtests_counts
+    patient_labtests_slice_by_year, patient_labtests_slice_by_week, patient_labtests_counts, \
+    patient_symptoms_slice_by_day, patient_findings_slice_by_day, patient_diagnoses_slice_by_day, \
+    patient_prescriptions_slice_by_day, patient_labtests_slice_by_day
 from doctor_profiles.models import DoctorProfile, PatientAppointment
 from receptionist_profiles.models import ReceptionistProfile
 
@@ -211,6 +213,8 @@ class ApiAnalyticsPatientByCheckupSymptomsAggregateCounts(APIView):
                     sliced_data, labels, dataset_keys = patient_symptoms_slice_by_year(checkups)
                 elif time_slice == 'week':
                     sliced_data, labels, dataset_keys = patient_symptoms_slice_by_week(checkups)
+                elif time_slice == 'day':
+                    sliced_data, labels, dataset_keys = patient_symptoms_slice_by_day(checkups)
                 else:
                     sliced_data, labels, dataset_keys = patient_symptoms_slice_by_month(checkups)
 
@@ -292,6 +296,8 @@ class ApiAnalyticsPatientByCheckupFindingsAggregateCounts(APIView):
                     sliced_data, labels, dataset_keys = patient_findings_slice_by_year(checkups)
                 elif time_slice == 'week':
                     sliced_data, labels, dataset_keys = patient_findings_slice_by_week(checkups)
+                elif time_slice == 'day':
+                    sliced_data, labels, dataset_keys = patient_findings_slice_by_day(checkups)
                 else:
                     sliced_data, labels, dataset_keys = patient_findings_slice_by_month(checkups)
 
@@ -373,6 +379,8 @@ class ApiAnalyticsPatientByCheckupDiagnosesAggregateCounts(APIView):
                     sliced_data, labels, dataset_keys = patient_diagnoses_slice_by_year(checkups)
                 elif time_slice == 'week':
                     sliced_data, labels, dataset_keys = patient_diagnoses_slice_by_week(checkups)
+                elif time_slice == 'day':
+                    sliced_data, labels, dataset_keys = patient_diagnoses_slice_by_day(checkups)
                 else:
                     sliced_data, labels, dataset_keys = patient_diagnoses_slice_by_month(checkups)
 
@@ -455,6 +463,8 @@ class ApiAnalyticsPatientByCheckupPrescriptionsAggregateCounts(APIView):
                     sliced_data, labels, dataset_keys = patient_prescriptions_slice_by_year(checkups)
                 elif time_slice == 'week':
                     sliced_data, labels, dataset_keys = patient_prescriptions_slice_by_week(checkups)
+                elif time_slice == 'day':
+                    sliced_data, labels, dataset_keys = patient_prescriptions_slice_by_day(checkups)
                 else:
                     sliced_data, labels, dataset_keys = patient_prescriptions_slice_by_month(checkups)
 
@@ -536,6 +546,8 @@ class ApiAnalyticsPatientByCheckupLabtestsAggregateCounts(APIView):
                     sliced_data, labels, dataset_keys = patient_labtests_slice_by_year(checkups)
                 elif time_slice == 'week':
                     sliced_data, labels, dataset_keys = patient_labtests_slice_by_week(checkups)
+                elif time_slice == 'day':
+                    sliced_data, labels, dataset_keys = patient_labtests_slice_by_day(checkups)
                 else:
                     sliced_data, labels, dataset_keys = patient_labtests_slice_by_month(checkups)
 

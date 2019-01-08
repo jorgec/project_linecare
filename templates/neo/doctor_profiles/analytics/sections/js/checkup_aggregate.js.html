@@ -1,72 +1,20 @@
 <script type="text/javascript">
-    var selectedSlice = 'month';
-    var selectedDay = '{{ date }}';
-    var selectedMedicalInstitution = null;
 
-    var btnSliceSelect = $(".btnSliceSelect");
-    var dateCheckup = $("#dateCheckup");
-    var selectMedicalInstitution = $("#selectMedicalInstitution");
-    var btnFilter = $("#btnFilter");
 
     var chartData = {};
-
+    var btnFilter = $("#btnFilter");
 
     $(document).ready(function(){
 
         loadCheckupAggregate();
-
-        btnSliceSelect.on('click', function(e){
-            e.preventDefault();
-            var slice = $(this).attr("data-slice");
-            selectSlice(slice);
-        });
-
-        dateCheckup.bootstrapMaterialDatePicker({
-            format: "YYYY-MM-DD",
-            time: false
-        });
-
-        dateCheckup.on('change', function(){
-            selectedDay = $(this).val();
-        });
-
-        selectMedicalInstitution.on("change", function(){
-            var sel = $(this).val();
-            if(sel !== "---"){
-                selectedMedicalInstitution = sel;
-            }else{
-                selectedMedicalInstitution = null;
-            }
-        });
-
-        btnFilter.on("click", function(e){
+         btnFilter.on("click", function (e) {
             e.preventDefault();
             loadCheckupAggregate();
         })
 
+
     });
 
-    function buildQS(){
-        var params = {
-            doctor_id: {{ doctor.id }},
-            slice: selectedSlice,
-            day: selectedDay,
-        };
-
-        if(selectedMedicalInstitution){
-            params['medical_institution_id'] = selectedMedicalInstitution;
-        }
-
-        return $.param(params);
-    }
-
-    function selectSlice(slice){
-        btnSliceSelect.each(function(i){
-            $(this).removeClass("active");
-        });
-        selectedSlice = slice;
-        $("#slice_" + slice).addClass("active");
-    }
 
     function buildChart(data){
         $("#chartVisit").empty();
