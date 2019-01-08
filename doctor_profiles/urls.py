@@ -115,6 +115,9 @@ urlpatterns = [
     path('analytics/symptoms',
          analytics_views.DoctorProfileAnalyticsPatientBySymptomAggregateView.as_view(),
          name='doctor_profile_analytics_symptoms_aggregate'),
+    path('analytics/findings',
+         analytics_views.DoctorProfileAnalyticsPatientByFindingAggregateView.as_view(),
+         name='doctor_profile_analytics_findings_aggregate'),
 ]
 
 #############################################################################

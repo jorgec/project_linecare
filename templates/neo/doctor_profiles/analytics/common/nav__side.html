@@ -17,8 +17,9 @@
         </a>
     </li>
     <li class="sidebar-nav-item">
-        <a {% if location == 'findings' %}class="active"{% endif %} href="">
-            <i class="fas fws fa-diagnoses mr-3"></i>
+        <a {% if location == 'patient_findings_overview' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_analytics_findings_aggregate' %}">
+            <i class="fas fws fa-search-plus mr-3"></i>
             Findings
         </a>
     </li>
