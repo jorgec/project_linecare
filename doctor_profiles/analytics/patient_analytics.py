@@ -723,7 +723,7 @@ def patient_labtests_counts(queryset):
     patient_labtests = PatientLabTestRequest.objects.filter(checkup__in=records)
     total = patient_labtests.count()
 
-    aggregate = patient_labtests.values('lab_test__name').annotate(scount=Count('labtest')).order_by('lab_test__name')
+    aggregate = patient_labtests.values('lab_test__name').annotate(scount=Count('lab_test')).order_by('lab_test__name')
 
     if total > 0:
         return {
