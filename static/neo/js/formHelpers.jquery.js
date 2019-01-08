@@ -23,7 +23,15 @@ function loadFormData(formFields, response){
         var target = $(formFields[fieldItem].elementId);
         var field = formFields[fieldItem].fieldName;
         var fieldValue = null;
-        if (field.includes(".")) {
+
+        var found = false;
+        for(var i = 0; i < field.length; i++){
+            if(field[i] == "."){
+                found = true;
+            }
+        }
+
+        if (found) {
             var parts = field.split(".");
             var partsLen = parts.length;
 
