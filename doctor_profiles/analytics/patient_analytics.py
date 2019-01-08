@@ -619,7 +619,7 @@ def patient_prescriptions_slice_by_month(queryset):
     datasets = {}
     checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
     prescriptions = Prescription.objects.filter(checkup__in=checkups)
-    dataset_keys = {c.prescription.name for c in prescriptions}
+    dataset_keys = {c.drug.name for c in prescriptions}
 
     for day in days:
         labels.append(str(day))
@@ -655,7 +655,7 @@ def patient_prescriptions_slice_by_week(queryset):
     datasets = {}
     checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
     prescriptions = Prescription.objects.filter(checkup__in=checkups)
-    dataset_keys = {c.prescription.name for c in prescriptions}
+    dataset_keys = {c.drug.name for c in prescriptions}
 
     for day in days:
         labels.append(str(day))
@@ -692,7 +692,7 @@ def patient_prescriptions_slice_by_year(queryset):
     datasets = {}
     checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
     prescriptions = Prescription.objects.filter(checkup__in=checkups)
-    dataset_keys = {c.prescription.name for c in prescriptions}
+    dataset_keys = {c.drug.name for c in prescriptions}
 
     for month in MONTH_CHOICES:
         queryset_on_month = checkups.filter(appointment__schedule_day__month=month[0])
