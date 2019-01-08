@@ -493,4 +493,7 @@ urlpatterns += [
     path(f'{version}/analytics/agg/symptoms/by_checkup/counts',
          patient_analytics_api.ApiAnalyticsPatientByCheckupSymptomsAggregateCounts.as_view(),
          name='api_private_doctor_patient_analytics_by_symptoms_aggregate_counts'),
+    path(f'{version}/analytics/agg/findings/by_checkup/counts',
+         patient_analytics_api.ApiAnalyticsPatientByCheckupFindingsAggregateCounts.as_view(),
+         name='api_private_doctor_patient_analytics_by_findings_aggregate_counts'),
 ]
