@@ -124,6 +124,9 @@ urlpatterns = [
     path('analytics/prescriptions',
          analytics_views.DoctorProfileAnalyticsPatientByPrescriptionAggregateView.as_view(),
          name='doctor_profile_analytics_prescriptions_aggregate'),
+    path('analytics/labtests',
+         analytics_views.DoctorProfileAnalyticsPatientByLabtestAggregateView.as_view(),
+         name='doctor_profile_analytics_labtests_aggregate'),
 ]
 
 #############################################################################
@@ -508,4 +511,7 @@ urlpatterns += [
     path(f'{version}/analytics/agg/prescriptions/by_checkup/counts',
          patient_analytics_api.ApiAnalyticsPatientByCheckupPrescriptionsAggregateCounts.as_view(),
          name='api_private_doctor_patient_analytics_by_prescriptions_aggregate_counts'),
+    path(f'{version}/analytics/agg/labtests/by_checkup/counts',
+         patient_analytics_api.ApiAnalyticsPatientByCheckupLabtestsAggregateCounts.as_view(),
+         name='api_private_doctor_patient_analytics_by_labtests_aggregate_counts'),
 ]

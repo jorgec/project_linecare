@@ -5,7 +5,7 @@ from datesdim.constants import MONTH_CHOICES
 from datesdim.models import DateDim
 from doctor_profiles.models import DoctorProfile, MedicalInstitution, PatientCheckupRecord, PatientSymptom, \
     PatientFinding, PatientDiagnosis
-from doctor_profiles.models.patient_checkup_models import Prescription
+from doctor_profiles.models.patient_checkup_models import Prescription, PatientLabTestRequest
 from doctor_profiles.modules.analytics_api.serializers.patient_analytics_serializers import \
     PatientByCheckupAggregateSerializer
 
@@ -716,6 +716,140 @@ def patient_prescriptions_slice_by_year(queryset):
                 }
         datasets[month[1]] = dataset
     return datasets, labels, dataset_keys
+
+
+def patient_labtests_counts(queryset):
+    records = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    patient_labtests = PatientLabTestRequest.objects.filter(checkup__in=records)
+    total = patient_labtests.count()
+
+    aggregate = patient_labtests.values('lab_test__name').annotate(scount=Count('labtest')).order_by('lab_test__name')
+
+    if total > 0:
+        return {
+            'items': list(
+                aggregate.values(
+                    'lab_test__name',
+                    'scount'
+                )
+            ),
+            'total': total
+        }
+    else:
+        return {
+            'items': [],
+            'total': 0
+        }
+
+
+def patient_labtests_slice_by_month(queryset):
+    month = queryset.first().schedule_day.month
+    year = queryset.first().schedule_day.year
+
+    days = DateDim.objects.days_in_month(month=month, year=year).order_by('day')
+
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.labtest.name for c in labtests}
+
+    for day in days:
+        labels.append(str(day))
+
+        queryset_on_day = checkups.filter(appointment__schedule_day=day)
+        labtests_on_day = PatientLabTestRequest.objects.filter(checkup__in=queryset_on_day)
+        dataset = {}
+        if labtests_on_day.count() > 0:
+            df = pd.DataFrame(list(labtests_on_day.values('labtest', 'lab_test__name')))
+
+            splits = dict(df.groupby('lab_test__name').labtest.count())
+
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[str(day)] = dataset
+    return datasets, labels, dataset_keys
+
+
+def patient_labtests_slice_by_week(queryset):
+    days = queryset.first().schedule_day.get_week()
+
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.labtest.name for c in labtests}
+
+    for day in days:
+        labels.append(str(day))
+
+        queryset_on_day = checkups.filter(appointment__schedule_day=day)
+        labtests_on_day = PatientLabTestRequest.objects.filter(checkup__in=queryset_on_day)
+        dataset = {}
+        if labtests_on_day.count() > 0:
+            df = pd.DataFrame(list(labtests_on_day.values('labtest', 'lab_test__name')))
+
+            splits = dict(df.groupby('lab_test__name').labtest.count())
+
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[str(day)] = dataset
+    return datasets, labels, dataset_keys
+
+
+def patient_labtests_slice_by_year(queryset):
+    datasets = {}
+    labels = []
+    year = queryset.first().schedule_day.year
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.labtest.name for c in labtests}
+
+    for month in MONTH_CHOICES:
+        queryset_on_month = checkups.filter(appointment__schedule_day__month=month[0])
+        labtests_on_month = PatientLabTestRequest.objects.filter(checkup__in=queryset_on_month)
+        labels.append(month[1])
+        dataset = {}
+        if labtests_on_month.count() > 0:
+            df = pd.DataFrame(list(labtests_on_month.values('lab_test', 'lab_test__name')))
+            splits = dict(df.groupby('lab_test__name').lab_test.count())
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[month[1]] = dataset
+    return datasets, labels, dataset_keys
+
 
 
 def patient_appointment_build_filters(params):

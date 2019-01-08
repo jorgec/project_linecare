@@ -11,7 +11,8 @@ from doctor_profiles.analytics.patient_analytics import patient_appointment_earn
     patient_findings_slice_by_year, patient_findings_slice_by_week, patient_findings_counts, \
     patient_diagnoses_slice_by_month, patient_diagnoses_slice_by_year, patient_diagnoses_slice_by_week, \
     patient_diagnoses_counts, patient_prescriptions_slice_by_month, patient_prescriptions_slice_by_year, \
-    patient_prescriptions_slice_by_week, patient_prescriptions_counts
+    patient_prescriptions_slice_by_week, patient_prescriptions_counts, patient_labtests_slice_by_month, \
+    patient_labtests_slice_by_year, patient_labtests_slice_by_week, patient_labtests_counts
 from doctor_profiles.models import DoctorProfile, PatientAppointment
 from receptionist_profiles.models import ReceptionistProfile
 
@@ -462,6 +463,87 @@ class ApiAnalyticsPatientByCheckupPrescriptionsAggregateCounts(APIView):
                     'counts': {
                         'data': prescription_counts,
                         'label': 'Prescriptions',
+                        'key': 'counts'
+                    },
+                    'slice': sliced_data,
+                    'labels': labels,
+                    'dataset_keys': dataset_keys
+                }
+
+
+                return Response(serialized, status=status.HTTP_200_OK)
+            return Response(serialized, status=status.HTTP_200_OK)
+        return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
+
+
+class ApiAnalyticsPatientByCheckupLabtestsAggregateCounts(APIView):
+    """
+
+    :param doctor_id
+    :type int
+
+    :param slice
+    :type str ("day", "week", "month", "year")
+
+    :param day
+    :type yyyy-mm-dd
+
+    [ optional ]
+    :param medical_institution_id
+    :type int
+
+
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+
+        result, profile_type = is_doctor_or_receptionist(request.user)
+        if not result:
+            return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
+
+        if not has_access(request, profile_type):
+            return Response("You do not have access to this data", status=status.HTTP_403_FORBIDDEN)
+
+        """
+        params
+        """
+        params = {
+            'doctor_id': request.GET.get('doctor_id'),
+            'slice': request.GET.get('slice', 'month'),
+            'day': request.GET.get('day', None),
+        }
+        if request.GET.get('medical_institution_id', None):
+            params['medical_institution_id'] = request.GET.get('medical_institution_id', None)
+        time_slice = request.GET.get('slice', 'month')
+        """
+        /params
+        """
+        filters = patient_analytics.patient_appointment_build_filters(params)
+
+        serialized = {}
+        if filters:
+            checkups = PatientAppointment.objects.filter(
+                **filters
+            )
+
+            if checkups.count() > 0:
+
+                if time_slice == 'month':
+                    sliced_data, labels, dataset_keys = patient_labtests_slice_by_month(checkups)
+                elif time_slice == 'year':
+                    sliced_data, labels, dataset_keys = patient_labtests_slice_by_year(checkups)
+                elif time_slice == 'week':
+                    sliced_data, labels, dataset_keys = patient_labtests_slice_by_week(checkups)
+                else:
+                    sliced_data, labels, dataset_keys = patient_labtests_slice_by_month(checkups)
+
+                labtest_counts = patient_labtests_counts(checkups)
+                serialized = {
+                    'counts': {
+                        'data': labtest_counts,
+                        'label': 'Labtests',
                         'key': 'counts'
                     },
                     'slice': sliced_data,

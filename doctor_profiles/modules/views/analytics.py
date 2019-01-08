@@ -126,3 +126,26 @@ class DoctorProfileAnalyticsPatientByPrescriptionAggregateView(LoginRequiredMixi
 
     def test_func(self):
         return self.request.user.doctor_profile()
+
+class DoctorProfileAnalyticsPatientByLabtestAggregateView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        doctor = request.user.doctor_profile()
+        date = DateDim.objects.today()
+
+        appointment_keys = [at[1] for at in APPOINTMENT_TYPES]
+
+        context = {
+            'page_title': 'Patient Labtests Overview',
+            'location': 'doctor_profile_analytics',
+            'sublocation': 'patient_labtests_overview',
+            'doctor': doctor,
+            'medical_institutions': doctor.get_medical_institutions(),
+            'date': date,
+            'appointment_keys': appointment_keys,
+            'appointment_types': APPOINTMENT_TYPES
+        }
+
+        return render(request, 'neo/doctor_profiles/analytics/labtests_by_checkup_aggregate.html', context)
+
+    def test_func(self):
+        return self.request.user.doctor_profile()

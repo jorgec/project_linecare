@@ -1,0 +1,36 @@
+{% extends 'neo/doctor_profiles/analytics/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+    {% include 'neo/doctor_profiles/analytics/sections/template/control_bar/main.html' %}
+    {% include 'neo/doctor_profiles/analytics/sections/template/control_bar/modals.html' %}
+    {% include 'neo/doctor_profiles/analytics/sections/template/control_bar/templates.html' %}
+
+    {% include 'neo/doctor_profiles/analytics/sections/template/labtests_aggregate/main.html' %}
+    {% include 'neo/doctor_profiles/analytics/sections/template/labtests_aggregate/modals.html' %}
+    {% include 'neo/doctor_profiles/analytics/sections/template/labtests_aggregate/templates.html' %}
+
+{% endblock %}
+
+{% block home_scripts %}
+    {% block inner_scripts %}
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+        <script type="text/javascript"
+                src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+        <script type="text/javascript" src="{% static '3rd-party/colors.js' %}"></script>
+        <script type="text/javascript" src="{% static '3rd-party/moment.js' %}"></script>
+        <script type="text/javascript" src="{% static '3rd-party/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
+        {% include 'neo/doctor_profiles/analytics/sections/js/control_bar.js.html' %}
+        {% include 'neo/doctor_profiles/analytics/sections/js/labtests_aggregate.js.html' %}
+
+
+    {% endblock %}
+{% endblock %}
