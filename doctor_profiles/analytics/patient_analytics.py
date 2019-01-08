@@ -630,7 +630,7 @@ def patient_prescriptions_slice_by_month(queryset):
         if prescriptions_on_day.count() > 0:
             df = pd.DataFrame(list(prescriptions_on_day.values('drug', 'drug__name')))
 
-            splits = dict(df.groupby('drug__name').prescription.count())
+            splits = dict(df.groupby('drug__name').drug__name.count())
 
             for dk in dataset_keys:
                 if dk in splits:
@@ -666,7 +666,7 @@ def patient_prescriptions_slice_by_week(queryset):
         if prescriptions_on_day.count() > 0:
             df = pd.DataFrame(list(prescriptions_on_day.values('drug', 'drug__name')))
 
-            splits = dict(df.groupby('drug__name').prescription.count())
+            splits = dict(df.groupby('drug__name').drug__name.count())
 
             for dk in dataset_keys:
                 if dk in splits:
@@ -701,7 +701,7 @@ def patient_prescriptions_slice_by_year(queryset):
         dataset = {}
         if prescriptions_on_month.count() > 0:
             df = pd.DataFrame(list(prescriptions_on_month.values('drug', 'drug__name')))
-            splits = dict(df.groupby('drug__name').prescription.count())
+            splits = dict(df.groupby('drug__name').drug__name.count())
             for dk in dataset_keys:
                 if dk in splits:
                     dataset[dk] = {
