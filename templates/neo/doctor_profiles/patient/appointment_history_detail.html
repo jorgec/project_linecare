@@ -1,0 +1,29 @@
+{% extends 'neo/doctor_profiles/patient/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+    {% include 'neo/doctor_profiles/patient/sections/template/basic_info/main.html' %}
+
+    {% include 'neo/doctor_profiles/patient/sections/template/next_steps/main.html' %}
+    {% include 'neo/doctor_profiles/patient/sections/template/next_steps/modals.html' %}
+    {% include 'neo/doctor_profiles/patient/sections/template/next_steps/template.html' %}
+
+    asdgasdg
+
+{% endblock %}
+
+{% block home_scripts %}
+    {% block inner_scripts %}
+        <script type="text/javascript"
+                src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+        {% include 'neo/doctor_profiles/patient/sections/js/basic_info.js.html' %}
+        {% include 'neo/doctor_profiles/patient/sections/js/next_steps.js.html' %}
+    {% endblock %}
+{% endblock %}

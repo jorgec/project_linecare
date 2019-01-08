@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.views import View
 
 from doctor_profiles.models import PatientAppointment, PatientCheckupRecord, PatientConnection, \
@@ -85,6 +86,12 @@ class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMi
     def get(self, request, *args, **kwargs):
         doctor = request.user.doctor_profile()
         appointment = get_object_or_404(PatientAppointment, id=request.GET.get('appointment', None))
+
+        if appointment.status == 'done':
+            return HttpResponseRedirect(
+                f"{reverse('doctor_profile_patient_appointment_history_detail')}?appointment={appointment.id}"
+            )
+
         checkup = appointment.appointment_checkup
 
         if not checkup.doctor_has_access(doctor):
@@ -101,6 +108,46 @@ class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMi
         }
 
         return render(request, 'neo/doctor_profiles/patient/appointment_detail.html', context)
+
+    def post(self, request, *args, **kwargs):
+        doctor = request.user.doctor_profile()
+        appointment = get_object_or_404(PatientAppointment, id=request.GET.get('appointment', None))
+        checkup = appointment.appointment_checkup
+
+        if not checkup.doctor_has_access(doctor):
+            return HttpResponseRedirect('/403/Forbidden')
+
+        appointment.status = 'done'
+        appointment.save()
+
+        return HttpResponseRedirect(
+            f"{reverse('doctor_profile_patient_appointment_history_detail')}?appointment={appointment.id}"
+        )
+
+    def test_func(self):
+        return self.request.user.doctor_profile()
+
+
+class DoctorProfilePatientAppointmentHistoryDetail(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        doctor = request.user.doctor_profile()
+        appointment = get_object_or_404(PatientAppointment, id=request.GET.get('appointment', None))
+        checkup = appointment.appointment_checkup
+
+        if not checkup.doctor_has_access(doctor):
+            return HttpResponseRedirect('/403/Forbidden')
+
+        context = {
+            'page_title': f'Appointment for {appointment.patient} on {appointment.schedule_day.nice_name} at {appointment.medical_institution}',
+            'location': 'doctor_profile_patients',
+            'sublocation': 'detail',
+            'doctor': doctor,
+            'patient': appointment.patient,
+            'appointment': appointment,
+            'checkup': checkup
+        }
+
+        return render(request, 'neo/doctor_profiles/patient/appointment_history_detail.html', context)
 
     def test_func(self):
         return self.request.user.doctor_profile()

@@ -31,8 +31,8 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Primary Physician</th>
-                                        <th>Findings</th>
                                         <th>Diagnoses</th>
+                                        <th>Status</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -48,10 +48,10 @@
 
                                                 </td>
                                                 <td>
-                                                    {{ c.checkup.get_findings|join:", " }}
+                                                    {{ c.checkup.get_diagnoses|join:", " }}
                                                 </td>
                                                 <td>
-                                                    {{ c.checkup.get_diagnoses|join:", " }}
+                                                    {{ c.checkup.appointment.get_status_display }}
                                                 </td>
                                             </tr>
 
