@@ -5,6 +5,7 @@ from datesdim.constants import MONTH_CHOICES
 from datesdim.models import DateDim
 from doctor_profiles.models import DoctorProfile, MedicalInstitution, PatientCheckupRecord, PatientSymptom, \
     PatientFinding, PatientDiagnosis
+from doctor_profiles.models.patient_checkup_models import Prescription
 from doctor_profiles.modules.analytics_api.serializers.patient_analytics_serializers import \
     PatientByCheckupAggregateSerializer
 
@@ -568,6 +569,139 @@ def patient_diagnoses_slice_by_year(queryset):
         if diagnoses_on_month.count() > 0:
             df = pd.DataFrame(list(diagnoses_on_month.values('diagnosis', 'diagnosis__name')))
             splits = dict(df.groupby('diagnosis__name').diagnosis.count())
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[month[1]] = dataset
+    return datasets, labels, dataset_keys
+
+
+def patient_prescriptions_counts(queryset):
+    records = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    patient_prescriptions = Prescription.objects.filter(checkup__in=records)
+    total = patient_prescriptions.count()
+
+    aggregate = patient_prescriptions.values('drug__name').annotate(scount=Count('drug')).order_by('drug__name')
+
+    if total > 0:
+        return {
+            'items': list(
+                aggregate.values(
+                    'drug__name',
+                    'scount'
+                )
+            ),
+            'total': total
+        }
+    else:
+        return {
+            'items': [],
+            'total': 0
+        }
+
+
+def patient_prescriptions_slice_by_month(queryset):
+    month = queryset.first().schedule_day.month
+    year = queryset.first().schedule_day.year
+
+    days = DateDim.objects.days_in_month(month=month, year=year).order_by('day')
+
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    prescriptions = Prescription.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.prescription.name for c in prescriptions}
+
+    for day in days:
+        labels.append(str(day))
+
+        queryset_on_day = checkups.filter(appointment__schedule_day=day)
+        prescriptions_on_day = Prescription.objects.filter(checkup__in=queryset_on_day)
+        dataset = {}
+        if prescriptions_on_day.count() > 0:
+            df = pd.DataFrame(list(prescriptions_on_day.values('drug', 'drug__name')))
+
+            splits = dict(df.groupby('drug__name').prescription.count())
+
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[str(day)] = dataset
+    return datasets, labels, dataset_keys
+
+
+def patient_prescriptions_slice_by_week(queryset):
+    days = queryset.first().schedule_day.get_week()
+
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    prescriptions = Prescription.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.prescription.name for c in prescriptions}
+
+    for day in days:
+        labels.append(str(day))
+
+        queryset_on_day = checkups.filter(appointment__schedule_day=day)
+        prescriptions_on_day = Prescription.objects.filter(checkup__in=queryset_on_day)
+        dataset = {}
+        if prescriptions_on_day.count() > 0:
+            df = pd.DataFrame(list(prescriptions_on_day.values('drug', 'drug__name')))
+
+            splits = dict(df.groupby('drug__name').prescription.count())
+
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[str(day)] = dataset
+    return datasets, labels, dataset_keys
+
+
+def patient_prescriptions_slice_by_year(queryset):
+    datasets = {}
+    labels = []
+    year = queryset.first().schedule_day.year
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    prescriptions = Prescription.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.prescription.name for c in prescriptions}
+
+    for month in MONTH_CHOICES:
+        queryset_on_month = checkups.filter(appointment__schedule_day__month=month[0])
+        prescriptions_on_month = Prescription.objects.filter(checkup__in=queryset_on_month)
+        labels.append(month[1])
+        dataset = {}
+        if prescriptions_on_month.count() > 0:
+            df = pd.DataFrame(list(prescriptions_on_month.values('drug', 'drug__name')))
+            splits = dict(df.groupby('drug__name').prescription.count())
             for dk in dataset_keys:
                 if dk in splits:
                     dataset[dk] = {

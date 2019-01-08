@@ -1,0 +1,153 @@
+<script type="text/javascript">
+    var selectedSlice = 'month';
+    var selectedDay = '{{ date }}';
+    var selectedMedicalInstitution = null;
+
+    var btnSliceSelect = $(".btnSliceSelect");
+    var dateCheckup = $("#dateCheckup");
+    var selectMedicalInstitution = $("#selectMedicalInstitution");
+    var btnFilter = $("#btnFilter");
+
+    $(document).ready(function(){
+        loadPrescriptionsAggregate();
+
+        btnSliceSelect.on('click', function(e){
+            e.preventDefault();
+            var slice = $(this).attr("data-slice");
+            selectSlice(slice);
+        });
+
+        dateCheckup.bootstrapMaterialDatePicker({
+            format: "YYYY-MM-DD",
+            time: false
+        });
+
+        dateCheckup.on('change', function(){
+            selectedDay = $(this).val();
+        });
+
+        selectMedicalInstitution.on("change", function(){
+            var sel = $(this).val();
+            if(sel !== "---"){
+                selectedMedicalInstitution = sel;
+            }else{
+                selectedMedicalInstitution = null;
+            }
+        });
+
+        btnFilter.on("click", function(e){
+            e.preventDefault();
+            loadPrescriptionsAggregate();
+        })
+    });
+
+    function buildQS(){
+        var params = {
+            doctor_id: {{ doctor.id }},
+            slice: selectedSlice,
+            day: selectedDay,
+        };
+
+        if(selectedMedicalInstitution){
+            params['medical_institution_id'] = selectedMedicalInstitution;
+        }
+
+        return $.param(params);
+    }
+
+    function selectSlice(slice){
+        btnSliceSelect.each(function(i){
+            $(this).removeClass("active");
+        });
+        selectedSlice = slice;
+        $("#slice_" + slice).addClass("active");
+    }
+
+    function buildChart(data){
+        $("#chartPrescriptions").empty();
+        var chartData = {
+            labels: data.labels
+        };
+
+        var datasets = [];
+        for(var k in data.dataset_keys){
+            var tempdata = [];
+            var dataset = {
+                label: data.dataset_keys[k],
+                stack: "Prescriptions",
+                backgroundColor: materialColor()
+            };
+            for(var j in data['slice']){
+                var key = data.dataset_keys[k];
+                if(data['slice'][j][key]){
+                    tempdata.push(data['slice'][j][key]['count'])
+                }
+            }
+            dataset['data'] = tempdata;
+            datasets.push(dataset);
+        }
+
+        chartData['datasets'] = datasets;
+        console.log(datasets);
+
+        var ctx = document.getElementById('chartPrescriptions').getContext('2d');
+
+        if(window.chartVisitGraph && (window.chartVisitGraph != null || window.chartVisitGraph !== undefined)){
+            window.chartVisitGraph.destroy();
+        }
+
+        window.chartVisitGraph = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                title: {
+                    display: true,
+                    text: 'Prescriptions'
+                },
+                tooltips: {
+                    //mode: 'index',
+                    intersect: false,
+
+                },
+                responsive: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
+    }
+
+    function loadPrescriptionsAggregate(){
+        var params = buildQS();
+        var url = "{% url 'api_private_doctor_patient_analytics_by_prescriptions_aggregate_counts' %}?" + params;
+
+        $.get(url)
+            .done(function(result) {
+
+                if(result['counts']) {
+                    $("#prescriptions-breakdown-container").loadTemplate(
+                        $("#prescriptions-breakdown-template"),
+                        result['counts']['data']['items']
+                    );
+                    $("#prescriptions-total-container").loadTemplate(
+                        $("#prescriptions-total-template"),
+                        result['counts']
+                    );
+                }else{
+                    $.notify({
+                        message: 'No results!'
+                    },{
+                        type: 'danger'
+                    })
+                }
+
+
+                buildChart(result);
+            });
+    }
+</script>

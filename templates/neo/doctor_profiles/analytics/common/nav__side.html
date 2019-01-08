@@ -24,13 +24,15 @@
         </a>
     </li>
     <li class="sidebar-nav-item">
-        <a {% if location == 'patient_diagnoses_overview' %}class="active"{% endif %} href="{% url 'doctor_profile_analytics_diagnoses_aggregate' %}">
+        <a {% if location == 'patient_diagnoses_overview' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_analytics_diagnoses_aggregate' %}">
             <i class="fas fws fa-diagnoses mr-3"></i>
             Diagnoses
         </a>
     </li>
     <li class="sidebar-nav-item">
-        <a {% if location == 'prescriptions' %}class="active"{% endif %} href="">
+        <a {% if location == 'patient_prescriptions_overview' %}class="active"{% endif %}
+           href="{% url 'doctor_profile_analytics_prescriptions_aggregate' %}">
             <i class="fas fws fa-prescription mr-3"></i>
             Medication
         </a>
