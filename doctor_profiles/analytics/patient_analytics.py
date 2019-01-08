@@ -797,7 +797,7 @@ def patient_labtests_slice_by_week(queryset):
         labtests_on_day = PatientLabTestRequest.objects.filter(checkup__in=queryset_on_day)
         dataset = {}
         if labtests_on_day.count() > 0:
-            df = pd.DataFrame(list(labtests_on_day.values('labtest', 'lab_test__name')))
+            df = pd.DataFrame(list(labtests_on_day.values('lab_test', 'lab_test__name')))
 
             splits = dict(df.groupby('lab_test__name').lab_test.count())
 
@@ -824,7 +824,7 @@ def patient_labtests_slice_by_year(queryset):
     labels = []
     datasets = {}
     checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
-    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups)
+    labtest's = PatientLabTestRequest.objects.filter(checkup__in=checkups)
     dataset_keys = {c.lab_test.name for c in labtests}
 
     for month in MONTH_CHOICES:
