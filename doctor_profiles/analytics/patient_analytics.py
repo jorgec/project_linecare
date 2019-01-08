@@ -4,8 +4,7 @@ from django.db.models import Count
 from datesdim.constants import MONTH_CHOICES
 from datesdim.models import DateDim
 from doctor_profiles.models import DoctorProfile, MedicalInstitution, PatientCheckupRecord, PatientSymptom, \
-    PatientFinding
-from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
+    PatientFinding, PatientDiagnosis
 from doctor_profiles.modules.analytics_api.serializers.patient_analytics_serializers import \
     PatientByCheckupAggregateSerializer
 
@@ -436,6 +435,139 @@ def patient_findings_slice_by_year(queryset):
         if findings_on_month.count() > 0:
             df = pd.DataFrame(list(findings_on_month.values('finding', 'finding__name')))
             splits = dict(df.groupby('finding__name').finding.count())
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[month[1]] = dataset
+    return datasets, labels, dataset_keys
+
+
+def patient_diagnoses_counts(queryset):
+    records = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    patient_diagnoses = PatientDiagnosis.objects.filter(checkup__in=records)
+    total = patient_diagnoses.count()
+
+    aggregate = patient_diagnoses.values('diagnosis__name').annotate(scount=Count('diagnosis')).order_by('diagnosis__name')
+
+    if total > 0:
+        return {
+            'items': list(
+                aggregate.values(
+                    'diagnosis__name',
+                    'scount'
+                )
+            ),
+            'total': total
+        }
+    else:
+        return {
+            'items': [],
+            'total': 0
+        }
+
+
+def patient_diagnoses_slice_by_month(queryset):
+    month = queryset.first().schedule_day.month
+    year = queryset.first().schedule_day.year
+
+    days = DateDim.objects.days_in_month(month=month, year=year).order_by('day')
+
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    diagnoses = PatientDiagnosis.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.diagnosis.name for c in diagnoses}
+
+    for day in days:
+        labels.append(str(day))
+
+        queryset_on_day = checkups.filter(appointment__schedule_day=day)
+        diagnoses_on_day = PatientDiagnosis.objects.filter(checkup__in=queryset_on_day)
+        dataset = {}
+        if diagnoses_on_day.count() > 0:
+            df = pd.DataFrame(list(diagnoses_on_day.values('diagnosis', 'diagnosis__name')))
+
+            splits = dict(df.groupby('diagnosis__name').diagnosis.count())
+
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[str(day)] = dataset
+    return datasets, labels, dataset_keys
+
+
+def patient_diagnoses_slice_by_week(queryset):
+    days = queryset.first().schedule_day.get_week()
+
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    diagnoses = PatientDiagnosis.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.diagnosis.name for c in diagnoses}
+
+    for day in days:
+        labels.append(str(day))
+
+        queryset_on_day = checkups.filter(appointment__schedule_day=day)
+        diagnoses_on_day = PatientDiagnosis.objects.filter(checkup__in=queryset_on_day)
+        dataset = {}
+        if diagnoses_on_day.count() > 0:
+            df = pd.DataFrame(list(diagnoses_on_day.values('diagnosis', 'diagnosis__name')))
+
+            splits = dict(df.groupby('diagnosis__name').diagnosis.count())
+
+            for dk in dataset_keys:
+                if dk in splits:
+                    dataset[dk] = {
+                        'label': dk,
+                        'count': splits[dk]
+                    }
+        else:
+            for dk in dataset_keys:
+                dataset[dk] = {
+                    'label': dk,
+                    'count': 0
+                }
+        datasets[str(day)] = dataset
+    return datasets, labels, dataset_keys
+
+
+def patient_diagnoses_slice_by_year(queryset):
+    datasets = {}
+    labels = []
+    year = queryset.first().schedule_day.year
+    labels = []
+    datasets = {}
+    checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
+    diagnoses = PatientDiagnosis.objects.filter(checkup__in=checkups)
+    dataset_keys = {c.diagnosis.name for c in diagnoses}
+
+    for month in MONTH_CHOICES:
+        queryset_on_month = checkups.filter(appointment__schedule_day__month=month[0])
+        diagnoses_on_month = PatientDiagnosis.objects.filter(checkup__in=queryset_on_month)
+        labels.append(month[1])
+        dataset = {}
+        if diagnoses_on_month.count() > 0:
+            df = pd.DataFrame(list(diagnoses_on_month.values('diagnosis', 'diagnosis__name')))
+            splits = dict(df.groupby('diagnosis__name').diagnosis.count())
             for dk in dataset_keys:
                 if dk in splits:
                     dataset[dk] = {
