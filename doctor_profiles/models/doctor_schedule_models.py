@@ -217,28 +217,30 @@ def update_queue_times(sender, instance, created=False, **kwargs):
 
         other_appointments = PatientAppointment.objects.filter(
             schedule_day=instance.schedule_day,
-            doctor=instance.doctor
+            doctor=instance.doctor,
+            medical_institution=instance.medical_institution
         ).exclude(
             status='done',
             id=instance.id
         )
 
         for appt in other_appointments:
-            new_start_diff = appt.time_start.minutes_since + difference
-            try:
-                new_start_time = TimeDim.objects.get(minutes_since=new_start_diff)
-            except TimeDim.DoesNotExist:
-                new_start_time = appt.time_start
+            if appt is not instance:
+                new_start_diff = appt.time_start.minutes_since + difference
+                try:
+                    new_start_time = TimeDim.objects.get(minutes_since=new_start_diff)
+                except TimeDim.DoesNotExist:
+                    new_start_time = appt.time_start
 
-            new_end_diff = appt.time_end.minutes_since + difference
-            try:
-                new_end_time = TimeDim.objects.get(minutes_since=new_end_diff)
-            except TimeDim.DoesNotExist:
-                new_end_time = appt.time_end
+                new_end_diff = appt.time_end.minutes_since + difference
+                try:
+                    new_end_time = TimeDim.objects.get(minutes_since=new_end_diff)
+                except TimeDim.DoesNotExist:
+                    new_end_time = appt.time_end
 
-            appt.time_start = new_start_time
-            appt.time_end = new_end_time
-            appt.save(update_fields=['time_start', 'time_end'])
+                appt.time_start = new_start_time
+                appt.time_end = new_end_time
+                appt.save(update_fields=['time_start', 'time_end'])
 
 
 @receiver(post_save, sender=DoctorSchedule)
