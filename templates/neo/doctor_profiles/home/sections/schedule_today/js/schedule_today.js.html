@@ -10,7 +10,6 @@
         webSocketBridge.listen(function (event) {
             console.log(event);
             if(event.type === "queue.update"){
-                console.log('update');
                 getQueue('{{ date }}');
             }
         });

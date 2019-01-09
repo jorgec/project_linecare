@@ -1058,7 +1058,7 @@ def patient_appointment_build_filters(params):
 
     filters = {
         'doctor': doctor,
-        'status__in': QUEUE_DONE_CODES
+        # 'status__in': QUEUE_DONE_CODES
     }
 
     if day_str:

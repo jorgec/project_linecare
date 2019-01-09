@@ -1,14 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
 from django.views import View
 from rest_framework.utils import json
 
 from biometrics.forms import BiometricForm
 from datesdim.models import DateDim
 from doctor_profiles.constants import APPOINTMENT_TYPES
-from doctor_profiles.models import DoctorProfile, MedicalInstitution
+from doctor_profiles.models import DoctorProfile, MedicalInstitution, MedicalInstitutionDoctor
 from profiles.models import Gender
 from receptionist_profiles.models import ReceptionistProfile
 from receptionist_profiles.models.receptionist_profile_model import ReceptionistConnection
@@ -55,6 +53,8 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
 
         biometrics_form = BiometricForm
 
+        doctor_rel = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor, medical_institution=medical_institution)
+
         context = {
             'page_title': f'Queue for {doctor} in {rel.medical_institution}',
             'location': 'receptionist_profile_manage_schedule',
@@ -66,7 +66,8 @@ class ReceptionistProfileDoctorScheduleDetail(LoginRequiredMixin, UserPassesTest
             'medical_institution': medical_institution,
             'date': date,
             'appointment_types': APPOINTMENT_TYPES,
-            'doctor_sched_options': json.dumps(doctor.get_options('schedule_options')),
+            'doctor_sched_options': json.dumps(doctor_rel.metadata.get('durations', {})),
+            'doctor_fee_options': json.dumps(doctor_rel.metadata.get('fees', {})),
             'today': DateDim.objects.today(),
             'tomorrow': date.tomorrow(),
             'yesterday': date.yesterday(),

@@ -10,6 +10,7 @@
     var scheduleTimePicker = $("#scheduleTimePicker");
 
     var schedule_options = {{ doctor_sched_options|safe }};
+    var fee_options = {{ doctor_fee_options|safe }};
 
     $(document).ready(function(){
         scheduleTime.bootstrapMaterialDatePicker({
@@ -22,10 +23,12 @@
         selectScheduleType.on('change', function(){
             var value = $("option:selected", this).val();
             var desc = "Please select an appointment type";
+            var fee = fee_options[value];
             if(value + "_duration" in schedule_options){
                 var duration = schedule_options[value + "_duration"];
                 var gap = schedule_options[value + "_gap"];
                 desc = "Estimated duration: " + duration + "mins, give or take " + gap + "mins. If you feel your appointment could take longer or shorter, please set your preferred times above.";
+                desc += "<br>Standard Fee: " + fee;
             }
             $("#appointment_type_description").html(desc);
 
