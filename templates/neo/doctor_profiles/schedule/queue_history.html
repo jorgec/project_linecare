@@ -1,0 +1,93 @@
+{% extends 'neo/doctor_profiles/schedule/base_fullwidth.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet"
+          href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+    <div class="two-column" id="schedule-section">
+        <div class="nav__page-control">
+            <div class="form-group control-row m-0">
+                <div class="nav__page-control-btns">
+                    <a href="?date={{ yesterday }}" class="btn">&laquo; Yesterday</a>
+                    <a href="?date={{ today }}" class="btn active">Today</a>
+                    <a href="?date={{ tomorrow }}" class="btn">Tomorrow &raquo;</a>
+                </div>
+                <label for="queue-date">Date:
+                    <input type="text" class="form-control" id="queue-date" value="{{ date }}">
+                </label>
+            </div>
+        </div>
+
+    </div>
+    <div class="connections__content">
+        <div class="header">
+            <h4 class="h6">
+                {{ page_title }}
+            </h4>
+            <div class="body py-3">
+                <table class="table table-bordered table-responsive-md">
+                    <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Patient</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for a in appointments %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'doctor_profile_patient_appointment_detail' %}?appointment={{ a.id }}">
+                                    {{ a.time_start }} to {{ a.time_end }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{% url 'doctor_profile_patient_detail' a.patient.id %}">
+                                    {{ a.patient }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ a.get_status_display }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block home_scripts %}
+    {% block inner_scripts %}
+        <script type="text/javascript" src="{% static '3rd-party/moment.js' %}"></script>
+        <script type="text/javascript"
+                src="{% static '3rd-party/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
+        <script type="text/javascript"
+                src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                bootUp(model);
+                var date_selector = $("#queue-date");
+                date_selector.bootstrapMaterialDatePicker({
+                    format: "YYYY-MM-DD",
+                    time: false
+                });
+                date_selector.on('change', function (e) {
+                    window.location.replace("?date=" + $(this).val());
+                });
+
+
+            });
+        </script>
+    {% endblock %}
+{% endblock %}

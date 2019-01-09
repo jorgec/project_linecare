@@ -33,6 +33,9 @@
         {% endif %}
     </div>
     <div class="body py-3">
+        <p class="mb-2">
+            <a href="{% url 'doctor_profile_medical_institution_history_list' medical_institution.slug %}?date={{ date }}">Appointment History</a>
+        </p>
         <table class="table table-bordered table-responsive-md medical-records__table">
             <thead>
             <tr>

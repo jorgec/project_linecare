@@ -6,7 +6,7 @@ from rest_framework.utils import json
 from biometrics.forms import BiometricForm
 from datesdim.models import DateDim
 from doctor_profiles.constants import APPOINTMENT_TYPES
-from doctor_profiles.models import MedicalInstitution
+from doctor_profiles.models import MedicalInstitution, PatientAppointment
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
 from profiles.models import Gender
 
@@ -78,10 +78,7 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
         return self.request.user.doctor_profile()
 
 
-class DoctorProfileScheduleCompletedDetail(LoginRequiredMixin, UserPassesTestMixin, View):
-    """
-    TODO
-    """
+class DoctorProfileScheduleHistory(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
         doctor = request.user.doctor_profile()
         if 'medical_institution' in kwargs:
@@ -99,8 +96,14 @@ class DoctorProfileScheduleCompletedDetail(LoginRequiredMixin, UserPassesTestMix
             if not date:
                 date = DateDim.objects.today()
 
+        appointments = PatientAppointment.objects.filter(
+                doctor=doctor,
+                medical_institution=medical_institution,
+                schedule_day=date
+            ).order_by('time_start__minutes_since')
+
         context = {
-            'page_title': f'Queue in {rel.medical_institution} on {date}',
+            'page_title': f'Appointment History in {rel.medical_institution} on {date}',
             'location': 'doctor_profile_manage_schedule',
             'sublocation': 'detail',
             'user': request.user,
@@ -109,7 +112,10 @@ class DoctorProfileScheduleCompletedDetail(LoginRequiredMixin, UserPassesTestMix
             'rel': rel,
             'medical_institution': medical_institution,
             'date': date,
+            'appointments': appointments
         }
+
+        return render(request, 'neo/doctor_profiles/schedule/queue_history.html', context)
 
     def test_func(self):
         return self.request.user.doctor_profile()

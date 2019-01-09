@@ -77,6 +77,9 @@ urlpatterns = [
     #############################################################################
     # Schedule
     #############################################################################
+    path('schedule/<medical_institution>/history',
+         schedule_views.DoctorProfileScheduleHistory.as_view(),
+         name='doctor_profile_medical_institution_history_list'),
     path('schedule/<medical_institution>',
          schedule_views.DoctorProfileMedicalInstitutionScheduleList.as_view(),
          name='doctor_profile_medical_institution_schedule_list'),
