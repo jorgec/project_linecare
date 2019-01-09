@@ -78,6 +78,42 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
         return self.request.user.doctor_profile()
 
 
+class DoctorProfileScheduleCompletedDetail(LoginRequiredMixin, UserPassesTestMixin, View):
+    """
+    TODO
+    """
+    def get(self, request, *args, **kwargs):
+        doctor = request.user.doctor_profile()
+        if 'medical_institution' in kwargs:
+            medical_institution = get_object_or_404(MedicalInstitution, slug=kwargs['medical_institution'])
+        else:
+            medical_institution = get_object_or_404(MedicalInstitution,
+                                                    slug=request.GET.get('medical_institution', None))
+        rel = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor, medical_institution=medical_institution)
+
+        date = request.GET.get('date', None)
+        if not date:
+            date = DateDim.objects.today()
+        else:
+            date = DateDim.objects.parse_get(date)
+            if not date:
+                date = DateDim.objects.today()
+
+        context = {
+            'page_title': f'Queue in {rel.medical_institution} on {date}',
+            'location': 'doctor_profile_manage_schedule',
+            'sublocation': 'detail',
+            'user': request.user,
+            'profile': doctor,
+            'doctor': doctor,
+            'rel': rel,
+            'medical_institution': medical_institution,
+            'date': date,
+        }
+
+    def test_func(self):
+        return self.request.user.doctor_profile()
+
 class DoctorProfileScheduleCalendarMonth(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
         doctor = request.user.doctor_profile()

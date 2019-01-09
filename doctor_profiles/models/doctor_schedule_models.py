@@ -238,7 +238,7 @@ def update_queue_times(sender, instance, created=False, **kwargs):
 
             appt.time_start = new_start_time
             appt.time_end = new_end_time
-            appt.save()
+            appt.save(update_fields=['time_start', 'time_end'])
 
 
 @receiver(post_save, sender=DoctorSchedule)
