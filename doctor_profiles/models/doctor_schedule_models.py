@@ -146,7 +146,34 @@ class PatientAppointment(models.Model):
         return f'{self.schedule_day.nice_name()} {self.time_start.format_12()}'
 
     def get_symptoms(self):
-        return self.appointment_checkup.checkup_symptoms.all()
+        return self.appointment_checkup.checkup_symptoms.filter(is_deleted=False)
+    
+    def get_deleted_symptoms(self):
+        return self.appointment_checkup.checkup_symptoms.filter(is_deleted=True)
+
+    def get_findings(self):
+        return self.appointment_checkup.checkup_findings.filter(is_deleted=False)
+
+    def get_deleted_findings(self):
+        return self.appointment_checkup.checkup_findings.filter(is_deleted=True)
+
+    def get_diagnoses(self):
+        return self.appointment_checkup.checkup_diagnoses.filter(is_deleted=False)
+
+    def get_deleted_diagnoses(self):
+        return self.appointment_checkup.checkup_diagnoses.filter(is_deleted=True)
+    
+    def get_prescriptions(self):
+        return self.appointment_checkup.checkup_prescriptions.filter(is_deleted=False)
+
+    def get_deleted_prescriptions(self):
+        return self.appointment_checkup.checkup_prescriptions.filter(is_deleted=True)
+    
+    def get_lab_tests(self):
+        return self.appointment_checkup.checkup_tests.filter(is_deleted=False)
+
+    def get_deleted_lab_tests(self):
+        return self.appointment_checkup.checkup_tests.filter(is_deleted=True)
 
 
 @receiver(post_save, sender=PatientAppointment)

@@ -15,7 +15,86 @@
     {% include 'neo/doctor_profiles/patient/sections/template/next_steps/modals.html' %}
     {% include 'neo/doctor_profiles/patient/sections/template/next_steps/template.html' %}
 
-    asdgasdg
+    <div class="connections__content">
+        <div class="header">
+            <h4 class="h4">
+                {{ page_title }}
+            </h4>
+            <div class="body py-3">
+                <div class="card-group">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="h5">Symptoms</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                {% for i in appointment.get_symptoms %}
+                                    <li class="list-group-item">
+                                        {{ i.name }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <hr>
+                            <h6 class="h6">Dismissed Symptoms</h6>
+                            <ul class="list-group">
+                                {% for i in appointment.get_deleted_symptoms %}
+                                    <li class="list-group-item">
+                                        {{ i.name }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="h5">Findings</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                {% for i in appointment.get_findings %}
+                                    <li class="list-group-item">
+                                        {{ i.name }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <hr>
+                            <h6 class="h6">Dismissed Findings</h6>
+                            <ul class="list-group">
+                                {% for i in appointment.get_deleted_findings %}
+                                    <li class="list-group-item">
+                                        {{ i.name }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="h5">Diagnoses</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                {% for i in appointment.get_diagnoses %}
+                                    <li class="list-group-item">
+                                        {{ i.name }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <hr>
+                            <h6 class="h6">Dismissed Diagnoses</h6>
+                            <ul class="list-group">
+                                {% for i in appointment.get_deleted_diagnoses %}
+                                    <li class="list-group-item">
+                                        {{ i.name }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 

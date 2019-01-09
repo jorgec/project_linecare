@@ -112,7 +112,10 @@ class DoctorProfileScheduleHistory(LoginRequiredMixin, UserPassesTestMixin, View
             'rel': rel,
             'medical_institution': medical_institution,
             'date': date,
-            'appointments': appointments
+            'appointments': appointments,
+            'today': DateDim.objects.today(),
+            'tomorrow': date.tomorrow(),
+            'yesterday': date.yesterday(),
         }
 
         return render(request, 'neo/doctor_profiles/schedule/queue_history.html', context)

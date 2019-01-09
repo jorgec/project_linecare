@@ -45,7 +45,7 @@
                         <tr>
                             <td>
                                 <a href="{% url 'doctor_profile_patient_appointment_detail' %}?appointment={{ a.id }}">
-                                    {{ a.time_start }} to {{ a.time_end }}
+                                    {{ a.time_start.format_12 }} to {{ a.time_end.format_12 }}
                                 </a>
                             </td>
                             <td>
@@ -76,7 +76,6 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                bootUp(model);
                 var date_selector = $("#queue-date");
                 date_selector.bootstrapMaterialDatePicker({
                     format: "YYYY-MM-DD",
