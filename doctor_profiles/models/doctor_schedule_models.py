@@ -170,10 +170,10 @@ class PatientAppointment(models.Model):
         return self.appointment_checkup.checkup_prescriptions.filter(is_deleted=True)
     
     def get_lab_tests(self):
-        return self.appointment_checkup.checkup_tests.filter(is_deleted=False)
+        return self.appointment_checkup.checkup_tests.filter(is_approved=True)
 
     def get_deleted_lab_tests(self):
-        return self.appointment_checkup.checkup_tests.filter(is_deleted=True)
+        return self.appointment_checkup.checkup_tests.filter(is_approved=False)
 
 
 @receiver(post_save, sender=PatientAppointment)

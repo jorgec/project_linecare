@@ -401,6 +401,9 @@ urlpatterns += [
     path(f'{version}/private/appointment/status/update',
          patient_appointment_api.ApiPatientAppointmentUpdateStatus.as_view(),
          name='api_private_patient_appointment_status_update'),
+    path(f'{version}/private/appointment/list',
+         patient_appointment_api.ApiPatientAppointmentList.as_view(),
+         name='api_private_patient_appointment_list'),
 
     # calendar
     path(f'{version}/private/calendar/month',

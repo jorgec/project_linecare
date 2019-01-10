@@ -446,8 +446,6 @@ class ApiPrivateMedicalInstitutionConnectedReceptionistList(APIView):
     [optional]
     ?fmt=[full] - returns serialized private profile objects
 
-    TODO
-    Make this private
     """
 
     permission_classes = [permissions.IsAuthenticated]

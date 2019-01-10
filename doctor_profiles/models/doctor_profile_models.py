@@ -292,6 +292,36 @@ class DoctorProfile(models.Model):
             return self.doctor_patients.filter(patients_query).order_by('patient__last_name')
         return self.doctor_patients.all()
 
+    def get_patient_appointments(
+            self, *,
+            medical_institution=None,
+            day_start=None,
+            day_end=None,
+            status=None,
+            appointment_type=None,
+            page=1,
+            grab=50
+    ):
+        filters = {}
+
+        if medical_institution:
+            filters['medical_institution'] = medical_institution
+        if day_start:
+            filters['schedule_day__date_obj__gte'] = day_start
+        if day_end:
+            filters['schedule_day__date_obj__lte'] = day_end
+        if status:
+            filters['status'] = status
+        if appointment_type:
+            filters['type'] = appointment_type
+
+        result_end = page * grab
+        result_start = result_end - grab
+
+        appointments = self.doctor_scheduled_appointments.filter(**filters)[result_start:result_end]
+
+        return appointments
+
     def name_indexing(self):
         return self.__str__()
 
