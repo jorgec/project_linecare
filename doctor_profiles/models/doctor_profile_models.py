@@ -308,9 +308,9 @@ class DoctorProfile(models.Model):
         if medical_institution:
             filters['medical_institution'] = medical_institution
         if day_start:
-            filters['schedule_day__date_obj__gte'] = day_start
+            filters['schedule_day__date_obj__gte'] = day_start.date_obj
         if day_end:
-            filters['schedule_day__date_obj__lte'] = day_end
+            filters['schedule_day__date_obj__lte'] = day_end.date_obj
         if status:
             filters['status'] = status
         if appointment_type:

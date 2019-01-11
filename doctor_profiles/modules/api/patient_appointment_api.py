@@ -141,21 +141,18 @@ class ApiPatientAppointmentList(APIView):
         appointment_type = request.GET.get('appointment_type', None)
         s = request.GET.get('s', None)
 
-        params = {
-            'medical_institution': medical_institution,
-            's': s,
-            'day_start': day_start,
-            'day_end': day_end,
-            'status': appointment_status,
-            'appointment_type': appointment_type,
-            'page': 1,
-            'grab': 50
-        }
-
-        print(params)
+        page = request.GET.get('page', 1)
+        grab = request.GET.get('grab', 50)
 
         appointments = doctor.get_patient_appointments(
-            **params
+            medical_institution=medical_institution,
+            s=s,
+            day_start=day_start,
+            day_end=day_end,
+            status=appointment_status,
+            appointment_type=appointment_type,
+            page=1,
+            grab=50
         )
 
         serializer = PatientQueuePrivateSerializer(appointments, many=True)
