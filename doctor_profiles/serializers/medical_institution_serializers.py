@@ -124,6 +124,14 @@ class MedicalInstitutionPhoneVoteSerializer(serializers.ModelSerializer):
 class MedicalInstitutionSerializer(serializers.ModelSerializer):
     type = MedicalInstitutionTypeSerializer()
     address = serializers.SerializerMethodField('repr_address')
+    address_text = serializers.SerializerMethodField('repr_address_text')
+
+    def repr_address_text(self, obj):
+        address = obj.address()
+        if address:
+            return str(address)
+        else:
+            return 'No address set!'
 
     def repr_address(self, obj):
         address = obj.address()
