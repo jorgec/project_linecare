@@ -325,6 +325,7 @@ class DoctorProfile(models.Model):
         appointments = self.doctor_scheduled_appointments.filter(**filters)
 
         if s:
+            print("-" * 80)
             appointments.filter(
                 Q(patient__first_name=s) | Q(patient__last_name=s)
             )
