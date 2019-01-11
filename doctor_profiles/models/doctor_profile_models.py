@@ -303,7 +303,9 @@ class DoctorProfile(models.Model):
             page=1,
             grab=50
     ):
+        print("=" * 80)
         print(s)
+        print("=" * 80)
         filters = {}
 
         if medical_institution:
