@@ -151,7 +151,8 @@ class MedicalInstitutionSerializer(serializers.ModelSerializer):
             'is_approved',
             'metadata',
             'type',
-            'address'
+            'address',
+            'address_text'
         )
 
 
