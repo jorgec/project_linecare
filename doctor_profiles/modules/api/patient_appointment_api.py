@@ -141,8 +141,8 @@ class ApiPatientAppointmentList(APIView):
         appointment_type = request.GET.get('appointment_type', None)
         s = request.GET.get('s', None)
 
-        page = request.GET.get('page', 1)
-        grab = request.GET.get('grab', 50)
+        page = int(request.GET.get('page', 1))
+        grab = int(request.GET.get('grab', 50))
 
         appointments = doctor.get_patient_appointments(
             medical_institution=medical_institution,
