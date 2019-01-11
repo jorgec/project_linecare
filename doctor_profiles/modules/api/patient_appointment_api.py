@@ -151,8 +151,8 @@ class ApiPatientAppointmentList(APIView):
             day_end=day_end,
             status=appointment_status,
             appointment_type=appointment_type,
-            page=1,
-            grab=50
+            page=page,
+            grab=grab
         )
 
         serializer = PatientQueuePrivateSerializer(appointments, many=True)
