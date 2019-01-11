@@ -303,6 +303,7 @@ class DoctorProfile(models.Model):
             page=1,
             grab=50
     ):
+        print(s)
         filters = {}
 
         if medical_institution:
@@ -325,6 +326,8 @@ class DoctorProfile(models.Model):
             appointments.filter(
                 Q(patient__first_name=s) | Q(patient__last_name=s)
             )
+        
+        print(appointments.query)
 
         return appointments[result_start:result_end]
 
