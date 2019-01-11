@@ -295,6 +295,7 @@ class DoctorProfile(models.Model):
     def get_patient_appointments(
             self, *,
             medical_institution=None,
+            s=None,
             day_start=None,
             day_end=None,
             status=None,
@@ -318,9 +319,14 @@ class DoctorProfile(models.Model):
         result_end = page * grab
         result_start = result_end - grab
 
-        appointments = self.doctor_scheduled_appointments.filter(**filters)[result_start:result_end]
+        appointments = self.doctor_scheduled_appointments.filter(**filters)
 
-        return appointments
+        if s:
+            appointments.filter(
+                Q(patient__first_name=s) | Q(patient__last_name=s)
+            )
+
+        return appointments[result_start:result_end]
 
     def name_indexing(self):
         return self.__str__()

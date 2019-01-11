@@ -139,9 +139,11 @@ class ApiPatientAppointmentList(APIView):
             day_end = None
         appointment_status = request.GET.get('appointment_status', None)
         appointment_type = request.GET.get('appointment_type', None)
+        s = request.GET.get('s', None)
 
         appointments = doctor.get_patient_appointments(
             medical_institution=medical_institution,
+            s=s,
             day_start=day_start,
             day_end=day_end,
             status=appointment_status,
