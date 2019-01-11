@@ -141,10 +141,6 @@ class ApiPatientAppointmentList(APIView):
         appointment_type = request.GET.get('appointment_type', None)
         s = request.GET.get('s', None)
 
-        print("~" * 80)
-        print(request.GET)
-        print("~" * 80)
-
         appointments = doctor.get_patient_appointments(
             medical_institution=medical_institution,
             s=s,

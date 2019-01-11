@@ -303,9 +303,6 @@ class DoctorProfile(models.Model):
             page=1,
             grab=50
     ):
-        print("=" * 80)
-        print(s)
-        print("=" * 80)
         filters = {}
 
         if medical_institution:
@@ -322,15 +319,12 @@ class DoctorProfile(models.Model):
         result_end = page * grab
         result_start = result_end - grab
 
-        appointments = self.doctor_scheduled_appointments.filter(**filters)
-
         if s:
-            print("-" * 80)
-            appointments.filter(
+            appointments = self.doctor_scheduled_appointments.filter(**filters).filter(
                 Q(patient__first_name__icontains=s) | Q(patient__last_name__icontains=s)
             )
-        
-        print(appointments.query)
+        else:
+            appointments = self.doctor_scheduled_appointments.filter(**filters)        
 
         return appointments[result_start:result_end]
 
