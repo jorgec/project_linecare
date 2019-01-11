@@ -129,7 +129,7 @@ class MedicalInstitutionSerializer(serializers.ModelSerializer):
     def repr_address_text(self, obj):
         address = obj.address()
         if address:
-            return str(address)
+            return str(address['address'])
         else:
             return 'No address set!'
 
