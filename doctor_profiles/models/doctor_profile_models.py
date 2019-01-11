@@ -327,7 +327,7 @@ class DoctorProfile(models.Model):
         if s:
             print("-" * 80)
             appointments.filter(
-                Q(patient__first_name=s) | Q(patient__last_name=s)
+                Q(patient__first_name__icontains=s) | Q(patient__last_name__icontains=s)
             )
         
         print(appointments.query)
