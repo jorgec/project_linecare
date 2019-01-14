@@ -38,7 +38,6 @@ class AccountRegistrationView(View):
             next_url = ''
             if primary_profile == "1":
                 # doctor profile
-
                 profile = account.create_doctor_profile()
 
                 account.user_settings = {
@@ -51,8 +50,9 @@ class AccountRegistrationView(View):
                 next_url = reverse('doctor_profile_home')
             elif primary_profile == "2":
                 # patient profile
-                pass
+                next_url = reverse('base_profile_home_view')
             elif primary_profile == "3":
+                next_url = reverse('receptionist_profile_home')
                 profile = account.create_receptionist_profile()
                 account.user_settings = {
                     'primary_profile': {
