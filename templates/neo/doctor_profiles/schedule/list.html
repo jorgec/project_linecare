@@ -31,7 +31,7 @@
             var today = new Date();
             var last_week = new Date(today.getTime() - 604800000);
             var appContext = {
-                doctor_id: 0,
+                doctor_id: {{ doctor.id }},
                 medical_institution: '',
                 s: '',
                 day_start: last_week.toISOString().split('T')[0],
