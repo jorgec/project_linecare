@@ -145,23 +145,12 @@ class DoctorProfileScheduleList(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
         doctor = request.user.doctor_profile()
 
-        date = request.GET.get('date', None)
-        if not date:
-            date = DateDim.objects.today()
-        else:
-            date = DateDim.objects.parse_get(date)
-            if not date:
-                date = DateDim.objects.today()
-
         context = {
             'page_title': f'Schedule list for {doctor}',
             'location': 'doctor_profile_manage_schedule',
             'sublocation': 'detail',
             'user': request.user,
             'doctor': doctor,
-            'today': DateDim.objects.today(),
-            'tomorrow': date.tomorrow(),
-            'yesterday': date.yesterday(),
         }
 
         return render(request, 'neo/doctor_profiles/schedule/list.html', context)
