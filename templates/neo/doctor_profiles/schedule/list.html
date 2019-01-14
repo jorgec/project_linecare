@@ -27,6 +27,9 @@
 {% block home_scripts %}
     {% block inner_scripts %}
         <script type="text/javascript">
+
+            var today = new Date();
+            var last_week = new Date(today.getTime() - 604800000);
             var appContext = {
                 doctor_id: 0,
                 medical_institution: '',
