@@ -5,20 +5,24 @@
             <li class="nav-item">
                 <a class="nav-link {% if location == 'doctor_profile_home' %}active{% endif %}" href="{% url 'doctor_profile_home' %}">My Doctor Profile</a>
             </li>
+            <!--
             <li class="nav-item">
                 <a class="nav-link {% if location == 'doctor_profile_appointments' %}active{% endif %}" href="{% url 'doctor_profile_appointments_list' %}?doctor_id={{ request.user.doctor_profile.id }}">Appointment History</a>
             </li>
+            -->
             <li class="nav-item">
                 <a class="nav-link {% if location == 'doctor_profile_manage_schedule' %}active{% endif %}" href="{% url 'doctor_profile_calendar' %}">Schedule</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {% if location == 'doctor_profile_analytics' %}active{% endif %}" href="{% url 'doctor_profile_analytics_checkups_aggregate' %}">Statistics</a>
             </li>
+            <!--
             <li class="item">
                 <a class="nav-link {% if location == 'doctor_profile_medical_institution' %}active{% endif %}" href="{% url 'doctor_profile_settings_medical_institution' %}">
                     Affiliated Medical Institutions
                 </a>
             </li>
+            -->
             <li class="nav-item">
                 <a class="nav-link {% if location == 'doctor_profile_settings' %}active{% endif %}" href="{% url 'doctor_profile_settings_home' %}">Settings</a>
             </li>

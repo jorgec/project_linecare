@@ -9,7 +9,13 @@
 </div>
 <div class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a href="/" class="navbar-brand">Linecare</a>
+        {% if request.user.doctor_profile %}
+            <a href="{% url 'doctor_profile_home' %}" class="navbar-brand"><img src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
+        {% elif request.user.receptionist_profile %}
+            <a href="{% url 'receptionist_profile_home' %}" class="navbar-brand"><img src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
+        {% else %}
+            <a href="/" class="navbar-brand"><img src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
+        {% endif %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
