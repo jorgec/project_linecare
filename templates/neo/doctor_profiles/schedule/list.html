@@ -3,36 +3,21 @@
 {% load crispy_forms_tags %}
 
 {% block header_css %}
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet"
-          href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
 {% endblock %}
 {% block header_js %}
 {% endblock %}
 
 {% block subcontent %}
-    <div class="two-column" id="schedule-section">
-        <div class="nav__page-control">
-            <div class="form-group control-row m-0">
-                <div class="nav__page-control-btns">
-                    <a href="?date={{ yesterday }}" class="btn">&laquo; Yesterday</a>
-                    <a href="?date={{ today }}" class="btn active">Today</a>
-                    <a href="?date={{ tomorrow }}" class="btn">Tomorrow &raquo;</a>
-                </div>
-                <label for="queue-date">Date:
-                    <input type="text" class="form-control" id="queue-date" value="{{ date }}">
-                </label>
-            </div>
-        </div>
 
-    </div>
     <div class="connections__content">
         <div class="header">
             <h4 class="h6">
                 {{ page_title }}
             </h4>
             <div class="body py-3">
-
+                <div id="root">
+                    <div class="donut-spinner"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -41,25 +26,8 @@
 
 {% block home_scripts %}
     {% block inner_scripts %}
-        <script type="text/javascript" src="{% static '3rd-party/moment.js' %}"></script>
-        <script type="text/javascript"
-                src="{% static '3rd-party/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
-        <script type="text/javascript"
-                src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
-
-        <script type="text/javascript">
-            $(document).ready(function () {
-                var date_selector = $("#queue-date");
-                date_selector.bootstrapMaterialDatePicker({
-                    format: "YYYY-MM-DD",
-                    time: false
-                });
-                date_selector.on('change', function (e) {
-                    window.location.replace("?date=" + $(this).val());
-                });
-
-
-            });
-        </script>
+        <script type="text/javascript" src="{% static 'react/doctor_profile/appointments/patient-appointments/js/patient-appointments.chunk.js' %}"></script>
+        <script type="text/javascript" src="{% static 'react/doctor_profile/appointments/patient-appointments/js/main.patient-appointments.chunk.js' %}"></script>
+        <script type="text/javascript" src="{% static 'react/doctor_profile/appointments/patient-appointments/js/runtime.patient-appointments.js' %}"></script>
     {% endblock %}
 {% endblock %}

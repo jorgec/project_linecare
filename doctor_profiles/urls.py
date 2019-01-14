@@ -96,6 +96,9 @@ urlpatterns = [
     #############################################################################
     # Patients/Appointment
     #############################################################################
+    path('appointments',
+         schedule_views.DoctorProfileScheduleList.as_view(),
+         name='doctor_profile_appointments_list'),
     path('patients',
          patient_views.DoctorProfilePatientList.as_view(),
          name='doctor_profile_patient_list'),
