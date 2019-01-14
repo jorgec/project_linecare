@@ -17,39 +17,48 @@
         <ul class="navbar-nav collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <li class="nav-item">
                 <div id="google_translate_element"></div>
-                    <script type="text/javascript">
-                        function googleTranslateElementInit() {
-                            new google.translate.TranslateElement({
-                                pageLanguage: 'en',
-                                includedLanguages: 'ceb,tl',
-                                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-                            }, 'google_translate_element');
-                        }
-                    </script>
-                    <script type="text/javascript"
-                            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                <script type="text/javascript">
+                    function googleTranslateElementInit() {
+                        new google.translate.TranslateElement({
+                            pageLanguage: 'en',
+                            includedLanguages: 'ceb,tl',
+                            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                        }, 'google_translate_element');
+                    }
+                </script>
+                <script type="text/javascript"
+                        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 
             </li>
             {% if not request.user.is_authenticated %}
-            <li class="nav-item active">
-                <a class="nav-link " href="{% url 'accounts_register' %}">Register</a>
-            </li>
-            {% endif %}
-            <li class="nav-item">
-                {% if request.user.is_authenticated %}
+                <li class="nav-item active">
+                    <a class="nav-link " href="{% url 'accounts_register' %}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts_login' %}">Log in</a>
+                </li>
+
+            {% else %}
+                <li class="nav-item">
                     <a class="nav-link" href="{% url 'base_profile_home_view' %}">Base Profile</a>
-                    {% if request.user.doctor_profile %}
+                </li>
+
+                {% if request.user.doctor_profile %}
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'doctor_profile_home' %}">My Doctor Profile</a>
-                    {% endif %}
-                    {% if request.user.receptionist_profile %}
-                        <a class="nav-link" href="{% url 'receptionist_profile_home' %}">My Receptionist Profile</a>
-                    {% endif %}
-                    <a class="nav-link" href="{% url 'accounts_logout' %}">Log out</a>
-                {% else %}
-                <a class="nav-link" href="{% url 'accounts_login' %}">Log in</a>
+                    </li>
                 {% endif %}
-            </li>
+                {% if request.user.receptionist_profile %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'receptionist_profile_home' %}">My Receptionist Profile</a>
+                    </li>
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts_logout' %}">Log out</a>
+                </li>
+            {% endif %}
 
         </ul>
     </div>
