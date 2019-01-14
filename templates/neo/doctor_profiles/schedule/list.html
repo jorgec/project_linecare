@@ -26,8 +26,25 @@
 
 {% block home_scripts %}
     {% block inner_scripts %}
-        <script type="text/javascript" src="{% static 'react/doctor_profile/appointments/patient-appointments/js/patient-appointments.chunk.js' %}"></script>
-        <script type="text/javascript" src="{% static 'react/doctor_profile/appointments/patient-appointments/js/main.patient-appointments.chunk.js' %}"></script>
-        <script type="text/javascript" src="{% static 'react/doctor_profile/appointments/patient-appointments/js/runtime.patient-appointments.js' %}"></script>
+        <script type="text/javascript">
+            var appContext = {
+                doctor_id: 0,
+                medical_institution: '',
+                s: '',
+                day_start: last_week.toISOString().split('T')[0],
+                day_end: today.toISOString().split('T')[0],
+                appointment_status: '',
+                appointment_type: '',
+                page: 1,
+                grab: 50,
+
+            };
+        </script>
+        <script type="text/javascript"
+                src="{% static 'react/doctor_profile/appointments/patient-appointments/js/patient-appointments.chunk.js' %}"></script>
+        <script type="text/javascript"
+                src="{% static 'react/doctor_profile/appointments/patient-appointments/js/main.patient-appointments.chunk.js' %}"></script>
+        <script type="text/javascript"
+                src="{% static 'react/doctor_profile/appointments/patient-appointments/js/runtime.patient-appointments.js' %}"></script>
     {% endblock %}
 {% endblock %}
