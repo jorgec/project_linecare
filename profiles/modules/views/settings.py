@@ -25,7 +25,8 @@ class ProfileSettingsBasicInfoView(LoginRequiredMixin, View):
             'location': 'profile_settings',
             'sublocation': 'basic',
             'profile': profile,
-            'form': form
+            'form': form,
+            'next_url': next_url
         }
 
         return render(request, 'neo/profile/settings/basic_info.html', context)

@@ -35,7 +35,6 @@ class AccountRegistrationView(View):
             )
 
             primary_profile = request.POST.get('primary_profile')
-            next_url = ''
             if primary_profile == "1":
                 # doctor profile
                 profile = account.create_doctor_profile()
@@ -62,16 +61,11 @@ class AccountRegistrationView(View):
                 }
 
             account.save()
-            context = {
-                'page_title': 'Welcome to LineCare!',
-                'form': form
-            }
 
             user = authenticate(email=account.email, password=password)
             if user is not None:
                 login(request, user)
                 messages.success(request, "Account created! Please fill up your profile.", extra_tags="success")
-                profile = user.base_profile()
 
                 request.session['login_origin'] = 'internal'
 
