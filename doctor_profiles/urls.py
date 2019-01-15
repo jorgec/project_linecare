@@ -305,6 +305,9 @@ urlpatterns += [
     #############################################################################
     # Medical Institutions
     #############################################################################
+    path(f'{version}/public/medical_institutions/connected/list',
+         doctor_profile_api.ApiPublicDoctorProfileMedicalInstitutions.as_view(),
+         name='api_public_doctor_medical_institutions_list'),
     path(f'{version}/public/medical_institution/type/list',
          medical_institutions_api.ApiPublicMedicalInstitutionTypeList.as_view(),
          name='api_public_medical_institution_type_list'),

@@ -107,10 +107,13 @@ class ApiPrivateReceptionistProfileCreateByDoctor(APIView):
 
         if serializer.is_valid():
 
-            account = Account.objects.create_user(
-                email=serializer.validated_data['email'],
-                password=serializer.validated_data['password']
-            )
+            try:
+                account = Account.objects.create_user(
+                    email=serializer.validated_data['email'],
+                    password=serializer.validated_data['password']
+                )
+            except IntegrityError:
+                return Response("That email is already registered!", status=status.HTTP_409_CONFLICT)
 
             profile = account.base_profile()
             profile.first_name = serializer.validated_data['first_name']
