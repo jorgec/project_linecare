@@ -146,7 +146,7 @@ class DoctorProfileScheduleList(LoginRequiredMixin, UserPassesTestMixin, View):
         doctor = request.user.doctor_profile()
 
         context = {
-            'page_title': f'Schedule list for {doctor}',
+            'page_title': f'Appointment history for {doctor}',
             'location': 'doctor_profile_manage_schedule',
             'sublocation': 'detail',
             'user': request.user,
