@@ -44,8 +44,8 @@ class ApiMedicalInstitutionDoctorMetaList(APIView):
             connection.metadata['durations'] = {}
             connection.metadata['fees'] = {}
             for t in types:
-                connection.metadata['durations'][f'{t[0]}_duration'] = 60
-                connection.metadata['durations'][f'{t[0]}_gap'] = 10
+                connection.metadata['durations'][f'{t[0]}_duration'] = 15
+                connection.metadata['durations'][f'{t[0]}_gap'] = 1
                 connection.metadata['fees'][t[0]] = 0
             connection.save()
 

@@ -148,6 +148,8 @@ Doctor Schedule helper functions
 
 
 def find_gaps(*, schedules, appointments, duration, gap):
+    duration = int(duration)
+    gap = int(gap)
     TimeDim = apps.get_model('datesdim.TimeDim')
     for schedule in schedules:
         start_time = schedule.schedule.start_time

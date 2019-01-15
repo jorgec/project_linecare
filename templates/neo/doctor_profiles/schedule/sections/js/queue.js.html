@@ -15,8 +15,8 @@
 
         $.get(url)
             .done(function(result){
-                console.log(result);
                 var queue = [];
+                var q_number = 1;
                 for(var r in result){
                     var q = result[r];
                     var btnAction = "";
@@ -52,6 +52,8 @@
 
                     q["button_action"] = btnAction;
                     q["subactions"] = subAction;
+                    q["q_number"] = q_number;
+                    q_number++;
 
                     queue.push(q);
                 }

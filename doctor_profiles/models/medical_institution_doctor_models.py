@@ -26,3 +26,12 @@ class MedicalInstitutionDoctor(models.Model):
 
     def __str__(self):
         return f'{self.medical_institution}: {self.doctor}'
+
+    def get_schedule_options(self):
+        try:
+            return {
+                'fees': self.metadata['fees'],
+                'durations': self.metadata['durations']
+            }
+        except KeyError:
+            return {}

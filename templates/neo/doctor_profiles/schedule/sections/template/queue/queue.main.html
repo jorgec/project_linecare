@@ -14,7 +14,7 @@
 <div class="connections__content">
     <div class="header">
         <h4 class="h6">
-            {{ page_title }}
+            <a href="{% url 'doctor_profile_medical_institution_home' medical_institution.slug %}">{{ page_title }}</a>
         </h4>
         {% if schedules %}
         <ul>

@@ -38,7 +38,37 @@
 
 <div id="top-address-container"></div>
 
+<div class="card">
+    <div class="card-body">
+        <p>
+            <a href="#!" data-toggle="modal" data-target="#claim-modal" >Are you an authorized representative of this institution?</a>
+        </p>
+    </div>
+</div>
+
 <!-- modals -->
+<!-- claim -->
+<div class="modal fade" id="claim-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Claim {{ rel.medical_institution }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Submitting a claim to this institution prevents unauthorized changes to its details, as well as allowing you to
+                    be the single source of truth for <strong>{{ rel.medical_institution }}</strong>.
+                </p>
+                <div class="alert alert-warning">Coming soon</div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!-- /claim -->
 
 <!-- addresses -->
 <div class="modal fade" id="all-addresses-modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -67,9 +97,9 @@
 <!-- /addresses -->
 
 <!-- submit address -->
-<div class="modal fade" id="submit-address-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
+<div class="modal fade" id="submit-address-modal" tabindex="-1" role="dialog" aria-hidden="true">    
+    <div class="modal-dialog" role="document"">
+        <div class="modal-content">            
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Submit an Alternate Address</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -77,6 +107,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div class="donut-spinner hide" id="submit-address-loader"></div>
                 <form id="submit-address-form" method="post" action="#">
                     {{ submit_location_form|crispy }}
                     <button type="submit" class="btn btn-primary" id="address-submit-suggestion">Submit</button>

@@ -55,31 +55,7 @@ class DoctorProfilePatientDetail(LoginRequiredMixin, UserPassesTestMixin, View):
 
 class DoctorProfilePatientQSDetail(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
-        doctor = request.user.doctor_profile()
-        patient = get_object_or_404(BaseProfile, id=request.GET.get('patient_id'))
-        connection = get_object_or_404(PatientConnection, doctor=doctor, patient=patient)
-
-        checkups = PatientCheckupRecordAccess.objects.filter(
-            doctor=doctor,
-            checkup__appointment__patient=patient,
-            is_approved=True
-        ).order_by(
-            '-checkup__appointment__schedule_day__date_obj'
-        )
-
-        context = {
-            'page_title': f'Patient profile for {patient}',
-            'location': 'doctor_profile_patients',
-            'sublocation': 'detail_home',
-            'doctor': doctor,
-            'patient': patient,
-            'checkups': checkups
-        }
-
-        return render(request, 'neo/doctor_profiles/patient/patient_detail.html', context)
-
-    def test_func(self):
-        return self.request.user.doctor_profile()
+        return HttpResponseRedirect(reverse('doctor_profile_patient_detail', kwargs={'patient_id': request.GET.get('patient_id', None)}))
 
 
 class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -120,8 +96,10 @@ class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMi
         appointment.status = 'done'
         appointment.save()
 
+        return_url = reverse('doctor_profile_schedule_detail', kwargs={'medical_institution': appointment.medical_institution.slug})
+
         return HttpResponseRedirect(
-            f"{reverse('doctor_profile_patient_appointment_history_detail')}?appointment={appointment.id}"
+            f'{return_url}?date={str(appointment.schedule_day)}'
         )
 
     def test_func(self):
@@ -138,7 +116,7 @@ class DoctorProfilePatientAppointmentHistoryDetail(LoginRequiredMixin, UserPasse
             return HttpResponseRedirect('/403/Forbidden')
 
         context = {
-            'page_title': f'Appointment for {appointment.patient} on {appointment.schedule_day.nice_name} at {appointment.medical_institution}',
+            'page_title': f'Appointment for {appointment.patient} on {appointment.schedule_day.nice_name()} at {appointment.medical_institution}',
             'location': 'doctor_profile_patients',
             'sublocation': 'detail',
             'doctor': doctor,

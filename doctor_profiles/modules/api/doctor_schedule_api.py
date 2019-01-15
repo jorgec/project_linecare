@@ -256,7 +256,8 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
 
 
         elif schedule_choice == 'first_available':
-            schedule_options = doctor.get_options('schedule_options')
+            # schedule_options = doctor.get_options('schedule_options')
+            schedule_options = mi_connection.get_schedule_options()['durations']
             if not f'{appointment_type}_duration' in schedule_options:
                 return Response("Invalid appointment type", status=status.HTTP_400_BAD_REQUEST)
 

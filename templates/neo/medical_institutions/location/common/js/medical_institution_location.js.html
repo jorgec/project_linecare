@@ -172,7 +172,8 @@
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
 
-        $("#submit-address-form").html("<div class='donut-spinner'></div>");
+        $("#submit-address-loader").removeClass("hide");
+        $(this).addClass("hide");
 
         $.post(url, formData)
             .done(function (result) {
@@ -196,7 +197,12 @@
                 }, {
                     type: 'danger'
                 });
+            })
+            .then(function(){
+                $("#submit-address-loader").addClass("hide");
+                $("#submit-address-form").removeClass("hide");
             });
+        
 
     });
 
