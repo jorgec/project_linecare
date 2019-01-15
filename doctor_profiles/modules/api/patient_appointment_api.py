@@ -108,7 +108,7 @@ class ApiPatientAppointmentList(APIView):
     def get(self, request, *args, **kwargs):
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
 
-        medical_institution_id = request.GET.get('medical_institution_id', None)
+        medical_institution_id = request.GET.get('medical_institution', None)
         if medical_institution_id:
             medical_institution = get_object_or_404(MedicalInstitution, id=medical_institution_id)
             connection = get_object_or_404(MedicalInstitutionDoctor, is_approved=True, doctor=doctor,
