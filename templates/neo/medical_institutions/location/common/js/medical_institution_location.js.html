@@ -172,6 +172,8 @@
             csrfmiddlewaretoken: '{{ csrf_token }}'
         };
 
+        $("#submit-address-form").html("<div class='donut-spinner'></div>");
+
         $.post(url, formData)
             .done(function (result) {
                 var all_addresses_modal = $("#all-addresses-modal");
@@ -209,8 +211,8 @@
             var provinces_url = "{% url 'api_location_provinces_of_region' %}?region=" + region;
             if (region) {
                 $.get(provinces_url, function (provincesResult) {
-                    $("#id_province").loadTemplate("#provinces-template", provincesResult);
-                    province_id = provincesResult[0].id;
+                    $("#id_province").loadTemplate("#provinces-template", provincesResult.results);
+                    province_id = provincesResult.results[0].id;
                     load_cities(province_id);
                 });
             }
@@ -220,7 +222,7 @@
             var cities_url = "{% url 'api_location_cities_of_province' %}?province=" + province;
             if (province) {
                 $.get(cities_url, function (citiesResult) {
-                    $("#id_city").loadTemplate("#cities-template", citiesResult);
+                    $("#id_city").loadTemplate("#cities-template", citiesResult.results);
                 });
             }
         }
