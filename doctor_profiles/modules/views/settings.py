@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from doctor_profiles.forms import MedicalDegreeForm, DoctorDegreeEditForm, SpecializationForm
@@ -7,16 +9,7 @@ from doctor_profiles.forms import MedicalDegreeForm, DoctorDegreeEditForm, Speci
 
 class DoctorProfileSettingsHomeView(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
-        context = {
-            'page_title': 'Doctor Settings',
-            'location': 'doctor_profile_settings',
-            'sublocation': 'home',
-        }
-
-        return render(request, 'neo/doctor_profiles/settings/home.html', context)
-
-    def test_func(self):
-        return self.request.user.doctor_profile()
+        return HttpResponseRedirect(reverse('doctor_profile_settings_medical_degree'))
 
 
 class DoctorProfileMedicalDegreeSettingsView(LoginRequiredMixin, UserPassesTestMixin, View):

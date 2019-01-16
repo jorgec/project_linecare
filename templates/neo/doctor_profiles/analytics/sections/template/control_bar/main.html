@@ -7,9 +7,6 @@
                 {% for mi in medical_institutions %}
                     <option value="{{ mi.id }}">
                         {{ mi.name }}
-                        <small>
-                            {{ mi.address.address }}
-                        </small>
                     </option>
                 {% endfor %}
             </select>
