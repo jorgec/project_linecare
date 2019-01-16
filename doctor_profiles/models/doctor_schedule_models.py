@@ -76,8 +76,14 @@ class DoctorScheduleDay(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, null=True, blank=True)
+    doctor_is_in = models.BooleanField(default=False)
+    doctor_stepped_out = models.BooleanField(default=False)
 
     day = models.ForeignKey('datesdim.DateDim', related_name='schedule_days', on_delete=models.CASCADE)
+    actual_start_time = models.ForeignKey('datesdim.TimeDim', related_name='actual_schedule_start_time', null=True, blank=True,
+                                   on_delete=models.SET_NULL)
+    actual_end_time = models.ForeignKey('datesdim.TimeDim', related_name='actual_schedule_end_time', null=True, blank=True,
+                                 on_delete=models.SET_NULL)
     doctor = models.ForeignKey('doctor_profiles.DoctorProfile', related_name='doctor_schedule_days',
                                on_delete=models.CASCADE)
     medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution',
@@ -114,6 +120,9 @@ class PatientAppointment(models.Model):
     # Relationship fields
     schedule_day = models.ForeignKey('datesdim.DateDim', on_delete=models.SET_NULL,
                                      related_name='day_scheduled_patients',
+                                     null=True, blank=True)
+    schedule_end = models.ForeignKey('datesdim.DateDim', on_delete=models.SET_NULL,
+                                     related_name='day_schedule_end_patients',
                                      null=True, blank=True)
     time_start = models.ForeignKey('datesdim.TimeDim', on_delete=models.SET_NULL,
                                    related_name='time_start_scheduled_patients',
@@ -175,6 +184,34 @@ class PatientAppointment(models.Model):
     def get_deleted_lab_tests(self):
         return self.appointment_checkup.checkup_tests.filter(is_approved=False)
 
+    def shift_time(self, time_start=None, save=True):
+        TimeDim = apps.get_model('datesdim.TimeDim')
+        DateDim = apps.get_model('datesdim.DateDim')
+
+        if not time_start:
+            new_time_start = TimeDim.objects.parse(arrow.utcnow().to(settings.TIME_ZONE).datetime)
+        else:
+            new_time_start = time_start
+
+        difference = new_time_start.minutes_since - self.time_start.minutes_since
+
+        self.time_start = new_time_start
+
+        try:
+            self.time_end = TimeDim.objects.get(minutes_since=self.time_end.minutes_since + difference)
+        except TimeDim.DoesNotExist:
+            # move to next day
+            self.schedule_end = DateDim.objects.parse_get(self.schedule_day.obj().shift(days=1).format('YYYY-MM-DD'))
+
+            spillover = difference - (1440 - self.time_end.minutes_since)
+            new_time_end = TimeDim.objects.get(minutes_since=spillover)
+            self.time_end = new_time_end
+
+        if save:
+            self.save()
+        else:
+            return self
+
 
 @receiver(post_save, sender=PatientAppointment)
 def add_new_to_patient_connection(sender, instance, created=False, **kwargs):
@@ -216,58 +253,6 @@ def create_checkup_record(sender, instance, created=False, **kwargs):
 def notify_queue_consumers(sender, instance, created=False, **kwargs):
     if instance:
         doctor_notify_update_queue(instance.doctor)
-
-@receiver(pre_save, sender=PatientAppointment)
-def update_start_time(sender, instance, created=False, **kwargs):
-    if not created and instance.status == 'in_progress':
-        TimeDim = apps.get_model('datesdim.TimeDim')
-        original_time_start = instance.time_start
-        now = arrow.utcnow().to(settings.TIME_ZONE)
-        time_start = TimeDim.objects.parse(now.datetime)
-        instance.time_start = time_start
-        difference = time_start.minutes_since - original_time_start.minutes_since
-        try:
-            instance.time_end = TimeDim.objects.get(minutes_since=difference)
-        except TimeDim.DoesNotExist:
-            pass
-
-@receiver(pre_save, sender=PatientAppointment)
-def update_queue_times(sender, instance, created=False, **kwargs):
-    if not created and instance.status == 'done':
-        TimeDim = apps.get_model('datesdim.TimeDim')
-        original_time_end = instance.time_end
-        now = arrow.utcnow().to(settings.TIME_ZONE)
-        time_end = TimeDim.objects.parse(now.datetime)
-        instance.time_end = time_end
-
-        difference = (time_end.minutes_since - original_time_end.minutes_since) + 10
-
-        other_appointments = PatientAppointment.objects.filter(
-            schedule_day=instance.schedule_day,
-            doctor=instance.doctor,
-            medical_institution=instance.medical_institution
-        ).exclude(
-            status='done',
-            id=instance.id
-        )
-
-        for appt in other_appointments:
-            if appt is not instance:
-                new_start_diff = appt.time_start.minutes_since + difference
-                try:
-                    new_start_time = TimeDim.objects.get(minutes_since=new_start_diff)
-                except TimeDim.DoesNotExist:
-                    new_start_time = appt.time_start
-
-                new_end_diff = appt.time_end.minutes_since + difference
-                try:
-                    new_end_time = TimeDim.objects.get(minutes_since=new_end_diff)
-                except TimeDim.DoesNotExist:
-                    new_end_time = appt.time_end
-
-                appt.time_start = new_start_time
-                appt.time_end = new_end_time
-                appt.save(update_fields=['time_start', 'time_end'])
 
 
 @receiver(post_save, sender=DoctorSchedule)

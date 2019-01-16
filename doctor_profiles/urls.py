@@ -391,6 +391,12 @@ urlpatterns += [
     path(f'{version}/private/doctor/schedule/delete',
          doctor_schedule_api.ApiDoctorScheduleDelete.as_view(),
          name='api_private_doctor_schedule_delete'),
+    path(f'{version}/private/doctor/schedule_day/presence/toggle',
+         doctor_schedule_api.ApiPrivateDoctorScheduleDayPresenceToggle.as_view(),
+         name='api_private_doctor_schedule_day_presence_toggle'),
+    path(f'{version}/private/doctor/schedule_day/presence/status',
+         doctor_schedule_api.ApiPrivateDoctorScheduleDayPresenceStatus.as_view(),
+         name='api_private_doctor_schedule_day_presence_status'),
 
     # patient connections
     path(f'{version}/private/patients/search',

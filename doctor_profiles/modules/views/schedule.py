@@ -6,7 +6,7 @@ from rest_framework.utils import json
 from biometrics.forms import BiometricForm
 from datesdim.models import DateDim
 from doctor_profiles.constants import APPOINTMENT_TYPES
-from doctor_profiles.models import MedicalInstitution, PatientAppointment
+from doctor_profiles.models import MedicalInstitution, PatientAppointment, DoctorScheduleDay
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
 from profiles.models import Gender
 
@@ -69,7 +69,8 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
             'yesterday': date.yesterday(),
             'schedules': doctor.get_schedule_on_day(day=date, medical_institution=medical_institution),
             'genders': Gender.objects.all(),
-            'biometrics_form': biometrics_form
+            'biometrics_form': biometrics_form,
+            'schedule_day': DoctorScheduleDay.objects.get(doctor=doctor, medical_institution=medical_institution, day=date)
         }
 
         return render(request, 'neo/doctor_profiles/schedule/queue.html', context)

@@ -1,20 +1,19 @@
-from django.db.models import Q
+import arrow
+from django.conf import settings
 from django.urls import reverse
 from rest_framework import status, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from datesdim.models import TimeDim, DateDim
 from datesdim.serializers import DateDimSerializer, TimeDimSerializer
-from doctor_profiles.constants import QUEUE_DISPLAY_CODES, QUEUE_CANCELLED_CODES
+from doctor_profiles.constants import QUEUE_DISPLAY_CODES
 from doctor_profiles.models import DoctorSchedule, DoctorProfile, MedicalInstitution
 from doctor_profiles.models.doctor_schedule_models import DoctorScheduleDay, PatientAppointment
 from doctor_profiles.models.managers.doctor_schedule_manager import check_collisions, find_gaps
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
-from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_new_appointment, \
-    doctor_notify_update_queue
+from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_new_appointment
 from doctor_profiles.serializers import DoctorScheduleSerializer, \
     MedicalInstitutionSerializer, PatientQueuePrivateSerializer
 from profiles.models import BaseProfile
@@ -201,6 +200,7 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
             return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
 
         """
+        TODO:
         put this in a manager
         """
 
@@ -330,6 +330,87 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         return Response(f"Appointment for {appointment} set", status=status.HTTP_200_OK)
 
 
+class ApiPrivateDoctorScheduleDayPresenceStatus(APIView):
+    """
+    Check whether doctor is in or out
+    ?schedule_day=n
+    """
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        schedule_day = get_object_or_404(DoctorScheduleDay, id=request.GET.get('schedule_day'))
+
+        if schedule_day.doctor_is_in:
+            button_classes = 'btn btn-success'
+            button_text = 'In'
+        else:
+            button_classes = 'btn btn-danger'
+            button_text = 'Out'
+
+        button_href = f"{reverse('api_private_doctor_schedule_day_presence_toggle')}?schedule_day={schedule_day.id}"
+
+        return Response({
+            'button_href': button_href,
+            'button_classes': button_classes,
+            'button_text': button_text,
+            'status': schedule_day.doctor_is_in
+        }, status=status.HTTP_200_OK)
+
+
+class ApiPrivateDoctorScheduleDayPresenceToggle(APIView):
+    """
+    Toggle doctor is in or not
+    ?schedule_day=n
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        result, profile_type = is_doctor_or_receptionist(request.user)
+        if not result:
+            return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
+
+        schedule_day = get_object_or_404(DoctorScheduleDay, id=request.GET.get('schedule_day'))
+        doctor = schedule_day.doctor
+        medical_institution = schedule_day.medical_institution
+
+        if type(profile_type) != DoctorProfile:
+            """ person adding isn't the doctor, so check if receptionist is allowed """
+            connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
+                                                    medical_institution=medical_institution)
+            if not connection:
+                return Response("Receptionist is not authorized by this doctor for this medical institution",
+                                status=status.HTTP_403_FORBIDDEN)
+        else:
+            if doctor != request.user.doctor_profile():
+                return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
+
+        now = TimeDim.objects.parse(arrow.utcnow().to(settings.TIME_ZONE).datetime)
+
+        if schedule_day.doctor_is_in:
+            if not schedule_day.actual_end_time:
+                schedule_day.doctor_is_in = False
+                schedule_day.actual_end_time = now
+                message = 'Successfully checked out'
+            else:
+                message = 'You have already checked out!'
+        else:
+            if not schedule_day.actual_start_time:
+                schedule_day.doctor_is_in = True
+                schedule_day.actual_start_time = now
+                message = 'Successfully checked in'
+            else:
+                message = 'You have already checked in!'
+
+        schedule_day.save()
+
+        return Response({
+            'status': schedule_day.doctor_is_in,
+            'message': message
+        }, status=status.HTTP_200_OK)
+
+
 class ApiPrivateDoctorScheduleQueueList(APIView):
     """
     Queue of doctor at medical institution on day
@@ -351,9 +432,10 @@ class ApiPrivateDoctorScheduleQueueList(APIView):
         doctor = get_object_or_404(DoctorProfile, id=doctor_id)
 
         if request.GET.get('medical_institution_id', None):
-            medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution_id', None))
+            medical_institution = get_object_or_404(MedicalInstitution,
+                                                    id=request.GET.get('medical_institution_id', None))
             mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
-                                          medical_institution=medical_institution, is_approved=True)
+                                              medical_institution=medical_institution, is_approved=True)
         else:
             medical_institution = None
 
@@ -376,7 +458,6 @@ class ApiPrivateDoctorScheduleQueueList(APIView):
             queue_date = DateDim.objects.parse_get(__queue_date)
             if not queue_date:
                 return Response(f"{__queue_date} is an invalid date", status=status.HTTP_400_BAD_REQUEST)
-
 
         if medical_institution:
             queue = PatientAppointment.objects.filter(
@@ -410,6 +491,7 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
     """
 
     permissions = [permissions.AllowAny]
+
     # permissions = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):

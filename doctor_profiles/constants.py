@@ -29,6 +29,10 @@ QUEUE_DONE_CODES = (
     'Done',
 )
 
+QUEUE_INACTIVE = (
+    'pending', 'queueing'
+)
+
 QUEUE_STATUS_CODES = (
     ('pending', 'Pending'),
     ('queueing', 'Queueing'),
@@ -60,7 +64,10 @@ QUEUE_STATUS_MESSAGES = {
         'color': 'success'
     },
     'cancelled_by_patient': '',
-    'cancelled_by_doctor': '',
+    'cancelled_by_doctor': {
+        'message': 'Your appointment has been cancelled by the doctor',
+        'color': 'danger'
+    },
     'rescheduled_by_patient': '',
     'rescheduled_by_doctor': '',
 }

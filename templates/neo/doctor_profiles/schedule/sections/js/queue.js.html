@@ -1,7 +1,13 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
+        loadPresenceStatus();
         getQueue('{{ date }}');
+
+        $("#doctor_presence_container").on('click', function(e){
+            e.preventDefault();
+            updatePresenceStatus();
+        });
     });
 
     function getQueue(){
@@ -24,19 +30,22 @@
                     var base_url = "{% url 'api_private_patient_appointment_status_update' %}?appointment_id=" + q.id;
                     var patient_appointment_url = "{% url 'doctor_profile_patient_appointment_detail' %}?appointment=" + q.id;
                     var reschedule_url = "";
+                    var cancel_url = base_url + "&queue_status=cancelled_by_doctor";
                     if(q["status"] === "pending"){
                         var arrived_url = base_url + "&queue_status=queueing";
 
                         btnAction += "<a class='btn btn-info btn-sm action-button mark-arrived' href='" + arrived_url + "' data-id='" + q.id + "'>Mark arrived</a>";
-                        btnAction += "<a class='btn btn-danger btn-sm action-button cancel-appointment' href='#!' data-id='" + q["id"] +"'>Cancel</a>";
+                        btnAction += "<a class='btn btn-danger btn-sm action-button cancel-appointment' href=" + cancel_url + " data-id='" + q["id"] +"'>Cancel</a>";
                         subAction += '<a href="' + reschedule_url + '">Reschedule Appointment</a>';
                     }
                     else if(q["status"] === "queueing"){
                         var pending_url = base_url + "&queue_status=pending";
                         var in_progress_url = base_url + "&queue_status=in_progress";
 
+
                         btnAction += "<a class='btn btn-primary btn-sm action-button receive-appointment' href='" + in_progress_url +"' data-id='" + q["id"] +"'>Come in</a>";
                         btnAction += "<a class='btn btn-secondary btn-sm action-button mark-pending' href='" + pending_url + "' data-id='" + q["id"] +"'>Mark pending</a>";
+                        btnAction += "<a class='btn btn-danger btn-sm action-button cancel-appointment' href=" + cancel_url + " data-id='" + q["id"] +"'>Cancel</a>";
                         subAction += '<a href="' + reschedule_url + '">Reschedule Appointment</a>';
                     }
                     else if(q["status"] === "in_progress"){
@@ -83,6 +92,29 @@
             })
             .fail(function(result){
                 console.log(result);
+            });
+    }
+
+    function loadPresenceStatus(){
+        var url = "{% url 'api_private_doctor_schedule_day_presence_status' %}?schedule_day={{ schedule_day.id }}";
+
+        $.get(url)
+            .done(function(result){
+                $("#doctor_presence_container").loadTemplate($("#doctor_presence_template"), result);
+            })
+    }
+
+    function updatePresenceStatus(){
+        var url = "{% url 'api_private_doctor_schedule_day_presence_toggle' %}?schedule_day={{ schedule_day.id }}";
+
+        $.get(url)
+            .done(function(result){
+                $.notify({
+                    message: result.message
+                }, {
+                    type: 'success'
+                });
+                loadPresenceStatus();
             });
     }
 
