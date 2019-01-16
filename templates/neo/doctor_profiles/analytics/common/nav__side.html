@@ -12,34 +12,34 @@
     <li class="sidebar-nav-item">
         <a {% if location == 'patient_symptoms_overview' %}class="active"{% endif %}
            href="{% url 'doctor_profile_analytics_symptoms_aggregate' %}">
-            <i class="fas fws fa-bug mr-3"></i>
+            <i class="fas fw fa-bug mr-3"></i>
             Symptoms
         </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if location == 'patient_findings_overview' %}class="active"{% endif %}
            href="{% url 'doctor_profile_analytics_findings_aggregate' %}">
-            <i class="fas fws fa-search-plus mr-3"></i>
+            <i class="fas fw fa-search-plus mr-3"></i>
             Findings
         </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if location == 'patient_diagnoses_overview' %}class="active"{% endif %}
            href="{% url 'doctor_profile_analytics_diagnoses_aggregate' %}">
-            <i class="fas fws fa-diagnoses mr-3"></i>
+            <i class="fas fw fa-diagnoses mr-3"></i>
             Diagnoses
         </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if location == 'patient_prescriptions_overview' %}class="active"{% endif %}
            href="{% url 'doctor_profile_analytics_prescriptions_aggregate' %}">
-            <i class="fas fws fa-prescription mr-3"></i>
+            <i class="fas fw fa-prescription mr-3"></i>
             Medication
         </a>
     </li>
     <li class="sidebar-nav-item">
         <a {% if location == 'patient_labtests_overview' %}class="active"{% endif %} href="{% url 'doctor_profile_analytics_labtests_aggregate' %}">
-            <i class="fas fws fa-vials mr-3"></i>
+            <i class="fas fw fa-vials mr-3"></i>
             Lab Requests
         </a>
     </li>
