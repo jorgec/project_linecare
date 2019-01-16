@@ -4,11 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from datesdim.models import DateDim
-from doctor_profiles.constants import QUEUE_STATUS_MESSAGES
 from doctor_profiles.models import PatientAppointment, DoctorProfile, MedicalInstitution, MedicalInstitutionDoctor
-from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_update_queue
 from doctor_profiles.serializers import PatientQueuePrivateSerializer
-from profiles.notifiers.patient_appointment_notifiers import patient_appointment_status_notify
 
 UPDATE_STATUS_PERMISSIONS_MATRIX = {
     'doctor': [
@@ -17,22 +14,22 @@ UPDATE_STATUS_PERMISSIONS_MATRIX = {
         'in_progress',
         'finishing',
         'done',
-        'doctor_cancel',
-        'doctor_resched',
+        'cancelled_by_doctor',
+        'rescheduled_by_doctor',
     ],
     'receptionist': [
         'pending',
         'queueing',
         'in_progress',
         'finishing',
-        'doctor_cancel',
-        'doctor_resched',
+        'cancelled_by_doctor',
+        'rescheduled_by_doctor',
     ],
     'patient': [
         'pending',
         'queueing',
-        'patient_cancel',
-        'patient_resched'
+        'cancelled_by_patient',
+        'rescheduled_by_patient'
     ]
 }
 
@@ -66,8 +63,8 @@ class ApiPatientAppointmentUpdateStatus(APIView):
     - in_progress: In Progress: doctor, receptionist
     - finishing: Finishing: doctor
     - done: Done: doctor, receptionist
-    - patient_cancel: Cancelled by patient: patient
-    - doctor_cancel: Cancelled by doctor: doctor, receptionist
+    - cancelled_by_patient: Cancelled by patient: patient
+    - cancelled_by_doctor: Cancelled by doctor: doctor, receptionist
     - patient_resched: Rescheduled by patient: patient
     - doctor_resched: Rescheduled by doctor: doctor, receptionist
     """

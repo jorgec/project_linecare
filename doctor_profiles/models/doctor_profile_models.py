@@ -206,6 +206,9 @@ class DoctorProfile(models.Model):
                 end_date__date_obj__gte=DateDim.objects.today().date_obj
             )
 
+    def get_active_schedules(self, medical_institution=None):
+        return self.get_schedules(medical_institution=medical_institution, include_past=False)
+
     def get_schedule_days_for_month(self, *, year=None, month=None, medical_institution=None):
         DateDim = apps.get_model('datesdim.DateDim')
         if not year or not month:
