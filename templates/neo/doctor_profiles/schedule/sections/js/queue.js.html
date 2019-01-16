@@ -1,13 +1,16 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
-        loadPresenceStatus();
+
         getQueue('{{ date }}');
 
-        $("#doctor_presence_container").on('click', function(e){
-            e.preventDefault();
-            updatePresenceStatus();
-        });
+        {% for schedule_day in schedules %}
+            loadPresenceStatus({{ schedule_day.id }});
+            $("#doctor_presence_container_{{ schedule_day.id }}").on('click', function(e){
+                e.preventDefault();
+                updatePresenceStatus({{ schedule_day.id }});
+            });
+        {% endfor %}
     });
 
     function getQueue(){
@@ -95,17 +98,17 @@
             });
     }
 
-    function loadPresenceStatus(){
-        var url = "{% url 'api_private_doctor_schedule_day_presence_status' %}?schedule_day={{ schedule_day.id }}";
+    function loadPresenceStatus(id){
+        var url = "{% url 'api_private_doctor_schedule_day_presence_status' %}?schedule_day=" + id;
 
         $.get(url)
             .done(function(result){
-                $("#doctor_presence_container").loadTemplate($("#doctor_presence_template"), result);
+                $("#doctor_presence_container_" + id).loadTemplate($("#doctor_presence_template_" + id), result);
             })
     }
 
-    function updatePresenceStatus(){
-        var url = "{% url 'api_private_doctor_schedule_day_presence_toggle' %}?schedule_day={{ schedule_day.id }}";
+    function updatePresenceStatus(id){
+        var url = "{% url 'api_private_doctor_schedule_day_presence_toggle' %}?schedule_day=" + id;
 
         $.get(url)
             .done(function(result){
@@ -114,7 +117,7 @@
                 }, {
                     type: 'success'
                 });
-                loadPresenceStatus();
+                loadPresenceStatus(id);
             });
     }
 

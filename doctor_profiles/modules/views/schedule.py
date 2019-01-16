@@ -70,7 +70,6 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
             'schedules': doctor.get_schedule_on_day(day=date, medical_institution=medical_institution),
             'genders': Gender.objects.all(),
             'biometrics_form': biometrics_form,
-            'schedule_day': DoctorScheduleDay.objects.get(doctor=doctor, medical_institution=medical_institution, day=date)
         }
 
         return render(request, 'neo/doctor_profiles/schedule/queue.html', context)

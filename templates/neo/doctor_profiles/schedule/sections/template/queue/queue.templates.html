@@ -34,9 +34,10 @@
         </td>
     </tr>
 </script>
-
-<script type="text/html" id="doctor_presence_template">
-    <a data-class="button_classes" id="btnDoctorPresence" data-href="button_href">
-        <span data-content="button_text" class="text-white h2"></span>
+{% for schedule_day in schedules %}
+<script type="text/html" id="doctor_presence_template_{{ schedule_day.id }}">
+    <a data-class="button_classes" id="btnDoctorPresence_{{ schedule_day.id }}" data-href="button_href">
+        <span data-content="button_text" class="text-white h4"></span>
     </a>
 </script>
+{% endfor %}

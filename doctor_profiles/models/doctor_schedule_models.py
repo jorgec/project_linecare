@@ -146,7 +146,7 @@ class PatientAppointment(models.Model):
 
     class Meta:
         ordering = ('-schedule_day', 'time_start__minutes_since')
-        unique_together = ('patient', 'doctor', 'medical_institution', 'schedule_day', 'time_start', 'time_end')
+        unique_together = ('patient', 'doctor', 'medical_institution', 'schedule_day', 'time_start', 'time_end', 'status', 'created')
 
     def __str__(self):
         return f'{self.schedule_day} - {self.time_start.format_12()}'

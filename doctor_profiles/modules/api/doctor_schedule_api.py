@@ -208,6 +208,8 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         schedule_time_end = None
 
         patient_id = request.data.get("profile_id", None)
+        force_schedule = request.data.get('force_schedule', False)
+
         if not patient_id:
             return Response("No patient selected", status=status.HTTP_400_BAD_REQUEST)
 
@@ -222,21 +224,25 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         else:
             schedule_day = DateDim.objects.today()
 
-        existing_schedules = DoctorScheduleDay.objects.filter(
-            doctor=doctor,
-            medical_institution=medical_institution,
-            day=schedule_day
-        ).order_by('schedule__start_time__minutes_since')
+        if force_schedule == 'true':
+            existing_schedules = []
+            existing_appointments = []
+        else:
+            existing_schedules = DoctorScheduleDay.objects.filter(
+                doctor=doctor,
+                medical_institution=medical_institution,
+                day=schedule_day
+            ).order_by('schedule__start_time__minutes_since')
 
-        if existing_schedules.count() == 0:
-            return Response(f"{doctor} does not have a schedule for this day in {medical_institution}!",
-                            status=status.HTTP_404_NOT_FOUND)
+            if existing_schedules.count() == 0:
+                return Response(f"{doctor} does not have a schedule for this day in {medical_institution}!",
+                                status=status.HTTP_404_NOT_FOUND)
 
-        existing_appointments = PatientAppointment.objects.filter(
-            schedule_day=schedule_day,
-            doctor=doctor,
-            medical_institution=medical_institution,
-        )
+            existing_appointments = PatientAppointment.objects.filter(
+                schedule_day=schedule_day,
+                doctor=doctor,
+                medical_institution=medical_institution,
+            )
 
         """
         appointment type
@@ -281,28 +287,33 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         collision checks
         """
         # check if doc has schedule on that time
+        if force_schedule == 'true':
+            schedule_day_object = None
+        else:
 
-        valid_times = existing_schedules.filter(
-            schedule__start_time__minutes_since__lte=schedule_time_start.minutes_since,
-            schedule__end_time__minutes_since__gte=schedule_time_end.minutes_since
-        )
+            valid_times = existing_schedules.filter(
+                schedule__start_time__minutes_since__lte=schedule_time_start.minutes_since,
+                schedule__end_time__minutes_since__gte=schedule_time_end.minutes_since
+            )
 
-        if valid_times.count() == 0:
-            return Response(f"{doctor} does not have a schedule on that time!", status=status.HTTP_404_NOT_FOUND)
+            if valid_times.count() == 0:
+                return Response(f"{doctor} does not have a schedule on that time!", status=status.HTTP_404_NOT_FOUND)
 
-        # check available
-        collisions = check_collisions(appointments=existing_appointments, schedule_time_start=schedule_time_start,
-                                      schedule_time_end=schedule_time_end)
+            schedule_day_object = schedule_day
 
-        if collisions.count() > 0:
-            return Response("The schedule you want conflicts with an existing schedule!",
-                            status=status.HTTP_409_CONFLICT)
+            # check available
+            collisions = check_collisions(appointments=existing_appointments, schedule_time_start=schedule_time_start,
+                                          schedule_time_end=schedule_time_end)
+
+            if collisions.count() > 0:
+                return Response("The schedule you want conflicts with an existing schedule!",
+                                status=status.HTTP_409_CONFLICT)
 
         # all clear
 
         # schedule_day_object = DoctorScheduleDay.objects.get(doctor=doctor, medical_institution=medical_institution,
         #                                                     day=schedule_day)
-        schedule_day_object = valid_times.first()
+
         appointment = PatientAppointment.objects.create(
             schedule_day=schedule_day,
             time_start=schedule_time_start,
