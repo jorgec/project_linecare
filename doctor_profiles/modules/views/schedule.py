@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.views import View
 from rest_framework.utils import json
 
@@ -39,6 +41,12 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
             medical_institution = get_object_or_404(MedicalInstitution, slug=kwargs['medical_institution'])
         else:
             medical_institution = get_object_or_404(MedicalInstitution, slug=request.GET.get('medical_institution', None))
+            return HttpResponseRedirect(reverse(
+                'doctor_profile_schedule_detail',
+                kwargs={
+                    'medical_institution': medical_institution.slug
+                }
+            ))
         rel = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor, medical_institution=medical_institution)
 
         date = request.GET.get('date', None)
