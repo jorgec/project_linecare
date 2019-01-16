@@ -85,5 +85,10 @@ class DoctorScheduleDaySerializer(serializers.ModelSerializer):
             'day',
             'doctor',
             'medical_institution',
-            'schedule'
+            'schedule',
+            'doctor_id_in',
+            'doctor_stepped_out',
+            'actual_start_time',
+            'actual_end_time'
         )
+

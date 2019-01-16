@@ -1,9 +1,10 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import models as models
+import arrow
 from django.apps import apps
+from django.conf import settings
+from django.db import models as models
 from django.db.models import Q
 
-from doctor_profiles.constants import QUEUE_DONE_CODES, QUEUE_STATUS_MESSAGES, QUEUE_CANCELLED_CODES
+from doctor_profiles.constants import QUEUE_STATUS_MESSAGES, QUEUE_CANCELLED_CODES, QUEUE_INACTIVE
 from profiles.notifiers.patient_appointment_notifiers import patient_appointment_status_notify
 
 
@@ -14,10 +15,67 @@ class PatientAppointmentQuerySet(models.QuerySet):
             patient=patient,
         )
 
+    def other_appointments(self, *, schedule_day, doctor, medical_institution, time_start=None, inactive_only=True):
+        filters = {
+            'schedule_day': schedule_day,
+            'doctor': doctor,
+            'medical_institution': medical_institution
+        }
+
+        if time_start:
+            filters['time_start__minutes_since__gte'] = time_start.minutes_since
+
+        if inactive_only:
+            filters['status__in'] = QUEUE_INACTIVE
+
+        return self.filter(**filters)
+
 
 class PatientAppointmentManager(models.Manager):
     def get_queryset(self):
         return PatientAppointmentQuerySet(self.model, using=self._db)
+
+    def get_other_appointments(self, *, instance, time_start=None, inactive_only=True):
+        filters = {
+            'schedule_day': instance.schedule_day,
+            'doctor': instance.doctor,
+            'medical_institution': instance.medical_institution,
+        }
+        if time_start:
+            filters['time_start'] = time_start
+
+        if inactive_only:
+            filters['inactive_only'] = inactive_only
+        return self.get_queryset().other_appointments(**filters)
+
+    def update_start_times(self, instance, time_start=None):
+        TimeDim = apps.get_model('datesdim.TimeDim')
+        Conn = apps.get_model('doctor_profiles.MedicalInstitutionDoctor')
+        now = arrow.utcnow().to(settings.TIME_ZONE)
+        if not time_start:
+            new_time_start = TimeDim.objects.parse(now.datetime)
+        else:
+            new_time_start = time_start
+
+        affected_appointments = self.get_other_appointments(
+            instance=instance,
+            inactive_only=True
+        ).order_by(
+            'time_start__minutes_since'
+        )
+
+        for appointment in affected_appointments:
+            if appointment == instance:
+                pass
+            else:
+                appointment.shift_time(new_time_start)
+            conn = Conn.objects.get(doctor=appointment.doctor, medical_institution=appointment.medical_institution)
+            durations = conn.get_schedule_options()['durations']
+            gap = int(durations[f'{appointment.type}_gap'])
+            try:
+                new_time_start = TimeDim.objects.get(minutes_since=appointment.time_end.minutes_since + gap)
+            except TimeDim.DoesNotExist:
+                return False
 
     def prior_visits(self, *, doctor, patient):
         return self.get_queryset().prior_visits(
@@ -26,14 +84,28 @@ class PatientAppointmentManager(models.Manager):
         )
 
     def update_status(self, *, id, status):
+        TimeDim = apps.get_model('datesdim.TimeDim')
         appointment = self.get(id=id)
         appointment.status = status
+        if appointment.status == 'in_progress':
+            appointment.shift_time()
+            Conn = apps.get_model('doctor_profiles.MedicalInstitutionDoctor')
+            conn = Conn.objects.get(doctor=appointment.doctor, medical_institution=appointment.medical_institution)
+            durations = conn.get_schedule_options()['durations']
+            gap = int(durations[f'{appointment.type}_gap'])
+            try:
+                new_time_start = TimeDim.objects.get(minutes_since=appointment.time_end.minutes_since + gap)
+                self.update_start_times(appointment, time_start=new_time_start)
+            except TimeDim.DoesNotExist:
+                pass
         appointment.save()
         patient_appointment_status_notify(appointment,
                                           QUEUE_STATUS_MESSAGES[status]['message'],
                                           QUEUE_STATUS_MESSAGES[status]['color'])
 
+
     def create(self, *args, **kwargs):
+        DateDim = apps.get_model('datesdim.DateDim')
         obj = super(PatientAppointmentManager, self).create(*args, **kwargs)
         meta = obj.doctor.get_medical_institution_meta(obj.medical_institution)
         try:
@@ -41,8 +113,15 @@ class PatientAppointmentManager(models.Manager):
         except KeyError:
             fee = 0.0
         obj.fee = fee
+
+        if obj.time_start.minutes_since > obj.time_end.minutes_since:
+            obj.schedule_end = DateDim.objects.parse_get(obj.schedule_day.obj().shift(days=1).format('YYYY-MM-DD'))
+        else:
+            obj.schedule_end = obj.schedule_day
+
         obj.save()
         return obj
+
 
 class DoctorScheduleManager(models.Manager):
     @staticmethod
@@ -151,8 +230,12 @@ def find_gaps(*, schedules, appointments, duration, gap):
     duration = int(duration)
     gap = int(gap)
     TimeDim = apps.get_model('datesdim.TimeDim')
+    now = TimeDim.objects.parse(arrow.utcnow().to(settings.TIME_ZONE).datetime)
     for schedule in schedules:
-        start_time = schedule.schedule.start_time
+        if now.minutes_since > schedule.schedule.start_time.minutes_since:
+            start_time = now
+        else:
+            start_time = schedule.schedule.start_time
         end_time = TimeDim.objects.get(minutes_since=start_time.minutes_since + duration)
         while end_time.minutes_since < schedule.schedule.end_time.minutes_since:
             collisions = check_collisions(
