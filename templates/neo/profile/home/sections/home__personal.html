@@ -23,9 +23,11 @@
                     <img src="{% static 'neo/images/icons/doctor-active.png' %}" class="img-fluid">
                 </a>
                 {% else %}
-                <a href="{% url 'doctor_profile_create' %}" data-toggle="tooltip" data-placement="top" title="Create a Doctor Profile">
-                    <img src="{% static 'neo/images/icons/doctor-inactive.png' %}" class="img-fluid">
-                </a>
+                    {% if not profile.user.receptionistprofile %}
+                        <a href="{% url 'doctor_profile_create' %}" data-toggle="tooltip" data-placement="top" title="Create a Doctor Profile">
+                            <img src="{% static 'neo/images/icons/doctor-inactive.png' %}" class="img-fluid">
+                        </a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-sm-3 col-md-1">
@@ -34,9 +36,11 @@
                         <img src="{% static 'neo/images/icons/receptionist-active.png' %}" class="img-fluid">
                     </a>
                 {% else %}
-                <a href="{% url 'receptionist_profile_create' %}" data-toggle="tooltip" data-placement="top" title="Create a Receptionist Profile">
-                    <img src="{% static 'neo/images/icons/receptionist-inactive.png' %}" class="img-fluid">
-                </a>
+                    {% if not profile.user.doctorprofile %}
+                        <a href="{% url 'receptionist_profile_create' %}" data-toggle="tooltip" data-placement="top" title="Create a Receptionist Profile">
+                            <img src="{% static 'neo/images/icons/receptionist-inactive.png' %}" class="img-fluid">
+                        </a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-sm-3 col-md-1">
