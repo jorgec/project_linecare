@@ -230,9 +230,11 @@ def find_gaps(*, schedules, appointments, duration, gap):
     duration = int(duration)
     gap = int(gap)
     TimeDim = apps.get_model('datesdim.TimeDim')
+    DateDim = apps.get_model('datesdim.DateDim')
     now = TimeDim.objects.parse(arrow.utcnow().to(settings.TIME_ZONE).datetime)
+    today = DateDim.objects.today()
     for schedule in schedules:
-        if now.minutes_since > schedule.schedule.start_time.minutes_since:
+        if (now.minutes_since > schedule.schedule.start_time.minutes_since) and schedule.day == today:
             start_time = now
         else:
             start_time = schedule.schedule.start_time
