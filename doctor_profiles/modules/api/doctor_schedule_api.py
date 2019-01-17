@@ -299,7 +299,7 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
             if valid_times.count() == 0:
                 return Response(f"{doctor} does not have a schedule on that time!", status=status.HTTP_404_NOT_FOUND)
 
-            schedule_day_object = schedule_day
+            schedule_day_object = valid_times.first()
 
             # check available
             collisions = check_collisions(appointments=existing_appointments, schedule_time_start=schedule_time_start,
