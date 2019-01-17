@@ -287,8 +287,12 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         collision checks
         """
         # check if doc has schedule on that time
+
         if force_schedule == 'true':
-            schedule_day_object = None
+            try:
+                schedule_day_object = DoctorScheduleDay.objects.get(id=request.data.get('schedule_day_id'))
+            except DoctorScheduleDay.DoesNotExist:
+                return Response('Invalid schedule!', status=status.HTTP_400_BAD_REQUEST)
         else:
 
             valid_times = existing_schedules.filter(

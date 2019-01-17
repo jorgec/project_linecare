@@ -69,7 +69,8 @@
             appointment_day: '{{ date }}',
             profile_id: profile_id,
             appointment_type: appointment_type,
-            force_schedule: $("#forceSchedule").is(':checked')
+            force_schedule: $("#forceSchedule").is(':checked'),
+            schedule_day_id: $("#scheduleDaySelect").val()
         };
 
         $.post(url, formData)
@@ -91,6 +92,7 @@
             });
 
         $("#modalScheduleAppointment").modal('hide');
+
 
     }
 </script>
