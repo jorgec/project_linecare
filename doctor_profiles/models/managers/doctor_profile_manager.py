@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, IntegrityError
 
 
 class DoctorProfileQuerySet(models.QuerySet):
@@ -7,6 +7,10 @@ class DoctorProfileQuerySet(models.QuerySet):
 
 class DoctorProfileManager(models.Manager):
     def create(self, *args, **kwargs):
+        user = kwargs['user']
+
+        if user.receptionist_profile():
+            raise IntegrityError("A receptionist can't have a doctor profile")
         try:
             doctor = self.get(user=kwargs['user'])
             return doctor

@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, IntegrityError
 from django.apps import apps
 
 
@@ -17,6 +17,11 @@ class ReceptionistConnectionManager(models.Manager):
 
 class ReceptionistProfileManager(models.Manager):
     def create(self, *args, **kwargs):
+        user = kwargs['user']
+
+        if user.doctor_profile():
+            raise IntegrityError("A doctor can't have a receptionist profile")
+
         try:
             receptionist = self.get(user=kwargs['user'])
             return receptionist

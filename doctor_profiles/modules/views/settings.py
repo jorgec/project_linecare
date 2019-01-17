@@ -7,7 +7,7 @@ from django.views import View
 from doctor_profiles.forms import MedicalDegreeForm, DoctorDegreeEditForm, SpecializationForm
 
 
-class DoctorProfileSettingsHomeView(LoginRequiredMixin, UserPassesTestMixin, View):
+class DoctorProfileSettingsHomeView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse('doctor_profile_settings_medical_degree'))
 
