@@ -16,7 +16,8 @@ class AccountRegistrationView(View):
 
         context = {
             'page_title': 'Welcome to LineCare!',
-            'form': form
+            'form': form,
+            'location': 'register'
         }
 
         return render(request, 'neo/accounts/register.html', context)
@@ -85,8 +86,10 @@ class AccountLoginView(View):
 
         context = {
             'page_title': 'Login',
-            'form': form
+            'form': form,
+            'location': 'login'
         }
+        
 
         return render(request, 'neo/accounts/login.html', context)
 

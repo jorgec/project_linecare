@@ -38,10 +38,10 @@
 
             </li>
             {% if not request.user.is_authenticated %}
-                <li class="nav-item active">
+                <li class="nav-item {% if location == 'register' %} active {% endif %}">
                     <a class="nav-link " href="{% url 'accounts_register' %}">Register</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if location == 'login' %} active {% endif %}">
                     <a class="nav-link" href="{% url 'accounts_login' %}">Log in</a>
                 </li>
 
