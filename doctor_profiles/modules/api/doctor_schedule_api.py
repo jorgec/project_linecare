@@ -295,6 +295,11 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
                 return Response('Invalid schedule!', status=status.HTTP_400_BAD_REQUEST)
         else:
 
+            today = DateDim.objects.today()
+
+            if schedule_day.date_obj < today.date_obj:
+                return Response("You can't schedule an appointment in the past!", status=status.HTTP_400_BAD_REQUEST)
+
             valid_times = existing_schedules.filter(
                 schedule__start_time__minutes_since__lte=schedule_time_start.minutes_since,
                 schedule__end_time__minutes_since__gte=schedule_time_end.minutes_since
@@ -302,8 +307,8 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
 
             if valid_times.count() == 0:
                 return Response(f"{doctor} does not have a schedule on that time!", status=status.HTTP_404_NOT_FOUND)
-
-            schedule_day_object = valid_times.first()
+            else:
+                schedule_day_object = valid_times.first()
 
             # check available
             collisions = check_collisions(appointments=existing_appointments, schedule_time_start=schedule_time_start,
@@ -318,7 +323,7 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         # schedule_day_object = DoctorScheduleDay.objects.get(doctor=doctor, medical_institution=medical_institution,
         #                                                     day=schedule_day)
 
-        appointment = PatientAppointment.objects.create(
+        create_result, appointment = PatientAppointment.objects.create(
             schedule_day=schedule_day,
             time_start=schedule_time_start,
             time_end=schedule_time_end,
@@ -329,20 +334,23 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
             schedule_day_object=schedule_day_object
         )
 
-        doctor_notify_new_appointment(appointment)
+        if create_result:
+            doctor_notify_new_appointment(appointment)
 
-        # update queue number
-        appointments_on_this_day = PatientAppointment.objects.filter(
-            schedule_day_object=schedule_day_object
-        ).order_by('time_start__minutes_since')
+            # update queue number
+            appointments_on_this_day = PatientAppointment.objects.filter(
+                schedule_day_object=schedule_day_object
+            ).order_by('time_start__minutes_since')
 
-        queue_number = 1
-        for a in appointments_on_this_day:
-            a.queue_number = queue_number
-            queue_number = queue_number + 1
-            a.save()
+            queue_number = 1
+            for a in appointments_on_this_day:
+                a.queue_number = queue_number
+                queue_number = queue_number + 1
+                a.save()
 
-        return Response(f"Appointment for {appointment} set", status=status.HTTP_200_OK)
+            return Response(f"Appointment for {appointment} set", status=status.HTTP_200_OK)
+        else:
+            return Response(appointment, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ApiPrivateDoctorScheduleDayPresenceStatus(APIView):
