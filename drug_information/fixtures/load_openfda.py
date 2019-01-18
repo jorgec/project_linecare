@@ -1,7 +1,7 @@
 import sys, os, django
 
 # sys.path.append("/home/ubuntu/linecare/linecare_core/")  # here store is root folder(means parent).
-sys.path.append("/linecare/app/")  # here store is root folder(means parent).
+sys.path.append("/linecare/")  # here store is root folder(means parent).
 # sys.path.append("/home/linecare/project_linecare/")  # here store is root folder(means parent).
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "linecare_core.settings")
@@ -17,12 +17,24 @@ from drug_information.models.drug_models import ActiveIngredient, DrugActiveIngr
 # json_src = '/home/ubuntu/linecare/documentation/drugs/openfda/endpoints/sample.json'
 # json_src = '/home/ubuntu/linecare/documentation/drugs/openfda/endpoints/drug-ndc-0001-of-0001.json'
 # json_src = '/home/linecare/documentation/drugs/openfda/endpoints/drug-ndc-0001-of-0001.json'
-json_src = '/linecare/drugs/drug-ndc-0001-of-0001.json'
+json_src = '/home/vagrant/drug-ndc-0001-of-0001.json'
 
 with open(json_src) as j:
     data = json.load(j)
 
+i = 0
+
+try:
+    lim = int(sys.argv[1])
+except KeyError:
+    lim = None
+
 for med in data['results']:
+
+    if lim:
+        if lim == i:
+            break
+
     _generic_name = med.get('generic_name', None)
     _name = med.get('brand_name', None)
     _base_name = med.get('brand_name_base', None)
@@ -42,7 +54,6 @@ for med in data['results']:
             'product_type': _marketing_status,
             'base_name': _base_name
         }
-
 
         if _generic_name:
             generic_names = [x.strip() for x in _generic_name.split(',')]
@@ -89,7 +100,7 @@ for med in data['results']:
                     )
                 except IntegrityError:
                     pass
-        
+
         if _pharm_class:
             for df in _pharm_class:
                 df = df.strip()
@@ -106,7 +117,7 @@ for med in data['results']:
                     )
                 except IntegrityError:
                     pass
-        
+
         if _route:
             for df in _route:
                 df = df.strip()
@@ -138,5 +149,6 @@ for med in data['results']:
                         active_ingredient=ai,
                         strength=active_ingredient.get('strength', '')
                     )
+                    i = i + 1
                 except IntegrityError:
                     pass

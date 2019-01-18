@@ -104,4 +104,8 @@ drug_information/migrations/
 
 biometrics/migrations/
 
+serve-local\.sh
+
+linecare_core/settings_collection/local-jorge\.py
+
 \.vscode/settings\.json
