@@ -1,6 +1,11 @@
 <script type="text/html" id="patients-template">
     <div class="item">
-        <div class="image" data-css="profile_photo_css"></div>
+        <div class="image" data-template-bind='[{
+                "attribute": "style",
+                "value": "profile_photo_css"
+            }]'>
+
+        </div>
         <div class="info">
             <p>
                 <a data-href="patient_detail_url">

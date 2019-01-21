@@ -24,6 +24,7 @@
 
         $.get(url)
             .done(function (result) {
+                console.log(result);
                 patients_loader.addClass('hide');
 
                 patients_container.loadTemplate(patients_template, result);
