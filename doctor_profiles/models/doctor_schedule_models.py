@@ -184,6 +184,9 @@ class PatientAppointment(models.Model):
     def get_deleted_lab_tests(self):
         return self.appointment_checkup.checkup_tests.filter(is_approved=False)
 
+    def get_notes(self):
+        return self.appointment_checkup.checkup_notes.all()
+
     def shift_time(self, time_start=None, save=True):
         TimeDim = apps.get_model('datesdim.TimeDim')
         DateDim = apps.get_model('datesdim.DateDim')
