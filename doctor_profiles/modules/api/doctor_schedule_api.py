@@ -426,6 +426,19 @@ class ApiPrivateDoctorScheduleDayPresenceToggle(APIView):
         }, status=status.HTTP_200_OK)
 
 
+class ApiPublicDummyScheduleQueueList(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        queue = PatientAppointment.objects.filter(
+            status__in=QUEUE_DISPLAY_CODES,
+        ).order_by('time_start__minutes_since')[:10]
+
+        serializer = PatientQueuePrivateSerializer(queue, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class ApiPrivateDoctorScheduleQueueList(APIView):
     """
     Queue of doctor at medical institution on day
