@@ -47,6 +47,9 @@ class PatientCheckupRecord(models.Model):
     def get_requested_tests(self):
         return self.checkup_tests.filter(is_approved=True)
 
+    def get_dismissed_tests(self):
+        return self.checkup_tests.filter(is_approved=False)
+
     def doctor_has_access(self, doctor):
         allowed = self.checkup_access.filter(is_approved=True, doctor=doctor)
         if allowed.count() > 0:
@@ -123,6 +126,9 @@ class PatientLabTestRequest(models.Model):
                                 related_name='checkup_tests')
     requested_by = models.ForeignKey('doctor_profiles.DoctorProfile', on_delete=models.SET_NULL, null=True,
                                      related_name='labtests_requested')
+
+    removed_by = models.ForeignKey('doctor_profiles.DoctorProfile', on_delete=models.SET_NULL, null=True,
+                                     related_name='labtests_dismissed')
 
     objects = PatientLabTestRequestManager()
 
@@ -328,6 +334,9 @@ class Prescription(models.Model):
 
     prescription_route = models.ForeignKey('drug_information.DrugRoute', on_delete=models.SET_NULL, null=True,
                                            blank=True, related_name='prescription_routes')
+
+    removed_by = models.ForeignKey('doctor_profiles.DoctorProfile', on_delete=models.SET_NULL, null=True, blank=True,
+                               related_name='doctor_dismissed_prescriptions')
 
     objects = PatientPrescriptionManager()
 

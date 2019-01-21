@@ -156,3 +156,22 @@ class ApiPrivatePatientDiagnosisRemove(APIView):
         patient_diagnosis.save()
         response_serializer = PatientDiagnoseserializer(patient_diagnosis)
         return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivatePatientDiagnosisUndismiss(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        patient_diagnosis = get_object_or_404(PatientDiagnosis, diagnosis_id=request.GET.get('id', None),
+                                            checkup_id=request.GET.get('checkup_id'))
+        doctor = request.user.doctor_profile()
+
+        if patient_diagnosis.removed_by == doctor:
+            patient_diagnosis.is_deleted = False
+            patient_diagnosis.removed_by = None
+            patient_diagnosis.save()
+            response_serializer = PatientDiagnoseserializer(patient_diagnosis)
+            return Response(response_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(f"Only {patient_diagnosis.removed_by} can undismiss this entry",
+                            status=status.HTTP_403_FORBIDDEN)

@@ -143,3 +143,22 @@ class ApiPrivatePatientSymptomRemove(APIView):
         patient_symptom.save()
         response_serializer = PatientSymptomSerializer(patient_symptom)
         return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivatePatientSymptomUndismiss(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        patient_symptom = get_object_or_404(PatientSymptom, symptom_id=request.GET.get('id', None),
+                                            checkup_id=request.GET.get('checkup_id'))
+        doctor = request.user.doctor_profile()
+
+        if patient_symptom.removed_by == doctor:
+            patient_symptom.is_deleted = False
+            patient_symptom.removed_by = None
+            patient_symptom.save()
+            response_serializer = PatientSymptomSerializer(patient_symptom)
+            return Response(response_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(f"Only {patient_symptom.removed_by} can undismiss this entry",
+                            status=status.HTTP_403_FORBIDDEN)

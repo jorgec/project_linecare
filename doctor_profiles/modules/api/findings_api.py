@@ -143,3 +143,22 @@ class ApiPrivatePatientFindingRemove(APIView):
         patient_finding.save()
         response_serializer = PatientFindingSerializer(patient_finding)
         return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivatePatientFindingUndismiss(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        patient_finding = get_object_or_404(PatientFinding, finding_id=request.GET.get('id', None),
+                                            checkup_id=request.GET.get('checkup_id'))
+        doctor = request.user.doctor_profile()
+
+        if patient_finding.removed_by == doctor:
+            patient_finding.is_deleted = False
+            patient_finding.removed_by = None
+            patient_finding.save()
+            response_serializer = PatientFindingSerializer(patient_finding)
+            return Response(response_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(f"Only {patient_finding.removed_by} can undismiss this entry",
+                            status=status.HTTP_403_FORBIDDEN)

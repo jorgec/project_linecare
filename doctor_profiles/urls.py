@@ -441,6 +441,9 @@ urlpatterns += [
     path(f'{version}/private/appointment/symptom/delete',
          symptoms_api.ApiPrivatePatientSymptomRemove.as_view(),
          name='api_private_appointment_symptom_delete'),
+    path(f'{version}/private/appointment/symptom/undismiss',
+         symptoms_api.ApiPrivatePatientSymptomUndismiss.as_view(),
+         name='api_private_appointment_symptom_undismiss'),
 
     # findings
     path(f'{version}/private/finding/create',
@@ -461,6 +464,9 @@ urlpatterns += [
     path(f'{version}/private/appointment/finding/delete',
          findings_api.ApiPrivatePatientFindingRemove.as_view(),
          name='api_private_appointment_finding_delete'),
+    path(f'{version}/private/appointment/finding/undismiss',
+         findings_api.ApiPrivatePatientFindingUndismiss.as_view(),
+         name='api_private_appointment_finding_undismiss'),
 
     # diagnoses
     path(f'{version}/private/diagnosis/create',
@@ -481,6 +487,9 @@ urlpatterns += [
     path(f'{version}/private/appointment/diagnosis/delete',
          diagnosis_api.ApiPrivatePatientDiagnosisRemove.as_view(),
          name='api_private_appointment_diagnosis_delete'),
+    path(f'{version}/private/appointment/diagnosis/undismiss',
+         diagnosis_api.ApiPrivatePatientDiagnosisUndismiss.as_view(),
+         name='api_private_appointment_diagnosis_undismiss'),
 
     # notes
     path(f'{version}/private/appointment/note/list',
@@ -500,6 +509,17 @@ urlpatterns += [
     path(f'{version}/private/appointment/labtest/list',
          labtest_api.ApiPrivatePatientLabTestList.as_view(),
          name='api_private_patient_labtest_list'),
+    path(f'{version}/private/appointment/labtest/dismissed_list',
+         labtest_api.ApiPrivatePatientDismissedLabTestList.as_view(),
+         name='api_private_patient_labtest_dismissed_list'),
+    path(f'{version}/private/appointment/labtest/delete',
+         labtest_api.ApiPrivatePatientLabTestRemove.as_view(),
+         name='api_private_appointment_labtest_delete'),
+    path(f'{version}/private/appointment/labtest/undismiss',
+         labtest_api.ApiPrivatePatientLabTestUndismiss.as_view(),
+         name='api_private_appointment_labtest_undismiss'),
+
+    
 
     # prescriptions
     path(f'{version}/private/appointment/prescription/create',
@@ -508,9 +528,18 @@ urlpatterns += [
     path(f'{version}/private/appointment/prescription/list',
          prescriptions_api.ApiPrivatePatientPrescriptionList.as_view(),
          name='api_private_patient_prescription_list'),
+    path(f'{version}/private/appointment/prescription/dismissed_list',
+         prescriptions_api.ApiPrivatePatientDismissedPrescriptionList.as_view(),
+         name='api_private_patient_prescription_dismissed_list'),
     path(f'{version}/private/prescription/detail',
          prescriptions_api.ApiPrivatePatientPrescriptionDetail.as_view(),
          name='api_private_prescription_detail'),
+    path(f'{version}/private/appointment/prescription/delete',
+         prescriptions_api.ApiPrivatePatientPrescriptionRemove.as_view(),
+         name='api_private_appointment_prescription_delete'),
+    path(f'{version}/private/appointment/prescription/undismiss',
+         prescriptions_api.ApiPrivatePatientPrescriptionUndismiss.as_view(),
+         name='api_private_appointment_prescription_undismiss'),
 
     #############################################################################
     # Analytics

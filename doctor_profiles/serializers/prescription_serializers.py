@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from doctor_profiles.models.patient_checkup_models import Prescription
 from drug_information.serializers.drug_serializers import DrugSerializer, DrugRouteSerializer
+from doctor_profiles.serializers.doctor_profile_serializers import DoctorProfilePrivateSerializer
 
 
 class PrescriptionCreateSerializer(serializers.ModelSerializer):
@@ -25,6 +26,8 @@ class PrescriptionCreateSerializer(serializers.ModelSerializer):
 class PatientPrescriptionSerializer(serializers.ModelSerializer):
     drug = DrugSerializer()
     prescription_route = DrugRouteSerializer()
+    doctor = DoctorProfilePrivateSerializer()
+    removed_by = DoctorProfilePrivateSerializer()
     class Meta:
         model = Prescription
         fields = (
@@ -40,4 +43,5 @@ class PatientPrescriptionSerializer(serializers.ModelSerializer):
             'prescription_frequency',
             'prescription_dispense_qty',
             'prescription_notes',
+            'removed_by'
         )
