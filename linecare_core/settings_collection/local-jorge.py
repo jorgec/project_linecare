@@ -30,7 +30,8 @@ SECRET_KEY = 's90mk9&2pim-kzyo41abc5+igybj3ltzz84on0a_&def3!$b%*'
 DEBUG = True
 
 SITE_ID = 1
-SITE_URL = 'https://192.168.10.220'
+# SITE_URL = 'https://192.168.10.245'
+SITE_URL = 'https://192.168.33.110'
 
 ALLOWED_HOSTS = ['*']
 
@@ -39,11 +40,20 @@ INTERNAL_IPS = [
     '127.0.0.1',
     '0.0.0.0',
 
+    # Vagrant
+    '192.168.33.70',
+
     # Local
-    '192.168.10.220',
+    '192.168.10.245',
+    '192.168.10.189,'
 
     # VirtualBox Adapters
-    '10.0.2.15'
+    '192.168.30.1',
+    '192.168.33.1',
+    '192.168.35.1',
+
+    # Host IP
+    '192.168.10.115'
 ]
 
 DEBUG_TOOLBAR_PANELS = [
@@ -69,6 +79,7 @@ DEBUG_TOOLBAR_CONFIG = {
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -76,6 +87,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'django.contrib.humanize',
 
     'debug_toolbar',
@@ -84,15 +96,16 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
 
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
     'rest_framework_swagger',
     'corsheaders',
+    'graphene_django',
 
     'django_extensions',
-    'channels',
 
     # utilities
     'phonenumber_field',
@@ -112,7 +125,8 @@ INSTALLED_APPS = [
     'locations',
     'receptionist_profiles',
     'drug_information',
-    'search_indexes',
+    'search_indexes'
+
 ]
 
 # User Model
@@ -124,7 +138,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/accounts/postlogin'
 
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
@@ -170,7 +184,9 @@ ROOT_URLCONF = 'linecare_core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/home/linecare/project_linecare/templates'],
+        'DIRS': [
+            '/linecare/templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -252,7 +268,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 50,
     'ORDERING_PARAM': 'ordering',
 }
-
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_METHODS = (
@@ -282,6 +297,14 @@ CORS_ORIGIN_WHITELIST = (
     '192.168.10.189',
     '192.168.33.1',
 )
+
+GRAPHENE = {
+    'SCHEMA': 'linecare_core.schema.schema',
+    'MIDDLEWARE': (
+        'graphene_django.debug.DjangoDebugMiddleware',
+    )
+}
+
 
 ELASTICSEARCH_DSL = {
     'default': {

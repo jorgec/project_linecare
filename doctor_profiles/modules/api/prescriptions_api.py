@@ -60,6 +60,30 @@ class ApiPrivatePatientPrescriptionList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class ApiPrivatePatientDismissedPrescriptionList(APIView):
+    """
+    Load dismissed prescriptions from checkup
+    ?checkup_id=id
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
+
+        if request.user != checkup.appointment.patient:
+            doctor = request.user.doctor_profile()
+            if not doctor:
+                return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
+            if not checkup.doctor_has_access(doctor):
+                return Response(f"{doctor} does not have access privileges for this record",
+                                status=status.HTTP_403_FORBIDDEN)
+
+        serializer = PatientPrescriptionSerializer(checkup.get_dismissed_prescriptions(), many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class ApiPrivatePatientPrescriptionDetail(APIView):
     """
     Prescription detail
@@ -85,38 +109,41 @@ class ApiPrivatePatientPrescriptionDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ApiPrivatePatientDismissedPrescriptionList(APIView):
-    """
-    Load dismissed prescriptions from checkup
-    ?checkup_id=id
-    """
-
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        # checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
-        # serializer = PatientPrescriptionSerializer(checkup.get_dismissed_prescriptions(), many=True)
-        #
-        # return Response(serializer.data, status=status.HTTP_200_OK)
-        pass
-
-
 class ApiPrivatePatientPrescriptionRemove(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        # patient_prescription = get_object_or_404(PatientPrescription, prescription_id=request.GET.get('id', None),
-        #                                     checkup_id=request.GET.get('checkup_id'))
-        # doctor = request.user.doctor_profile()
-        # if not doctor:
-        #     return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
-        # if not patient_prescription.checkup.doctor_has_access(doctor):
-        #     return Response(f"{doctor} does not have access privileges for this record",
-        #                     status=status.HTTP_403_FORBIDDEN)
-        #
-        # patient_prescription.is_deleted = True
-        # patient_prescription.removed_by = doctor
-        # patient_prescription.save()
-        # response_serializer = PatientPrescriptionSerializer(patient_prescription)
-        # return Response(response_serializer.data, status=status.HTTP_200_OK)
+        patient_prescription = get_object_or_404(Prescription, id=request.GET.get('id', None),
+                                                 checkup_id=request.GET.get('checkup_id'))
+        doctor = request.user.doctor_profile()
+        if not doctor:
+            return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
+        if not patient_prescription.checkup.doctor_has_access(doctor):
+            return Response(f"{doctor} does not have access privileges for this record",
+                            status=status.HTTP_403_FORBIDDEN)
+
+        patient_prescription.is_deleted = True
+        patient_prescription.removed_by = doctor
+        patient_prescription.save()
+        response_serializer = PatientPrescriptionSerializer(patient_prescription)
+        return Response(response_serializer.data, status=status.HTTP_200_OK)
         pass
+
+
+class ApiPrivatePatientPrescriptionUndismiss(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        patient_prescription = get_object_or_404(Prescription, id=request.GET.get('id', None),
+                                                 checkup_id=request.GET.get('checkup_id'))
+        doctor = request.user.doctor_profile()
+
+        if patient_prescription.removed_by == doctor:
+            patient_prescription.is_deleted = False
+            patient_prescription.removed_by = None
+            patient_prescription.save()
+            response_serializer = PatientPrescriptionSerializer(patient_prescription)
+            return Response(response_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(f"Only {patient_prescription.removed_by} can undismiss this entry",
+                            status=status.HTTP_403_FORBIDDEN)

@@ -104,8 +104,5 @@ drug_information/migrations/
 
 biometrics/migrations/
 
-
-
-
-
-envars/
+serve-local\.sh
+\.vscode/settings\.json

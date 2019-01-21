@@ -18,6 +18,6 @@
 
 <script type="text/html" id="dismissed-diagnoses-template">
     <li class="list-group-item">
-        <span data-content="diagnosis.name"></span> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
+        <a href="#!" class="undismiss-diagnosis" data-template-bind='[{"attribute": "data-diagnosis-id", "value": "diagnosis.id"}]'><span data-content="diagnosis.name"></span></a> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
     </li>
 </script>

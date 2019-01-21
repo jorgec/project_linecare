@@ -90,3 +90,58 @@ class ApiPrivatePatientLabTestList(APIView):
         serializer = PatientLabTestRequestSerializer(checkup.get_requested_tests(), many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivatePatientDismissedLabTestList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
+        doctor = request.user.doctor_profile()
+        if not doctor:
+            return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
+        if not checkup.doctor_has_access(doctor):
+            return Response(f"{doctor} does not have access privileges for this record",
+                            status=status.HTTP_403_FORBIDDEN)
+        serializer = PatientLabTestRequestSerializer(checkup.get_dismissed_tests(), many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class ApiPrivatePatientLabTestRemove(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        patient_labtest = get_object_or_404(PatientLabTestRequest, lab_test_id=request.GET.get('id', None),
+                                            checkup_id=request.GET.get('checkup_id'))
+        doctor = request.user.doctor_profile()
+        if not doctor:
+            return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
+        if not patient_labtest.checkup.doctor_has_access(doctor):
+            return Response(f"{doctor} does not have access privileges for this record",
+                            status=status.HTTP_403_FORBIDDEN)
+
+        patient_labtest.is_approved = False
+        patient_labtest.removed_by = doctor
+        patient_labtest.save()
+        response_serializer = PatientLabTestRequestSerializer(patient_labtest)
+        return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivatePatientLabTestUndismiss(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        patient_labtest = get_object_or_404(PatientLabTestRequest, lab_test_id=request.GET.get('id', None),
+                                            checkup_id=request.GET.get('checkup_id'))
+        doctor = request.user.doctor_profile()
+
+        if patient_labtest.removed_by == doctor:
+            patient_labtest.is_approved = True
+            patient_labtest.removed_by = None
+            patient_labtest.save()
+            response_serializer = PatientLabTestRequestSerializer(patient_labtest)
+            return Response(response_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(f"Only {patient_labtest.removed_by} can undismiss this entry",
+                            status=status.HTTP_403_FORBIDDEN)

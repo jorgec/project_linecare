@@ -2,43 +2,38 @@
 <ul class="sidebar-nav">
 
     <li class="sidebar-nav-separator"></li>
-    <li class="sidebar-nav-item">
-        <a {% if location == 'patient_checkup_overview' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_analytics_checkups_aggregate' %}">
+    <li class="sidebar-nav-item {% if sublocation == 'patient_checkup_overview' %}active{% endif %}">
+        <a href="{% url 'doctor_profile_analytics_checkups_aggregate' %}">
             <i class="fas fw fa-user-md mr-3"></i>
             Checkups and Consultations
         </a>
     </li>
-    <li class="sidebar-nav-item">
-        <a {% if location == 'patient_symptoms_overview' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_analytics_symptoms_aggregate' %}">
+    <li class="sidebar-nav-item {% if sublocation == 'patient_symptoms_overview' %}active{% endif %}">
+        <a href="{% url 'doctor_profile_analytics_symptoms_aggregate' %}">
             <i class="fas fw fa-bug mr-3"></i>
             Symptoms
         </a>
     </li>
-    <li class="sidebar-nav-item">
-        <a {% if location == 'patient_findings_overview' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_analytics_findings_aggregate' %}">
+    <li class="sidebar-nav-item {% if sublocation == 'patient_findings_overview' %}active{% endif %}">
+        <a href="{% url 'doctor_profile_analytics_findings_aggregate' %}">
             <i class="fas fw fa-search-plus mr-3"></i>
             Findings
         </a>
     </li>
-    <li class="sidebar-nav-item">
-        <a {% if location == 'patient_diagnoses_overview' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_analytics_diagnoses_aggregate' %}">
+    <li class="sidebar-nav-item {% if sublocation == 'patient_diagnoses_overview' %}active{% endif %}">
+        <a href="{% url 'doctor_profile_analytics_diagnoses_aggregate' %}">
             <i class="fas fw fa-diagnoses mr-3"></i>
             Diagnoses
         </a>
     </li>
-    <li class="sidebar-nav-item">
-        <a {% if location == 'patient_prescriptions_overview' %}class="active"{% endif %}
-           href="{% url 'doctor_profile_analytics_prescriptions_aggregate' %}">
+    <li class="sidebar-nav-item {% if sublocation == 'patient_prescriptions_overview' %}active{% endif %}">
+        <a href="{% url 'doctor_profile_analytics_prescriptions_aggregate' %}">
             <i class="fas fw fa-prescription mr-3"></i>
             Medication
         </a>
     </li>
-    <li class="sidebar-nav-item">
-        <a {% if location == 'patient_labtests_overview' %}class="active"{% endif %} href="{% url 'doctor_profile_analytics_labtests_aggregate' %}">
+    <li class="sidebar-nav-item {% if sublocation == 'patient_labtests_overview' %}active{% endif %}">
+        <a  href="{% url 'doctor_profile_analytics_labtests_aggregate' %}">
             <i class="fas fw fa-vials mr-3"></i>
             Lab Requests
         </a>

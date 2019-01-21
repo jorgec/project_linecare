@@ -106,6 +106,7 @@ class PatientAppointmentManager(models.Manager):
 
     def create(self, *args, **kwargs):
         DateDim = apps.get_model('datesdim.DateDim')
+
         obj = super(PatientAppointmentManager, self).create(*args, **kwargs)
         meta = obj.doctor.get_medical_institution_meta(obj.medical_institution)
         try:
@@ -120,7 +121,7 @@ class PatientAppointmentManager(models.Manager):
             obj.schedule_end = obj.schedule_day
 
         obj.save()
-        return obj
+        return True, obj
 
 
 class DoctorScheduleManager(models.Manager):
@@ -203,12 +204,15 @@ class DoctorScheduleManager(models.Manager):
         DateDim = apps.get_model('datesdim.DateDim')
         doctor = kwargs['doctor']
 
+        start = DateDim.objects.parse_get(kwargs['start_date'])
+        end = DateDim.objects.parse_get(kwargs['end_date'])
+
         if not self.valid_times(start=kwargs['start_time'], end=kwargs['end_time']):
             return False, "Invalid start and end time", []
 
         schedule_days = DateDim.objects.get_days_between(
-            start=DateDim.objects.parse_get(kwargs['start_date']),
-            end=DateDim.objects.parse_get(kwargs['end_date']),
+            start=start,
+            end=end,
             day_filter=kwargs['days']
         )
 

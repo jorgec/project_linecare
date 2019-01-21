@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from doctor_profiles.models import LabTest, PatientLabTestRequest
+from doctor_profiles.serializers.doctor_profile_serializers import DoctorProfilePrivateSerializer
 
 
 class LabTestSerializer(serializers.ModelSerializer):
@@ -96,6 +97,8 @@ class PatientLabTestRequestCreateSerializer(serializers.ModelSerializer):
 
 class PatientLabTestRequestSerializer(serializers.ModelSerializer):
     lab_test = LabTestSerializer()
+    requested_by = DoctorProfilePrivateSerializer()
+    removed_by = DoctorProfilePrivateSerializer()
     class Meta:
         model = PatientLabTestRequest
         fields = '__all__'

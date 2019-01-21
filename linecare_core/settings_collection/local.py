@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'django.contrib.humanize',
 
     'debug_toolbar',
 
@@ -303,7 +304,6 @@ GRAPHENE = {
         'graphene_django.debug.DjangoDebugMiddleware',
     )
 }
-
 
 ELASTICSEARCH_DSL = {
     'default': {
