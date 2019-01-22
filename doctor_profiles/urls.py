@@ -410,6 +410,11 @@ urlpatterns += [
     path(f'{version}/private/queue/list',
          doctor_schedule_api.ApiPrivateDoctorScheduleQueueList.as_view(),
          name='api_private_queue_list'),
+     
+     path(f'{version}/public/queue/list',
+          doctor_schedule_api.ApiPublicDummyScheduleQueueList.as_view(),
+          name='api_public_queue_list'),
+     
     path(f'{version}/private/appointment/status/update',
          patient_appointment_api.ApiPatientAppointmentUpdateStatus.as_view(),
          name='api_private_patient_appointment_status_update'),
