@@ -880,7 +880,7 @@ def patient_prescriptions_slice_by_year(queryset):
 
 def patient_labtests_counts(queryset):
     records = PatientCheckupRecord.objects.filter(appointment__in=queryset)
-    patient_labtests = PatientLabTestRequest.objects.filter(checkup__in=records, is_deleted=False)
+    patient_labtests = PatientLabTestRequest.objects.filter(checkup__in=records, is_approved=True)
     total = patient_labtests.count()
 
     aggregate = patient_labtests.values('lab_test__name').annotate(scount=Count('lab_test')).order_by('lab_test__name')
@@ -908,7 +908,7 @@ def patient_labtests_slice_by_day(queryset):
     datasets = {}
 
     checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
-    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups, is_deleted=False)
+    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups, is_approved=True)
     dataset_keys = {c.lab_test.name for c in labtests}
 
     for hour in labels:
@@ -981,7 +981,7 @@ def patient_labtests_slice_by_week(queryset):
     labels = []
     datasets = {}
     checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
-    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups, is_deleted=False)
+    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups, is_approved=True)
     dataset_keys = {c.lab_test.name for c in labtests}
 
     for day in days:
@@ -1018,7 +1018,7 @@ def patient_labtests_slice_by_year(queryset):
     labels = []
     datasets = {}
     checkups = PatientCheckupRecord.objects.filter(appointment__in=queryset)
-    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups, is_deleted=False)
+    labtests = PatientLabTestRequest.objects.filter(checkup__in=checkups, is_approved=True)
     dataset_keys = {c.lab_test.name for c in labtests}
 
     for month in MONTH_CHOICES:
