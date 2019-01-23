@@ -46,7 +46,7 @@ class TestCreateApi:
         request = factory.post('/', {
             'height': random.randint(100, 300),
             'weight': random.randint(100, 300),
-            'blood_type': random.choice(blood_type),
+            'blood_type': blood_type,
             'first_name': first_name,
             'last_name': last_name,
             'date_of_birth': fake.date(),
@@ -65,7 +65,7 @@ class TestCreateApi:
         request = factory.post('/', {
             'height': f'{random.randint(2, 9)}\' {random.randint(0, 12)}"',
             'weight': f'{random.randint(100, 300)} lb',
-            'blood_type': random.choice(blood_type),
+            'blood_type': blood_type,
             'first_name': first_name,
             'last_name': last_name,
             'date_of_birth': fake.date(),
@@ -81,7 +81,7 @@ class TestCreateApi:
         request = factory.post('/', {
             'height': 'sadg',
             'weight': f'{random.randint(100, 300)} lb',
-            'blood_type': random.choice(blood_type),
+            'blood_type': blood_type,
             'first_name': first_name,
             'last_name': last_name,
             'date_of_birth': fake.date(),
@@ -97,7 +97,7 @@ class TestCreateApi:
         request = factory.post('/', {
             'height': f'{random.randint(2, 9)}\' {random.randint(0, 12)}"',
             'weight': 'asdasdg',
-            'blood_type': random.choice(blood_type),
+            'blood_type': blood_type,
             'first_name': first_name,
             'last_name': last_name,
             'date_of_birth': fake.date(),
