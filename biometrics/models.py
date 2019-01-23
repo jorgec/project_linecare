@@ -4,18 +4,8 @@ from django.db import models
 # Create your models here.
 from django.db.models import Model
 
+from biometrics.constants import BLOOD_TYPE_CHOICES
 from biometrics.managers import BiometricManager
-
-BLOOD_TYPE_CHOICES = (
-    ('A+', 'A+'),
-    ('A-', 'A-'),
-    ('B+', 'B+'),
-    ('B-', 'B-'),
-    ('O+', 'O+'),
-    ('O-', 'O-'),
-    ('AB+', 'AB+'),
-    ('AB-', 'AB-'),
-)
 
 
 class Biometric(models.Model):

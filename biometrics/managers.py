@@ -1,6 +1,8 @@
 import re
 from django.db import models
 
+from biometrics.constants import BLOOD_TYPE_CHOICES
+
 
 class BiometricQuerySet(models.QuerySet):
     def none(self):
@@ -41,6 +43,16 @@ class BiometricManager(models.Manager):
                     weight = float(__weight_n)
                 except ValueError:
                     return False, f"Bad Weight: {__weight}"
+
+        if 'blood_type' in kwargs:
+            __blood_type = kwargs['blood_type']
+            found = False
+            for bt in BLOOD_TYPE_CHOICES:
+                if bt[0] == __blood_type:
+                    found = True
+
+            if not found:
+                return False, f"Bad blood type: {__blood_type}"
 
         retval = {
             "height": height,
