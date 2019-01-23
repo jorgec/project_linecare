@@ -47,3 +47,42 @@ class TestDatesDimModels:
         assert obj.obj() == d
 
         assert obj.datestr() == d.format('YYYY-MM-DD')
+
+    def test_subtract(self):
+        obj1 = DateDim.objects.create(
+            year=2018,
+            month=10,
+            day=2
+        )
+
+        # test creation of date_obj
+        d1 = arrow.get('2018-10-02')
+
+        obj2 = DateDim.objects.create(
+            year=2018,
+            month=10,
+            day=10
+        )
+
+        # test creation of date_obj
+        d2 = arrow.get('2018-10-10')
+
+        assert obj1 - obj2 == d1 - d2, f"Expected {d1 - d2}, got {obj1 - obj2}"
+
+    def test_day_str(self):
+        obj = DateDim.objects.create(
+            year=2018,
+            month=10,
+            day=2
+        )
+
+        assert obj.day_str() == '02', f"Expected 02, got {obj.day_str()}"
+
+    def test_nice_name(self):
+        obj = DateDim.objects.create(
+            year=2019,
+            month=1,
+            day=23
+        )
+
+        assert obj.nice_name() == 'Wednesday, January 23, 2019'
