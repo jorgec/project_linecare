@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
 from accounts.models import Account
+from biometrics.models import Biometric
+from biometrics.serializers import BiometricSerializer
 from profiles.serializers import PrivateProfileSerializer, PublicBaseProfileSerializer, BaseProfilePrivateSerializerFull
 
 
@@ -59,4 +61,26 @@ class AccountWithProfileSerializerPrivate(serializers.ModelSerializer):
             'created',
             'parent',
             'base_profile'
+        )
+
+
+class AccountWithProfileAndBiometricsPrivate(serializers.ModelSerializer):
+    base_profile = BaseProfilePrivateSerializerFull(read_only=True)
+    profile_biometrics = serializers.SerializerMethodField('repr_biometrics')
+
+    def repr_biometrics(self, obj):
+        bm = Biometric.objects.get(profile=obj.base_profile())
+        return BiometricSerializer(bm).data
+
+    class Meta:
+        model = Account
+        fields = (
+            'id',
+            'username',
+            'email',
+            'user_type',
+            'created',
+            'parent',
+            'base_profile',
+            'profile_biometrics'
         )

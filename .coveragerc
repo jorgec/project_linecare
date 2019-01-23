@@ -15,5 +15,11 @@ omit =
     *forms.py,
     *serializers.py,
     *routing.py,
-    *__init__.py
-    *admin.py
+    *__init__.py,
+    *admin.py,
+    react_frontend/*,
+    search_indexes/*,
+    apis/*,
+    *get-pip.py,
+    *tests.py,
+    *constants.py
