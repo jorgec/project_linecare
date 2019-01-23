@@ -6,6 +6,9 @@ from rest_framework.views import APIView
 from doctor_profiles.constants import APPOINTMENT_TYPES
 from doctor_profiles.models import DoctorProfile
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
+from doctor_profiles.serializers import MedicalInstitutionDoctorPrivateSerializer
+from doctor_profiles.serializers.medical_institution_doctor_serializers import \
+    MedicalInstitutionDoctorCreatePrivateSerializer
 from receptionist_profiles.models import ReceptionistProfile
 
 
@@ -21,6 +24,23 @@ def is_doctor_or_receptionist(user):
         except ReceptionistProfile.DoesNotExist:
             return False, user_type
     return True, user_type
+
+
+class ApiMedicalInstitutionDoctorCreate(APIView):
+    """
+    Create connection between MI and Doctor
+    ?doctor_id=n&medical_institution_id=m
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = MedicalInstitutionDoctorCreatePrivateSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ApiMedicalInstitutionDoctorMetaList(APIView):
@@ -94,9 +114,6 @@ class ApiMedicalInstitutionDoctorMetaUpdate(APIView):
             if k.startswith("payload__"):
                 label = k.replace("payload__", "")
                 connection.metadata[key][label] = data
-
-
-        print(connection.metadata)
 
         connection.save()
         return Response(connection.metadata, status=status.HTTP_200_OK)

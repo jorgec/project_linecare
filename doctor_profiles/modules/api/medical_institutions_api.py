@@ -15,6 +15,7 @@ from doctor_profiles.serializers import MedicalInstitutionTypePublicSerializer, 
     MedicalInstitutionCoordinatePublicSerializerWithVotes, MedicalInstitutionCoordinatesCreateSerializer
 from doctor_profiles.serializers.serializer_managers.medical_institution_serializer_manager import \
     MedicalInstitutionSerializerManager
+from locations.models import Region
 from receptionist_profiles.modules.response_templates.receptionist_profile import private_receptionist_profile_template
 from receptionist_profiles.serializers.receptionist_profile_serializers import ReceptionistProfileSerializer
 
@@ -125,6 +126,7 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                 return Response("That Medical Institution already exists!", status=status.HTTP_400_BAD_REQUEST)
 
             try:
+                country = Region.objects.get(id=serializer.validated_data.get('region', None)).country
                 loc = MedicalInstitutionLocation.objects.create(
                     address=serializer.validated_data['address'],
                     region_id=serializer.validated_data['region'],
@@ -132,7 +134,8 @@ class ApiPrivateMedicalInstitutionCreate(APIView):
                     city_id=serializer.validated_data['city'],
                     zip_code=serializer.validated_data['zip_code'],
                     suggested_by=request.user,
-                    medical_institution=mi
+                    medical_institution=mi,
+                    country=country
                 )
 
             except IntegrityError as e:
