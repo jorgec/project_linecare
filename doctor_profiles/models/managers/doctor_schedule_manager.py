@@ -200,6 +200,11 @@ class DoctorScheduleManager(models.Manager):
 
         return True
 
+    def valid_days(self, *, start, end):
+        if start.date_obj > end.date_obj:
+            return False
+        return True
+
     def create(self, *args, **kwargs):
         DateDim = apps.get_model('datesdim.DateDim')
         doctor = kwargs['doctor']
@@ -209,6 +214,9 @@ class DoctorScheduleManager(models.Manager):
 
         if not self.valid_times(start=kwargs['start_time'], end=kwargs['end_time']):
             return False, "Invalid start and end time", []
+
+        if not self.valid_days(start=start, end=end):
+            return False, "Invalid start and end dates", []
 
         schedule_days = DateDim.objects.get_days_between(
             start=start,
