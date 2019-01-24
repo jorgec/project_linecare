@@ -1,3 +1,5 @@
+from _socket import gaierror
+
 import arrow
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField, ArrayField
@@ -255,7 +257,10 @@ def create_checkup_record(sender, instance, created=False, **kwargs):
 @receiver(post_save, sender=PatientAppointment)
 def notify_queue_consumers(sender, instance, created=False, **kwargs):
     if instance:
-        doctor_notify_update_queue(instance.doctor)
+        try:
+            doctor_notify_update_queue(instance.doctor)
+        except gaierror:
+            pass
 
 
 @receiver(post_save, sender=DoctorSchedule)
