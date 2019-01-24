@@ -1,5 +1,6 @@
 import operator
 from django.apps import apps
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from functools import reduce
 
@@ -39,7 +40,7 @@ class DoctorProfile(models.Model):
         diplomates = ", ".join([a.get_abbreviation() for a in self.get_diplomates_rel()])
 
         try:
-            title = f"Dr. {self.user.base_profile().get_name()} {degrees} {fellowships} {diplomates}"
+            title = f"{self.user.base_profile().get_name()} {degrees} {fellowships} {diplomates}"
         except AttributeError:
             return 'NoBaseProfile'
 
@@ -99,7 +100,7 @@ class DoctorProfile(models.Model):
         try:
             connection = self.doctor_connections.get(**filters)
             return connection
-        except self.doctor_connections.DoesNotExist:
+        except ObjectDoesNotExist:
             return False
 
     def get_receptionists(self, *, medical_institution=None, s=None):
