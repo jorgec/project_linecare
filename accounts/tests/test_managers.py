@@ -35,7 +35,7 @@ class TestAccountManager:
 
         parent = Account.objects.create_user(email=email, password=password)
 
-        first_name, last_name = fake.name().split(" ")
+        first_name, last_name = "tamad", "juan"
         subuser = Account.objects.create_sub_user(first_name=first_name, last_name=last_name, parent=parent, date_of_birth='1980-01-07')
         base_username = slugify('{} {} {}'.format(first_name, last_name, parent.email))
         username = '{}-{}'.format(base_username[:32], get_random_string(length=8))
