@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
+from doctor_profiles.constants import APPOINTMENT_TYPES
+
 
 class MedicalInstitutionDoctor(models.Model):
     """
@@ -34,4 +36,15 @@ class MedicalInstitutionDoctor(models.Model):
                 'durations': self.metadata['durations']
             }
         except KeyError:
-            return {}
+            types = APPOINTMENT_TYPES
+            self.metadata['durations'] = {}
+            self.metadata['fees'] = {}
+            for t in types:
+                self.metadata['durations'][f'{t[0]}_duration'] = 15
+                self.metadata['durations'][f'{t[0]}_gap'] = 1
+                self.metadata['fees'][t[0]] = 0
+            self.save()
+            return {
+                'fees': self.metadata['fees'],
+                'durations': self.metadata['durations']
+            }
