@@ -1,3 +1,5 @@
+from _socket import gaierror
+
 import arrow
 from django.conf import settings
 from django.urls import reverse
@@ -42,13 +44,13 @@ class ApiDoctorScheduleCreate(APIView):
         if not result:
             return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
 
-        doctor_id = request.GET.get('doctor_id', None)
+        doctor_id = request.data.get('doctor_id', None)
         try:
             doctor = DoctorProfile.objects.get(id=doctor_id)
         except DoctorProfile.DoesNotExist:
             return Response("Doctor does not exist!", status=status.HTTP_404_NOT_FOUND)
 
-        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution', None))
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.data.get('medical_institution_id', None))
 
         mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
                                           medical_institution=medical_institution, is_approved=True)
@@ -86,7 +88,7 @@ class ApiDoctorScheduleCreate(APIView):
         if result:
             schedule_serializer = DoctorScheduleSerializer(schedule)
 
-            return Response(schedule_serializer.data, status.HTTP_200_OK)
+            return Response(schedule_serializer.data, status.HTTP_201_CREATED)
         else:
             if message == "Schedule Conflict":
                 conflict_data = []
@@ -102,6 +104,8 @@ class ApiDoctorScheduleCreate(APIView):
 
                 return Response(conflict_data, status=status.HTTP_409_CONFLICT)
             elif message == "Invalid start and end time":
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
+            elif message == "Invalid start and end dates":
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -146,28 +150,20 @@ class ApiDoctorScheduleDelete(APIView):
         if not result:
             return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
 
-        doctor_id = request.GET.get('doctor_id', None)
-        doctor = get_object_or_404(DoctorProfile, id=doctor_id)
-        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution', None))
+        schedule = get_object_or_404(DoctorSchedule, id=request.data.get('id', None))
 
-        mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
-                                          medical_institution=medical_institution, is_approved=True)
+        flag = False
+        if type(profile_type) == DoctorProfile and profile_type == schedule.doctor:
+            flag = True
 
-        if type(profile_type) != DoctorProfile:
-            """ person adding isn't the doctor, so check if receptionist is allowed """
-            connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
-                                                    medical_institution=medical_institution)
-            if not connection:
-                return Response("Receptionist is not authorized by this doctor for this medical institution",
-                                status=status.HTTP_403_FORBIDDEN)
-        elif profile_type.id != doctor.id:
-            return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
+        if type(profile_type) == ReceptionistProfile and schedule.doctor.verify_receptionist(receptionist=profile_type, medical_institution=schedule.medical_institution):
+            flag = True
 
-        schedule = get_object_or_404(DoctorSchedule, id=request.GET.get('id', None), doctor=doctor)
-
-        schedule.delete()
-
-        return Response("Schedule deleted", status=status.HTTP_200_OK)
+        if flag:
+            schedule.delete()
+            return Response("Schedule deleted", status=status.HTTP_200_OK)
+        else:
+            return Response("Unauthorized user", status=status.HTTP_403_FORBIDDEN)
 
 
 class ApiDoctorScheduleAppointmentCreate(APIView):
@@ -179,13 +175,16 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
+        print("-" * 80)
+        print(request.data)
+        print("-" * 80)
         result, profile_type = is_doctor_or_receptionist(request.user)
         if not result:
             return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
 
-        doctor_id = request.GET.get('doctor_id', None)
+        doctor_id = request.data.get('doctor_id', None)
         doctor = get_object_or_404(DoctorProfile, id=doctor_id)
-        medical_institution = get_object_or_404(MedicalInstitution, id=request.GET.get('medical_institution_id', None))
+        medical_institution = get_object_or_404(MedicalInstitution, id=request.data.get('medical_institution_id', None))
 
         mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
                                           medical_institution=medical_institution, is_approved=True)
@@ -335,7 +334,10 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         )
 
         if create_result:
-            doctor_notify_new_appointment(appointment)
+            try:
+                doctor_notify_new_appointment(appointment)
+            except gaierror:
+                pass
 
             # update queue number
             appointments_on_this_day = PatientAppointment.objects.filter(

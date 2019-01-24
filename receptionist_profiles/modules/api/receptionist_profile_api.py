@@ -25,14 +25,14 @@ class ApiPrivateReceptionistConnectionCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        receptionist_profile = get_object_or_404(ReceptionistProfile, id=request.GET.get('receptionist_id', None))
+        receptionist_profile = get_object_or_404(ReceptionistProfile, id=request.POST.get('receptionist_id', None))
 
         params = {
             'receptionist': receptionist_profile
         }
 
-        doctor_id = request.GET.get('doctor_id', None)
-        medical_institution_id = request.GET.get('medical_institution_id', None)
+        doctor_id = request.POST.get('doctor_id', None)
+        medical_institution_id = request.POST.get('medical_institution_id', None)
 
         if doctor_id:
             doctor_profile = get_object_or_404(DoctorProfile, id=doctor_id)
@@ -47,9 +47,11 @@ class ApiPrivateReceptionistConnectionCreate(APIView):
                 **params
             )
             serializer = ReceptionistConnectionPrivateBasicSerializer(connection)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         except IntegrityError:
             return Response("This connection already exists!", status=status.HTTP_400_BAD_REQUEST)
+        except KeyError as e:
+            return Response(f"{e}\n doctor: {doctor_id}, receptionist: {receptionist_profile}, mi: {medical_institution_id}")
 
 
 class ApiPrivateReceptionistConnectionDelete(APIView):
@@ -61,14 +63,14 @@ class ApiPrivateReceptionistConnectionDelete(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        receptionist_profile = get_object_or_404(ReceptionistProfile, id=request.GET.get('receptionist_id', None))
+        receptionist_profile = get_object_or_404(ReceptionistProfile, id=request.POST.get('receptionist_id', None))
 
         params = {
             'receptionist': receptionist_profile
         }
 
-        doctor_id = request.GET.get('doctor_id', None)
-        medical_institution_id = request.GET.get('medical_institution_id', None)
+        doctor_id = request.POST.get('doctor_id', None)
+        medical_institution_id = request.POST.get('medical_institution_id', None)
 
         if doctor_id:
             doctor_profile = get_object_or_404(DoctorProfile, id=doctor_id)

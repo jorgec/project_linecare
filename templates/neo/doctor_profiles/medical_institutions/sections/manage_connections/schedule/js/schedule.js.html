@@ -38,7 +38,7 @@
             var endTime = $("#endTime", this).val();
             var startDate = $("#startDate", this).val();
             var endDate = $("#endDate", this).val();
-            var url = "{% url 'api_private_doctor_schedule_create' %}?medical_institution={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}";
+            var url = "{% url 'api_private_doctor_schedule_create' %}";
             var formData = {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 days: days,
@@ -46,6 +46,8 @@
                 end_time: endTime,
                 start_date: startDate,
                 end_date: endDate,
+                medical_institution_id: {{ rel.medical_institution.id }},
+                doctor_id: {{ rel.doctor.id }}
             };
 
             $.post(url, formData)
