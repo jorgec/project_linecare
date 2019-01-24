@@ -5,7 +5,7 @@ from django.db.models import Q
 from functools import reduce
 
 from django.contrib.postgres.fields import JSONField
-from django.db import models as models
+from django.db import models as models, IntegrityError
 
 from doctor_profiles.models.managers.doctor_profile_manager import DoctorProfileManager
 from helpers import search
@@ -184,7 +184,7 @@ class DoctorProfile(models.Model):
                         if value > 0:
                             total = total + 1
             retval['progress'] = total / max
-            retval['progress_pct'] = f'{round((total/max)*100)}%'
+            retval['progress_pct'] = f'{round((total / max) * 100)}%'
             retval['progress_int'] = round((total / max) * 100)
             retval['items'] = progress
         return retval
@@ -328,33 +328,115 @@ class DoctorProfile(models.Model):
                 Q(patient__first_name__icontains=s) | Q(patient__last_name__icontains=s)
             )
         else:
-            appointments = self.doctor_scheduled_appointments.filter(**filters)        
+            appointments = self.doctor_scheduled_appointments.filter(**filters)
 
         return appointments[result_start:result_end]
+
+    def connect_medical_institution(self, *, medical_institution):
+        MedicalInstitutionDoctor = apps.get_model('doctor_profiles.MedicalInstitutionDoctor')
+        try:
+            return MedicalInstitutionDoctor.objects.create(
+                doctor=self,
+                medical_institution=medical_institution
+            )
+        except IntegrityError:
+            return MedicalInstitutionDoctor.objects.get(
+                doctor=self,
+                medical_institution=medical_institution
+            )
+
+    def connect_receptionist(self, *, medical_institution, receptionist):
+        ReceptionistConnection = apps.get_model('receptionist_profiles.ReceptionistConnection')
+
+        try:
+            add_to_mi = ReceptionistConnection.objects.get(
+                medical_institution=medical_institution,
+                receptionist=receptionist,
+                doctor=None
+            )
+        except ReceptionistConnection.DoesNotExist:
+            add_to_mi = ReceptionistConnection.objects.create(
+                medical_institution=medical_institution,
+                receptionist=receptionist,
+                doctor=None
+            )
+
+        try:
+            receptionist_conn = ReceptionistConnection.objects.get(
+                medical_institution=medical_institution,
+                receptionist=receptionist,
+                doctor=self
+            )
+        except ReceptionistConnection.DoesNotExist:
+            receptionist_conn = ReceptionistConnection.objects.create(
+                medical_institution=medical_institution,
+                receptionist=receptionist,
+                doctor=self
+            )
+
+        return receptionist_conn
+
+    def create_schedule(
+            self,
+            *,
+            medical_institution,
+            start_time,
+            end_time,
+            start_date,
+            end_date,
+            days
+    ):
+        DoctorSchedule = apps.get_model('doctor_profiles.DoctorSchedule')
+
+        """
+        TODO:
+        Must be TimeDim instance
+        """
+
+        result, message, schedule = DoctorSchedule.objects.create(
+            doctor=self,
+            medical_institution=medical_institution,
+            start_time=start_time,
+            end_time=end_time,
+            start_date=start_date,
+            end_date=end_date,
+            days=days,
+        )
+
+        return result, message, schedule
+
 
     def name_indexing(self):
         return self.__str__()
 
+
     def specializations_indexing(self):
         return [x.specialization.name for x in self.get_specializations_rel()]
+
 
     def degrees_indexing(self):
         return [x.degree.name for x in self.get_degrees_rel()]
 
+
     def associations_indexing(self):
         return [x.association.name for x in self.get_associations_rel()]
+
 
     def diplomates_indexing(self):
         return [x.association.name for x in self.get_diplomates_rel()]
 
+
     def fellowships_indexing(self):
         return [x.association.name for x in self.get_fellowships_rel()]
+
 
     def insurance_providers_indexing(self):
         return [x.insurance.name for x in self.get_insurance_providers_rel()]
 
+
     def medical_institutions_indexing(self):
         return [x.medical_institution.name for x in self.get_medical_institutions_rel()]
+
 
     def addresses_indexing(self):
         medical_institutions = self.get_medical_institutions()

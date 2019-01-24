@@ -2,6 +2,7 @@ from _socket import gaierror
 
 import arrow
 from django.conf import settings
+from django.db import transaction, IntegrityError
 from django.urls import reverse
 from rest_framework import status, permissions
 from rest_framework.generics import get_object_or_404
@@ -175,9 +176,6 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        print("-" * 80)
-        print(request.data)
-        print("-" * 80)
         result, profile_type = is_doctor_or_receptionist(request.user)
         if not result:
             return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
@@ -322,16 +320,20 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         # schedule_day_object = DoctorScheduleDay.objects.get(doctor=doctor, medical_institution=medical_institution,
         #                                                     day=schedule_day)
 
-        create_result, appointment = PatientAppointment.objects.create(
-            schedule_day=schedule_day,
-            time_start=schedule_time_start,
-            time_end=schedule_time_end,
-            patient=patient,
-            doctor=doctor,
-            medical_institution=medical_institution,
-            type=appointment_type,
-            schedule_day_object=schedule_day_object
-        )
+        try:
+            create_result, appointment = PatientAppointment.objects.create(
+                schedule_day=schedule_day,
+                time_start=schedule_time_start,
+                time_end=schedule_time_end,
+                patient=patient,
+                doctor=doctor,
+                medical_institution=medical_institution,
+                type=appointment_type,
+                schedule_day_object=schedule_day_object
+            )
+        except IntegrityError:
+            create_result = None
+            appointment = "Duplicate"
 
         if create_result:
             try:

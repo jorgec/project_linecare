@@ -188,8 +188,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '8:00am',
             'end_time': '11:00am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Monday;Tuesday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -205,8 +205,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '8:00am',
             'end_time': '11:00am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Wednesday;Friday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -223,8 +223,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '8:00am',
             'end_time': '11:00am',
-            'start_date': '2019-02-01',
-            'end_date': '2019-02-20',
+            'start_date': '2019-11-01',
+            'end_date': '2019-11-20',
             'days': 'Monday;Tuesday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -241,8 +241,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '8:00am',
             'end_time': '11:00am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Monday;Tuesday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -258,8 +258,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '7:00am',
             'end_time': '11:00am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Monday;Tuesday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -275,8 +275,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '7:00am',
             'end_time': '11:30am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Monday;Tuesday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -292,8 +292,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '9:00am',
             'end_time': '10:30am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Monday;Tuesday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -309,8 +309,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '9:00am',
             'end_time': '1:30pm',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Monday;Tuesday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -326,8 +326,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '7:00am',
             'end_time': '11:30am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': '',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -343,8 +343,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '7:00am',
             'end_time': '11:30am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Thursday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -360,8 +360,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '7:00am',
             'end_time': '11:30am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Saturday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -377,8 +377,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '7:00am',
             'end_time': '11:30am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Sunday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -394,8 +394,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '7:00pm',
             'end_time': '11:30pm',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Monday',
             'medical_institution_id': medical_institution_2.id,
             'doctor_id': doctor.id
@@ -411,8 +411,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '1:00am',
             'end_time': '5:30am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Monday',
             'medical_institution_id': medical_institution_2.id,
             'doctor_id': doctor.id
@@ -428,8 +428,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '1:00am',
             'end_time': '5:30am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Monday',
             'medical_institution_id': medical_institution_2.id,
             'doctor_id': user5.id
@@ -445,8 +445,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '7:00am',
             'end_time': '5:30am',
-            'start_date': '2019-01-01',
-            'end_date': '2019-01-30',
+            'start_date': '2019-12-01',
+            'end_date': '2019-12-31',
             'days': 'Wednesday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -462,8 +462,8 @@ class TestDoctorScheduleApi:
         form_data = {
             'start_time': '1:00am',
             'end_time': '5:30am',
-            'start_date': '2019-01-31',
-            'end_date': '2019-01-30',
+            'start_date': '2019-04-04',
+            'end_date': '2019-03-03',
             'days': 'Wednesday',
             'medical_institution_id': medical_institution.id,
             'doctor_id': doctor.id
@@ -535,11 +535,25 @@ class TestDoctorScheduleApi:
             'medical_institution_id': medical_institution.id,
             'profile_id': user5.id,
             'schedule_choice': 'first_available',
-            'appointment_day': '2019-01-28',
+            'appointment_day': '2019-12-02',
             'appointment_type': 'checkup'
         }
         request = factory.post('/', form_data)
         force_authenticate(request, user=user)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.data}"
+
+        """ create appointment: first available - receptionist """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user6.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user2)
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
         assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.data}"
 
@@ -555,7 +569,7 @@ class TestDoctorScheduleApi:
         request = factory.post('/', form_data)
         force_authenticate(request, user=user)
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
+        assert response.status_code == 400 or response.status_code == 404, f"Expected 400, got {response.status_code}: {response.data}"
 
         """ create appointment: wrong doctor """
         form_data = {
@@ -563,10 +577,259 @@ class TestDoctorScheduleApi:
             'medical_institution_id': medical_institution.id,
             'profile_id': user5.id,
             'schedule_choice': 'first_available',
-            'appointment_day': '2019-01-28',
+            'appointment_day': '2019-12-02',
             'appointment_type': 'checkup'
         }
         request = factory.post('/', form_data)
         force_authenticate(request, user=user)
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
         assert response.status_code == 404, f"Expected 404, got {response.status_code}: {response.data}"
+
+        """ create appointment: wrong receptionist """
+        form_data = {
+            'doctor_id': receptionist2.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user5.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user3)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}: {response.data}"
+
+        """ create appointment: wrong user type """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user5.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user6)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 403, f"Expected 403, got {response.status_code}: {response.data}"
+
+        """ create appointment: no patient """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
+
+        """ create appointment: no day """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user5.id,
+            'schedule_choice': 'first_available',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}: {response.data}"
+
+        """ create appointment: no schedule day """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user5.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-03-28',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}: {response.data}"
+
+        """ create appointment: wrong appointment type """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user5.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'sdafghsd'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
+
+
+    def test_good_appointments(self):
+        # fixtures
+        DateDim.objects.preload_year(year=2019)
+        TimeDim.objects.preload_times()
+
+        email = fake.email()
+        password = fake.password()
+        user = Account.objects.create_user(email=email, password=password)
+        assert user is not None, "User was not created"
+
+        doctor = user.create_doctor_profile()
+        assert doctor is not None, "Doctor Profile was not created"
+
+        email = fake.email()
+        password = fake.password()
+        user4 = Account.objects.create_user(email=email, password=password)
+        assert user4 is not None, "User 4 was not created"
+
+        doctor2 = user4.create_doctor_profile()
+        assert doctor2 is not None, "Doctor Profile 2 was not created"
+
+        email = fake.email()
+        password = fake.password()
+        user2 = Account.objects.create_user(email=email, password=password)
+        assert user2 is not None, "User 2 was not created"
+
+        receptionist = user2.create_receptionist_profile()
+        assert receptionist is not None, "Receptionist Profile 1 was not created"
+
+        email = fake.email()
+        password = fake.password()
+        user3 = Account.objects.create_user(email=email, password=password)
+        assert user3 is not None, "User 3 was not created"
+
+        receptionist2 = user3.create_receptionist_profile()
+        assert receptionist2 is not None, "Receptionist Profile 2 was not created"
+
+        email = fake.email()
+        password = fake.password()
+        user5 = Account.objects.create_user(email=email, password=password)
+        assert user5 is not None, "User 5 was not created"
+
+        email = fake.email()
+        password = fake.password()
+        user6 = Account.objects.create_user(email=email, password=password)
+        assert user6 is not None, "User 6 was not created"
+
+        mi_type = MedicalInstitutionType.objects.create(name='Hospital')
+        assert mi_type is not None, "Type was not created"
+
+        country = Country.objects.create(name=fake.name())
+        assert country is not None, "Country was not created"
+
+        region = Region.objects.create(
+            name=fake.name(),
+            country=country
+        )
+        assert region is not None, "Region was not created"
+
+        province = Province.objects.create(
+            name=fake.name(),
+            region=region,
+            country=country
+        )
+        assert province is not None, "Province was not created"
+
+        city = City.objects.create(
+            name=fake.name(),
+            province=province
+        )
+        assert city is not None, "City was not created"
+
+        medical_institution = MedicalInstitution.objects.create(
+            name=fake.name(),
+            type=mi_type,
+            added_by=user
+        )
+
+        medical_institution_2 = MedicalInstitution.objects.create(
+            name=fake.name(),
+            type=mi_type,
+            added_by=user
+        )
+
+        conn1 = doctor.connect_medical_institution(medical_institution=medical_institution)
+        assert conn1, f'Connection failed {conn1}'
+
+        recep_doc = doctor.connect_receptionist(medical_institution=medical_institution, receptionist=receptionist)
+        assert recep_doc, f'Receptionist connection failed {recep_doc}'
+
+        schedule_result_1, schedule_message_1, schedule_1 = doctor.create_schedule(
+            medical_institution=medical_institution,
+            start_time='8:00am',
+            end_time='11:00am',
+            start_date='2018-12-01',
+            end_date='2018-12-31',
+            days='Monday'
+        )
+
+        assert schedule_result_1, f"Schedule creation failed: {schedule_message_1}, {schedule_1}"
+
+        # /fixtures
+
+
+        # """ create appointment: user selection, bad time """
+        # form_data = {
+        #     'doctor_id': doctor.id,
+        #     'medical_institution_id': medical_institution.id,
+        #     'profile_id': user6.id,
+        #     'schedule_choice': 'user_select',
+        #     'appointment_day': '2019-12-02',
+        #     'appointment_type': 'checkup',
+        #     'appointment_time_start': '7:00am',
+        #     'appointment_time_end': '8:00am',
+        # }
+        # request = factory.post('/', form_data)
+        # force_authenticate(request, user=user)
+        # response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        # assert response.status_code == 404, f"Expected 404, got {response.status_code}: {response.data}"
+        #
+        # """ create appointment: user selection - no start time """
+        # form_data = {
+        #     'doctor_id': doctor.id,
+        #     'medical_institution_id': medical_institution.id,
+        #     'profile_id': user5.id,
+        #     'schedule_choice': 'user_select',
+        #     'appointment_day': '2019-12-02',
+        #     'appointment_type': 'checkup',
+        #     'appointment_time_end': '8:00am',
+        # }
+        # request = factory.post('/', form_data)
+        # force_authenticate(request, user=user)
+        # response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        # assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
+        #
+        # """ create appointment: user selection - no end time """
+        # form_data = {
+        #     'doctor_id': doctor.id,
+        #     'medical_institution_id': medical_institution.id,
+        #     'profile_id': user5.id,
+        #     'schedule_choice': 'user_select',
+        #     'appointment_day': '2019-12-02',
+        #     'appointment_type': 'checkup',
+        #     'appointment_time_start': '7:00am',
+        # }
+        # request = factory.post('/', form_data)
+        # force_authenticate(request, user=user)
+        # response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        # assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
+        #
+        # """ create appointment: user selection, good time """
+        # form_data = {
+        #     'doctor_id': doctor.id,
+        #     'medical_institution_id': medical_institution.id,
+        #     'profile_id': user5.id,
+        #     'schedule_choice': 'user_select',
+        #     'appointment_day': '2019-12-02',
+        #     'appointment_type': 'checkup',
+        #     'appointment_time_start': '9:00am',
+        #     'appointment_time_end': '10:00am',
+        # }
+        # request = factory.post('/', form_data)
+        # force_authenticate(request, user=user)
+        # response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        # assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.data}"
