@@ -60,18 +60,14 @@ class ApiMedicalInstitutionDoctorMetaList(APIView):
 
         types = APPOINTMENT_TYPES
 
-        if len(connection.metadata) == 0:
-            connection.metadata['durations'] = {}
-            connection.metadata['fees'] = {}
-            for t in types:
-                connection.metadata['durations'][f'{t[0]}_duration'] = 15
-                connection.metadata['durations'][f'{t[0]}_gap'] = 1
-                connection.metadata['fees'][t[0]] = 0
-            connection.save()
+        meta = connection.get_schedule_options()
 
         key = request.GET.get('key', None)
         if key:
-            return Response(connection.metadata[key], status=status.HTTP_200_OK)
+            if key in meta:
+                return Response(meta[key], status=status.HTTP_200_OK)
+            else:
+                return Response(f"{key} not found", status=status.HTTP_404_NOT_FOUND)
 
         return Response(connection.metadata, status=status.HTTP_200_OK)
 
