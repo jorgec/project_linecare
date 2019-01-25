@@ -22,4 +22,6 @@ omit =
     apis/*,
     *get-pip.py,
     *tests.py,
-    *constants.py
+    *constants.py,
+    linecare_core/*,
+    helpers/*

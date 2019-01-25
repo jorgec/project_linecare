@@ -1,14 +1,12 @@
-import json
-
 import pytest
 import random
 from faker import Faker
-from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework.test import APIClient
+from rest_framework.test import APIRequestFactory, force_authenticate
 
 from accounts.models import Account
 from datesdim.models import DateDim, TimeDim
-from doctor_profiles.models import MedicalInstitutionType, MedicalInstitution, MedicalInstitutionDoctor, DoctorSchedule
+from doctor_profiles.models import MedicalInstitutionType, MedicalInstitution, DoctorSchedule
 from doctor_profiles.modules.api.doctor_schedule_api import ApiDoctorScheduleCreate, ApiDoctorScheduleDelete, \
     ApiDoctorScheduleAppointmentCreate
 from doctor_profiles.modules.api.medical_institution_doctors_api import ApiMedicalInstitutionDoctorCreate
@@ -529,33 +527,7 @@ class TestDoctorScheduleApi:
         response = ApiDoctorScheduleDelete.as_view()(request)
         assert response.status_code == 404, f"404 expected: {response.status_code}, {response.data}"
 
-        """ create appointment: first available """
-        form_data = {
-            'doctor_id': doctor.id,
-            'medical_institution_id': medical_institution.id,
-            'profile_id': user5.id,
-            'schedule_choice': 'first_available',
-            'appointment_day': '2019-12-02',
-            'appointment_type': 'checkup'
-        }
-        request = factory.post('/', form_data)
-        force_authenticate(request, user=user)
-        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.data}"
 
-        """ create appointment: first available - receptionist """
-        form_data = {
-            'doctor_id': doctor.id,
-            'medical_institution_id': medical_institution.id,
-            'profile_id': user6.id,
-            'schedule_choice': 'first_available',
-            'appointment_day': '2019-12-02',
-            'appointment_type': 'checkup'
-        }
-        request = factory.post('/', form_data)
-        force_authenticate(request, user=user2)
-        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.data}"
 
         """ create appointment: in the past """
         form_data = {
@@ -668,7 +640,7 @@ class TestDoctorScheduleApi:
         assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
 
 
-    def test_good_appointments(self):
+    def test_appointments(self):
         # fixtures
         DateDim.objects.preload_year(year=2019)
         TimeDim.objects.preload_times()
@@ -683,26 +655,26 @@ class TestDoctorScheduleApi:
 
         email = fake.email()
         password = fake.password()
-        user4 = Account.objects.create_user(email=email, password=password)
-        assert user4 is not None, "User 4 was not created"
+        user2 = Account.objects.create_user(email=email, password=password)
+        assert user2 is not None, "User 4 was not created"
 
-        doctor2 = user4.create_doctor_profile()
+        doctor2 = user2.create_doctor_profile()
         assert doctor2 is not None, "Doctor Profile 2 was not created"
 
         email = fake.email()
         password = fake.password()
-        user2 = Account.objects.create_user(email=email, password=password)
-        assert user2 is not None, "User 2 was not created"
+        user3 = Account.objects.create_user(email=email, password=password)
+        assert user3 is not None, "User 2 was not created"
 
-        receptionist = user2.create_receptionist_profile()
+        receptionist = user3.create_receptionist_profile()
         assert receptionist is not None, "Receptionist Profile 1 was not created"
 
         email = fake.email()
         password = fake.password()
-        user3 = Account.objects.create_user(email=email, password=password)
-        assert user3 is not None, "User 3 was not created"
+        user4 = Account.objects.create_user(email=email, password=password)
+        assert user4 is not None, "User 3 was not created"
 
-        receptionist2 = user3.create_receptionist_profile()
+        receptionist2 = user4.create_receptionist_profile()
         assert receptionist2 is not None, "Receptionist Profile 2 was not created"
 
         email = fake.email()
@@ -762,74 +734,128 @@ class TestDoctorScheduleApi:
             medical_institution=medical_institution,
             start_time='8:00am',
             end_time='11:00am',
-            start_date='2018-12-01',
-            end_date='2018-12-31',
-            days='Monday'
+            start_date='2019-12-01',
+            end_date='2019-12-31',
+            days='Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday'
         )
 
         assert schedule_result_1, f"Schedule creation failed: {schedule_message_1}, {schedule_1}"
 
-        # /fixtures
+        """ create appointment: first available """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user5.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 200, f"Expected 200 for 2019-12-02, got {response.status_code}: {response.data}: {schedule_1} : {schedule_1.schedule_on_days.all()}"
 
+        """ create appointment: first available - receptionist """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user6.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user3)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.data}"
 
-        # """ create appointment: user selection, bad time """
-        # form_data = {
-        #     'doctor_id': doctor.id,
-        #     'medical_institution_id': medical_institution.id,
-        #     'profile_id': user6.id,
-        #     'schedule_choice': 'user_select',
-        #     'appointment_day': '2019-12-02',
-        #     'appointment_type': 'checkup',
-        #     'appointment_time_start': '7:00am',
-        #     'appointment_time_end': '8:00am',
-        # }
-        # request = factory.post('/', form_data)
-        # force_authenticate(request, user=user)
-        # response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        # assert response.status_code == 404, f"Expected 404, got {response.status_code}: {response.data}"
-        #
-        # """ create appointment: user selection - no start time """
-        # form_data = {
-        #     'doctor_id': doctor.id,
-        #     'medical_institution_id': medical_institution.id,
-        #     'profile_id': user5.id,
-        #     'schedule_choice': 'user_select',
-        #     'appointment_day': '2019-12-02',
-        #     'appointment_type': 'checkup',
-        #     'appointment_time_end': '8:00am',
-        # }
-        # request = factory.post('/', form_data)
-        # force_authenticate(request, user=user)
-        # response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        # assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
-        #
-        # """ create appointment: user selection - no end time """
-        # form_data = {
-        #     'doctor_id': doctor.id,
-        #     'medical_institution_id': medical_institution.id,
-        #     'profile_id': user5.id,
-        #     'schedule_choice': 'user_select',
-        #     'appointment_day': '2019-12-02',
-        #     'appointment_type': 'checkup',
-        #     'appointment_time_start': '7:00am',
-        # }
-        # request = factory.post('/', form_data)
-        # force_authenticate(request, user=user)
-        # response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        # assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
-        #
-        # """ create appointment: user selection, good time """
-        # form_data = {
-        #     'doctor_id': doctor.id,
-        #     'medical_institution_id': medical_institution.id,
-        #     'profile_id': user5.id,
-        #     'schedule_choice': 'user_select',
-        #     'appointment_day': '2019-12-02',
-        #     'appointment_type': 'checkup',
-        #     'appointment_time_start': '9:00am',
-        #     'appointment_time_end': '10:00am',
-        # }
-        # request = factory.post('/', form_data)
-        # force_authenticate(request, user=user)
-        # response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        # assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.data}"
+        """ create appointment: first available - bad receptionist """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user6.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user4)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 403, f"Expected 403, got {response.status_code}: {response.data}"
+
+        """ create appointment: first available - other doctor """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user6.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user2)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 401, f"Expected 401, got {response.status_code}: {response.data}"
+
+        """ create appointment: first available - normal user """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user6.id,
+            'schedule_choice': 'first_available',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup'
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user5)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 403, f"Expected 403, got {response.status_code}: {response.data}"
+
+        """ create appointment: user selection, bad time """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user6.id,
+            'schedule_choice': 'user_select',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup',
+            'appointment_time_start': '7:00am',
+            'appointment_time_end': '8:00am',
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}: {response.data}"
+
+        """ create appointment: user selection, bad time """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user6.id,
+            'schedule_choice': 'user_select',
+            'appointment_day': '2019-12-02',
+            'appointment_type': 'checkup',
+            'appointment_time_start': '7asdgs',
+            'appointment_time_end': '8:00am',
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
+
+        """ create appointment: user selection, bad date """
+        form_data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id,
+            'profile_id': user6.id,
+            'schedule_choice': 'user_select',
+            'appointment_day': '2019-12-45',
+            'appointment_type': 'checkup',
+            'appointment_time_start': '8:00',
+            'appointment_time_end': '10:00am',
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user)
+        response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
+        assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
+
