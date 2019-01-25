@@ -104,6 +104,15 @@
                                         <a href="#!" class="modalDrugDetail-{{ i.drug.id }}_open">
                                             {{ i.drug.name }}
                                         </a>
+                                        <hr >
+                                        <strong>{{ i.prescription_dosage }} {{ i.prescription_dosage_unit }}</strong>,
+                                        {{ i.prescription_amount }} {{ i.prescription_amount_unit }}<br >
+                                        {{ i.prescription_route }} <em>{{ i.prescription_frequency }}</em><br>
+                                        <small>Dispense: {{ i.prescription_dispence_qty }}</small>
+                                        <hr>
+                                        {{ i.prescription_notes }}
+                                        <br>
+                                        <small>Prescribed by: {{ i.doctor }}</small>
                                     </li>
 
                                     <div id="modalDrugDetail-{{ i.drug.id }}" class="popup-modal card">
