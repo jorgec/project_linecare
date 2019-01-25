@@ -181,8 +181,8 @@ class PatientAppointmentManager(models.Manager):
             _schedule_time_end = end
             if not _schedule_time_end:
                 return False, "Please set a end time"
-            schedule_time_start = TimeDim.objects.parse(start)
-            schedule_time_end = TimeDim.objects.parse(end)
+            schedule_time_start = TimeDim.objects.parse(_schedule_time_start)
+            schedule_time_end = TimeDim.objects.parse(_schedule_time_end)
 
         else:
             # schedule_options = doctor.get_options('schedule_options')
@@ -200,7 +200,7 @@ class PatientAppointmentManager(models.Manager):
             if not first_available_result:
                 return False, "We couldn't find an available slot; you can try manually setting your appointment times if you wish"
 
-        return schedule_time_start, schedule_time_end
+        return True, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}
 
     def is_doctor_or_receptionist(self, user):
         DoctorProfile = apps.get_model('doctor_profiles.DoctorProfile')
@@ -268,8 +268,12 @@ class PatientAppointmentManager(models.Manager):
         appointment_type = kwargs.get('appointment_type', 'checkup')
         medical_institution_id = kwargs.get('medical_institution_id', None)
         doctor_id = kwargs.get('doctor_id')
-        preferred_time_start = kwargs.get('appointment_time_start', None)
-        preferred_time_end = kwargs.get('appointment_time_end', None)
+        preferred_time_start = kwargs.get('preferred_time_start', None)
+        preferred_time_end = kwargs.get('preferred_time_end', None)
+
+        print("-" * 80)
+        print(kwargs)
+        print("-" * 80)
 
         if patient_id:
             try:
@@ -324,7 +328,7 @@ class PatientAppointmentManager(models.Manager):
             existing_schedules = existing['existing_schedules']
             existing_appointments = existing['existing_appointments']
 
-        schedule_time_start, schedule_time_end = self.get_schedule_times(
+        sched_time_result, schedule_times = self.get_schedule_times(
             schedule_choice=schedule_choice,
             appointment_type=appointment_type,
             mi_connection=mi_connection,
@@ -334,8 +338,11 @@ class PatientAppointmentManager(models.Manager):
             existing_appointments=existing_appointments
         )
 
-        if not schedule_time_start or not schedule_time_end:
+        if not sched_time_result:
             return False, f'{preferred_time_start} - {preferred_time_end} are invalid times!', status.HTTP_400_BAD_REQUEST
+
+        schedule_time_start = schedule_times['schedule_time_start']
+        schedule_time_end = schedule_times['schedule_time_end']
 
         collision_result, schedule_day_object, collision_status = self.collision_checks(
             force_schedule=force_schedule,

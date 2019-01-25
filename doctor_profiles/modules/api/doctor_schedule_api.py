@@ -206,6 +206,11 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         appointment_type = request.data.get('appointment_type', 'checkup')
         """ /kwargs """
 
+        if force_schedule == 'true':
+            force_schedule = True
+        else:
+            force_schedule = False
+
         create_result, appointment, status_code = PatientAppointment.objects.create(
             patient_id=patient_id,
             doctor_id=doctor_id,
