@@ -200,6 +200,12 @@ class PatientAppointmentManager(models.Manager):
             if not first_available_result:
                 return False, "We couldn't find an available slot; you can try manually setting your appointment times if you wish"
 
+        if not schedule_time_start:
+            return False, f"{schedule_time_start} is not a valid time"
+
+        if not schedule_time_end:
+            return False, f"{schedule_time_end} is not a valid time"
+
         return True, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}
 
     def is_doctor_or_receptionist(self, user):
@@ -270,10 +276,6 @@ class PatientAppointmentManager(models.Manager):
         doctor_id = kwargs.get('doctor_id')
         preferred_time_start = kwargs.get('preferred_time_start', None)
         preferred_time_end = kwargs.get('preferred_time_end', None)
-
-        print("-" * 80)
-        print(kwargs)
-        print("-" * 80)
 
         if patient_id:
             try:

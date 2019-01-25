@@ -825,7 +825,7 @@ class TestDoctorScheduleApi:
         request = factory.post('/', form_data)
         force_authenticate(request, user=user)
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}: {response.data}"
 
         """ create appointment: user selection, bad time """
         form_data = {
