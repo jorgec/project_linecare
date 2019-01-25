@@ -188,7 +188,7 @@ class PatientAppointmentManager(models.Manager):
             # schedule_options = doctor.get_options('schedule_options')
             schedule_options = mi_connection.get_schedule_options()['durations']
             if not f'{appointment_type}_duration' in schedule_options:
-                return False, "Invalid appointment type"
+                return False, {'schedule_time_start': start, 'schedule_time_end': end}, "Invalid appointment type"
 
             first_available_result, schedule_time_start, schedule_time_end = find_gaps(
                 schedules=existing_schedules,
@@ -198,15 +198,15 @@ class PatientAppointmentManager(models.Manager):
             )
 
             if not first_available_result:
-                return False, "We couldn't find an available slot; you can try manually setting your appointment times if you wish"
+                return False, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}, "We couldn't find an available slot; you can try manually setting your appointment times if you wish"
 
         if not schedule_time_start:
-            return False, f"{schedule_time_start} is not a valid time"
+            return False, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}, f"{schedule_time_start} is not a valid time"
 
         if not schedule_time_end:
-            return False, f"{schedule_time_end} is not a valid time"
+            return False, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}, f"{schedule_time_end} is not a valid time"
 
-        return True, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}
+        return True, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}, ""
 
     def is_doctor_or_receptionist(self, user):
         DoctorProfile = apps.get_model('doctor_profiles.DoctorProfile')
@@ -224,14 +224,14 @@ class PatientAppointmentManager(models.Manager):
                 return False, user_type
         return True, user_type
 
-    def collision_checks(self, *, force_schedule=False, schedule_day=None,
+    def collision_checks(self, *, force_schedule=False, schedule_day_id=None, schedule_day=None,
                          existing_schedules=None, existing_appointments=None,
                          schedule_time_start=None, schedule_time_end=None, doctor=None):
         DoctorScheduleDay = apps.get_model('doctor_profiles.DoctorScheduleDay')
         DateDim = apps.get_model('datesdim.DateDim')
         if force_schedule:
             try:
-                schedule_day_object = DoctorScheduleDay.objects.get(id=schedule_day.id)
+                schedule_day_object = DoctorScheduleDay.objects.get(id=schedule_day_id)
             except DoctorScheduleDay.DoesNotExist:
                 return False, 'Invalid schedule!', status.HTTP_400_BAD_REQUEST
         else:
@@ -276,6 +276,7 @@ class PatientAppointmentManager(models.Manager):
         doctor_id = kwargs.get('doctor_id')
         preferred_time_start = kwargs.get('preferred_time_start', None)
         preferred_time_end = kwargs.get('preferred_time_end', None)
+        schedule_day_id = kwargs.get('schedule_day_id', None)
 
         if patient_id:
             try:
@@ -330,7 +331,7 @@ class PatientAppointmentManager(models.Manager):
             existing_schedules = existing['existing_schedules']
             existing_appointments = existing['existing_appointments']
 
-        sched_time_result, schedule_times = self.get_schedule_times(
+        sched_time_result, schedule_times, sched_message = self.get_schedule_times(
             schedule_choice=schedule_choice,
             appointment_type=appointment_type,
             mi_connection=mi_connection,
@@ -340,11 +341,11 @@ class PatientAppointmentManager(models.Manager):
             existing_appointments=existing_appointments
         )
 
-        if not sched_time_result:
-            return False, f'{preferred_time_start} - {preferred_time_end} are invalid times!', status.HTTP_400_BAD_REQUEST
-
         schedule_time_start = schedule_times['schedule_time_start']
         schedule_time_end = schedule_times['schedule_time_end']
+
+        if not sched_time_result:
+            return False, f'{schedule_time_start} - {schedule_time_end}: {sched_message}!', status.HTTP_400_BAD_REQUEST
 
         collision_result, schedule_day_object, collision_status = self.collision_checks(
             force_schedule=force_schedule,
@@ -353,7 +354,8 @@ class PatientAppointmentManager(models.Manager):
             existing_appointments=existing_appointments,
             schedule_time_start=schedule_time_start,
             schedule_time_end=schedule_time_end,
-            doctor=doctor
+            doctor=doctor,
+            schedule_day_id=schedule_day_id
         )
 
         if not collision_result:

@@ -204,6 +204,7 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         preferred_time_start = request.data.get('appointment_time_start', None)
         preferred_time_end = request.data.get('appointment_time_end', None)
         appointment_type = request.data.get('appointment_type', 'checkup')
+        schedule_day_id = request.data.get('schedule_day_id', None)
         """ /kwargs """
 
         if force_schedule == 'true':
@@ -220,7 +221,8 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
             preferred_time_end=preferred_time_end,
             schedule_choice=schedule_choice,
             force_schedule=force_schedule,
-            appointment_type=appointment_type
+            appointment_type=appointment_type,
+            schedule_day_id=schedule_day_id
         )
 
         if create_result:
