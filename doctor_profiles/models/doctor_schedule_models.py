@@ -115,7 +115,7 @@ class PatientAppointment(models.Model):
     """
     is_approved = models.BooleanField(default=True)
     status = models.CharField(choices=QUEUE_STATUS_CODES, max_length=50, default='pending')
-    type = models.CharField(choices=APPOINTMENT_TYPES, max_length=50, default='check_up')
+    type = models.CharField(choices=APPOINTMENT_TYPES, max_length=50, default='checkup')
     queue_number = models.PositiveSmallIntegerField(null=True, blank=True, default=1)
     fee = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
@@ -266,18 +266,17 @@ def notify_queue_consumers(sender, instance, created=False, **kwargs):
 @receiver(post_save, sender=DoctorSchedule)
 def populate_schedule_days(sender, instance=None, created=False, **kwargs):
     if created and instance:
-        if instance.is_regular:
-            DateDim = apps.get_model('datesdim.DateDim')
-            date_range = DateDim.objects.get_days_between(
-                start=instance.start_date,
-                end=instance.end_date,
-                day_filter=instance.days
-            )
+        DateDim = apps.get_model('datesdim.DateDim')
+        date_range = DateDim.objects.get_days_between(
+            start=instance.start_date,
+            end=instance.end_date,
+            day_filter=instance.days
+        )
 
-            for day in date_range:
-                DoctorScheduleDay.objects.create(
-                    day=day,
-                    doctor=instance.doctor,
-                    medical_institution=instance.medical_institution,
-                    schedule=instance
-                )
+        for day in date_range:
+            DoctorScheduleDay.objects.create(
+                day=day,
+                doctor=instance.doctor,
+                medical_institution=instance.medical_institution,
+                schedule=instance
+            )

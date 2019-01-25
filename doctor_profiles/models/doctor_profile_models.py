@@ -386,21 +386,18 @@ class DoctorProfile(models.Model):
             end_date,
             days
     ):
+        TimeDim = apps.get_model('datesdim.TimeDim')
+        DateDim = apps.get_model('datesdim.DateDim')
         DoctorSchedule = apps.get_model('doctor_profiles.DoctorSchedule')
-
-        """
-        TODO:
-        Must be TimeDim instance
-        """
 
         result, message, schedule = DoctorSchedule.objects.create(
             doctor=self,
             medical_institution=medical_institution,
-            start_time=start_time,
-            end_time=end_time,
-            start_date=start_date,
-            end_date=end_date,
-            days=days,
+            start_time=TimeDim.objects.parse(start_time),
+            end_time=TimeDim.objects.parse(end_time),
+            start_date=DateDim.objects.parse_get(start_date),
+            end_date=DateDim.objects.parse_get(end_date),
+            days=days.split(";"),
         )
 
         return result, message, schedule

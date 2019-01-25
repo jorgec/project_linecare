@@ -1,4 +1,5 @@
 import phonenumbers
+from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.signals import post_save
@@ -54,8 +55,8 @@ class BaseProfile(models.Model):
 
     def as_html(self):
         html = f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Full Name</span><span class='kv-value'>{self.get_full_name()}</p>" \
-               f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Sex</span><span class='kv-value'>{self.gender}</p>" \
-               f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Date of Birth</span><span class='kv-value'>{self.date_of_birth}</p>"
+            f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Sex</span><span class='kv-value'>{self.gender}</p>" \
+            f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Date of Birth</span><span class='kv-value'>{self.date_of_birth}</p>"
         return html
 
     def get_casual_name(self):
@@ -178,6 +179,40 @@ class BaseProfile(models.Model):
             return self.profile_biometrics
         except ObjectDoesNotExist:
             return None
+
+    """ appointments """
+
+    def create_appointment(
+            self,
+            *,
+            doctor_id,
+            medical_institution_id,
+            day,
+            time_start,
+            time_end,
+            schedule_choice='first_available',
+            appointment_type='checkup',
+            force_schedule=False
+
+    ):
+        PatientAppointment = apps.get_model('doctor_profiles.PatientAppointment')
+
+        result, appointment, status_code = PatientAppointment.objects.create(
+            patient_id=self.id,
+            doctor_id=doctor_id,
+            medical_institution_id=medical_institution_id,
+            appointment_day=day,
+            preferred_time_start=time_start,
+            preferred_time_end=time_end,
+            schedule_choice=schedule_choice,
+            force_schedule=force_schedule,
+            appointment_type=appointment_type
+        )
+
+        return result, appointment, status_code
+
+
+""" /appointments """
 
 
 class ProfilePhone(models.Model):

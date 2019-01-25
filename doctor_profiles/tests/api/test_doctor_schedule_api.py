@@ -753,7 +753,7 @@ class TestDoctorScheduleApi:
         request = factory.post('/', form_data)
         force_authenticate(request, user=user)
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        assert response.status_code == 200, f"Expected 200 for 2019-12-02, got {response.status_code}: {response.data}: {schedule_1} : {schedule_1.schedule_on_days.all()}"
+        assert response.status_code == 201, f"Expected 201 for 2019-12-02, got {response.status_code}: {response.data}: {schedule_1} : {schedule_1.schedule_on_days.all()}"
 
         """ create appointment: first available - receptionist """
         form_data = {
@@ -767,7 +767,7 @@ class TestDoctorScheduleApi:
         request = factory.post('/', form_data)
         force_authenticate(request, user=user3)
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.data}"
+        assert response.status_code == 201, f"Expected 201, got {response.status_code}: {response.data}"
 
         """ create appointment: first available - bad receptionist """
         form_data = {
@@ -825,7 +825,7 @@ class TestDoctorScheduleApi:
         request = factory.post('/', form_data)
         force_authenticate(request, user=user)
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
-        assert response.status_code == 404, f"Expected 404, got {response.status_code}: {response.data}"
+        assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
 
         """ create appointment: user selection, bad time """
         form_data = {
