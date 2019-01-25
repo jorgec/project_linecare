@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
-# from django.views.generic import TemplateView
+from django.views.generic import TemplateView
 # from graphene_django.views import GraphQLView
 
 from accounts.modules.views.auth import AccountLoginView
@@ -27,8 +27,11 @@ schema_view = get_swagger_view(title='Linecare Core API')
 
 urlpatterns = [
     path('mHBvVWdpEY/', admin.site.urls),
-    # path('', TemplateView.as_view(template_name='neo/front_page/base.html')),
+    path('policy/', TemplateView.as_view(template_name='neo/static_pages/privacy_policy.html')),
+    path('terms/', TemplateView.as_view(template_name='neo/static_pages/terms_and_services.html')),
     path('', AccountLoginView.as_view(), name='home'),
+    path('terms/', AccountLoginView.as_view(), name='terms'),
+    path('policy/', AccountLoginView.as_view(), name='policy'),
 
     # auths
     path('accounts/', include('accounts.urls')),
