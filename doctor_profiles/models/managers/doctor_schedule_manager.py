@@ -181,8 +181,8 @@ class PatientAppointmentManager(models.Manager):
             _schedule_time_end = end
             if not _schedule_time_end:
                 return False, "Please set a end time"
-            schedule_time_start = TimeDim.objects.parse(_schedule_time_start)
-            schedule_time_end = TimeDim.objects.parse(_schedule_time_end)
+            schedule_time_start = TimeDim.objects.parse(start)
+            schedule_time_end = TimeDim.objects.parse(end)
 
         else:
             # schedule_options = doctor.get_options('schedule_options')
