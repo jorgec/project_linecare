@@ -97,11 +97,10 @@ class DoctorProfile(models.Model):
         if medical_institution:
             filters['medical_institution'] = medical_institution
 
-        try:
-            connection = self.doctor_connections.get(**filters)
-            return connection
-        except ObjectDoesNotExist:
-            return False
+        connection = self.doctor_connections.filter(**filters)
+        if connection.count() > 0:
+            return connection.first()
+        return False
 
     def get_receptionists(self, *, medical_institution=None, s=None):
 
