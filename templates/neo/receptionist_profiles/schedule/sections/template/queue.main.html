@@ -17,15 +17,27 @@
             {{ page_title }} &mdash; {{ date }}
         </h4>
         {% if schedules %}
-        <ul>
-            {% for schedule_day in schedules %}
-                <li>
-                    <strong>{{ schedule_day.schedule.split_days }}</strong>:
-                    {{ schedule_day.schedule.start_time.format_12 }} to {{ schedule_day.schedule.end_time.format_12 }} <br>
-                    <small>({{ schedule_day.schedule.start_date }} to {{ schedule_day.schedule.end_date }})</small>
-                </li>
-            {% endfor %}
-        </ul>
+            <div class="row">
+                {% for schedule_day in schedules %}
+                    <div class="col-sm-12 col-md-6 mb-1">
+                        <h4 class="h6">{{ schedule_day.schedule.split_days }}</h4>
+                        {{ schedule_day.schedule.start_time.format_12 }}
+                        to {{ schedule_day.schedule.end_time.format_12 }},
+                        <small>({{ schedule_day.schedule.start_date }} to {{ schedule_day.schedule.end_date }})</small>
+                    </div>
+                    <div class="col-sm-6 col-md-3 text-center">
+                        <!--
+                        The doctor is<br>
+                        <div id="doctor_presence_container_{{ schedule_day.id }}" class="doctor_presence_container"></div>
+                        -->
+                    </div>
+                    <div class="col-sm-6 col-md-3 text-center">
+
+                        <div id="doctor_stepped_out_container"></div>
+                    </div>
+                    <hr>
+                {% endfor %}
+            </div>
         {% else %}
             <div class="alert alert-danger">
                 {{ doctor }} does not have a schedule at {{ medical_institution }} on this day!
@@ -33,6 +45,10 @@
         {% endif %}
     </div>
     <div class="body py-3">
+        <p class="mb-2">
+            <a href="{% url 'receptionist_profile_medical_institution_doctor_history_list' medical_institution.slug doctor.id %}?date={{ date }}">Appointment
+                History</a>
+        </p>
         <table class="table table-bordered table-responsive-md medical-records__table">
             <thead>
             <tr>
@@ -43,7 +59,11 @@
             </tr>
             </thead>
             <tbody id="container-queue">
-
+            <tr>
+                <td colspan="4" class="text-center">
+                    <div class="donut-spinner"></div>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

@@ -23,6 +23,9 @@ urlpatterns = [
     path('queue/<medical_institution>/<doctor_id>',
          doctor_schedule_views.ReceptionistProfileDoctorScheduleDetail.as_view(),
          name='receptionist_profile_doctor_queue'),
+    path('schedule/<medical_institution>/<doctor>/history',
+         doctor_schedule_views.DoctorProfileScheduleHistory.as_view(),
+         name='receptionist_profile_medical_institution_doctor_history_list'),
 
     # connections
     path('settings/medical_institution',

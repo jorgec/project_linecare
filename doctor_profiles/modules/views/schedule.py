@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -8,7 +9,7 @@ from rest_framework.utils import json
 from biometrics.forms import BiometricForm
 from datesdim.models import DateDim
 from doctor_profiles.constants import APPOINTMENT_TYPES
-from doctor_profiles.models import MedicalInstitution, PatientAppointment, DoctorScheduleDay
+from doctor_profiles.models import MedicalInstitution, PatientAppointment, DoctorScheduleDay, DoctorProfile
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
 from profiles.models import Gender
 
@@ -89,11 +90,27 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
 class DoctorProfileScheduleHistory(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
         doctor = request.user.doctor_profile()
+
         if 'medical_institution' in kwargs:
             medical_institution = get_object_or_404(MedicalInstitution, slug=kwargs['medical_institution'])
         else:
             medical_institution = get_object_or_404(MedicalInstitution,
                                                     slug=request.GET.get('medical_institution', None))
+
+        if not doctor:
+            try:
+                doctor = DoctorProfile.objects.get(id=request.GET.get('doctor_id', None))
+            except DoctorProfile.DoesNotExist:
+                return HttpResponseRedirect(reverse('/403'))
+            # check if receptionist
+            receptionist = request.user.receptionist_profile()
+            if not receptionist:
+                return HttpResponseRedirect(reverse('/403'))
+
+            conn = doctor.verify_receptionist(receptionist=receptionist, medical_institution=medical_institution)
+            if not conn:
+                return HttpResponseRedirect(reverse('/403'))
+
         rel = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor, medical_institution=medical_institution)
 
         date = request.GET.get('date', None)
@@ -129,7 +146,7 @@ class DoctorProfileScheduleHistory(LoginRequiredMixin, UserPassesTestMixin, View
         return render(request, 'neo/doctor_profiles/schedule/queue_history.html', context)
 
     def test_func(self):
-        return self.request.user.doctor_profile()
+        return self.request.user.doctor_profile() or self.request.user.receptionist_profile()
 
 class DoctorProfileScheduleCalendarMonth(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
@@ -151,17 +168,38 @@ class DoctorProfileScheduleCalendarMonth(LoginRequiredMixin, UserPassesTestMixin
 
 class DoctorProfileScheduleList(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
-        doctor = request.user.doctor_profile()
+        if request.user.doctor_profile():
+            doctor = request.user.doctor_profile()
 
-        context = {
-            'page_title': f'Appointment history for {doctor}',
-            'location': 'doctor_profile_manage_schedule',
-            'sublocation': 'detail',
-            'user': request.user,
-            'doctor': doctor,
-        }
+            context = {
+                'page_title': f'Appointment history for {doctor}',
+                'location': 'doctor_profile_manage_schedule',
+                'sublocation': 'detail',
+                'user': request.user,
+                'doctor': doctor,
+            }
 
-        return render(request, 'neo/doctor_profiles/schedule/list.html', context)
+            return render(request, 'neo/doctor_profiles/schedule/list.html', context)
+        elif request.user.receptionist_profile():
+            doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
+            receptionist = request.user.receptionist_profile()
+
+            if not receptionist:
+                raise PermissionDenied(self.get_permission_denied_message())
+
+            if not doctor.verify_receptionist(receptionist=receptionist):
+                raise PermissionDenied(self.get_permission_denied_message())
+
+            context = {
+                'page_title': f'Appointment history for {doctor}',
+                'location': 'doctor_profile_manage_schedule',
+                'sublocation': 'detail',
+                'user': request.user,
+                'receptionist': receptionist,
+                'doctor': doctor,
+            }
+
+            return render(request, 'neo/receptionist_profiles/schedule/list.html', context)
 
     def test_func(self):
-        return self.request.user.doctor_profile()
+        return self.request.user.doctor_profile() or self.request.user.receptionist_profile()
