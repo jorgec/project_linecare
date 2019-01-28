@@ -1,0 +1,20 @@
+{% extends 'neo/receptionist_profiles/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block content %}
+
+<div class="two-column">
+    {% block subcontent %}
+        {% include 'neo/receptionist_profiles/patient/common/nav__side.html' %}
+    {% endblock %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

@@ -4,6 +4,7 @@ from doctor_profiles.modules.api import medical_institutions_api
 from .modules.views import home as home_views
 from .modules.views import doctor_schedule as doctor_schedule_views
 from .modules.views import receptionist_connections as receptionist_connection_views
+from .modules.views import patient as patient_views
 
 from .modules.api import receptionist_profile_api
 from .modules.api import receptionist_connections_api
@@ -26,6 +27,11 @@ urlpatterns = [
     path('schedule/<medical_institution>/<doctor>/history',
          doctor_schedule_views.DoctorProfileScheduleHistory.as_view(),
          name='receptionist_profile_medical_institution_doctor_history_list'),
+
+    # patient
+    path('patients/<patient_id>/detail',
+         patient_views.ReceptionistProfilePatientDetail.as_view(),
+         name='receptionist_profile_patient_detail'),
 
     # connections
     path('settings/medical_institution',
