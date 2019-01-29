@@ -31,7 +31,7 @@ DEBUG = True
 
 SITE_ID = 1
 # SITE_URL = 'https://192.168.10.245'
-SITE_URL = 'https://192.168.33.110'
+SITE_URL = 'http://192.168.50.11'
 
 ALLOWED_HOSTS = ['*']
 
@@ -46,6 +46,7 @@ INTERNAL_IPS = [
     # Local
     '192.168.10.245',
     '192.168.10.189,'
+    '192.168.50.11'
 
     # VirtualBox Adapters
     '192.168.30.1',
@@ -185,7 +186,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            '/linecare/templates',
+            '/linecare/linecare-backend/templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -296,6 +297,7 @@ CORS_ORIGIN_WHITELIST = (
     'linecare.local',
     '192.168.10.189',
     '192.168.33.1',
+    '192.168.50.11'
 )
 
 GRAPHENE = {
