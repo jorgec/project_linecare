@@ -41,19 +41,15 @@
             Insurance Providers
         </a>
     </li>
-    <li class="sidebar-nav-separator"></li>
     <li class="sidebar-nav-item">
         <a {% if sublocation == 'institution' %}class="active"{% endif %}
            href="{% url 'doctor_profile_settings_medical_institution' %}">
             <i class="fas fa-hospital mr-3"></i>
-            Medical Institution Linkages
+            Hospital/Clinics
         </a>
 
     </li>
     <li class="sidebar-nav-separator"></li>
-    <li class="sidebar-nav-item">
-        <a {% if sublocation == 'home' %}class="active"{% endif %} href="{% url 'doctor_profile_settings_medical_institution' %}">My Affiliated Medical Institutions</a>
-    </li>
     {% if rel.medical_institution %}
     <li class="sidebar-nav-item">
         <a {% if sublocation == 'connection' %}class="active"{% endif %} href="">Connection Details {{ rel.medical_institution }}</a>
