@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
 
 # Create your views here.
@@ -59,16 +59,17 @@ class ProfileSettingsBasicInfoView(LoginRequiredMixin, View):
 
 class ProfileSettingsEmailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        form = EmailChangeForm(instance=request.user)
-
-        context = {
-            'page_title': 'Update Email',
-            'location': 'profile_settings',
-            'sublocation': 'email',
-            'form': form,
-        }
-
-        return render(request, 'neo/profile/settings/email.html', context)
+        # form = EmailChangeForm(instance=request.user)
+        #
+        # context = {
+        #     'page_title': 'Update Email',
+        #     'location': 'profile_settings',
+        #     'sublocation': 'email',
+        #     'form': form,
+        # }
+        #
+        # return render(request, 'neo/profile/settings/email.html', context)
+        return HttpResponseForbidden()
 
     def post(self, request, *args, **kwargs):
         form = EmailChangeForm(request.POST, instance=request.user)
