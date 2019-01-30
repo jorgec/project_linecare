@@ -13,3 +13,15 @@
 {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/schedule/js/schedule.js.html' %}
 {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/meta_duration/js/meta_duration.js.html' %}
 {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/meta_fee/js/meta_fee.js.html' %}
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var btnSaveOtherSettings = $("#btnSaveOtherSettings");
+
+        btnSaveOtherSettings.on('click', function(e){
+            e.preventDefault();
+            saveMeta("fees", fees_meta);
+            saveMeta("durations", durations_meta);
+        });
+    });
+</script>
