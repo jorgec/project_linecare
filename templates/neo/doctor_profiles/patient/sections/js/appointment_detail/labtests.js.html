@@ -12,6 +12,7 @@
     var modalAddLabTest_purpose_full = $("#modalAddLabTest_purpose_full");
     var modalAddLabTest_indication_full = $("#modalAddLabTest_indication_full");
     var modalAddLabTest_notes_full = $("#modalAddLabTest_notes_full");
+    var btnAddLabTestPatientSelected = $("#btnAddLabTestPatientSelected");
 
     var txtLabTestsearch = $("#txtLabTestsearch");
     $(document).ready(function () {
@@ -57,7 +58,27 @@
             var labtest_id = $(this).attr("data-labtest-id");
             addLabTest(labtest_id);
         });
+
+        btnAddLabTestPatientSelected.on('click', function(e){
+            e.preventDefault();
+            addSelectedLabTests();
+        });
     });
+
+    function addSelectedLabTests(){
+        $.notify({
+            message: "Requesting your lab tests..."
+        }, {
+            type: "info"
+        });
+        modalAddLabTest.popup('hide');
+        $('#labtests-container input:checked').each(function() {
+            var labtest_id = $(this).attr('value');
+            addLabTest(labtest_id);
+        });
+
+
+    }
 
     function addLabTest(labtest_id) {
         var url = "{% url 'api_private_patient_labtest_create' %}";
@@ -115,7 +136,6 @@
         $.get(dismissed_url)
             .done(function (result) {
                 $("#dismissed-labtests-container").loadTemplate($("#dismissed-labtests-template"), result);
-                console.log(result);
                 $(".undismiss-labtest").on('click', function (e) {
                     e.preventDefault();
                     var labtest_id = $(this).attr("data-labtest-id");
@@ -134,7 +154,6 @@
         if (term.length >= 3 || term.length === 0) {
             $.get(url)
                 .done(function (result) {
-                    console.log(result);
                     labtests_loader.addClass('hide');
                     labtests_container.loadTemplate(labtests_template, result);
 
