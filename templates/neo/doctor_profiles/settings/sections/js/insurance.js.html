@@ -114,6 +114,11 @@
         e.preventDefault();
         addRelatedEntity();
     });
+    $("#btnRelatedEntityAddNext").click(function(e){
+        e.preventDefault();
+        addRelatedEntity();
+        window.location.replace('/doctor/settings/medical_institution');
+    });
 
     $("#btnEntityAdd").click(function(e){
         e.preventDefault();

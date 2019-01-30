@@ -123,6 +123,11 @@
         e.preventDefault();
         addRelatedEntity();
     });
+    $("#btnRelatedEntityAddNext").click(function(e){
+        e.preventDefault();
+        addRelatedEntity();
+        window.location.replace('/doctor/settings/insurance');
+    });
 
     $("#btnEntityAdd").click(function(e){
         e.preventDefault();
