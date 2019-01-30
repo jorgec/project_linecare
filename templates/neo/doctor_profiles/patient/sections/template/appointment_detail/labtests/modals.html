@@ -5,21 +5,36 @@
                 <div class="form-group mb-2">
                     <input type="text" class="form-control" placeholder="Search..." name="txtLabTestsearch" id="txtLabTestsearch">
                 </div>
-                <div style="height: 70vh; overflow: scroll">
+                <div style="height: 60vh; overflow: scroll">
                     <ul class="list-group list-group-flush" id="labtests-container"></ul>
                 </div>
+                <a id="btnAddLabTestPatientSelected" class="btn btn-primary btn-sm mt-1" href="#!">
+                    Request selected tests
+                </a>
             </div>
             <div class="col-sm-12 col-md-8 hide" id="modalAddLabTestDescriptionPane">
                 <h4 id="modalAddLabTest_title" class="h4"></h4>
                 <hr>
                 <h5 class="h5">Description</h5>
-                <p id="modalAddLabTest_description"></p>
+                <div id="modalAddLabTest_description_wrapper">
+                    <p><span id="modalAddLabTest_description"></span> <a href="#!" class="modalAddLabTest_description_full_open">Read mode &raquo;</a></p>
+                    <div id="modalAddLabTest_description_full" class="popup-modal card card-body" style="width: 50vw"></div>
+                </div>
                 <h5 class="h5">Purpose</h5>
-                <p id="modalAddLabTest_purpose"></p>
+                <div id="modalAddLabTest_purpose_wrapper">
+                    <p><span id="modalAddLabTest_purpose"></span> <a href="#!" class="modalAddLabTest_purpose_full_open">Read mode &raquo;</a></p>
+                    <div id="modalAddLabTest_purpose_full" class="popup-modal card card-body" style="width: 50vw"></div>
+                </div>
                 <h5 class="h5">Indication</h5>
-                <p id="modalAddLabTest_indication"></p>
+                <div id="modalAddLabTest_indication_wrapper">
+                    <p><span id="modalAddLabTest_indication"></span> <a href="#!" class="modalAddLabTest_indication_full_open">Read mode &raquo;</a></p>
+                    <div id="modalAddLabTest_indication_full" class="popup-modal card card-body" style="width: 50vw"></div>
+                </div>
                 <h5 class="h5">Notes</h5>
-                <p id="modalAddLabTest_notes"></p>
+                <div id="modalAddLabTest_notes_wrapper">
+                    <p><span id="modalAddLabTest_notes"></span> <a href="#!" class="modalAddLabTest_notes_full_open">Read mode &raquo;</a></p>
+                    <div id="modalAddLabTest_notes_full" class="popup-modal card card-body" style="width: 50vw"></div>
+                </div>
                 <hr>
                 <a id="btnAddLabTestPatient" class="btn btn-primary" href="#!">
                     Request for this test
