@@ -174,7 +174,7 @@ class DoctorProfileScheduleList(LoginRequiredMixin, UserPassesTestMixin, View):
             context = {
                 'page_title': f'Appointment history for {doctor}',
                 'location': 'doctor_profile_manage_schedule',
-                'sublocation': 'detail',
+                'sublocation': 'appointment_list',
                 'user': request.user,
                 'doctor': doctor,
             }
@@ -193,7 +193,7 @@ class DoctorProfileScheduleList(LoginRequiredMixin, UserPassesTestMixin, View):
             context = {
                 'page_title': f'Appointment history for {doctor}',
                 'location': 'doctor_profile_manage_schedule',
-                'sublocation': 'detail',
+                'sublocation': 'appointment_list',
                 'user': request.user,
                 'receptionist': receptionist,
                 'doctor': doctor,

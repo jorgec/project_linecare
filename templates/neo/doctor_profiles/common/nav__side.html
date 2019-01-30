@@ -7,4 +7,7 @@
     <li class="sidebar-nav-item">
         <a {% if location == 'doctor_profile_patients' %}class="active"{% endif %} href="{% url 'doctor_profile_patient_list' %}">Patients</a>
     </li>
+    <li class="sidebar-nav-item">
+        <a {% if location == 'doctor_profile_manage_schedule' %}class="active"{% endif %} href="{% url 'doctor_profile_appointments_list' %}">Appointment History</a>
+    </li>
 </ul>
