@@ -8,6 +8,10 @@
     var patient_labtests_template = $("#patient-labtests-template");
     var modalLabTestRequestDetail = $("#modalLabTestRequestDetail");
     var modalDismissedLabtests = $("#modalDismissedLabtests");
+    var modalAddLabTest_description_full = $("#modalAddLabTest_description_full");
+    var modalAddLabTest_purpose_full = $("#modalAddLabTest_purpose_full");
+    var modalAddLabTest_indication_full = $("#modalAddLabTest_indication_full");
+    var modalAddLabTest_notes_full = $("#modalAddLabTest_notes_full");
 
     var txtLabTestsearch = $("#txtLabTestsearch");
     $(document).ready(function () {
@@ -26,10 +30,26 @@
             scrolllock: true
         });
 
+        modalAddLabTest_description_full.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+        modalAddLabTest_purpose_full.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+        modalAddLabTest_indication_full.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+        modalAddLabTest_notes_full.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+
 
         txtLabTestsearch.on('keyup', function (e) {
             var term = $(this).val();
-            console.log(term);
             loadLabTests(term);
         });
 
@@ -125,10 +145,14 @@
                             if (parseInt(labtest_id) === item.id) {
                                 $("#modalAddLabTestDescriptionPane").removeClass("hide");
                                 $("#modalAddLabTest_title").html(item.name);
-                                $("#modalAddLabTest_description").html(item.description);
-                                $("#modalAddLabTest_purpose").html(item.purpose);
-                                $("#modalAddLabTest_indication").html(item.indication);
-                                $("#modalAddLabTest_notes").html(item.notes);
+                                $("#modalAddLabTest_description").html(item.description_excerpt);
+                                $("#modalAddLabTest_purpose").html(item.purpose_excerpt);
+                                $("#modalAddLabTest_indication").html(item.indication_excerpt);
+                                $("#modalAddLabTest_notes").html(item.notes_excerpt);
+                                $("#modalAddLabTest_description_full").html(item.description);
+                                $("#modalAddLabTest_purpose_full").html(item.purpose);
+                                $("#modalAddLabTest_indication_full").html(item.indication);
+                                $("#modalAddLabTest_notes_full").html(item.notes);
                                 $("#btnAddLabTestPatient").attr("data-labtest-id", item.id);
                             }
 

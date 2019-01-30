@@ -5,14 +5,14 @@ from doctor_profiles.serializers.doctor_profile_serializers import DoctorProfile
 
 
 class LabTestSerializer(serializers.ModelSerializer):
-    description = serializers.SerializerMethodField('repr_description')
-    purpose = serializers.SerializerMethodField('repr_purpose')
-    indication = serializers.SerializerMethodField('repr_indication')
-    sample = serializers.SerializerMethodField('repr_sample')
-    preparation = serializers.SerializerMethodField('repr_preparation')
-    usage = serializers.SerializerMethodField('repr_usage')
-    interpretation = serializers.SerializerMethodField('repr_interpretation')
-    notes = serializers.SerializerMethodField('repr_notes')
+    description_excerpt = serializers.SerializerMethodField('repr_description')
+    purpose_excerpt = serializers.SerializerMethodField('repr_purpose')
+    indication_excerpt = serializers.SerializerMethodField('repr_indication')
+    sample_excerpt = serializers.SerializerMethodField('repr_sample')
+    preparation_excerpt = serializers.SerializerMethodField('repr_preparation')
+    usage_excerpt = serializers.SerializerMethodField('repr_usage')
+    interpretation_excerpt = serializers.SerializerMethodField('repr_interpretation')
+    notes_excerpt = serializers.SerializerMethodField('repr_notes')
     aliases = serializers.SerializerMethodField('repr_aliases')
 
     def repr_aliases(self, obj):
@@ -83,6 +83,14 @@ class LabTestSerializer(serializers.ModelSerializer):
             'usage',
             'interpretation',
             'notes',
+            'description_excerpt',
+            'purpose_excerpt',
+            'indication_excerpt',
+            'sample_excerpt',
+            'preparation_excerpt',
+            'usage_excerpt',
+            'interpretation_excerpt',
+            'notes_excerpt',
         )
 
 

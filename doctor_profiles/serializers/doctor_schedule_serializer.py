@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import serializers
 
 from datesdim.serializers import TimeDimSerializer, DateDimSerializer
@@ -23,6 +24,12 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
     doctor = DoctorProfileSerializer()
     medical_institution = MedicalInstitutionPublicSerializer()
     days_split = serializers.SerializerMethodField('repr_days_split')
+    mi_queue = serializers.SerializerMethodField('repr_mi_queue')
+
+    def repr_mi_queue(self, obj):
+        return reverse('doctor_profile_schedule_detail', kwargs={
+            'medical_institution': obj.medical_institution.slug
+        })
 
     def repr_days_split(self, obj):
         return obj.split_days()
@@ -38,7 +45,8 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
             'doctor',
             'medical_institution',
             'days',
-            'days_split'
+            'days_split',
+            'mi_queue'
         )
 
 

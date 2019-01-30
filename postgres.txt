@@ -1,20 +1,11 @@
 sudo -u postgres psql
-CREATE DATABASE svcore;
-CREATE USER svcore_user WITH PASSWORD 'asdf1234';
+CREATE DATABASE linecare_core;
+CREATE USER linecare_user WITH PASSWORD 'asdf1234';
 
-ALTER ROLE svcore_user SET client_encoding TO 'utf8';
-ALTER ROLE svcore_user SET default_transaction_isolation TO 'read committed';
-ALTER ROLE svcore_user SET timezone TO 'Asia/Manila';
+ALTER ROLE linecare_user SET client_encoding TO 'utf8';
+ALTER ROLE linecare_user SET default_transaction_isolation TO 'read committed';
+ALTER ROLE linecare_user SET timezone TO 'Asia/Manila';
 
-GRANT ALL PRIVILEGES ON DATABASE svcore TO svcore_user;
+GRANT ALL PRIVILEGES ON DATABASE linecare_core TO linecare_user;
 
-CREATE DATABASE svcore_test;
-CREATE tester svcore_tester WITH PASSWORD 'asdf1234';
-
-ALTER ROLE svcore_tester SET client_encoding TO 'utf8';
-ALTER ROLE svcore_tester SET default_transaction_isolation TO 'read committed';
-ALTER ROLE svcore_tester SET timezone TO 'Asia/Manila';
-
-GRANT ALL PRIVILEGES ON DATABASE svcore_test TO svcore_tester;
-
-\q
+psql databasename < data_base_dump
