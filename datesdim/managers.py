@@ -7,7 +7,6 @@ from arrow.parser import ParserError
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
-from datetime import *
 
 from datesdim.constants import JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, \
     DECEMBER, MONTH_CHOICES
@@ -222,7 +221,7 @@ class TimeDimManager(models.Manager):
         t = t.replace(' ', '').lower()
         if "am" in t or "pm" in t:
             try:
-                _time = datetime.strptime(t, '%I:%M%p').time()
+                _time = datetime.datetime.strptime(t, '%I:%M%p').time()
                 return f'{_time.hour}:{_time.minute}'
             except ValueError:
                 return False
