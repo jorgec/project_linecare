@@ -2,16 +2,16 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $(".endTime").bootstrapMaterialDatePicker({
-            date: false,
-            format: "h:mm a",
-            shortTime: true,
-        });
-        $(".startTime").bootstrapMaterialDatePicker({
-            date: false,
-            format: "h:mm a",
-            shortTime: true,
-        });
+        // $(".endTime").bootstrapMaterialDatePicker({
+        //     date: false,
+        //     format: "h:mm a",
+        //     shortTime: true,
+        // });
+        // $(".startTime").bootstrapMaterialDatePicker({
+        //     date: false,
+        //     format: "h:mm a",
+        //     shortTime: true,
+        // });
 
 
         $(".endDate").bootstrapMaterialDatePicker({
@@ -34,8 +34,8 @@
                     return this.value;
                 }
             ).get().join(";");
-            var startTime = $("#startTime", this).val();
-            var endTime = $("#endTime", this).val();
+            var startTime = $("#myStartTime", this).val();
+            var endTime = $("#myEndTime", this).val();
             var startDate = $("#startDate", this).val();
             var endDate = $("#endDate", this).val();
             var url = "{% url 'api_private_doctor_schedule_create' %}";
@@ -54,6 +54,7 @@
 
                 .done(function (result) {
                     $("#schedule_errors_container").html('');
+                    $('#frmAddRegularWeeklySchedule_0').trigger("reset");
                     $.notify({
                         message: "Schedule created!"
                     }, {
