@@ -7,6 +7,7 @@ from arrow.parser import ParserError
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
+from datetime import *
 
 from datesdim.constants import JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, \
     DECEMBER, MONTH_CHOICES
@@ -215,18 +216,16 @@ class TimeDimManager(models.Manager):
     def evening(self):
         return self.get_queryset().evening()
 
-    def convert_to_24(self, time):
+    def convert_to_24(self, t):
         """Converts 12 hours time format to 24 hours
         """
-        time = time.replace(' ', '')
-        time, half_day = time[:-2], time[-2:].lower()
-        if half_day == 'am':
-            return time
-        elif half_day == 'pm':
-            split = time.find(':')
-            if split == -1:
-                split = None
-            return str(int(time[:split]) + 12) + time[split:]
+        t = t.replace(' ', '').lower()
+        if "am" in t or "pm" in t:
+            try:
+                _time = datetime.strptime(t, '%I:%M%p').time()
+                return f'{_time.hour}:{_time.minute}'
+            except ValueError:
+                return False
         else:
             raise ValueError("Didn't end with AM or PM.")
 
@@ -242,6 +241,8 @@ class TimeDimManager(models.Manager):
             t = t.lower()
             if "am" in t or "pm" in t:
                 t = self.convert_to_24(t)
+                if not t:
+                    return False
 
             pattern = re.compile('^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$')
             match = pattern.match(t)
