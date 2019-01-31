@@ -54,6 +54,7 @@
 
                 .done(function (result) {
                     $("#schedule_errors_container").html('');
+                    $('#frmCollectionRegularWeeklySchedule').trigger("reset");
                     $.notify({
                         message: "Schedule created!"
                     }, {
