@@ -11,6 +11,15 @@
                 updatePresenceStatus({{ schedule_day.id }});
             });
         {% endfor %}
+
+        var webSocketBridge = new channels.WebSocketBridge();
+        webSocketBridge.connect('/notifications/doctor/queue/status_update/');
+        webSocketBridge.listen(function (event) {
+            console.log(event);
+            if(event.type === "queue.update"){
+                getQueue('{{ date }}');
+            }
+        });
     });
 
     function getQueue(){
