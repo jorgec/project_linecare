@@ -191,13 +191,16 @@ class DoctorProfile(models.Model):
     def settings_progress(self):
         return self.calculate_settings_progress()
 
-    def get_schedules(self, *, medical_institution=None, include_past=True):
+    def get_schedules(self, *, medical_institution=None, include_past=True, filter_days=None):
         DateDim = apps.get_model('datesdim.DateDim')
         filters = {
             'is_approved': True
         }
         if medical_institution:
             filters['medical_institution'] = medical_institution
+
+        if filter_days:
+            filters['days__contains'] = filter_days
 
         if include_past:
             return self.doctor_schedules.filter(**filters)
@@ -206,8 +209,8 @@ class DoctorProfile(models.Model):
                 end_date__date_obj__gte=DateDim.objects.today().date_obj
             )
 
-    def get_active_schedules(self, medical_institution=None):
-        return self.get_schedules(medical_institution=medical_institution, include_past=False)
+    def get_active_schedules(self, medical_institution=None, filter_days=None):
+        return self.get_schedules(medical_institution=medical_institution, include_past=False, filter_days=None)
 
     def get_schedule_days_for_month(self, *, year=None, month=None, medical_institution=None):
         DateDim = apps.get_model('datesdim.DateDim')

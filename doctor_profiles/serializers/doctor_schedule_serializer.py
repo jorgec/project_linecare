@@ -74,7 +74,6 @@ class DoctorScheduleBasicSerializer(serializers.ModelSerializer):
         )
 
 
-
 class DoctorScheduleCollisionSerializer(serializers.Serializer):
     medical_institution = MedicalInstitutionSerializer()
     day = DateDimSerializer()
@@ -84,8 +83,12 @@ class DoctorScheduleCollisionSerializer(serializers.Serializer):
 
 
 class DoctorScheduleDaySerializer(serializers.ModelSerializer):
+    day = DateDimSerializer()
+    actual_start_time = TimeDimSerializer()
+    actual_end_time = TimeDimSerializer()
     schedule = DoctorScheduleBasicSerializer()
     medical_institution = MedicalInstitutionPublicSerializer()
+
     class Meta:
         model = DoctorScheduleDay
         fields = (
@@ -94,9 +97,34 @@ class DoctorScheduleDaySerializer(serializers.ModelSerializer):
             'doctor',
             'medical_institution',
             'schedule',
-            'doctor_id_in',
+            'doctor_is_in',
             'doctor_stepped_out',
             'actual_start_time',
             'actual_end_time'
         )
 
+
+class DoctorScheduleDayBasicSerializer(serializers.ModelSerializer):
+    day = DateDimSerializer()
+    actual_start_time = TimeDimSerializer()
+    actual_end_time = TimeDimSerializer()
+
+    class Meta:
+        model = DoctorScheduleDay
+        fields = (
+            'id',
+            'day',
+            'doctor',
+            'medical_institution',
+            'schedule',
+            'doctor_is_in',
+            'doctor_stepped_out',
+            'actual_start_time',
+            'actual_end_time'
+        )
+
+
+class DoctorScheduleListQueryParamsSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    medical_institution = serializers.IntegerField(required=False, allow_null=False)
+    include_past = serializers.CharField(default="no")

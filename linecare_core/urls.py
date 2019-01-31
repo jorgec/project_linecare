@@ -23,6 +23,7 @@ from accounts.modules.views.auth import AccountLoginView
 
 from accounts.modules.api.auth import ApiFacebookLogin
 from rest_framework_swagger.views import get_swagger_view
+
 schema_view = get_swagger_view(title='Linecare Core API')
 
 urlpatterns = [
@@ -54,6 +55,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns += [
         path('__debug__/', include(debug_toolbar.urls)),
         path('apidocs/', schema_view)

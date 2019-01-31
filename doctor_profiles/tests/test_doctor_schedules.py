@@ -8,8 +8,9 @@ from doctor_profiles.models import MedicalInstitutionType, MedicalInstitution
 pytestmark = pytest.mark.django_db
 fake = Faker()
 
-class TestDoctorScheduleManager:
-    def test_create_schedule(self):
+
+class TestDoctorSchedules:
+    def test_init(self):
         DateDim.objects.preload_year(year=2019)
         TimeDim.objects.preload_times()
 
@@ -20,14 +21,6 @@ class TestDoctorScheduleManager:
 
         doctor = user.create_doctor_profile()
         assert doctor is not None, "Doctor Profile was not created"
-
-        email = fake.email()
-        password = fake.password()
-        user4 = Account.objects.create_user(email=email, password=password)
-        assert user4 is not None, "User 4 was not created"
-
-        doctor2 = user4.create_doctor_profile()
-        assert doctor2 is not None, "Doctor Profile 2 was not created"
 
         email = fake.email()
         password = fake.password()
@@ -42,33 +35,15 @@ class TestDoctorScheduleManager:
         user3 = Account.objects.create_user(email=email, password=password)
         assert user3 is not None, "User 3 was not created"
 
-        receptionist2 = user3.create_receptionist_profile()
-        assert receptionist2 is not None, "Receptionist Profile 2 was not created"
-
-        email = fake.email()
-        password = fake.password()
-        user5 = Account.objects.create_user(email=email, password=password)
-        assert user5 is not None, "User 5 was not created"
-
-        email = fake.email()
-        password = fake.password()
-        user6 = Account.objects.create_user(email=email, password=password)
-        assert user6 is not None, "User 6 was not created"
-
         mi_type = MedicalInstitutionType.objects.create(name='Hospital')
         assert mi_type is not None, "Type was not created"
 
-        # /fixtures
-
-        """ create institution 1 """
-        m1_name = fake.name()
-
         mi = MedicalInstitution.objects.create(
-            name=m1_name,
+            name=fake.name(),
             type=mi_type,
             added_by=user
         )
-        assert mi, f"{m1_name} not created: {mi}"
+        assert mi, f"{fake.name()} not created: {mi}"
 
         d1_mi1 = doctor.connect_medical_institution(
             medical_institution=mi
@@ -91,7 +66,17 @@ class TestDoctorScheduleManager:
         )
         assert s1r, f"Schedule not created for {doctor} at {mi}"
 
-        a1res, a1, a1status = user5.base_profile().create_appointment(
+        s1r, s1m, s1s = doctor.create_schedule(
+            medical_institution=mi,
+            start_time='12:00pm',
+            end_time='17:00',
+            start_date='2019-12-01',
+            end_date='2019-12-31',
+            days='Monday;Tuesday'
+        )
+        assert s1r, f"Schedule not created for {doctor} at {mi}"
+
+        a1res, a1, a1status = user3.base_profile().create_appointment(
             doctor_id=doctor.id,
             medical_institution_id=mi.id,
             day='2019-12-02',
@@ -99,8 +84,8 @@ class TestDoctorScheduleManager:
             time_end='9:30',
             appointment_type='checkup'
         )
+        assert a1, f"{a1status}: {user3} appointment with {doctor} at {mi} on 2019-12-02 not created: {a1}"
 
-        assert a1, f"{a1status}: {user5} appointment with {doctor} at {mi} on 2019-12-02 not created: {a1}"
-
-
-
+        schedules = doctor.get_active_schedules()
+        assert schedules.count() == 2, f"Expected 2, got {schedules.count()}"
+        assert s1s in schedules, f"{s1s} not in {schedules}"

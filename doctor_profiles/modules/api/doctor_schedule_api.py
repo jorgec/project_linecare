@@ -19,6 +19,8 @@ from doctor_profiles.models.medical_institution_doctor_models import MedicalInst
 from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_new_appointment
 from doctor_profiles.serializers import DoctorScheduleSerializer, \
     MedicalInstitutionSerializer, PatientQueuePrivateSerializer
+from doctor_profiles.serializers.doctor_schedule_serializer import DoctorScheduleDaySerializer, \
+    DoctorScheduleDayBasicSerializer
 from profiles.models import BaseProfile
 from receptionist_profiles.models import ReceptionistProfile
 
@@ -110,6 +112,23 @@ class ApiDoctorScheduleCreate(APIView):
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ApiDoctorScheduleDayList(APIView):
+    """
+    Get days of particular schedule
+    ?id=schedule_id
+    """
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        schedule = get_object_or_404(DoctorSchedule, id=request.GET.get('id', None))
+        schedule_days = schedule.get_schedule_days().order_by('day__date_obj')
+
+        serializer = DoctorScheduleDayBasicSerializer(schedule_days, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class ApiDoctorScheduleList(APIView):
     """
     Get schedule list of doctor
@@ -117,6 +136,7 @@ class ApiDoctorScheduleList(APIView):
     [optional]
     medical_institution=medical_institution_id
     include_past=yes
+    filter_days=Monday^Tuesday^...
     """
     permission_classes = [permissions.AllowAny]
 
@@ -128,12 +148,25 @@ class ApiDoctorScheduleList(APIView):
         else:
             medical_institution = None
 
+        filter_days = request.GET.get('filter_days', None)
+        if filter_days:
+            days = request.GET.get('filter_days').split("^")
+        else:
+            days = None
+
         if request.GET.get('include_past', 'no') == 'yes':
             serializer = DoctorScheduleSerializer(
-                doctor.get_schedules(medical_institution=medical_institution, include_past=True), many=True)
+                doctor.get_schedules(
+                    medical_institution=medical_institution,
+                    include_past=True,
+                    filter_days=days
+                ), many=True)
         else:
-            serializer = DoctorScheduleSerializer(doctor.get_schedules(medical_institution=medical_institution),
-                                                  many=True)
+            serializer = DoctorScheduleSerializer(doctor.get_schedules(
+                medical_institution=medical_institution,
+                filter_days=days
+            ),
+                many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -157,7 +190,8 @@ class ApiDoctorScheduleDelete(APIView):
         if type(profile_type) == DoctorProfile and profile_type == schedule.doctor:
             flag = True
 
-        if type(profile_type) == ReceptionistProfile and schedule.doctor.verify_receptionist(receptionist=profile_type, medical_institution=schedule.medical_institution):
+        if type(profile_type) == ReceptionistProfile and schedule.doctor.verify_receptionist(receptionist=profile_type,
+                                                                                             medical_institution=schedule.medical_institution):
             flag = True
 
         if flag:

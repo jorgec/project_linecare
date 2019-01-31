@@ -70,6 +70,9 @@ class DoctorSchedule(models.Model):
     def split_days(self):
         return ", ".join(self.days)
 
+    def get_schedule_days(self):
+        return self.schedule_on_days.all()
+
 
 class DoctorScheduleDay(models.Model):
     """
