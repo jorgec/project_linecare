@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 
 from datesdim.models import DateDim
 from doctor_profiles.models import PatientAppointment, DoctorProfile, MedicalInstitution, MedicalInstitutionDoctor
+from doctor_profiles.modules.api.doctor_schedule_api import is_doctor_or_receptionist
 from doctor_profiles.serializers import PatientQueuePrivateSerializer
 
 UPDATE_STATUS_PERMISSIONS_MATRIX = {
@@ -100,10 +101,23 @@ class ApiPatientAppointmentList(APIView):
     appointment_type=str
     """
 
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('doctor_id', None))
+
+        access, profile_type = is_doctor_or_receptionist(request.user)
+        if not access:
+            return Response("Invalid account", status=status.HTTP_401_UNAUTHORIZED)
+
+        if type(profile_type) != DoctorProfile:
+            """ person accessing isn't the doctor, so check if receptionist is allowed """
+            connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile)
+            if not connection:
+                return Response("Receptionist is not authorized by this doctor for this medical institution",
+                                status=status.HTTP_403_FORBIDDEN)
+        elif profile_type.id != doctor.id:
+            return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
 
         medical_institution_id = request.GET.get('medical_institution', None)
         if medical_institution_id:

@@ -8,7 +8,7 @@ from accounts.models import Account
 from datesdim.models import DateDim, TimeDim
 from doctor_profiles.models import MedicalInstitutionType, MedicalInstitution, DoctorSchedule
 from doctor_profiles.modules.api.doctor_schedule_api import ApiDoctorScheduleCreate, ApiDoctorScheduleDelete, \
-    ApiDoctorScheduleAppointmentCreate
+    ApiDoctorScheduleAppointmentCreate, ApiPrivateDoctorScheduleQueueList, ApiPrivateDoctorScheduleCalendar
 from doctor_profiles.modules.api.medical_institution_doctors_api import ApiMedicalInstitutionDoctorCreate
 from doctor_profiles.modules.api.medical_institutions_api import ApiPrivateMedicalInstitutionCreate
 from locations.models import Region, Province, City, Country
@@ -234,6 +234,23 @@ class TestDoctorScheduleApi:
         assert response.status_code == 201, f"Schedule not created for {doctor} at {medical_institution}: {response.status_code}, {response.data}"
 
         """ /schedule 1c """
+
+        """ schedule 1d"""
+        form_data = {
+            'start_time': '8:00am',
+            'end_time': '11:00am',
+            'start_date': '2019-11-01',
+            'end_date': '2019-11-20',
+            'days': 'Monday;Tuesday',
+            'medical_institution_id': medical_institution.id,
+            'doctor_id': 43543
+        }
+        request = factory.post('/', form_data)
+        force_authenticate(request, user=user)
+        response = ApiDoctorScheduleCreate.as_view()(request)
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}"
+
+        """ /schedule 1d """
 
         """ schedule 2 -- conflict """
         form_data = {
@@ -527,8 +544,6 @@ class TestDoctorScheduleApi:
         response = ApiDoctorScheduleDelete.as_view()(request)
         assert response.status_code == 404, f"404 expected: {response.status_code}, {response.data}"
 
-
-
         """ create appointment: in the past """
         form_data = {
             'doctor_id': doctor.id,
@@ -638,7 +653,6 @@ class TestDoctorScheduleApi:
         force_authenticate(request, user=user)
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
         assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
-
 
     def test_appointments(self):
         # fixtures
@@ -859,3 +873,142 @@ class TestDoctorScheduleApi:
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
         assert response.status_code == 400, f"Expected 400, got {response.status_code}: {response.data}"
 
+        """ queue schedule """
+        data = {
+            'doctor_id': doctor.id,
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user)
+        response = ApiPrivateDoctorScheduleQueueList.as_view()(request)
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+
+        data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user)
+        response = ApiPrivateDoctorScheduleQueueList.as_view()(request)
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+
+        data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution_2.id
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user)
+        response = ApiPrivateDoctorScheduleQueueList.as_view()(request)
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}"
+
+        data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': 13248
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user)
+        response = ApiPrivateDoctorScheduleQueueList.as_view()(request)
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}"
+
+        data = {
+            'doctor_id': doctor.id,
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user6)
+        response = ApiPrivateDoctorScheduleQueueList.as_view()(request)
+        assert response.status_code == 403, f"Expected 403, got {response.status_code}"
+
+        data = {
+            'doctor_id': 23321,
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user)
+        response = ApiPrivateDoctorScheduleQueueList.as_view()(request)
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}"
+
+        data = {
+            'doctor_id': doctor.id,
+            'medical_institution_id': medical_institution.id
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user2)
+        response = ApiPrivateDoctorScheduleQueueList.as_view()(request)
+        assert response.status_code == 401, f"Expected 401, got {response.status_code}"
+
+        """ calendar """
+        data = {
+            'doctor_id': doctor.id,
+            'year': 2019,
+            'month': 12
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user)
+        response = ApiPrivateDoctorScheduleCalendar.as_view()(request)
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+
+        data = {
+            'year': 2019,
+            'month': 12
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user)
+        response = ApiPrivateDoctorScheduleCalendar.as_view()(request)
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}"
+
+        data = {
+            'doctor_id': 2346,
+            'year': 2019,
+            'month': 12
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user)
+        response = ApiPrivateDoctorScheduleCalendar.as_view()(request)
+        assert response.status_code == 404, f"Expected 404, got {response.status_code}"
+
+        data = {
+            'doctor_id': doctor.id,
+            'month': 12
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user)
+        response = ApiPrivateDoctorScheduleCalendar.as_view()(request)
+        assert response.status_code == 400, f"Expected 400, got {response.status_code}"
+
+        data = {
+            'doctor_id': doctor.id,
+            'year': 2019,
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=user)
+        response = ApiPrivateDoctorScheduleCalendar.as_view()(request)
+        assert response.status_code == 400, f"Expected 400, got {response.status_code}"
+
+        data = {
+            'doctor_id': doctor.id,
+            'year': 2019,
+            'month': 12,
+            'consumer': 'receptionist'
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=receptionist.user)
+        response = ApiPrivateDoctorScheduleCalendar.as_view()(request)
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+
+        data = {
+            'doctor_id': doctor.id,
+            'year': 2019,
+            'month': 12
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=doctor2.user)
+        response = ApiPrivateDoctorScheduleCalendar.as_view()(request)
+        assert response.status_code == 401, f"Expected 401, got {response.status_code}"
+
+        data = {
+            'doctor_id': doctor.id,
+            'year': 2019,
+            'month': 12
+        }
+        request = factory.get('/', data)
+        force_authenticate(request, user=receptionist2.user)
+        response = ApiPrivateDoctorScheduleCalendar.as_view()(request)
+        assert response.status_code == 403, f"Expected 403, got {response.status_code}"

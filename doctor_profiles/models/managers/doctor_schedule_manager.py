@@ -1,3 +1,5 @@
+from _socket import gaierror
+
 import arrow
 from django.apps import apps
 from django.conf import settings
@@ -146,9 +148,12 @@ class PatientAppointmentManager(models.Manager):
             except TimeDim.DoesNotExist:
                 pass
         appointment.save()
-        patient_appointment_status_notify(appointment,
-                                          QUEUE_STATUS_MESSAGES[status]['message'],
-                                          QUEUE_STATUS_MESSAGES[status]['color'])
+        try:
+            patient_appointment_status_notify(appointment,
+                                              QUEUE_STATUS_MESSAGES[status]['message'],
+                                              QUEUE_STATUS_MESSAGES[status]['color'])
+        except gaierror:
+            pass
 
     def get_existing_schedules(self, *, doctor, medical_institution, schedule_day):
         DoctorScheduleDay = apps.get_model('doctor_profiles.DoctorScheduleDay')

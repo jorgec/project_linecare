@@ -58,18 +58,30 @@ QUEUE_STATUS_MESSAGES = {
         'message': 'Please come in',
         'color': 'success'
     },
-    'finishing': '',
+    'finishing': {
+        'message': 'Thank you!',
+        'color': 'success'
+    },
     'done': {
         'message': 'Thank you!',
         'color': 'success'
     },
-    'cancelled_by_patient': '',
+    'cancelled_by_patient': {
+        'message': 'Appointment cancelled by patient',
+        'color': 'danger'
+    },
     'cancelled_by_doctor': {
         'message': 'Your appointment has been cancelled by the doctor',
         'color': 'danger'
     },
-    'rescheduled_by_patient': '',
-    'rescheduled_by_doctor': '',
+    'rescheduled_by_patient': {
+        'message': 'Appointment cancelled by patient',
+        'color': 'danger'
+    },
+    'rescheduled_by_doctor': {
+        'message': 'Your appointment has been rescheduled by the doctor',
+        'color': 'warning'
+    },
 }
 
 

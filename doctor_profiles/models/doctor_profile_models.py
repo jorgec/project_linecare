@@ -401,7 +401,6 @@ class DoctorProfile(models.Model):
 
         return result, message, schedule
 
-
     def name_indexing(self):
         return self.__str__()
 
