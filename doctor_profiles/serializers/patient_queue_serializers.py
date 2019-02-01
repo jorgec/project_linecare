@@ -48,7 +48,9 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
     schedule = serializers.SerializerMethodField('repr_schedule')
 
     def repr_schedule(self, obj):
-        return obj.schedule_day_object.schedule.id
+        if obj.schedule_day_object:
+            return obj.schedule_day_object.schedule.id
+        return None
 
     def repr_prior_visits(self, obj):
         return PatientAppointment.objects.prior_visits(
