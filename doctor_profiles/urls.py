@@ -554,9 +554,12 @@ urlpatterns += [
     #############################################################################
     # Notifications
     #############################################################################
-    path(f'{version}/private/notifications/appointments',
-         doctor_notifications_api.ApiPrivateDoctorAppointmentNotifications.as_view(),
-         name='api_private_notifications_appointments'),
+    path(f'{version}/private/notifications/appointments/list',
+         doctor_notifications_api.ApiPrivateDoctorAppointmentNotificationsList.as_view(),
+         name='api_private_notifications_appointments_list'),
+    path(f'{version}/private/notifications/appointments/clear',
+         doctor_notifications_api.ApiPrivateDoctorAppointmentNotificationsDelete.as_view(),
+         name='api_private_notifications_appointments_clear'),
 
     #############################################################################
     # Analytics

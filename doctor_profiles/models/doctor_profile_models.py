@@ -258,12 +258,15 @@ class DoctorProfile(models.Model):
     def update_appointment_notifications(self, data):
         notifs = self.appointment_notifications()
         notifs.append(data)
+        notifs.reverse()
         self.metadata['notifications'] = notifs
         self.save(update_fields=['metadata'])
+        return self.appointment_notifications()
 
     def clear_appointment_notifications(self):
         self.metadata['notifications'] = []
         self.save(update_fields=['metadata'])
+        return []
 
     def initialize_options(self):
         self.metadata['options'] = {
