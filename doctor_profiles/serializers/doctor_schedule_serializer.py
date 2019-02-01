@@ -128,3 +128,4 @@ class DoctorScheduleListQueryParamsSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     medical_institution = serializers.IntegerField(required=False, allow_null=False)
     include_past = serializers.CharField(default="no")
+    filter_days = serializers.CharField(required=False, default="")

@@ -1,5 +1,6 @@
 from django.urls import path
 
+from doctor_profiles.modules.api import doctor_notifications_api
 from .modules.views import home as home_views
 from .modules.views import settings as setting_views
 from .modules.views import medical_institutions as institution_views
@@ -416,11 +417,11 @@ urlpatterns += [
     path(f'{version}/private/queue/list',
          doctor_schedule_api.ApiPrivateDoctorScheduleQueueList.as_view(),
          name='api_private_queue_list'),
-     
-     path(f'{version}/public/queue/list',
-          doctor_schedule_api.ApiPublicDummyScheduleQueueList.as_view(),
-          name='api_public_queue_list'),
-     
+
+    path(f'{version}/public/queue/list',
+         doctor_schedule_api.ApiPublicDummyScheduleQueueList.as_view(),
+         name='api_public_queue_list'),
+
     path(f'{version}/private/appointment/status/update',
          patient_appointment_api.ApiPatientAppointmentUpdateStatus.as_view(),
          name='api_private_patient_appointment_status_update'),
@@ -530,8 +531,6 @@ urlpatterns += [
          labtest_api.ApiPrivatePatientLabTestUndismiss.as_view(),
          name='api_private_appointment_labtest_undismiss'),
 
-    
-
     # prescriptions
     path(f'{version}/private/appointment/prescription/create',
          prescriptions_api.ApiPrivatePrescriptionCreate.as_view(),
@@ -551,6 +550,13 @@ urlpatterns += [
     path(f'{version}/private/appointment/prescription/undismiss',
          prescriptions_api.ApiPrivatePatientPrescriptionUndismiss.as_view(),
          name='api_private_appointment_prescription_undismiss'),
+
+    #############################################################################
+    # Notifications
+    #############################################################################
+    path(f'{version}/private/notifications/appointments',
+         doctor_notifications_api.ApiPrivateDoctorAppointmentNotifications.as_view(),
+         name='api_private_notifications_appointments'),
 
     #############################################################################
     # Analytics

@@ -14,10 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 # from graphene_django.views import GraphQLView
+from rest_framework.documentation import include_docs_urls
 
 from accounts.modules.views.auth import AccountLoginView
 
@@ -58,5 +60,9 @@ if settings.DEBUG:
 
     urlpatterns += [
         path('__debug__/', include(debug_toolbar.urls)),
-        path('apidocs/', schema_view)
+        path('apidocs/', schema_view),
+        path('docs/', include_docs_urls(title='Linecare DRF Docs')),
+        # path('swagger', yasg_schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+        # path('redoc', yasg_schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+        # url(r'^swagger(?P<format>\.json|\.yaml)$', yasg_schema_view.without_ui(cache_timeout=0), name='schema-json'),
     ]

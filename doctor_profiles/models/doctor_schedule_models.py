@@ -1,19 +1,17 @@
 from _socket import gaierror
 
 import arrow
+from django.apps import apps
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models as models, IntegrityError
-from django.db.models.signals import post_save, post_delete, pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django_extensions.db import fields as extension_fields
-from django.apps import apps
-
-from django.apps import apps
 
 from doctor_profiles.constants import QUEUE_STATUS_CODES, APPOINTMENT_TYPES
 from doctor_profiles.models.managers.doctor_schedule_manager import DoctorScheduleManager, PatientAppointmentManager
-from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_update_queue
+from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_update_queue, \
+    doctor_notify_new_appointment
 
 
 class DoctorSchedule(models.Model):
@@ -85,10 +83,12 @@ class DoctorScheduleDay(models.Model):
     doctor_stepped_out = models.BooleanField(default=False)
 
     day = models.ForeignKey('datesdim.DateDim', related_name='schedule_days', on_delete=models.CASCADE)
-    actual_start_time = models.ForeignKey('datesdim.TimeDim', related_name='actual_schedule_start_time', null=True, blank=True,
-                                   on_delete=models.SET_NULL)
-    actual_end_time = models.ForeignKey('datesdim.TimeDim', related_name='actual_schedule_end_time', null=True, blank=True,
-                                 on_delete=models.SET_NULL)
+    actual_start_time = models.ForeignKey('datesdim.TimeDim', related_name='actual_schedule_start_time', null=True,
+                                          blank=True,
+                                          on_delete=models.SET_NULL)
+    actual_end_time = models.ForeignKey('datesdim.TimeDim', related_name='actual_schedule_end_time', null=True,
+                                        blank=True,
+                                        on_delete=models.SET_NULL)
     doctor = models.ForeignKey('doctor_profiles.DoctorProfile', related_name='doctor_schedule_days',
                                on_delete=models.CASCADE)
     medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution',
@@ -151,7 +151,8 @@ class PatientAppointment(models.Model):
 
     class Meta:
         ordering = ('-schedule_day', 'time_start__minutes_since')
-        unique_together = ('patient', 'doctor', 'medical_institution', 'schedule_day', 'time_start', 'time_end', 'status', 'created')
+        unique_together = (
+        'patient', 'doctor', 'medical_institution', 'schedule_day', 'time_start', 'time_end', 'status', 'created')
 
     def __str__(self):
         return f'{self.schedule_day} - {self.time_start.format_12()}'
@@ -161,7 +162,7 @@ class PatientAppointment(models.Model):
 
     def get_symptoms(self):
         return self.appointment_checkup.checkup_symptoms.filter(is_deleted=False)
-    
+
     def get_deleted_symptoms(self):
         return self.appointment_checkup.checkup_symptoms.filter(is_deleted=True)
 
@@ -176,13 +177,13 @@ class PatientAppointment(models.Model):
 
     def get_deleted_diagnoses(self):
         return self.appointment_checkup.checkup_diagnoses.filter(is_deleted=True)
-    
+
     def get_prescriptions(self):
         return self.appointment_checkup.checkup_prescriptions.filter(is_deleted=False)
 
     def get_deleted_prescriptions(self):
         return self.appointment_checkup.checkup_prescriptions.filter(is_deleted=True)
-    
+
     def get_lab_tests(self):
         return self.appointment_checkup.checkup_tests.filter(is_approved=True)
 
@@ -224,6 +225,10 @@ class PatientAppointment(models.Model):
 @receiver(post_save, sender=PatientAppointment)
 def add_new_to_patient_connection(sender, instance, created=False, **kwargs):
     if created and instance:
+        try:
+            doctor_notify_new_appointment(instance)
+        except gaierror:
+            pass
         PatientConnection = apps.get_model('doctor_profiles.PatientConnection')
         try:
             PatientConnection.objects.create(
@@ -256,6 +261,7 @@ def create_checkup_record(sender, instance, created=False, **kwargs):
             )
         except IntegrityError:
             pass
+
 
 @receiver(post_save, sender=PatientAppointment)
 def notify_queue_consumers(sender, instance, created=False, **kwargs):

@@ -60,8 +60,15 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
 
         biometrics_form = BiometricForm
 
+        if request.GET.get('schedule_id', None):
+            schedule_id = request.GET.get('schedule_id')
+            schedules = doctor.get_schedule_on_day(day=date, schedule_id=schedule_id, medical_institution=medical_institution)
+        else:
+            schedule_id = ''
+            schedules = doctor.get_schedule_on_day(day=date, medical_institution=medical_institution)
+
         context = {
-            'page_title': f'Queue in {rel.medical_institution} on {date}',
+            'page_title': f'Queue on {date}',
             'location': 'doctor_profile_manage_schedule',
             'sublocation': 'detail',
             'user': request.user,
@@ -76,9 +83,10 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
             'today': DateDim.objects.today(),
             'tomorrow': date.tomorrow(),
             'yesterday': date.yesterday(),
-            'schedules': doctor.get_schedule_on_day(day=date, medical_institution=medical_institution),
+            'schedules': schedules,
             'genders': Gender.objects.all(),
             'biometrics_form': biometrics_form,
+            'schedule_id': schedule_id
         }
 
         return render(request, 'neo/doctor_profiles/schedule/queue.html', context)

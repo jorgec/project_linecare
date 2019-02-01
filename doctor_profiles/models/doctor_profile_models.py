@@ -232,7 +232,7 @@ class DoctorProfile(models.Model):
 
         return self.doctor_schedule_days.filter(**filters)
 
-    def get_schedule_on_day(self, *, day=None, medical_institution=None):
+    def get_schedule_on_day(self, *, day=None, medical_institution=None, schedule_id=None):
         DateDim = apps.get_model('datesdim.DateDim')
         if not day:
             day = DateDim.objects.today()
@@ -240,11 +240,30 @@ class DoctorProfile(models.Model):
         filters = {
             'day': day
         }
-
-        if medical_institution:
-            filters['medical_institution'] = medical_institution
+        if schedule_id:
+            filters['schedule__id'] = schedule_id
+        else:
+            if medical_institution:
+                filters['medical_institution'] = medical_institution
 
         return self.doctor_schedule_days.filter(**filters)
+
+    def appointment_notifications(self):
+        try:
+            return self.metadata['notifications']
+        except KeyError:
+            self.metadata['notifications'] = []
+            return []
+
+    def update_appointment_notifications(self, data):
+        notifs = self.appointment_notifications()
+        notifs.append(data)
+        self.metadata['notifications'] = notifs
+        self.save(update_fields=['metadata'])
+
+    def clear_appointment_notifications(self):
+        self.metadata['notifications'] = []
+        self.save(update_fields=['metadata'])
 
     def initialize_options(self):
         self.metadata['options'] = {

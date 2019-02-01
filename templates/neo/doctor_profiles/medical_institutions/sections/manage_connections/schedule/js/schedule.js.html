@@ -2,18 +2,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        // $(".endTime").bootstrapMaterialDatePicker({
-        //     date: false,
-        //     format: "h:mm a",
-        //     shortTime: true,
-        // });
-        // $(".startTime").bootstrapMaterialDatePicker({
-        //     date: false,
-        //     format: "h:mm a",
-        //     shortTime: true,
-        // });
-
-
         $(".endDate").bootstrapMaterialDatePicker({
             format: "YYYY-MM-DD",
             time: false
@@ -28,7 +16,11 @@
 
         $("#frmCollectionRegularWeeklySchedule").on('submit', '.frmAddRegularWeeklySchedule', function (e) {
             e.preventDefault();
-
+            $.notify({
+                message: "Checking for conflicts, please wait..."
+            }, {
+                type: 'info'
+            });
             var days = $("input[name=weekday]:checked", this).map(
                 function () {
                     return this.value;
@@ -139,9 +131,6 @@
             csrfmiddlewaretoken: '{{ csrf_token }}',
             id: schedule_id
         };
-
-        console.log(formData);
-
         $.post(url, formData)
             .done(function (result) {
                 $.notify({

@@ -29,7 +29,7 @@
         if( !date ){
             date = new Date().toISOString().split("T")[0];
         }
-        var url = "{% url 'api_private_queue_list' %}?doctor_id={{ doctor.id }}&medical_institution_id={{ medical_institution.id }}&date=" + date;
+        var url = "{% url 'api_private_queue_list' %}?doctor_id={{ doctor.id }}&medical_institution_id={{ medical_institution.id }}&date=" + date + "&schedule_id={{ schedule_id }}";
 
         $.get(url)
             .done(function(result){

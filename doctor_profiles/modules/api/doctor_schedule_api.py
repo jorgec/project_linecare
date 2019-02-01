@@ -5,9 +5,11 @@ from django.conf import settings
 from django.db import transaction, IntegrityError
 from django.urls import reverse
 from rest_framework import status, permissions
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, GenericAPIView
 from rest_framework.response import Response
+from rest_framework.schemas import SchemaGenerator
 from rest_framework.views import APIView
+from rest_framework_swagger import renderers
 
 from datesdim.models import TimeDim, DateDim
 from datesdim.serializers import DateDimSerializer, TimeDimSerializer
@@ -20,7 +22,7 @@ from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import docto
 from doctor_profiles.serializers import DoctorScheduleSerializer, \
     MedicalInstitutionSerializer, PatientQueuePrivateSerializer
 from doctor_profiles.serializers.doctor_schedule_serializer import DoctorScheduleDaySerializer, \
-    DoctorScheduleDayBasicSerializer
+    DoctorScheduleDayBasicSerializer, DoctorScheduleListQueryParamsSerializer
 from profiles.models import BaseProfile
 from receptionist_profiles.models import ReceptionistProfile
 
@@ -132,6 +134,8 @@ class ApiDoctorScheduleDayList(APIView):
 class ApiDoctorScheduleList(APIView):
     """
     Get schedule list of doctor
+
+    Accept the following GET parameters: id, [medical_institution, include_past, filter_days]
     ?id=doctor_id
     [optional]
     medical_institution=medical_institution_id
@@ -139,6 +143,7 @@ class ApiDoctorScheduleList(APIView):
     filter_days=Monday^Tuesday^...
     """
     permission_classes = [permissions.AllowAny]
+    serializer_class = DoctorScheduleListQueryParamsSerializer
 
     def get(self, request, *args, **kwargs):
         doctor = get_object_or_404(DoctorProfile, id=request.GET.get('id', None))
@@ -260,10 +265,6 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         )
 
         if create_result:
-            try:
-                doctor_notify_new_appointment(appointment)
-            except gaierror:
-                pass
 
             # update queue number
             appointments_on_this_day = PatientAppointment.objects.filter(
@@ -380,9 +381,12 @@ class ApiPrivateDoctorScheduleQueueList(APIView):
     Queue of doctor at medical institution on day
     ?doctor_id=doctor_id
     [optional]
-    medical_institution_id=medical_institution_id
     date=YYYY-MM-DD
     count=n
+    [[ mutually exclusive ]]
+    medical_institution_id=medical_institution_id
+    - or -
+    schedule_id=schedule_id (overrides medical_institution_id)
     """
 
     permission_classes = [permissions.IsAuthenticated]
@@ -402,6 +406,8 @@ class ApiPrivateDoctorScheduleQueueList(APIView):
                                               medical_institution=medical_institution, is_approved=True)
         else:
             medical_institution = None
+
+        schedule_id = request.GET.get('schedule_id', None)
 
         if type(profile_type) != DoctorProfile and medical_institution:
             """ person adding isn't the doctor, so check if receptionist is allowed """
@@ -423,22 +429,30 @@ class ApiPrivateDoctorScheduleQueueList(APIView):
             if not queue_date:
                 return Response(f"{__queue_date} is an invalid date", status=status.HTTP_400_BAD_REQUEST)
 
-        if medical_institution:
+        if schedule_id:
             queue = PatientAppointment.objects.filter(
                 status__in=QUEUE_DISPLAY_CODES,
                 doctor=doctor,
-                medical_institution=medical_institution,
-                schedule_day=queue_date
+                schedule_day=queue_date,
+                schedule_day_object__schedule__id=schedule_id
             ).order_by('time_start__minutes_since')
         else:
-            queue = PatientAppointment.objects.filter(
-                status__in=QUEUE_DISPLAY_CODES,
-                doctor=doctor,
-                schedule_day=queue_date
-            ).order_by('time_start__minutes_since')
+            if medical_institution:
+                queue = PatientAppointment.objects.filter(
+                    status__in=QUEUE_DISPLAY_CODES,
+                    doctor=doctor,
+                    medical_institution=medical_institution,
+                    schedule_day=queue_date
+                ).order_by('time_start__minutes_since')
+            else:
+                queue = PatientAppointment.objects.filter(
+                    status__in=QUEUE_DISPLAY_CODES,
+                    doctor=doctor,
+                    schedule_day=queue_date
+                ).order_by('time_start__minutes_since')
 
-        if request.GET.get('count', None):
-            queue = queue[:int(request.GET.get('count', 1))]
+            if request.GET.get('count', None):
+                queue = queue[:int(request.GET.get('count', 1))]
 
         serializer = PatientQueuePrivateSerializer(queue, many=True)
 

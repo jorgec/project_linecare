@@ -7,6 +7,7 @@ from doctor_profiles.models import PatientAppointment
 from doctor_profiles.serializers import MedicalInstitutionSerializer
 from profiles.serializers import BaseProfilePrivateSerializerFull
 
+
 class PatientAppointmentSerializer(serializers.ModelSerializer):
     patient = BaseProfilePrivateSerializerFull()
     schedule_day = DateDimSerializer()
@@ -44,6 +45,10 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
     medical_institution = MedicalInstitutionSerializer()
     last_visit = serializers.SerializerMethodField('repr_last_visit')
     patient_url = serializers.SerializerMethodField('repr_patient_url')
+    schedule = serializers.SerializerMethodField('repr_schedule')
+
+    def repr_schedule(self, obj):
+        return obj.schedule_day_object.schedule.id
 
     def repr_prior_visits(self, obj):
         return PatientAppointment.objects.prior_visits(
@@ -110,5 +115,6 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
             'queue_number',
             'status_display',
             'last_visit',
-            'patient_url'
+            'patient_url',
+            'schedule'
         )
