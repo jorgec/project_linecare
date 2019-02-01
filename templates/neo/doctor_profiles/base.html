@@ -116,6 +116,7 @@
         }
 
         function clearAppointmentLists() {
+            listsSection.style.display = "none";
             $.get("{% url 'api_private_notifications_appointments_clear' %}", function(data){
                 $('#appointment-lists-section').loadTemplate($("#appointment-notification-template"), data);
                 $("#badgeNotificationAlert").addClass('hide');
