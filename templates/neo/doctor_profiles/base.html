@@ -84,6 +84,7 @@
                 console.log(event);
                 if(event.type === "notification.alert"){
                     var a = event.appointment;
+                    $("#global-announcement").loadTemplate($("#appointment-notification-template"), a);
                     $.notify({
                         message: "New appointment created for " + a.patient.name + " on " + a.schedule.day_nicename + " at " + a.medical_institution.name
                     }, {
