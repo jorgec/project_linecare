@@ -136,7 +136,7 @@ ROOT_URLCONF = 'linecare_core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/linecare/app/templates'],
+        'DIRS': ['/home/kbeflo/linecare/app/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -286,10 +286,10 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_URL = f'{SITE_URL}/static/'
-STATIC_ROOT = '/linecare/www/html/static/'
+STATIC_ROOT = '/home/kbeflo/linecare/www/html/static/'
 
 MEDIA_URL = f'{SITE_URL}/media/'
-MEDIA_ROOT = '/linecare/www/html/media/'
+MEDIA_ROOT = '/home/kbeflo/linecare/www/html/media/'
 TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
