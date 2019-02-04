@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-from os.path import abspath, basename, dirname, join, normpath
+from os.path import abspath, basename, dirname, join, normpath, isfile
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,7 +27,10 @@ SITE_NAME = basename(DJANGO_ROOT)
 SECRET_KEY = 'yy740q+h$_n(swcuws^f(z5-^3svk=895b-x8b$d=a3@h+ac4c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if isfile("/home/kbeflo/DEBUG"):
+    DEBUG = True
+else:
+    DEBUG = False
 
 SITE_ID = 1
 SITE_URL = 'https://linecare.ph'
