@@ -21,7 +21,7 @@ def doctor_notify_new_appointment(appointment):
                 "name": appointment.patient.get_full_name(),
                 "user_id": appointment.patient.user.id,
                 "profile_id": appointment.patient.id,
-                "photo": appointment.patient.get_profile_photo(),
+                "photo": str(appointment.patient.get_profile_photo()),
                 "url": reverse('doctor_profile_patient_detail', kwargs={'patient_id': appointment.patient.id})
             },
             "medical_institution": {
