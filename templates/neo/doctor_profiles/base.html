@@ -101,12 +101,11 @@
         var webSocketBridge = new channels.WebSocketBridge();
         webSocketBridge.connect('/notifications/receptionist/appointments/');
         webSocketBridge.listen(function (event) {
-            console.log(event);
             if (event.type === "notification.alert") {
                 var a = event.appointment;
                 $("#badgeNotificationAlert").removeClass('hide');
                 $.notify({
-                    message: "New appointment created for " + a.patient.name + " on " + a.appointment.schedule.day_nicename + " at " + a.appointment.name
+                    message: "New appointment created for " + a.patient.name
                 }, {
                     type: 'success'
                 });

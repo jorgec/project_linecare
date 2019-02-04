@@ -46,7 +46,7 @@ def doctor_notify_new_appointment(appointment):
     }
     appointment.doctor.update_appointment_notifications(appointment_data)
     async_to_sync(channel_layer.group_send)(
-        f"{appointment.doctor.id}-appointments", appointment_data
+        f"doctor-{appointment.doctor.id}-appointments", appointment_data
     )
 
 

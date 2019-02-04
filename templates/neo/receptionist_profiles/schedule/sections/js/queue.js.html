@@ -2,6 +2,14 @@
 
     $(document).ready(function(){
         getQueue('{{ date }}');
+
+        var webSocketBridge = new channels.WebSocketBridge();
+        webSocketBridge.connect('/notifications/doctor/queue/status_update/');
+        webSocketBridge.listen(function (event) {
+            if(event.type === "queue.update"){
+                getQueue('{{ date }}');
+            }
+        });
     });
 
     function getQueue(){
@@ -16,11 +24,14 @@
         $.get(url)
             .done(function(result){
                 var queue = [];
+                var q_number = 1;
                 for(var r in result){
                     var q = result[r];
                     var btnAction = "";
+                    var subAction = "";
                     var base_url = "{% url 'api_private_patient_appointment_status_update' %}?appointment_id=" + q.id;
                     var cancel_url = base_url + "&queue_status=cancelled_by_doctor";
+                    var reschedule_url = "";
                     if(q["status"] === "pending"){
                         var arrived_url = base_url + "&queue_status=queueing";
 
@@ -45,7 +56,8 @@
                     }
 
                     q["button_action"] = btnAction;
-
+                    q["q_number"] = q_number;
+                    q_number++;
                     queue.push(q);
                 }
                 $("#container-queue").loadTemplate($("#template-queue"), queue);
