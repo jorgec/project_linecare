@@ -5,7 +5,10 @@ from django.urls import reverse
 
 def doctor_notify_new_appointment(appointment):
     channel_layer = get_channel_layer()
-    schedule_url = reverse("doctor_profile_schedule_detail", kwargs={"medical_institution": appointment.medical_institution.slug}) + f"?date={appointment.schedule_day}&schedule_id={appointment.schedule_day_object.schedule.id}"
+    schedule_url = reverse("doctor_profile_schedule_detail", kwargs={
+        "medical_institution": appointment.medical_institution.slug}) + f"?date={appointment.schedule_day}&schedule_id={appointment.schedule_day_object.schedule.id}"
+    mi_address = str(
+        appointment.medical_institution.address()['address']) if appointment.medical_institution.address() else ''
     appointment_data = {
         "type": "notification.alert",
         "event": "New appointment",
@@ -28,8 +31,9 @@ def doctor_notify_new_appointment(appointment):
                 "name": appointment.medical_institution.name,
                 "type": appointment.medical_institution.type.name,
                 "id": appointment.medical_institution.id,
-                "address": str(appointment.medical_institution.address()['address']),
-                "url": reverse("doctor_profile_schedule_detail", kwargs={"medical_institution": appointment.medical_institution.slug}) + f"?date={appointment.schedule_day}"
+                "address": mi_address,
+                "url": reverse("doctor_profile_schedule_detail", kwargs={
+                    "medical_institution": appointment.medical_institution.slug}) + f"?date={appointment.schedule_day}"
             },
             "schedule": {
                 "id": appointment.schedule_day_object.schedule.id,
