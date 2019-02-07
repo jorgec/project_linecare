@@ -30,11 +30,12 @@
                 var q_number = 1;
                 for(var r in result){
                     var q = result[r];
+                    console.log(q)
                     var btnAction = "";
                     var subAction = "";
                     var base_url = "{% url 'api_private_patient_appointment_status_update' %}?appointment_id=" + q.id;
                     var patient_appointment_url = "{% url 'doctor_profile_patient_appointment_detail' %}?appointment=" + q.id;
-                    var mi_url = "{% url 'doctor_profile_schedule_detail_urlstring' %}?medical_institution=" + q.medical_institution.slug + "&date={{ date }}";
+                    var mi_url = "{% url 'doctor_profile_schedule_detail_urlstring' %}?medical_institution=" + q.medical_institution.slug + "&date={{ date }}&schedule_id=" + q.schedule;
                     var reschedule_url = "";
                     var cancel_url = base_url + "&queue_status=cancelled_by_doctor";
                     q["patient_url"] = "{% url 'doctor_profile_patient_qs_detail' %}?patient_id=" + q.patient.id;

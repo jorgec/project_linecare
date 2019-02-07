@@ -38,19 +38,23 @@ class DoctorProfileMedicalInstitutionScheduleList(LoginRequiredMixin, UserPasses
 class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
         doctor = request.user.doctor_profile()
+        date = request.GET.get('date', '')
+        schedule_id = request.GET.get('schedule_id', '')
         if 'medical_institution' in kwargs:
             medical_institution = get_object_or_404(MedicalInstitution, slug=kwargs['medical_institution'])
         else:
             medical_institution = get_object_or_404(MedicalInstitution, slug=request.GET.get('medical_institution', None))
-            return HttpResponseRedirect(reverse(
+            new_url = reverse(
                 'doctor_profile_schedule_detail',
                 kwargs={
                     'medical_institution': medical_institution.slug
                 }
-            ))
+            )
+
+            return HttpResponseRedirect(f"{new_url}?date={date}&schedule_id={schedule_id}")
         rel = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor, medical_institution=medical_institution)
 
-        date = request.GET.get('date', None)
+
         if not date:
             date = DateDim.objects.today()
         else:
@@ -60,8 +64,7 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
 
         biometrics_form = BiometricForm
 
-        if request.GET.get('schedule_id', None):
-            schedule_id = request.GET.get('schedule_id')
+        if schedule_id:
             schedules = doctor.get_schedule_on_day(day=date, schedule_id=schedule_id, medical_institution=medical_institution)
         else:
             schedule_id = ''

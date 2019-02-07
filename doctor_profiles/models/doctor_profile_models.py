@@ -65,6 +65,13 @@ class DoctorProfile(models.Model):
     def get_specializations(self):
         return [s.specialization for s in self.get_specializations_rel()]
 
+    def repr_specializations(self):
+        specializations = self.get_specializations_rel()
+        html = ''
+        for s in specializations:
+            html += f'{s.specialization.name} ({s.year_attained})<br><small>{s.place_of_residency}</small><hr>'
+        return html
+
     def get_associations_rel(self):
         return self.doctor_associations.filter(association__is_approved=True)
 
