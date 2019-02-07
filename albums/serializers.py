@@ -18,6 +18,18 @@ class AlbumSerializer(serializers.ModelSerializer):
         )
 
 
+class AlbumCreateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True, required=False)
+
+    class Meta:
+        model = models.Album
+        fields = (
+            'id',
+            'name',
+            'is_public'
+        )
+
+
 class AlbumUpdateSerializer(serializers.ModelSerializer):
     description = serializers.CharField(max_length=500, allow_blank=True, required=False)
 

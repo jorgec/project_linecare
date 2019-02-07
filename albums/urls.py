@@ -5,6 +5,9 @@ urlpatterns = [
     # api
 
     # create
+    path('api/private/create',
+         create.ApiPrivateAlbumCreate.as_view(),
+         name='api_private_album_create'),
     path('api/private/upload',
          create.ApiPrivateAlbumPostUploadPhoto.as_view(),
          name='api_private_album_post_upload_photo'),
