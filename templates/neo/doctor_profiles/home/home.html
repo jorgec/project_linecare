@@ -16,7 +16,10 @@
         <div class="row">
             <div class="col-sm-12 col-md-3">
                 <div class="two-column__left--nav">
-                    <div class="doctor-profile_photo rounded-circle" style="background-image: url({{ doctor.user.base_profile.get_profile_photo }})"></div>
+                    <div class="doctor-profile_photo rounded-circle position-relative" style="background-image: url({{ doctor.user.base_profile.get_profile_photo }})">
+                        <a href="javascript:void(0)"><i class="fas fa-camera position-absolute fa-fw"></i></a>
+                        <a href="javascript:void(0)"><i class="fas fa-trash-alt position-absolute fa-fw"></i></a>
+                    </div>
                     {% include 'neo/doctor_profiles/common/nav__side.html' %}
                 </div>
             </div>
