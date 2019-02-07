@@ -50,6 +50,8 @@
 <script src="{% static 'neo/js/snippetProfileProgress.js' %}"></script>
 <script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
 
+{% include 'neo/profile/common/js/photo.js.html' %}
+
 <script type="text/html" id="appointment-notification-template">
     <div class="row">
         <div class="col-md-2">
@@ -65,7 +67,7 @@
                 <a data-href="appointment.patient.url">
                     <span data-content="appointment.patient.name"></span>
                 </a>
-                    at
+                at
                 <a data-href="appointment.medical_institution.url">
                     <span data-content="appointment.medical_institution.name"></span>
                 </a>
@@ -81,7 +83,6 @@
     <hr>
 </script>
 
-<script type="text/html" id=""></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -135,13 +136,13 @@
         })
     }
 
-        function clearAppointmentLists() {
-            listsSection.style.display = "none";
-            $.get("{% url 'api_private_notifications_appointments_clear' %}", function(data){
-                $('#appointment-lists-section').loadTemplate($("#appointment-notification-template"), data);
-                $("#badgeNotificationAlert").addClass('hide');
-            })
-        }
+    function clearAppointmentLists() {
+        listsSection.style.display = "none";
+        $.get("{% url 'api_private_notifications_appointments_clear' %}", function (data) {
+            $('#appointment-lists-section').loadTemplate($("#appointment-notification-template"), data);
+            $("#badgeNotificationAlert").addClass('hide');
+        })
+    }
 
     bell.addEventListener('click', showAppointmentLists);
     clearBtn.addEventListener('click', clearAppointmentLists);

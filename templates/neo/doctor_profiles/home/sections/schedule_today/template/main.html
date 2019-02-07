@@ -1,40 +1,36 @@
-<div class="connections__content mb-4 no-shadow">
-    <h4 class="h6">Schedule Today {{ date }}</h4>
-    {% if schedules %}
-        <ul class="m-0">
-            {% for schedule_day in schedules %}
-                <li>
-                    <strong>{{ schedule_day.schedule.split_days }}</strong>:
-                    {{ schedule_day.schedule.start_time.format_12 }} to {{ schedule_day.schedule.end_time.format_12 }}
-                    <br>
-                    <small>({{ schedule_day.schedule.start_date }} to {{ schedule_day.schedule.end_date }})</small>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <div class="alert alert-danger">
-            {{ doctor }} does not have a schedule at {{ medical_institution }} on this day!
-        </div>
-    {% endif %}
-
-    <div class="py-3">
-        <table class="table table-bordered table-responsive-md medical-records__table">
-            <thead>
-            <tr>
-                <th colspan="3">Patient</th>
-                <th>Medical Institution</th>
-                <th style="width: 40%;">Action</th>
-            </tr>
-            </thead>
-            <tbody id="container-queue">
-
-            </tbody>
-        </table>
+<div class="card">
+    <div class="card-header bg-dark">
+        <h4 class="card-title text-white">Schedule Today {{ date }}</h4>
     </div>
+    <div class="card-body">
 
-    <div class="btn-group">
-        <a href="{% url 'doctor_profile_calendar' %}">
-            <i class="fa fa-calendar"></i> Calendar
-        </a>
+
+        {% if not schedules %}
+            <div class="alert alert-danger">
+                {{ doctor }} does not have a schedule at {{ medical_institution }} on this day!
+            </div>
+        {% endif %}
+
+        <div class="py-3">
+            <table class="table table-bordered table-responsive-md medical-records__table mt-0">
+                <thead>
+                <tr>
+                    <th colspan="3">Patient</th>
+                    <th>Medical Institution</th>
+                    <th style="width: 40%;">Action</th>
+                </tr>
+                </thead>
+                <tbody id="container-queue">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="btn-group">
+            <a href="{% url 'doctor_profile_calendar' %}">
+                <i class="fa fa-calendar"></i> Calendar
+            </a>
+        </div>
     </div>
 </div>

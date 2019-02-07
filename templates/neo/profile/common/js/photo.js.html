@@ -1,0 +1,49 @@
+<script type="text/javascript">
+    var btnProfilePhotoRemove = $("#btnProfilePhotoRemove");
+    var containerProfilePhoto = $("#containerProfilePhoto");
+
+    $(document).ready(function () {
+        btnProfilePhotoRemove.on('click', function (e) {
+            e.preventDefault();
+            profilePhotoRemove();
+        });
+
+        profilePhotoLoad();
+    });
+
+    function profilePhotoLoad(){
+        var url = "{% url 'api_private_profile_photo_detail' %}";
+        $.get(url)
+            .done(function(result){
+                if(result){
+                    containerProfilePhoto.css(
+                        'background-image', "url(" + result + ")"
+                    )
+                }
+            });
+    }
+
+    function profilePhotoRemove() {
+        var url = "{% url 'api_private_photo_unset_primary' %}";
+        var postData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        };
+
+        $.post(url, postData)
+            .done(function (result) {
+                profilePhotoLoad();
+                $.notify({
+                    message: result.message
+                },{
+                    type: 'success'
+                })
+            })
+            .fail(function (result) {
+                $.notify({
+                    message: result.message
+                },{
+                    type: 'danger'
+                })
+            });
+    }
+</script>

@@ -69,6 +69,18 @@ class ApiPrivateGetProfilePhotos(APIView):
         return Response(None, status=status.HTTP_404_NOT_FOUND)
 
 
+class ApiPrivateGetProfilePhoto(APIView):
+    """
+    Get profile photo of currently logged in user
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        photo = request.user.base_profile().get_profile_photo_url()
+        return Response(photo, status=status.HTTP_200_OK)
+
+
 class ApiPublicGetPhotos(APIView):
     """
     Get all public photos of an album

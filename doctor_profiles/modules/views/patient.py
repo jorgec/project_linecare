@@ -65,9 +65,11 @@ class DoctorProfilePatientDetail(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         return self.request.user.doctor_profile() or self.request.user.receptionist_profile()
 
-class DoctorProfilePatientQSDetail(LoginRequiredMixin, UserPassesTestMixin, View):
+
+class DoctorProfilePatientQSDetail(View):
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('doctor_profile_patient_detail', kwargs={'patient_id': request.GET.get('patient_id', None)}))
+        return HttpResponseRedirect(
+            reverse('doctor_profile_patient_detail', kwargs={'patient_id': request.GET.get('patient_id', None)}))
 
 
 class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -108,7 +110,8 @@ class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMi
         appointment.status = 'done'
         appointment.save()
 
-        return_url = reverse('doctor_profile_schedule_detail', kwargs={'medical_institution': appointment.medical_institution.slug})
+        return_url = reverse('doctor_profile_schedule_detail',
+                             kwargs={'medical_institution': appointment.medical_institution.slug})
 
         return HttpResponseRedirect(
             f'{return_url}?date={str(appointment.schedule_day)}'

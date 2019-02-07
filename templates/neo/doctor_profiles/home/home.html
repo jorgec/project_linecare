@@ -1,9 +1,14 @@
 {% extends 'neo/doctor_profiles/home/base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 
 {% block header_css %}
-
+    <style type="text/css">
+        .queue-action-block .queue-action-buttons .btn{
+            display: block;
+            width: 100%;
+            padding: .6rem 0 !important;
+        }
+    </style>
 {% endblock %}
 {% block header_js %}
 
@@ -16,9 +21,9 @@
         <div class="row">
             <div class="col-sm-12 col-md-3">
                 <div class="two-column__left--nav">
-                    <div class="doctor-profile_photo rounded-circle position-relative" style="background-image: url({{ doctor.user.base_profile.get_profile_photo }})">
-                        <a href="javascript:void(0)"><i class="fas fa-camera position-absolute fa-fw"></i></a>
-                        <a href="javascript:void(0)"><i class="fas fa-trash-alt position-absolute fa-fw"></i></a>
+                    <div id="containerProfilePhoto" class="doctor-profile_photo rounded-circle position-relative">
+                        <a href="{% url 'profile_album_detail' request.user.base_profile.get_profile_album.slug %}" id="btnProfilePhotoUpload"><i class="fas fa-camera position-absolute fa-fw"></i></a>
+                        <a href="#!" id="btnProfilePhotoRemove"><i class="fas fa-trash-alt position-absolute fa-fw"></i></a>
                     </div>
                     {% include 'neo/doctor_profiles/common/nav__side.html' %}
                 </div>

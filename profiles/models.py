@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_extensions.db import fields as extension_fields
 from phonenumber_field.modelfields import PhoneNumberField
+from django.conf import settings
 
 from albums.constants import PROFILE_PHOTO_ALBUM, COVER_PHOTO_ALBUM
 from albums.models import Album
@@ -161,11 +162,17 @@ class BaseProfile(models.Model):
         except:
             return None
 
-    def get_profile_photo(self):
+    def get_profile_photo(self, return_null=False):
         album = self.get_profile_album()
         if album:
-            return album.get_primary_photo()
+            return album.get_primary_photo(return_null)
         return None
+
+    def get_profile_photo_url(self):
+        photo = self.get_profile_photo(return_null=True)
+        if photo:
+            return photo.photo.url
+        return f"{settings.STATIC_URL}neo/images/profile-dummy.png"
 
     def get_cover_photo(self):
         album = self.get_cover_album()
