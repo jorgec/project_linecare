@@ -15,74 +15,60 @@
     {{ message|safe }}
 </div>
 {% endfor %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-8 col-sm-12 p-0">
-            <div class="signup-page__banner d-lg-flex flex-column justify-content-center align-items-center">
-                <h1>Your home for health</h1>
-                <p>For million of people, Linecare is the trusted and familiar home where they know they'll find a
-                    healing
-                    touch.</p>
-            </div>
+
+<div class="login-wrapper d-flex justify-content-center align-items-center" style="height: 100vh;background: url({% static 'neo/images/bg-01.png' %}) center center no-repeat;background-size: cover;">
+    <form class="signup-page__form col-lg-12 col-sm-12 p-4" method="post" style="box-shadow:0 0 10px #333 ; height: auto !important; background-color: #fff;">
+        {% csrf_token %}
+        <div class="text-center mb-4">
+            <h3 class="h3">Register</h3>
         </div>
-        <div class="col-lg-4 col-sm-12 px-4">
-            <form class="signup-page__form col-lg-4 col-sm-12" method="post">
-                {% csrf_token %}
-                <div class="text-center mb-4">
-                    <h3 class="h3">Register</h3>
-                </div>
 
 
-                <div class="form-label-group">
-                    <img src="{% static 'neo/images/close-envelope-green.png' %}" alt="Email" class="img-envelop">
-                    <input type="email" id="email" class="form-control" placeholder="Email address" name="email"
-                        required>
-                </div>
+        <div class="form-label-group">
+            <img src="{% static 'neo/images/close-envelope-green.png' %}" alt="Email" class="img-envelop">
+            <input type="email" id="email" class="form-control" placeholder="Email address" name="email" required>
+        </div>
 
-                <div class="form-label-group">
-                    <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="Password" class="img-padlock">
-                    <input type="password" id="password" class="form-control" placeholder="Password" name="password"
-                        required>
-                </div>
+        <div class="form-label-group">
+            <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="Password" class="img-padlock">
+            <input type="password" id="password" class="form-control" placeholder="Password" name="password" required>
+        </div>
 
-                <div class="form-label-group">
-                    <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="Confirm Password" class="img-padlock-1">
-                    <input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password"
-                        name="confirm_password" required>
-                </div>
+        <div class="form-label-group">
+            <img src="{% static 'neo/images/002-padlock-green.png' %}" alt="Confirm Password" class="img-padlock-1">
+            <input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password" name="confirm_password"
+                required>
+        </div>
 
-                <div class="form-label-group">
-                    <label for="primary_profile">Select your primary profile</label>
-                    <select name="primary_profile" id="primary_profile" class="form-control">
-                        <option value="1">I'm a Doctor</option>
-                        <option value="2">I'm a Patient</option>
-                        <!--<option value="2">Auto-create my Patient/User Profile</option>-->
-                        <option value="3">I'm a Receptionists</option>
-                    </select>
-                </div>
+        <div class="form-label-group">
+            <label for="primary_profile">Select your primary profile</label>
+            <select name="primary_profile" id="primary_profile" class="form-control">
+                <option value="1">I'm a Doctor</option>
+                <option value="2">I'm a Patient</option>
+                <!--<option value="2">Auto-create my Patient/User Profile</option>-->
+                <option value="3">I'm a Receptionists</option>
+            </select>
+        </div>
 
-                <div class="mb-1">
-                    <small>Note: You can activate any/all of the profiles above later if you want.</small>
-                    <br>
-                    <span class="small"><input type="checkbox" required> By creating an account, you agree to the Terms
-                        and Conditions of the <a href="{% url 'terms' %}">User
-                            Agreement</a>
-                        and <a href="{% url 'policy' %}">Privacy
-                            Policy</a>.</span>
-                </div>
+        <div class="mb-1">
+            <small>Note: You can activate any/all of the profiles above later if you want.</small>
+            <br>
+            <span class="small"><input type="checkbox" required> By creating an account, you agree to the Terms
+                and Conditions of the <a href="{% url 'terms' %}">User
+                    Agreement</a>
+                and <a href="{% url 'policy' %}">Privacy
+                    Policy</a>.</span>
+        </div>
 
-                <button class="btn btn-primary btn-block" type="submit">Sign up</button>
-                <!--
+        <button class="btn btn-primary btn-block" type="submit">Sign up</button>
+        <!--
                         <a class="btn btn-light btn-block" href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="fab fa-facebook-f"></i>Sign
                             up with
                             Facebook</a>
                         -->
-                <!--<button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign up with Google</button>-->
-            </form>
-        </div>
-    </div>
+        <!--<button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign up with Google</button>-->
+    </form>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
