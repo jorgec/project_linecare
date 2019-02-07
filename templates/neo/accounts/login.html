@@ -10,57 +10,44 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-8 col-sm-12 p-0">
-            <div class="signin-page__banner d-lg-flex flex-column justify-content-center align-items-center">
-                <h1>Providing outstanding healthcare to everyone</h1>
-                <p>We have a national reputation for world-class care and innovative medical treatment.</p>
-            </div>
+<div class="login-wrapper d-flex justify-content-center align-items-center" style="height: 100vh;background: url({% static 'neo/images/bg-01.png' %}) center center no-repeat;background-size: cover;">
+    <form class="signin-page__form col-lg-12 col-sm-12 p-4" method="post" style="box-shadow:0 0 10px #333 ; height: auto !important; background-color: #fff;">
+        {% csrf_token %}
+        <div class="text-center mb-4">
+            <h3 class="h3">Log in</h3>
         </div>
-        <div class="col-lg-4 col-sm-12 px-4">
-            <form class="signin-page__form col-lg-4 col-sm-12" method="post">
-                {% csrf_token %}
-                <div class="text-center mb-4">
-                    <h3 class="h3">Log in</h3>
-                </div>
 
-                {% if messages %}
-                {% for m in messages %}
-                <div class="alert alert-{{ m.tags }}">{{ m }}</div>
-                {% endfor %}
-                {% endif %}
+        {% if messages %}
+        {% for m in messages %}
+        <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+        {% endfor %}
+        {% endif %}
 
-                <div class="form-label-group">
-                    <img class="img-envelop" src="{% static 'neo/images/close-envelope-green.png' %}" alt="Email">
-                    <input type="email" id="email" class="form-control" placeholder="Email address" name="email"
-                        required autofocus>
-                </div>
+        <div class="form-label-group">
+            <img class="img-envelop" src="{% static 'neo/images/close-envelope-green.png' %}" alt="Email">
+            <input type="email" id="email" class="form-control" placeholder="Email address" name="email" required
+                autofocus>
+        </div>
 
-                <div class="form-label-group">
-                    <img class="img-padlock" src="{% static 'neo/images/002-padlock-green.png' %}" alt="Password">
-                    <input type="password" id="password" class="form-control" placeholder="Password" name="password"
-                        required>
-                </div>
+        <div class="form-label-group">
+            <img class="img-padlock" src="{% static 'neo/images/002-padlock-green.png' %}" alt="Password">
+            <input type="password" id="password" class="form-control" placeholder="Password" name="password" required>
+        </div>
 
-                <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-primary btn-block" type="submit">Sign in</button>
 
-                <p class="my-3">
-                    Don't have an account? <a href="{% url 'accounts_register' %}">Register your email</a>
-                </p>
+        <p class="my-3">
+            Don't have an account? <a href="{% url 'accounts_register' %}">Register your email</a>
+        </p>
 
-                <!--
+        <!--
             <a class="btn btn-light btn-block" href="{% provider_login_url 'facebook' method='oauth2' %}"><i class="fab fa-facebook-f"></i>Sign
                 in with
                 Facebook</a>
             <button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign in with Google</button>
             -->
-            </form>
-        </div>
-    </div>
+    </form>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
