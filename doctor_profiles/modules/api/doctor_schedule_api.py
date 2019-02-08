@@ -530,14 +530,14 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
                     'medical_institution': schedule_day.medical_institution.slug
                 })
             event = {
-				"schedule_day_id": schedule_day.id,
-				"doctor_id": schedule_day.doctor.id,
+                "schedule_day_id": schedule_day.id,
+                "doctor_id": schedule_day.doctor.id,
                 "title": schedule_day.short(),
                 "start": start,
                 "end": end,
-				"days": schedule_day.schedule.split_days(),
-				"patient_count": schedule_day.day_schedule_object_patients.all().count(),
-				"url": f"{base_url}?date={schedule_day.day}"
+                "days": schedule_day.schedule.split_days(),
+                "patient_count": schedule_day.day_schedule_object_patients.all().count(),
+                "url": f"{base_url}?date={schedule_day.day}"
             }
             events.append(event)
 
@@ -545,18 +545,17 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
 
 
 class ApiDoctorScheduleDayDelete(APIView):
-	"""
-	Delete specific schedule on day
-	?doctor_id=doctor_id
-	?id=schedule_day_id
-	"""
+    """
+    Delete specific schedule on day
+    ?doctor_id=doctor_id
+    ?id=schedule_day_id
+    """
 
-	permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
-	def post(self, request, *args, **kwargs):
-		schedule_day = get_object_or_404(DoctorScheduleDay.objects.get(id=request.data.get('schedule_day_id', None)))
-		result, profile_type = is_doctor_or_receptionist(request.user)
-
+    def post(self, request, *args, **kwargs):
+        schedule_day = get_object_or_404(DoctorScheduleDay.objects.get(id=request.data.get('schedule_day_id', None)))
+        result, profile_type = is_doctor_or_receptionist(request.user)
         if not result:
             return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
 
@@ -572,7 +571,6 @@ class ApiDoctorScheduleDayDelete(APIView):
                                           medical_institution=medical_institution, is_approved=True)
 
         if type(profile_type) != DoctorProfile:
-            """ person adding isn't the doctor, so check if receptionist is allowed """
             connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
                                                     medical_institution=medical_institution)
             if not connection:
@@ -581,7 +579,6 @@ class ApiDoctorScheduleDayDelete(APIView):
         elif profile_type.id != doctor.id:
             return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
 
-		schedule_day.delete()
+        schedule_day.delete()
 
-		return Response(f"{schedule_day} deleted!", status=status.HTTP_200_OK)
-	
+        return Response(f"{schedule_day} deleted!", status=status.HTTP_200_OK)

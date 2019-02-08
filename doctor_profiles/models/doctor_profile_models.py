@@ -343,7 +343,7 @@ class DoctorProfile(models.Model):
     def get_patient_appointments(
             self, *,
             medical_institution=None,
-			schedule_id=None,
+            schedule_id=None,
             s=None,
             day_start=None,
             day_end=None,

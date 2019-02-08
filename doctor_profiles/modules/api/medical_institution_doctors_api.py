@@ -5,10 +5,13 @@ from rest_framework.views import APIView
 
 from doctor_profiles.constants import APPOINTMENT_TYPES
 from doctor_profiles.models import DoctorProfile
-from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
+from doctor_profiles.models.medical_institution_doctor_models import (
+    MedicalInstitutionDoctor,
+)
 from doctor_profiles.serializers import MedicalInstitutionDoctorPrivateSerializer
-from doctor_profiles.serializers.medical_institution_doctor_serializers import \
-    MedicalInstitutionDoctorCreatePrivateSerializer
+from doctor_profiles.serializers.medical_institution_doctor_serializers import (
+    MedicalInstitutionDoctorCreatePrivateSerializer,
+)
 from receptionist_profiles.models import ReceptionistProfile
 
 
@@ -53,16 +56,14 @@ class ApiMedicalInstitutionDoctorMetaList(APIView):
 
     def get(self, request, *args, **kwargs):
         connection = get_object_or_404(
-            MedicalInstitutionDoctor,
-            is_approved=True,
-            id=request.GET.get('id', None)
+            MedicalInstitutionDoctor, is_approved=True, id=request.GET.get("id", None)
         )
 
         types = APPOINTMENT_TYPES
 
         meta = connection.get_schedule_options()
 
-        key = request.GET.get('key', None)
+        key = request.GET.get("key", None)
         if key:
             if key in meta:
                 return Response(meta[key], status=status.HTTP_200_OK)
@@ -83,25 +84,32 @@ class ApiMedicalInstitutionDoctorMetaUpdate(APIView):
         connection = get_object_or_404(
             MedicalInstitutionDoctor,
             is_approved=True,
-            id=request.data.get('rel_id', None)
+            id=request.data.get("rel_id", None),
         )
 
         result, profile_type = is_doctor_or_receptionist(request.user)
         if not result:
-            return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                "Incompatible user profile", status=status.HTTP_403_FORBIDDEN
+            )
 
         if type(profile_type) != DoctorProfile:
             """ person updating isn't the doctor, so check if receptionist is allowed """
             receptionist_connection = connection.doctor.verify_receptionist(
                 receptionist=request.user.receptionistprofile,
-                medical_institution=connection.medical_institution)
+                medical_institution=connection.medical_institution,
+            )
             if not receptionist_connection:
-                return Response("Receptionist is not authorized by this doctor for this medical institution",
-                                status=status.HTTP_403_FORBIDDEN)
+                return Response(
+                    "Receptionist is not authorized by this doctor for this medical institution",
+                    status=status.HTTP_403_FORBIDDEN,
+                )
         elif profile_type.id != connection.doctor.id:
-            return Response("This is not your profile", status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                "This is not your profile", status=status.HTTP_401_UNAUTHORIZED
+            )
 
-        key = request.data.get('key', None)
+        key = request.data.get("key", None)
 
         if not key:
             return Response("Invalid metadata key", status=status.HTTP_400_BAD_REQUEST)

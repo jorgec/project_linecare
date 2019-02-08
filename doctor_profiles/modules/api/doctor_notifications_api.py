@@ -7,6 +7,7 @@ class ApiPrivateDoctorAppointmentNotificationsList(APIView):
     """
     Get Doctor's appointment notifications
     """
+
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -29,4 +30,6 @@ class ApiPrivateDoctorAppointmentNotificationsDelete(APIView):
         if not doctor:
             return Response("Invalid profile", status=status.HTTP_401_UNAUTHORIZED)
 
-        return Response(doctor.clear_appointment_notifications(), status=status.HTTP_200_OK)
+        return Response(
+            doctor.clear_appointment_notifications(), status=status.HTTP_200_OK
+        )

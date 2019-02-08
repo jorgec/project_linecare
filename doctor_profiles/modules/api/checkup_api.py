@@ -4,7 +4,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from doctor_profiles.models import PatientCheckupRecord, CheckupNote
-from doctor_profiles.serializers.checkup_serializers import CheckupNoteSerializer, CheckupNoteCreateSerializer
+from doctor_profiles.serializers.checkup_serializers import (
+    CheckupNoteSerializer,
+    CheckupNoteCreateSerializer,
+)
 
 
 class ApiCheckupNoteList(APIView):
@@ -16,13 +19,17 @@ class ApiCheckupNoteList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
+        checkup = get_object_or_404(
+            PatientCheckupRecord, id=request.GET.get("checkup_id", None)
+        )
         doctor = request.user.doctor_profile()
         if not doctor:
             return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
         if not checkup.doctor_has_access(doctor):
-            return Response(f"{doctor} does not have access privileges for this record",
-                            status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                f"{doctor} does not have access privileges for this record",
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
         notes = CheckupNote.objects.filter(checkup=checkup)
 
@@ -39,13 +46,17 @@ class ApiCheckupNoteCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        checkup = get_object_or_404(PatientCheckupRecord, id=request.GET.get('checkup_id', None))
+        checkup = get_object_or_404(
+            PatientCheckupRecord, id=request.GET.get("checkup_id", None)
+        )
         doctor = request.user.doctor_profile()
         if not doctor:
             return Response("Not a doctor", status=status.HTTP_401_UNAUTHORIZED)
         if not checkup.doctor_has_access(doctor):
-            return Response(f"{doctor} does not have access privileges for this record",
-                            status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                f"{doctor} does not have access privileges for this record",
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
         serializer = CheckupNoteCreateSerializer(data=request.data)
 
