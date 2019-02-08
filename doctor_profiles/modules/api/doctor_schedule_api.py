@@ -519,6 +519,7 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
         for schedule_day in schedule_days:
             start = f"{schedule_day.day}T{schedule_day.schedule.start_time}"
             end = f"{schedule_day.day}T{schedule_day.schedule.end_time}"
+
             if consumer == 'receptionist':
                 base_url = reverse('receptionist_profile_doctor_queue', kwargs={
                     'medical_institution': schedule_day.medical_institution.slug,
@@ -532,7 +533,9 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
                 "title": schedule_day.short(),
                 "start": start,
                 "end": end,
-                "url": f"{base_url}?date={schedule_day.day}"
+				"days": schedule_day.schedule.split_days(),
+				"patient_count": schedule_day.day_schedule_object_patients.all().count(),
+				"url": f"{base_url}?date={schedule_day.day}"
             }
             events.append(event)
 
