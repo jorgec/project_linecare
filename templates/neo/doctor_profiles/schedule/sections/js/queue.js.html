@@ -61,7 +61,6 @@
                     }
                     else if(q["status"] === "in_progress"){
                         var back_to_queue_url = base_url + "&queue_status=queueing";
-                        var mark_done_url = base_url + "&queue_status=done";
 
                         btnAction += "<a class='btn btn-info btn-sm' href='" + patient_appointment_url + "'>Load Medical Chart</a>";
                         btnAction += "<a class='btn btn-secondary btn-sm action-button' href='" + back_to_queue_url + "'>Back to queue</a>";
