@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 class ApiPrivateDoctorAppointmentNotificationsList(APIView):
     """
-    Get Doctor's appointment notifications
+    Get Doctor's appointment notifiers
     """
 
     permission_classes = [permissions.IsAuthenticated]
@@ -20,7 +20,7 @@ class ApiPrivateDoctorAppointmentNotificationsList(APIView):
 
 class ApiPrivateDoctorAppointmentNotificationsDelete(APIView):
     """
-    Clear Doctor's appointment notifications
+    Clear Doctor's appointment notifiers
     """
 
     permission_classes = [permissions.IsAuthenticated]

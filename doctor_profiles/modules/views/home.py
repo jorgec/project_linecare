@@ -21,6 +21,9 @@ class DoctorProfileHomeView(LoginRequiredMixin, UserPassesTestMixin, View):
             'schedules': doctor.get_schedule_on_day(day=date),
             'date': date
         }
+        # print("-" * 80)
+        # print("IP Address for debug-toolbar: " + request.META['REMOTE_ADDR'])
+        # print("-" * 80)
 
         return render(request, 'neo/doctor_profiles/home/home.html', context)
 

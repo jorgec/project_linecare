@@ -5,7 +5,7 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models as models, IntegrityError
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
 
 from doctor_profiles.constants import QUEUE_STATUS_CODES, APPOINTMENT_TYPES
@@ -393,4 +393,15 @@ def populate_schedule_days(sender, instance=None, created=False, **kwargs):
                 doctor=instance.doctor,
                 medical_institution=instance.medical_institution,
                 schedule=instance,
+            )
+
+
+@receiver(pre_delete, sender=DoctorScheduleDay)
+def notify_affected_appointments(sender, instance=None, **kwargs):
+    if instance:
+        appointments = instance.get_appointments()
+        for a in appointments:
+            PatientAppointment.objects.update_status(
+                id=a.id,
+                status='cancelled_by_doctor'
             )

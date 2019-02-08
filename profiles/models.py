@@ -1,5 +1,6 @@
 import phonenumbers
 from django.apps import apps
+from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.signals import post_save
@@ -45,6 +46,8 @@ class BaseProfile(models.Model):
 
     is_fresh = models.BooleanField(default=True)
     is_primary = models.BooleanField(default=False)
+
+    metadata = JSONField(default=dict, null=True, blank=True)
 
     objects = BaseProfileManager()
 
@@ -188,6 +191,26 @@ class BaseProfile(models.Model):
             return None
 
     """ appointments """
+
+    def appointment_notifications(self):
+        try:
+            return self.metadata['notifiers']
+        except KeyError:
+            self.metadata['notifiers'] = []
+            return []
+
+    def update_appointment_notifications(self, data):
+        notifs = self.appointment_notifications()
+        notifs.append(data)
+        notifs.reverse()
+        self.metadata['notifiers'] = notifs
+        self.save(update_fields=['metadata'])
+        return self.appointment_notifications()
+
+    def clear_appointment_notifications(self):
+        self.metadata['notifiers'] = []
+        self.save(update_fields=['metadata'])
+        return []
 
     def create_appointment(
             self,
