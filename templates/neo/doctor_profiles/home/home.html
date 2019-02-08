@@ -39,9 +39,9 @@
                             <h5 class="card-title h5">Schedules</h5>
                         </div>
                         <div class="card-body">
-                            {% if profile.get_active_schedules %}
+                            {% if schedules %}
                                 <div class="row no-gutters">
-                                    {% for schedule in profile.get_active_schedules %}
+                                    {% for schedule in schedules %}
                                         <div class="mb-4">
                                             <div class="info">
                                                 <h6 class="h6">
