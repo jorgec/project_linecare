@@ -281,6 +281,8 @@ CORS_ORIGIN_WHITELIST = (
     'linecare.local',
     '192.168.10.189',
     '192.168.33.1',
+    'localhost:3000',
+    '192.168.10.189:3000'
 )
 
 ELASTICSEARCH_DSL = {
