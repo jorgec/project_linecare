@@ -7,6 +7,7 @@ from functools import reduce
 from django.contrib.postgres.fields import JSONField
 from django.db import models as models, IntegrityError
 
+from doctor_profiles.constants import QUEUE_NOT_CANCELLED_CODES
 from doctor_profiles.models.managers.doctor_profile_manager import DoctorProfileManager
 from helpers import search
 
@@ -350,7 +351,8 @@ class DoctorProfile(models.Model):
             status=None,
             appointment_type=None,
             page=1,
-            grab=50
+            grab=50,
+            show_cancelled=True
     ):
         filters = {}
 
@@ -364,6 +366,9 @@ class DoctorProfile(models.Model):
             filters['status'] = status
         if appointment_type:
             filters['type'] = appointment_type
+
+        if not show_cancelled:
+            filters['status__in'] = QUEUE_NOT_CANCELLED_CODES
 
         result_end = page * grab
         result_start = result_end - grab

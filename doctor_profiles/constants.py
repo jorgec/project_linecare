@@ -29,8 +29,13 @@ QUEUE_DONE_CODES = (
     'Done',
 )
 
-QUEUE_INACTIVE = (
-    'pending', 'queueing'
+
+QUEUE_NOT_CANCELLED_CODES = (
+    'pending',
+    'queueing',
+    'in_progress',
+    'finishing',
+    'done',
 )
 
 QUEUE_STATUS_CODES = (

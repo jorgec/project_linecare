@@ -20,3 +20,11 @@ def patient_appointment_status_notify(appointment, message, color):
             "color": color
         }
     )
+
+    async_to_sync(channel_layer.group_send)(
+        f"doctor-{appointment.doctor.id}-appointments", {
+            "type": "notification.alert",
+            "event": f"Appointment status changed: {appointment.status}",
+            "appointment": f"{appointment}",
+        }
+    )

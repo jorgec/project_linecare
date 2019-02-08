@@ -48,7 +48,7 @@ def update_status_permissions_check(appointment, request, queue_status):
         if queue_status in UPDATE_STATUS_PERMISSIONS_MATRIX["doctor"]:
             is_allowed = True
     if actor.receptionist_profile() and actor.receptionist_profile() in appointment.doctor.get_receptionists(
-        medical_institution=appointment.medical_institution
+            medical_institution=appointment.medical_institution
     ):
         if queue_status in UPDATE_STATUS_PERMISSIONS_MATRIX["receptionist"]:
             is_allowed = True
@@ -61,12 +61,12 @@ def update_status_permissions_check(appointment, request, queue_status):
 
 class ApiPatientAppointmentCount(APIView):
     """
-	Count the number of appointments for specified date
+    Count the number of appointments for specified date
 
-	[optional]
-	?date=YYYY-MM-DD
-	?medical_institution_id=n
-	"""
+    [optional]
+    ?date=YYYY-MM-DD
+    ?medical_institution_id=n
+    """
 
     permission_classes = [permissions.IsAuthenticated]
 
@@ -91,9 +91,8 @@ class ApiPatientAppointmentCount(APIView):
             )
 
         appointments = doctor.get_patient_appointments(
-            day_start=date, day_end=date, medical_institution=medical_institution
+            day_start=date, day_end=date, medical_institution=medical_institution, show_cancelled=False
         )
-        # serializer = PatientQueuePrivateSerializer(appointments, many=True)
 
         return Response(appointments.count(), status=status.HTTP_200_OK)
 
