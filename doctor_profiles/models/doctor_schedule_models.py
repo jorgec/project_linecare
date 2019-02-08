@@ -160,8 +160,8 @@ class DoctorScheduleDay(models.Model):
     def short(self):
         return f"{self.medical_institution}"
 
-        def get_appointments(self):
-            return self.day_schedule_object_patients.all()
+    def get_appointments(self):
+        return self.day_schedule_object_patients.all()
 
 
 class PatientAppointment(models.Model):

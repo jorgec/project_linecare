@@ -557,7 +557,7 @@ class ApiDoctorScheduleDayDelete(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        schedule_day = get_object_or_404(DoctorScheduleDay.objects.get(id=request.data.get('schedule_day_id', None)))
+        schedule_day = DoctorScheduleDay.objects.get(id=request.data.get('schedule_day_id'))
         result, profile_type = is_doctor_or_receptionist(request.user)
         if not result:
             return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
@@ -569,9 +569,6 @@ class ApiDoctorScheduleDayDelete(APIView):
             return Response("Doctor does not exist!", status=status.HTTP_404_NOT_FOUND)
 
         medical_institution = schedule_day.medical_institution
-
-        mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
-                                          medical_institution=medical_institution, is_approved=True)
 
         if type(profile_type) != DoctorProfile:
             connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
