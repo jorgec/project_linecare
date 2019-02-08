@@ -33,10 +33,10 @@
                         class="fas fa-caret-down"></i></a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
                     <hr>
-                    <a class="dropdown-item" href="{% url 'base_profile_home_view' %}">My Personal Profile</a>
+<!--                <a class="dropdown-item" href="{% url 'base_profile_home_view' %}">My Personal Profile</a> -->
                     <hr>
                     {% if request.user.doctorprofile %}
-                        <a class="dropdown-item" href="{% url 'doctor_profile_home' %}" data-toggle="tooltip"
+                        <a class="dropdown-item" href="{% url 'doctor_profile_settings_home' %}" data-toggle="tooltip"
                            data-placement="top" title="My Doctor Profile">
                             My Doctor Profile
                         </a>
