@@ -537,7 +537,8 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
                 "end": end,
                 "days": schedule_day.schedule.split_days(),
                 "patient_count": schedule_day.day_schedule_object_patients.all().count(),
-                "url": f"{base_url}?date={schedule_day.day}"
+                "url": f"{base_url}?date={schedule_day.day}",
+                "delete_url": f"{reverse('api_private_doctor_schedule_day_delete')}"
             }
             events.append(event)
 
