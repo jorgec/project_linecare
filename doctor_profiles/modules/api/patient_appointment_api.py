@@ -53,6 +53,43 @@ def update_status_permissions_check(appointment, request, queue_status):
     return is_allowed
 
 
+class ApiPatientAppointmentCount(APIView):
+	"""
+	Count the number of appointments for specified date
+
+	[optional]
+	?date=YYYY-MM-DD
+	?medical_institution_id=n
+	"""
+
+	permission_classes = [permissions.IsAuthenticated]
+
+	def get(self, request, *args, **kwargs):
+		doctor = request.user.doctor_profile()
+		if not doctor:
+			return Response("Invalid user profile", status=status.HTTP_403_FORBIDDEN)
+
+		date = None
+		medical_institution = None
+
+		if request.GET.get('date'):
+			date = DateDim.objects.parse_get(request.GET.get('date'))
+		if not date:
+			date = DateDim.objects.today()
+
+		if request.GET.get('medical_institution_id', None):
+			medical_institution = get_object_or_404(MedicalInstitution.objects.get(id=request.GET.get('medical_institution_id')))
+
+		appointments = doctor.get_patient_appointments(
+			day_start=date,
+			day_end=date,
+			medical_institution=medical_institution
+		)
+		# serializer = PatientQueuePrivateSerializer(appointments, many=True)
+
+		return Response(appointments.count(), status=status.HTTP_200_OK)
+
+
 class ApiPatientAppointmentUpdateStatus(APIView):
     """
     Update status of patient appointment
