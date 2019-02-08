@@ -12,6 +12,14 @@
             <a href="/" class="navbar-brand"><img src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
         {% endif %}
 
+        <div class="menu__container">
+            {% if request.user.doctor_profile %}
+            {% include 'neo/doctor_profiles/common/main_menu.html' %}
+            {% elif request.user.receptionist_profile  %}
+            {% include 'neo/receptionist_profiles/common/main_menu.html' %}
+            {% endif %}
+        </div>
+
         <div class="profile__container">
             <div class="profile__notif">
                 <a id="notification_bell" href="javascript:void(0)"><i class="fas fa-bell"></i><span id="badgeNotificationAlert" class="badge badge-success hide">New</span></a>
