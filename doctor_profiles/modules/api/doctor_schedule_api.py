@@ -547,8 +547,10 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
 class ApiDoctorScheduleDayDelete(APIView):
     """
     Delete specific schedule on day
-    ?doctor_id=doctor_id
-    ?id=schedule_day_id
+
+    : post :
+    doctor_id=doctor_id
+    id=schedule_day_id
     """
 
     permission_classes = [permissions.IsAuthenticated]
