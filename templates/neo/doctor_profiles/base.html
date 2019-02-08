@@ -17,6 +17,36 @@
     {% block header_js %} {% endblock %}
     <script src="{% static 'channels/js/websocketbridge.js' %}" type="text/javascript"></script>
 
+    <style type="text/css">
+        ul.main-nav:after{
+        content: "";
+        display: block;
+        clear: both;
+        }
+
+        ul.main-nav li.main-nav-item{
+        list-style-type: none;
+        margin: 0 20px 0 0;
+        padding: 0;
+        float: left;
+				font-size: 1.5rem;
+        }
+
+				ul.main-nav li.main-nav-item a{
+				color: #558b2f !important;
+				}
+
+				ul.main-nav li.main-nav-item a.active{
+				color: #64dd17 !important;
+				}
+
+				ul.main-nav li.main-nav-item a:hover{
+				color: #00c853 !important;
+				}
+    </style>
+        
+
+
 </head>
 
 <body>

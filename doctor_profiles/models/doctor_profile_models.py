@@ -35,15 +35,28 @@ class DoctorProfile(models.Model):
         ordering = ('user',)
 
     def __str__(self):
-        degrees = ", ".join([a.degree.abbreviation for a in self.get_degrees_rel()])
-        fellowships = ", ".join([a.get_abbreviation() for a in self.get_fellowships_rel()])
-        diplomates = ", ".join([a.get_abbreviation() for a in self.get_diplomates_rel()])
+        degrees, fellowships, diplomates = self.get_name_suffixes()
 
         try:
             title = f"{self.user.base_profile().get_name()} {degrees} {fellowships} {diplomates}"
         except AttributeError:
             return 'NoBaseProfile'
 
+        return title
+
+    def name_only(self):
+        return self.user.base_profile().get_name()
+
+    def get_name_suffixes(self):
+        degrees = ", ".join([a.degree.abbreviation for a in self.get_degrees_rel()])
+        fellowships = ", ".join([a.get_abbreviation() for a in self.get_fellowships_rel()])
+        diplomates = ", ".join([a.get_abbreviation() for a in self.get_diplomates_rel()])
+
+        return degrees, fellowships, diplomates
+
+    def repr_name_suffixes(self):
+        degrees, fellowships, diplomates = self.get_name_suffixes()
+        title = f"{degrees} {fellowships} {diplomates}"
         return title
 
     def get_degrees_rel(self):
@@ -198,7 +211,7 @@ class DoctorProfile(models.Model):
     def settings_progress(self):
         return self.calculate_settings_progress()
 
-    def get_schedules(self, *, medical_institution=None, include_past=True, filter_days=None):
+    def get_schedules(self, *, medical_institution=None, include_past=True, filter_days=None, day=None):
         DateDim = apps.get_model('datesdim.DateDim')
         filters = {
             'is_approved': True
@@ -208,6 +221,8 @@ class DoctorProfile(models.Model):
 
         if filter_days:
             filters['days__contains'] = filter_days
+        
+      
 
         if include_past:
             return self.doctor_schedules.filter(**filters)

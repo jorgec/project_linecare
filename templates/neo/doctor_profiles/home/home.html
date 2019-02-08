@@ -28,7 +28,8 @@
                     </div>
                     <div class="card my-2">
                         <div class="card-body">
-                            <h4 class="h4">{{ doctor }}</h4>
+                            <h4 class="h4 mb-0">{{ doctor.name_only }}</h4>
+                            {{ doctor.repr_name_suffixes }}
                             <hr>
                             <p>{{ doctor.repr_specializations|safe }}</p>
                         </div>
@@ -36,7 +37,7 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title h5">Schedules</h5>
+                            <h5 class="card-title h5">Daily Schedule</h5>
                         </div>
                         <div class="card-body">
                             {% if schedules %}
@@ -49,10 +50,10 @@
                                                         {{ schedule.medical_institution }}
                                                     </a>
                                                 </h6>
-                                                {{ schedule.start_time.format_12 }} to {{ schedule.end_time.format_12 }}
+                                                {{ schedule.schedule.start_time.format_12 }} to {{ schedule.schedule.end_time.format_12 }}
                                                 <div class="card-actions">
 
-                                                    <a href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}?schedule_id={{ schedule.id }}">
+                                                    <a href="{% url 'doctor_profile_schedule_detail' schedule.medical_institution.slug %}?schedule_id={{ schedule.schedule.id }}">
                                                         <i class="fa fa-list"></i> Go to Queue
                                                     </a>
 
@@ -71,8 +72,9 @@
                             {% endif %}
                         </div>
                     </div>
-
+                    <!--
                     {% include 'neo/doctor_profiles/common/nav__side.html' %}
+                    -->
                 </div>
             </div>
             <div class="col-sm-12 col-md-9">
