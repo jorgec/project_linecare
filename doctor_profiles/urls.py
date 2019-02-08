@@ -404,6 +404,9 @@ urlpatterns += [
     path(f'{version}/private/doctor/schedule_day/presence/status',
          doctor_schedule_api.ApiPrivateDoctorScheduleDayPresenceStatus.as_view(),
          name='api_private_doctor_schedule_day_presence_status'),
+	path(f'{version}/private/doctor/schedule_day/delete',
+		 doctor_schedule_api.ApiDoctorScheduleDayDelete.as_view(),
+		 name='api_private_doctor_schedule_day_delete'),
 
     # patient connections
     path(f'{version}/private/patients/search',
