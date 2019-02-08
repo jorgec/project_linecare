@@ -558,6 +558,10 @@ class ApiDoctorScheduleDayDelete(APIView):
 
     def post(self, request, *args, **kwargs):
         schedule_day = DoctorScheduleDay.objects.get(id=request.data.get('schedule_day_id'))
+
+        if schedule_day.day.date_obj < DateDim.objects.today().date_obj:
+            return Response("You can't delete past schedules!", status=status.HTTP_400_BAD_REQUEST)
+
         result, profile_type = is_doctor_or_receptionist(request.user)
         if not result:
             return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)

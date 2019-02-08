@@ -1,9 +1,17 @@
 {% load static %}
 
 <script type="text/javascript">
-
+    var modalPatientPreview = $("#modalPatientPreview");
+    var btnPatientPreview = $(".modalPatientPreview_open");
+    var containerPatientPreview = $("#container-patient-detail");
+    var templatePatientPreview = $("#template-patient-detail");
     $(document).ready(function(){
         getQueue('{{ date }}');
+        modalPatientPreview.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+
 
         var webSocketBridge = new channels.WebSocketBridge();
         webSocketBridge.connect('/notifications/doctor/queue/status_update/');
@@ -30,7 +38,7 @@
                 var q_number = 1;
                 for(var r in result){
                     var q = result[r];
-                    console.log(q)
+                    // console.log(q)
                     var btnAction = "";
                     var subAction = "";
                     var base_url = "{% url 'api_private_patient_appointment_status_update' %}?appointment_id=" + q.id;
@@ -67,10 +75,24 @@
                     q["button_action"] = btnAction;
                     q["mi_url"] = mi_url;
                     q["q_number"] = q_number;
+                    q["index"] = q_number - 1;
                     q_number++;
                     queue.push(q);
                 }
                 $("#container-queue").loadTemplate($("#template-queue"), queue);
+
+                $(".modalPatientPreview_open").on('click', function(e){                    
+                    var q = $(this).attr("data-patient-id");
+                    containerPatientPreview.loadTemplate(templatePatientPreview, queue[q]);
+                    var url = "{% url 'api_private_patient_appointments_history' %}?patient_id=" + queue[q].patient.id;
+                    $.get(url)
+                     .done(function(result){
+                         console.log(result);
+                     });
+                    
+
+                });
+
 
                 $(".queue-action-buttons .action-button").on('click', function(e){
                     e.preventDefault();

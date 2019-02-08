@@ -420,6 +420,9 @@ urlpatterns += [
     path(f'{version}/private/queue/list',
          doctor_schedule_api.ApiPrivateDoctorScheduleQueueList.as_view(),
          name='api_private_queue_list'),
+    path(f'{version}/private/patient/appointments/history',
+         patient_appointment_api.ApiPatientAppointmentHistory.as_view(),
+         name='api_private_patient_appointments_history'),
 
     path(f'{version}/public/queue/list',
          doctor_schedule_api.ApiPublicDummyScheduleQueueList.as_view(),

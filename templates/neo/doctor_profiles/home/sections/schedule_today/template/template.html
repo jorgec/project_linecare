@@ -17,8 +17,8 @@
             <small>Prior visits: <span data-content="prior_visits"></span></small><br>
             <small>Last visit: <a data-href="last_visit.url"><span data-content="last_visit.date"></span></a></small>
         </td>
-        <td class="align-middle">
-            <a data-href="patient_url">
+        <td class="align-middle patient-details-td">
+            <a href="#!" class="modalPatientPreview_open" data-template-bind='[{"attribute": "data-patient-id", "value": "index"}]' >
                 <span data-content="patient.full_name"></span>
             </a>
             <br>
@@ -37,4 +37,56 @@
             </div>
         </td>
     </tr>
+</script>
+
+<script type="text/html" id="template-patient-detail">
+
+    <div class="col-sm-12 col-md-2">
+				<img class="thumbnail img-fluid" data-src="patient.profile_photo">
+		</div>
+		<div class="col-sm-12 col-md-10">
+        <h4 class="h4">
+            <a data-href="patient.patient_detail_url" data-content="patient.full_name"></a>
+        </h4>
+        <div class="row mb-2 no-gutters info-details">
+            <div class="col">
+                <div class="info-label">
+                    Birth Date
+                </div>
+                <div class="info-value" data-content="patient.date_of_birth"></div>
+            </div>
+            <div class="col">
+                <div class="info-label">
+                    Sex
+                </div>
+                <div class="info-value" data-content="patient.gender.name"></div>
+            </div>
+            <div class="col">
+                <div class="info-label">
+                    Height (cm)
+                </div>
+                <div class="info-value" data-content="biometrics.height"></div>
+            </div>
+            <div class="col">
+                <div class="info-label">
+                    Weight (kg)
+                </div>
+                <div class="info-value" data-content="biometrics.weight"></div>
+            </div>
+            <div class="col">
+                <div class="info-label">
+                    Blood Type
+                </div>
+                <div class="info-value" data-content="biometrics.blood_type"></div>
+            </div>
+        </div>
+    </div>
+
+
+</script>
+<script type="text/html" id="template-patient-appointments-list">
+    <li class="list-group-item">
+        <a data-href="appointment_url" data-content="text"></a>
+    </li>
+    
 </script>

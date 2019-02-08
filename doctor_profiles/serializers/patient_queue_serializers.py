@@ -6,7 +6,8 @@ from doctor_profiles.constants import QUEUE_INACTIVE, QUEUE_ACTIVE
 from doctor_profiles.models import PatientAppointment
 from doctor_profiles.serializers import MedicalInstitutionSerializer
 from profiles.serializers import BaseProfilePrivateSerializerFull
-
+from biometrics.serializers import BiometricSerializer
+from biometrics.models import Biometric
 
 class PatientAppointmentSerializer(serializers.ModelSerializer):
     patient = BaseProfilePrivateSerializerFull()
@@ -46,6 +47,15 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
     last_visit = serializers.SerializerMethodField('repr_last_visit')
     patient_url = serializers.SerializerMethodField('repr_patient_url')
     schedule = serializers.SerializerMethodField('repr_schedule')
+    biometrics = serializers.SerializerMethodField('repr_biometrics')
+
+    def repr_biometrics(self, obj):
+        try:
+            biometrics = Biometric.objects.get(profile=obj.patient)
+            serializer = BiometricSerializer(biometrics)
+            return serializer.data
+        except Biometric.DoesNotExist:
+            return None
 
     def repr_schedule(self, obj):
         if obj.schedule_day_object:
@@ -118,5 +128,6 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
             'status_display',
             'last_visit',
             'patient_url',
-            'schedule'
+            'schedule',
+            'biometrics'
         )

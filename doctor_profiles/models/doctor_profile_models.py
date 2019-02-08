@@ -352,7 +352,8 @@ class DoctorProfile(models.Model):
             appointment_type=None,
             page=1,
             grab=50,
-            show_cancelled=True
+            show_cancelled=True,
+            patient_id=None
     ):
         filters = {}
 
@@ -366,6 +367,8 @@ class DoctorProfile(models.Model):
             filters['status'] = status
         if appointment_type:
             filters['type'] = appointment_type
+        if patient_id:
+            filters['patient_id'] = patient_id
 
         if not show_cancelled:
             filters['status__in'] = QUEUE_NOT_CANCELLED_CODES
