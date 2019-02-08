@@ -10,5 +10,4 @@ class PhotoUploadForm(forms.ModelForm):
             'photo',
             'caption',
             'is_public',
-            'is_primary'
         )

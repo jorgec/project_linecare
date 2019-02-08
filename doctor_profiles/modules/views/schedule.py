@@ -43,7 +43,8 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
         if 'medical_institution' in kwargs:
             medical_institution = get_object_or_404(MedicalInstitution, slug=kwargs['medical_institution'])
         else:
-            medical_institution = get_object_or_404(MedicalInstitution, slug=request.GET.get('medical_institution', None))
+            medical_institution = get_object_or_404(MedicalInstitution,
+                                                    slug=request.GET.get('medical_institution', None))
             new_url = reverse(
                 'doctor_profile_schedule_detail',
                 kwargs={
@@ -53,7 +54,6 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
 
             return HttpResponseRedirect(f"{new_url}?date={date}&schedule_id={schedule_id}")
         rel = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor, medical_institution=medical_institution)
-
 
         if not date:
             date = DateDim.objects.today()
@@ -65,7 +65,8 @@ class DoctorProfileScheduleDetail(LoginRequiredMixin, UserPassesTestMixin, View)
         biometrics_form = BiometricForm
 
         if schedule_id:
-            schedules = doctor.get_schedule_on_day(day=date, schedule_id=schedule_id, medical_institution=medical_institution)
+            schedules = doctor.get_schedule_on_day(day=date, schedule_id=schedule_id,
+                                                   medical_institution=medical_institution)
         else:
             schedule_id = ''
             schedules = doctor.get_schedule_on_day(day=date, medical_institution=medical_institution)
@@ -133,10 +134,10 @@ class DoctorProfileScheduleHistory(LoginRequiredMixin, UserPassesTestMixin, View
                 date = DateDim.objects.today()
 
         appointments = PatientAppointment.objects.filter(
-                doctor=doctor,
-                medical_institution=medical_institution,
-                schedule_day=date
-            ).order_by('time_start__minutes_since')
+            doctor=doctor,
+            medical_institution=medical_institution,
+            schedule_day=date
+        ).order_by('time_start__minutes_since')
 
         context = {
             'page_title': f'Appointment History in {rel.medical_institution} on {date}',
@@ -158,6 +159,7 @@ class DoctorProfileScheduleHistory(LoginRequiredMixin, UserPassesTestMixin, View
 
     def test_func(self):
         return self.request.user.doctor_profile() or self.request.user.receptionist_profile()
+
 
 class DoctorProfileScheduleCalendarMonth(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):

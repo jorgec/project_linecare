@@ -11,7 +11,7 @@
 
     <div class="user-profile__container">
         <div class="p-3">
-             {% for album in albums %}
+            {% for album in albums %}
                 <div class="row mb-3">
                     <div class="col-sm-6 col-md-2">
                         <div style="width: 100%; height: 100px; background: url({{ album.get_primary_photo }}) no-repeat center center; background-size: cover;"></div>
@@ -20,10 +20,10 @@
                         {{ album }}
 
                         <div class="btn-group-sm">
-                            <a class="btn btn-outline-info" href="{% url 'profile_album_detail' album.slug %}">
+                            <a class="btn btn-outline-info" href="{% url 'profile_album_detail' album.id %}">
                                 <i class="fa fa-eye"></i> View Photos
                             </a>
-                            <a class="btn btn-outline-primary" href="#!">
+                            <a class="btn btn-outline-primary" href="{% url 'profile_album_detail' album.id %}">
                                 <i class="fa fa-plus"></i>
                                 Add photo
                             </a>
@@ -41,16 +41,21 @@
         </div>
     </div>
 
-
+    {% include 'neo/profile/albums/sections/templates/add_photo/main.html' %}
+    {% include 'neo/profile/albums/sections/templates/add_photo/modals.html' %}
+    {% include 'neo/profile/albums/sections/templates/add_photo/templates.html' %}
 
 {% endblock %}
 
 {% block scripts %}
     {% block inner_scripts %}
     {% endblock %}
+    <script type="text/javascript"
+            src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+    <script src="{% static '3rd-party/jquery.popupoverlay.js' %}"></script>
+    {% include 'neo/profile/albums/sections/js/add_photo.js.html' %}
+    <script type="text/javascript">
 
-<script type="text/javascript">
-
-</script>
+    </script>
 
 {% endblock %}

@@ -253,14 +253,14 @@ class ProfilePhone(models.Model):
 def create_generic_albums(sender, instance=None, created=False, **kwargs):
     if created:
         Album.objects.create(**{
-            'name': '{} Profile Photos'.format(instance.user.username),
+            'name': 'Profile Photos',
             'description': 'Profile photos',
             'profile': instance,
             'album_type': PROFILE_PHOTO_ALBUM
         })
 
         Album.objects.create(**{
-            'name': '{} Cover Photos'.format(instance.user.username),
+            'name': 'Cover Photos',
             'description': 'Cover photos',
             'profile': instance,
             'album_type': COVER_PHOTO_ALBUM
