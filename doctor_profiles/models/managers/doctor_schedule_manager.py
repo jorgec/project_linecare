@@ -497,3 +497,6 @@ class DoctorScheduleManager(models.Manager):
             return False, "Schedule Conflict", collision_days
 
         return True, "Schedule Created", super(DoctorScheduleManager, self).create(*args, **kwargs)
+
+
+		

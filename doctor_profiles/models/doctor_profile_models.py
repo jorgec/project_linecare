@@ -221,8 +221,6 @@ class DoctorProfile(models.Model):
 
         if filter_days:
             filters['days__contains'] = filter_days
-        
-      
 
         if include_past:
             return self.doctor_schedules.filter(**filters)
@@ -345,6 +343,7 @@ class DoctorProfile(models.Model):
     def get_patient_appointments(
             self, *,
             medical_institution=None,
+			schedule_id=None,
             s=None,
             day_start=None,
             day_end=None,

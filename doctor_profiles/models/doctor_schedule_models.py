@@ -96,11 +96,16 @@ class DoctorScheduleDay(models.Model):
                                             on_delete=models.CASCADE)
     schedule = models.ForeignKey(DoctorSchedule, related_name='schedule_on_days', on_delete=models.CASCADE)
 
+	# objects = DoctorScheduleDayManager()
+
     def __str__(self):
         return f'{self.day} - {self.schedule}'
 
     def short(self):
         return f'{self.medical_institution}'
+
+	def get_appointments(self):
+		return self.day_schedule_object_patients.all()
 
 
 class PatientAppointment(models.Model):
