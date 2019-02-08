@@ -404,9 +404,9 @@ urlpatterns += [
     path(f'{version}/private/doctor/schedule_day/presence/status',
          doctor_schedule_api.ApiPrivateDoctorScheduleDayPresenceStatus.as_view(),
          name='api_private_doctor_schedule_day_presence_status'),
-	path(f'{version}/private/doctor/schedule_day/delete',
-		 doctor_schedule_api.ApiDoctorScheduleDayDelete.as_view(),
-		 name='api_private_doctor_schedule_day_delete'),
+    path(f'{version}/private/doctor/schedule_day/delete',
+         doctor_schedule_api.ApiDoctorScheduleDayDelete.as_view(),
+         name='api_private_doctor_schedule_day_delete'),
 
     # patient connections
     path(f'{version}/private/patients/search',
@@ -431,7 +431,8 @@ urlpatterns += [
     path(f'{version}/private/appointment/list',
          patient_appointment_api.ApiPatientAppointmentList.as_view(),
          name='api_private_patient_appointment_list'),
-	path(f'{version}/private/appointments/today/count', patient_appointment_api.ApiPatientAppointmentCount.as_view(), name='api_private_patient_appointment_count'),
+    path(f'{version}/private/appointments/today/count', patient_appointment_api.ApiPatientAppointmentCount.as_view(),
+         name='api_private_patient_appointment_count'),
 
     # calendar
     path(f'{version}/private/calendar/month',
