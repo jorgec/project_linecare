@@ -3,6 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.utils.crypto import get_random_string
 from django.views import View
 from rest_framework.utils import json
 
@@ -171,6 +172,7 @@ class DoctorProfileScheduleCalendarMonth(LoginRequiredMixin, UserPassesTestMixin
             'sublocation': 'detail',
             'user': request.user,
             'doctor': doctor,
+            'rand': get_random_string(length=32)
         }
 
         return render(request, 'neo/doctor_profiles/schedule/calendar.html', context)

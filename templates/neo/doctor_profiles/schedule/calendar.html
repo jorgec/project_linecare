@@ -21,9 +21,10 @@
         var appContext = {
             doctor_id: '{{ doctor.id }}',
         };
+
     </script>
-    <script src="{% static 'react/receptionist_profile/calendar/js/calendar-1.js' %}"></script>
-    <script src="{% static 'react/receptionist_profile/calendar/js/calendar-main.js' %}"></script>
-    <script src="{% static 'react/receptionist_profile/calendar/js/calendar-runtime.js' %}"></script>
+    <script src="{% static 'react/receptionist_profile/calendar/js/calendar-1.js' %}?r={{ rand }}"></script>
+    <script src="{% static 'react/receptionist_profile/calendar/js/calendar-main.js' %}?r={{ rand }}"></script>
+    <script src="{% static 'react/receptionist_profile/calendar/js/calendar-runtime.js' %}?r={{ rand }}"></script>
     {% endblock %}
 {% endblock %}
