@@ -34,6 +34,48 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
         )
 
 
+class PatientAppointmentHistoryListSerializer(serializers.ModelSerializer):
+    schedule_day = DateDimSerializer()
+    time_start = TimeDimSerializer()
+    time_end = TimeDimSerializer()
+    queue_status = serializers.SerializerMethodField('repr_queue_status')
+    status_display = serializers.SerializerMethodField('repr_status_display')
+    type = serializers.SerializerMethodField('repr_type')
+    medical_institution = MedicalInstitutionSerializer()
+    appointment_url = serializers.SerializerMethodField('repr_appointment_url')
+
+    def repr_queue_status(self, obj):
+        if obj.status in QUEUE_INACTIVE:
+            return 'inactive'
+        elif obj.status in QUEUE_ACTIVE:
+            return 'active'
+        else:
+            return 'waiting'
+
+    def repr_type(self, obj):
+        return obj.get_type_display()
+
+    def repr_status_display(self, obj):
+        return obj.get_status_display()
+
+    def repr_appointment_url(self, obj):
+        return f"{reverse('doctor_profile_patient_appointment_detail')}?appointment={obj.id}"
+
+    class Meta:
+        model = PatientAppointment
+        fields = (
+            'id',
+            'schedule_day',
+            'time_start',
+            'time_end',
+            'queue_status',
+            'status_display',
+            'type',
+            'medical_institution',
+            'appointment_url'
+        )
+
+
 class PatientQueuePrivateSerializer(serializers.ModelSerializer):
     patient = BaseProfilePrivateSerializerFull()
     schedule_day = DateDimSerializer()

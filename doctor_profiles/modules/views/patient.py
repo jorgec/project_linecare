@@ -82,7 +82,10 @@ class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMi
                 f"{reverse('doctor_profile_patient_appointment_history_detail')}?appointment={appointment.id}"
             )
 
-        checkup = appointment.appointment_checkup
+        try:
+            checkup = appointment.appointment_checkup
+        except PatientCheckupRecord.DoesNotExist:
+            checkup = PatientCheckupRecord.objects.create(appointment=appointment)
 
         if not checkup.doctor_has_access(doctor):
             return HttpResponseRedirect('/403/Forbidden')

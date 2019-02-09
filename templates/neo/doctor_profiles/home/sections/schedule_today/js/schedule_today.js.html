@@ -4,7 +4,9 @@
     var modalPatientPreview = $("#modalPatientPreview");
     var btnPatientPreview = $(".modalPatientPreview_open");
     var containerPatientPreview = $("#container-patient-detail");
-    var templatePatientPreview = $("#template-patient-detail");
+ var templatePatientPreview = $("#template-patient-detail");
+ var containerPatientHistoryList = $("#container-patient-appointments-list");
+ var templatePatientHistoryList = $("#template-patient-appointments-list");
     $(document).ready(function(){
         getQueue('{{ date }}');
         modalPatientPreview.popup({
@@ -31,7 +33,7 @@
             date = new Date().toISOString().split("T")[0];
         }
         var url = "{% url 'api_private_queue_list' %}?doctor_id={{ doctor.id }}&date=" + date;
-
+        var queue = []
         $.get(url)
             .done(function(result){
                 var queue = [];
@@ -85,9 +87,10 @@
                     var q = $(this).attr("data-patient-id");
                     containerPatientPreview.loadTemplate(templatePatientPreview, queue[q]);
                     var url = "{% url 'api_private_patient_appointments_history' %}?patient_id=" + queue[q].patient.id;
+
                     $.get(url)
                      .done(function(result){
-                         console.log(result);
+                         containerPatientHistoryList.loadTemplate(templatePatientHistoryList, result);
                      });
                     
 

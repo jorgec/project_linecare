@@ -11,7 +11,7 @@ from doctor_profiles.models import (
     MedicalInstitutionDoctor,
 )
 from doctor_profiles.modules.api.doctor_schedule_api import is_doctor_or_receptionist
-from doctor_profiles.serializers import PatientQueuePrivateSerializer
+from doctor_profiles.serializers import PatientQueuePrivateSerializer, PatientAppointmentHistoryListSerializer
 from profiles.models import BaseProfile
 
 UPDATE_STATUS_PERMISSIONS_MATRIX = {
@@ -161,8 +161,8 @@ class ApiPatientAppointmentHistory(APIView):
         doctor = request.user.doctor_profile()
         patient = get_object_or_404(BaseProfile, id=request.GET.get('patient_id', None))
 
-        appointments = doctor.get_patient_appointments(patient_id=patient.id)
-        serializer = PatientQueuePrivateSerializer(appointments, many=True)
+        appointments = doctor.get_patient_appointments(patient_id=patient.id, grab=10)
+        serializer = PatientAppointmentHistoryListSerializer(appointments, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 

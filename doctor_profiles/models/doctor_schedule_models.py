@@ -246,7 +246,7 @@ class PatientAppointment(models.Model):
     objects = PatientAppointmentManager()
 
     class Meta:
-        ordering = ("-schedule_day", "time_start__minutes_since")
+        ordering = ("-schedule_day__date_obj", "-time_start__minutes_since")
         unique_together = (
             "patient",
             "doctor",

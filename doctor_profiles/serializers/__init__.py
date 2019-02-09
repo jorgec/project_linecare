@@ -29,6 +29,6 @@ from .medical_institution_serializers import MedicalInstitutionTypeSerializer, M
 
 from .doctor_schedule_serializer import DoctorScheduleCollisionSerializer, DoctorScheduleSerializer, \
     DoctorScheduleCreateRegularScheduleSerializer
-from .patient_queue_serializers import PatientQueuePrivateSerializer
+from .patient_queue_serializers import PatientQueuePrivateSerializer, PatientAppointmentHistoryListSerializer
 
 from .medical_institution_doctor_serializers import MedicalInstitutionDoctorPrivateSerializer

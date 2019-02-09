@@ -22,9 +22,9 @@
             <div class="col-sm-12 col-md-3">
                 <div class="two-column__left">
 
-                    <div id="containerProfilePhoto" class="doctor-profile_photo rounded-circle position-relative">
+                    <div id="containerProfilePhoto" class="doctor-profile_photo rounded-circle position-relative" style="background-image: url({{request.user.base_profile.get_profile_photo.photo.url}});">
                         <a href="{% url 'profile_album_detail' request.user.base_profile.get_profile_album.id %}" id="btnProfilePhotoUpload"><i class="fas fa-camera position-absolute fa-fw"></i></a>
-                        <a href="#!" id="btnProfilePhotoRemove"><i class="fas fa-trash-alt position-absolute fa-fw"></i></a>
+
                     </div>
                     <div class="card my-2">
                         <div class="card-body">
