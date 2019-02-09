@@ -33,7 +33,12 @@
             date = new Date().toISOString().split("T")[0];
         }
         var url = "{% url 'api_private_queue_list' %}?doctor_id={{ doctor.id }}&date=" + date;
-        var queue = []
+        var queue = [];
+        var previewState = {
+            current: 0,
+            next: 0,
+            prev: 0
+        };
         $.get(url)
             .done(function(result){
                 var queue = [];
@@ -85,16 +90,60 @@
 
                 $(".modalPatientPreview_open").on('click', function(e){                    
                     var q = $(this).attr("data-patient-id");
-                    containerPatientPreview.loadTemplate(templatePatientPreview, queue[q]);
-                    var url = "{% url 'api_private_patient_appointments_history' %}?patient_id=" + queue[q].patient.id;
+
+                    updatePreviewState(q);
+                    loadPatientPreview(previewState.current);
+                });
+
+                $("#btnPreviewPatientPrevious").on('click', function(e){
+                    e.preventDefault();
+                    var current = previewState.current - 1;
+                    updatePreviewState(current);
+                    loadPatientPreview(previewState.current);
+
+
+                });
+
+                $("#btnPreviewPatientNext").on('click', function(e){
+                    e.preventDefault();
+                    var current = previewState.current + 1;
+                    if(current >= queue.length){
+                        current = current - 1;
+                    }
+                    updatePreviewState(current);
+                    loadPatientPreview(previewState.current);
+
+
+                });
+
+                function updatePreviewState(q){
+                    q = parseInt(q);
+                    if(q < 0){
+                        previewState.prev = 0;
+                        previewState.current = 0;
+                        previewState.next = 1;
+                    }else if(q >= queue.length){
+                        previewState.prev = queue.length - 1;
+                        previewState.current = queue.length;
+                        previewState.next = queue.length;
+                    }else{
+                        previewState.prev = q - 1;
+                        previewState.current = q;
+                        previewState.next = q + 1;
+                    }
+
+                    console.log(previewState);
+                }
+
+                function loadPatientPreview(current){
+                    containerPatientPreview.loadTemplate(templatePatientPreview, queue[current]);
+                    var url = "{% url 'api_private_patient_appointments_history' %}?patient_id=" + queue[current].patient.id;
 
                     $.get(url)
                      .done(function(result){
                          containerPatientHistoryList.loadTemplate(templatePatientHistoryList, result);
                      });
-                    
-
-                });
+                }
 
 
                 $(".queue-action-buttons .action-button").on('click', function(e){
