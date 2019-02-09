@@ -18,6 +18,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+
 # from graphene_django.views import GraphQLView
 from rest_framework.documentation import include_docs_urls
 

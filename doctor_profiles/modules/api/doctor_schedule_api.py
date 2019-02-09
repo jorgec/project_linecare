@@ -20,6 +20,15 @@ from receptionist_profiles.models import ReceptionistProfile
 
 
 def is_doctor_or_receptionist(user):
+    """
+    Check whether logged in user is a doctor or a receptionist
+
+    Parameters:
+    accounts.Account model
+
+    Returns:
+    bool, profile instance
+    """
     user_type = None
     try:
         doctor = DoctorProfile.objects.get(user=user)
@@ -34,6 +43,142 @@ def is_doctor_or_receptionist(user):
 
 
 class ApiDoctorScheduleCreate(APIView):
+    """
+    Create a doctor schedule
+    Allows doctor or receptionist profile
+    <br>
+    <strong>POST PARAMS</STRONG>:
+    - start_time: str HH:mm (24-hour format) or hh:mm a (12-hour format)
+    - end_time: str HH:mm (24-hour format) or hh:mm a (12-hour format)
+    - start_date: str YYYY-MM-DD
+    - end_date: str YYYY-MM-DD
+    - doctor_id: int
+    - medical_institution_id: int
+    - days: str 'Monday^Tuesday^...' (note: use caret ^ to split the days)
+
+    <br>
+    <strong>RESPONSE</strong>:
+    - <em>SUCCESS</em>: status code: 201
+    <pre>
+    {
+       id: int,
+       start_time: TimeDim{
+            hour: int,
+            minute: int,
+            minutes_since: int,
+            format_24: str,
+            format_12: str
+       },
+       end_time: TimeDim{
+            hour: int,
+            minute: int,
+            minutes_since: int,
+            format_24: str,
+            format_12: str
+       },
+       start_date: DateDim{
+            id: int
+            year: int
+            month: int
+            day: int
+            date_obj: datetime
+            day_name: str
+            week_day: int
+            week_month: int
+            week_year: int
+            month_name: str
+            month_name_short: str
+            day_name_short: str
+       },
+       end_date: DateDim{
+            id: int
+            year: int
+            month: int
+            day: int
+            date_obj: datetime
+            day_name: str
+            week_day: int
+            week_month: int
+            week_year: int
+            month_name: str
+            month_name_short: str
+            day_name_short: str
+       },
+       doctor: DoctorProfile{
+            id: int,
+            created: datetime,
+            last_updated: datetime,
+            metadata: json,
+            user: Account{
+                id: int,
+                username: str,
+                user_type: int,
+                base_profile: BaseProfile{
+                    first_name: str,
+                    last_name: str
+                }
+            },
+            doctor_name: str
+       },
+       medical_institution: MedicalInstitution{
+            id: int,
+            slug: str,
+            name: str,
+            type: MedicalInstitutionType{
+                id: int,
+                name: str,
+                slug: str,
+                created: datetime,
+                last_updated: datetime,
+                metadata: json,
+                is_approved: bool
+            },
+            coords: MedicalInstitutionCoordinate{
+                lat: decimal,
+                lon: decimal,
+                created: datetime,
+                last_updated: datetime,
+                metadata: json,
+                is_approved: bool,
+                medical_institution: int,
+                suggested_by: int (Account id),
+                address: {
+                       id: int,
+                       zip_code: int,
+                       country: Country{
+                            id: int,
+                            iso: str,
+                            name: str,
+                            slug: str,
+                            nicename: str,
+                            iso3: str,
+                            numcode: int,
+                            phonecode: int
+                       },
+                       region: Region{
+                            id: int,
+                            slug: str,
+                            name: str
+                       },
+                       province: Province{
+                            id: int,
+                            slug: str,
+                            name: str
+                       },
+                       city: City{
+                            id: int,
+                            slug: str,
+                            name: str
+                       },
+                       address: str
+                },
+            }
+       },
+       days_split: str (comma separated list of days),
+       mi_queue: str (URL for the queue)
+    }
+    </pre>
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
@@ -66,7 +211,7 @@ class ApiDoctorScheduleCreate(APIView):
         end_time = TimeDim.objects.parse(request.data.get('end_time'))
         start_date = DateDim.objects.parse_get(request.data.get('start_date'))
         end_date = DateDim.objects.parse_get(request.data.get('end_date'))
-        days = request.data.get('days').split(';')
+        days = request.data.get('days').split('^')
         if days == ['']:
             return Response("Which days should this schedule be applied to?", status=status.HTTP_400_BAD_REQUEST)
 
@@ -109,7 +254,51 @@ class ApiDoctorScheduleCreate(APIView):
 class ApiDoctorScheduleDayList(APIView):
     """
     Get days of particular schedule
-    ?id=schedule_id
+    <br>
+    <strong>GET PARAMS</STRONG>:
+    - id: int (schedule_id)
+
+    <br>
+    <strong>RESPONSE</strong>:
+    - <em>SUCCESS</em>: status code: 200
+    <pre>
+    {
+        id: int,
+        actual_start_time: TimeDim{
+            hour: int,
+            minute: int,
+            minutes_since: int,
+            format_24: str,
+            format_12: str
+       },
+       actual_end_time: TimeDim{
+            hour: int,
+            minute: int,
+            minutes_since: int,
+            format_24: str,
+            format_12: str
+       },
+       day: DateDim{
+            id: int
+            year: int
+            month: int
+            day: int
+            date_obj: datetime
+            day_name: str
+            week_day: int
+            week_month: int
+            week_year: int
+            month_name: str
+            month_name_short: str
+            day_name_short: str
+       },
+       doctor: int (DoctorProfile id),
+       medical_institution: int (MedicalInstitution id),
+       schedule: int (Schedule id),
+       doctor_id_in: bool,
+       doctor_stepped_out: bool
+    }
+    </pre>
     """
 
     permission_classes = [permissions.AllowAny]
