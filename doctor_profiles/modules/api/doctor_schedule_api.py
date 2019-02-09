@@ -1,29 +1,21 @@
-from _socket import gaierror
-
 import arrow
 from django.conf import settings
-from django.db import transaction, IntegrityError
 from django.urls import reverse
 from rest_framework import status, permissions
-from rest_framework.generics import get_object_or_404, GenericAPIView
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.schemas import SchemaGenerator
 from rest_framework.views import APIView
-from rest_framework_swagger import renderers
 
 from datesdim.models import TimeDim, DateDim
 from datesdim.serializers import DateDimSerializer, TimeDimSerializer
-from doctor_profiles.constants import QUEUE_DISPLAY_CODES, QUEUE_NOT_CANCELLED_CODES
+from doctor_profiles.constants import QUEUE_DISPLAY_CODES, QUEUE_NOT_CANCELLED_BUT_NOT_DONE_CODES
 from doctor_profiles.models import DoctorSchedule, DoctorProfile, MedicalInstitution
 from doctor_profiles.models.doctor_schedule_models import DoctorScheduleDay, PatientAppointment
-from doctor_profiles.models.managers.doctor_schedule_manager import check_collisions, find_gaps
 from doctor_profiles.models.medical_institution_doctor_models import MedicalInstitutionDoctor
-from doctor_profiles.modules.notifiers.doctor_appointment_notifiers import doctor_notify_new_appointment
 from doctor_profiles.serializers import DoctorScheduleSerializer, \
     MedicalInstitutionSerializer, PatientQueuePrivateSerializer
-from doctor_profiles.serializers.doctor_schedule_serializer import DoctorScheduleDaySerializer, \
-    DoctorScheduleDayBasicSerializer, DoctorScheduleListQueryParamsSerializer
-from profiles.models import BaseProfile
+from doctor_profiles.serializers.doctor_schedule_serializer import DoctorScheduleDayBasicSerializer, \
+    DoctorScheduleListQueryParamsSerializer
 from receptionist_profiles.models import ReceptionistProfile
 
 
@@ -536,7 +528,8 @@ class ApiPrivateDoctorScheduleCalendar(APIView):
                 "start": start,
                 "end": end,
                 "days": schedule_day.schedule.split_days(),
-                "patient_count": schedule_day.day_schedule_object_patients.filter(status__in=QUEUE_NOT_CANCELLED_CODES).count(),
+                "patient_count": schedule_day.day_schedule_object_patients.filter(
+                    status__in=QUEUE_NOT_CANCELLED_BUT_NOT_DONE_CODES).count(),
                 "url": f"{base_url}?date={schedule_day.day}",
                 "delete_url": f"{reverse('api_private_doctor_schedule_day_delete')}"
             }

@@ -38,6 +38,15 @@ QUEUE_NOT_CANCELLED_CODES = (
     'done',
 )
 
+# lol
+QUEUE_NOT_CANCELLED_BUT_NOT_DONE_CODES = (
+    'pending',
+    'queueing',
+    'in_progress',
+    'finishing',
+)
+
+
 QUEUE_STATUS_CODES = (
     ('pending', 'Pending'),
     ('queueing', 'Queueing'),
