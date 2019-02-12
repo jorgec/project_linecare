@@ -4,26 +4,35 @@
 		<li class="main-nav-item">
 				<a href="{% url 'doctor_profile_home' %}"
 					 class="nav-link {% if location == 'doctor_profile_home'%}active{% endif %}" title="Home">
-						<i class="fas fa-home"></i>
+						<i class="fas fa-home fa-fw"></i>
 				</a>
 		</li>
 
 		<li class="main-nav-item">
         <a href="{% url 'doctor_profile_calendar' %}"
            class="nav-link {% if location == 'doctor_profile_manage_schedule' %}active{% endif %}" title="Schedule">
-            <i class="fas fa-calendar"></i>
+            <i class="fas fa-calendar fa-fw"></i>
         </a>
     </li>
     <li class="main-nav-item">
         <a href="{% url 'doctor_profile_analytics_checkups_aggregate' %}"
            class="nav-link {% if location == 'doctor_profile_analytics' %}active{% endif %}" title="Analytics">
-            <i class="far fa-chart-bar"></i>
+            <i class="far fa-chart-bar fa-fw"></i>
         </a>
     </li>
     <li class="main-nav-item">
         <a href="{% url 'doctor_profile_settings_home' %}"
+           class="nav-link {% if location == 'doctor_profile_settings' %}active{% endif %}" title="Add Patients">
+            <i class="fas fa-notes-medical fa-fw"></i>
+        </a>
+    </li>
+    <li class="main-nav-item" class="nav-link">
+            <div title="Change Language" id="google_translate_element" class="d-flex align-items-center justify-content-center" style="height:44.8px;width:56px;"></div>
+    </li>
+    <li class="main-nav-item">
+        <a href="{% url 'doctor_profile_settings_home' %}"
            class="nav-link {% if location == 'doctor_profile_settings' %}active{% endif %}" title="Settings">
-            <i class="fas fa-cogs"></i>
+            <i class="fas fa-cogs fa-fw"></i>
         </a>
     </li>
 </ul>
