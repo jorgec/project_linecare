@@ -1,6 +1,6 @@
 {% load static %}
 
-<ul class="main-nav my-0">
+<ul class="main-nav my-0 position-relative">
 		<li class="main-nav-item">
 				<a href="{% url 'doctor_profile_home' %}"
 					 class="nav-link {% if location == 'doctor_profile_home'%}active{% endif %}" title="Home">
@@ -26,13 +26,12 @@
             <i class="fas fa-notes-medical fa-fw"></i>
         </a>
     </li>
-    <li class="main-nav-item" class="nav-link">
-            <div title="Change Language" id="google_translate_element" class="d-flex align-items-center justify-content-center" style="height:44.8px;width:56px;"></div>
-    </li>
     <li class="main-nav-item">
         <a href="{% url 'doctor_profile_settings_home' %}"
            class="nav-link {% if location == 'doctor_profile_settings' %}active{% endif %}" title="Settings">
             <i class="fas fa-cogs fa-fw"></i>
         </a>
     </li>
+    
 </ul>
+

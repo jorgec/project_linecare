@@ -8,6 +8,7 @@
     </div>
 </div>
 <div class="navbar navbar-expand-lg navbar-light bg-light">
+
     <div class="container">
         {% if request.user.doctor_profile %}
             <a href="{% url 'doctor_profile_home' %}" class="navbar-brand"><img src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
@@ -49,7 +50,7 @@
                     <a class="nav-link" href="{% url 'accounts_logout' %}">Log out</a>
                 </li>
             {% endif %}
-
+        <div title="Change Language" id="google_translate_element" class="d-flex align-items-center justify-content-center" style="height:44.8px;width:56px;"></div>
         </ul>
     </div>
 </div>
