@@ -8,9 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Linecare &mdash; Doctor Profile &mdash; {{ page_title }}</title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
-          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
-          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+        crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'neo/css/styles.min.css' %}">
 
     {% block header_css %} {% endblock %}
@@ -21,37 +20,37 @@
 
 <body>
 
-{% include 'neo/profile/common/nav__top.html' %}
-{% include 'neo/profile/common/nav__main.html' %}
-{% block nav_submain %}
+    {% include 'neo/profile/common/nav__top.html' %}
+    {% include 'neo/profile/common/nav__main.html' %}
+    {% block nav_submain %}
     {% include 'neo/doctor_profiles/common/nav__submain.html' %}
-{% endblock %}
+    {% endblock %}
 
-<div class="container">
-    {% block content %}{% endblock %}
-</div>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
 
-{% include 'neo/profile/common/footer.html' %}
+    {% include 'neo/profile/common/footer.html' %}
 
-<div id="backToTopDiv" class="p-4">
-    <a onclick="topFunction()" title="Go to top" href="javascript:void(0)" class="rounded-circle btn-primary p-2"><i
-            class="fas fa-arrow-up fa-fw"></i></a>
-</div>
+    <div id="backToTopDiv" class="p-4">
+        <a onclick="topFunction()" title="Go to top" href="javascript:void(0)" class="rounded-circle btn-primary p-2"><i
+                class="fas fa-arrow-up fa-fw"></i></a>
+    </div>
 
-<script src="{% static 'neo/js/main.min.js' %}"></script>
-<script src="{% static '3rd-party/jquery.popupoverlay.js' %}"></script>
-{% block scripts %}
-{% endblock %}
-{% block base_scripts %}
-{% endblock %}
-{% block home_scripts %}
-{% endblock %}
+    <script src="{% static 'neo/js/main.min.js' %}"></script>
+    <script src="{% static '3rd-party/jquery.popupoverlay.js' %}"></script>
+    {% block scripts %}
+    {% endblock %}
+    {% block base_scripts %}
+    {% endblock %}
+    {% block home_scripts %}
+    {% endblock %}
 
-<script src="{% static 'neo/js/snippetProfileProgress.js' %}"></script>
-<script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+    <script src="{% static 'neo/js/snippetProfileProgress.js' %}"></script>
+    <script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
 
-<script type="text/html" id="appointment-notification-template">
-    <div class="row">
+    <script type="text/html" id="appointment-notification-template">
+        <div class="row">
         <div class="col-md-2">
             <img style="max-width: 52.666px;max-height:52.666px;" data-src="appointment.patient.photo"
                  class="img-thumbnail img-fluid" data-alt="appointment.patient.name">
@@ -82,12 +81,12 @@
 </script>
 
 
-<script type="text/javascript">
-    $(document).ready(function () {
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-        countAppointments();
+            countAppointments();
 
-        {% if request.user.doctorprofile.display_profile_progress_status %}
+            {% if request.user.doctorprofile.display_profile_progress_status %}
             var snippet_location = $("#profile-progress-snippet");
             loadProfileProgress(snippet_location);
             snippet_location.on('click', '#dismiss-profile-progress', function (e) {
@@ -97,83 +96,85 @@
             });
 
 
-        {% endif %}
+            {% endif %}
 
-        var webSocketBridge = new channels.WebSocketBridge();
-        webSocketBridge.connect('/notifications/receptionist/appointments/');
-        webSocketBridge.listen(function (event) {
-            if (event.type === "notification.alert") {
-                var a = event.appointment;
-                $("#badgeNotificationAlert").removeClass('hide');
-                countAppointments();
-                $.notify({
-                    message: "New appointment created for " + a.patient.name
-                }, {
-                    type: 'success'
-                });
-            }
-        });
-    });
-
-    function countAppointments() {
-        var url = "{% url 'api_private_patient_appointment_count' %}";
-        $.get(url)
-            .done(function (result) {
-                var title = "(" + result + ") Linecare - Doctor Profile - {{ page_title }}";
-                document.title = title;
+            var webSocketBridge = new channels.WebSocketBridge();
+            webSocketBridge.connect('/notifications/receptionist/appointments/');
+            webSocketBridge.listen(function (event) {
+                if (event.type === "notification.alert") {
+                    var a = event.appointment;
+                    $("#badgeNotificationAlert").removeClass('hide');
+                    var count = countAppointments();
+                    if (typeof updateQueueTitle === "function") {
+                        updateQueueTitle(count);
+                    }
+                    $.notify({
+                        message: "New appointment created for " + a.patient.name
+                    }, {
+                        type: 'success'
+                    });
+                }
             });
-    }
+        });
 
-    window.onscroll = function () {
-        scrollFunction()
-    };
-
-    var bell = document.getElementById("notification_bell");
-    var listsSection = document.getElementById("appointment-lists-container");
-    var clearBtn = document.getElementById("clear_notifications");
-
-    function showAppointmentLists() {
-        if (listsSection.style.display === "none") {
-            listsSection.style.display = "block";
-        } else {
-            listsSection.style.display = "none";
+        function countAppointments() {
+            var url = "{% url 'api_private_patient_appointment_count' %}";
+            $.get(url)
+                .done(function (result) {
+                    var title = "(" + result + ") Linecare - Doctor Profile - {{ page_title }}";
+                    document.title = title;
+                });
+            return result;
         }
-        $.get("{% url 'api_private_notifications_appointments_list' %}", function (data) {
-            if (data.length === 0) {
-                $('#appointment-lists-section').html('No new notifications');
+
+        window.onscroll = function () {
+            scrollFunction()
+        };
+
+        var bell = document.getElementById("notification_bell");
+        var listsSection = document.getElementById("appointment-lists-container");
+        var clearBtn = document.getElementById("clear_notifications");
+
+        function showAppointmentLists() {
+            if (listsSection.style.display === "none") {
+                listsSection.style.display = "block";
             } else {
-                $('#appointment-lists-section').loadTemplate($("#appointment-notification-template"), data);
+                listsSection.style.display = "none";
             }
-        })
-    }
-
-    function clearAppointmentLists() {
-        listsSection.style.display = "none";
-        $.get("{% url 'api_private_notifications_appointments_clear' %}", function (data) {
-            $('#appointment-lists-section').loadTemplate($("#appointment-notification-template"), data);
-            $("#badgeNotificationAlert").addClass('hide');
-        })
-    }
-
-    bell.addEventListener('click', showAppointmentLists);
-    clearBtn.addEventListener('click', clearAppointmentLists);
-
-    function scrollFunction() {
-        if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-            document.getElementById("backToTopDiv").style.display = "block";
-        } else {
-            document.getElementById("backToTopDiv").style.display = "none";
+            $.get("{% url 'api_private_notifications_appointments_list' %}", function (data) {
+                if (data.length === 0) {
+                    $('#appointment-lists-section').html('No new notifications');
+                } else {
+                    $('#appointment-lists-section').loadTemplate($("#appointment-notification-template"), data);
+                }
+            })
         }
-    }
 
-    // When the user clicks on the button, scroll to the top of the document
-    function topFunction() {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }
+        function clearAppointmentLists() {
+            listsSection.style.display = "none";
+            $.get("{% url 'api_private_notifications_appointments_clear' %}", function (data) {
+                $('#appointment-lists-section').loadTemplate($("#appointment-notification-template"), data);
+                $("#badgeNotificationAlert").addClass('hide');
+            })
+        }
 
+        bell.addEventListener('click', showAppointmentLists);
+        clearBtn.addEventListener('click', clearAppointmentLists);
 
-</script>
+        function scrollFunction() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                document.getElementById("backToTopDiv").style.display = "block";
+            } else {
+                document.getElementById("backToTopDiv").style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
 
 </body>
 
