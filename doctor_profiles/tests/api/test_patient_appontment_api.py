@@ -131,9 +131,9 @@ class TestPatientAppointmentApi(TransactionTestCase):
         assert self.a1, f"{self.a1status}: {self.user5} appointment with {self.doctor} at {self.mi} on 2019-12-02 not created: {self.a1}"
         # /fixtures
 
-    def test_appointment(self):
-        self.test_init()
-        assert self.doctor is not None, "fixtures lost"
+    # def test_appointment(self):
+    #     self.test_init()
+    #     assert self.doctor is not None, "fixtures lost"
 
         # should pass: same doctor
         request = factory.get('/', {
@@ -143,7 +143,7 @@ class TestPatientAppointmentApi(TransactionTestCase):
         })
         force_authenticate(request, user=self.user)
         response = ApiPatientAppointmentList.as_view()(request)
-
+        assert len(response.data) == 1, f"Expected len(1), got {len(response.data)}: {response.data}"
         assert response.status_code == 200, f"Response: {response.data}; Expected 200, got {response.status_code}"
 
         # should pass: same doctor

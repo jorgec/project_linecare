@@ -97,24 +97,36 @@
 
                 $("#btnPreviewPatientPrevious").on('click', function(e){
                     e.preventDefault();
+                    prev();
+                });
+
+                $("#btnPreviewPatientNext").on('click', function(e) {
+                    e.preventDefault();
+                    next();
+                });
+
+                $("#modalPatientPreview").keydown(function(e){
+                    if((e.keyCode || e.which) === 37){
+                        prev();
+                    }else if((e.keyCode || e.which) === 39){
+                        next();
+                    }
+                });
+
+                function prev(){
                     var current = previewState.current - 1;
                     updatePreviewState(current);
                     loadPatientPreview(previewState.current);
+                }
 
-
-                });
-
-                $("#btnPreviewPatientNext").on('click', function(e){
-                    e.preventDefault();
+                function next(){
                     var current = previewState.current + 1;
                     if(current >= queue.length){
                         current = current - 1;
                     }
                     updatePreviewState(current);
                     loadPatientPreview(previewState.current);
-
-
-                });
+                }
 
                 function updatePreviewState(q){
                     q = parseInt(q);
@@ -132,10 +144,10 @@
                         previewState.next = q + 1;
                     }
 
-                    console.log(previewState);
                 }
 
                 function loadPatientPreview(current){
+                    $("#container-patient-appointments-list").html('<div class="donut-spinner"></div>');
                     containerPatientPreview.loadTemplate(templatePatientPreview, queue[current]);
                     var url = "{% url 'api_private_patient_appointments_history' %}?patient_id=" + queue[current].patient.id;
 

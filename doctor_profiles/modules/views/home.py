@@ -19,7 +19,7 @@ class DoctorProfileHomeView(LoginRequiredMixin, UserPassesTestMixin, View):
             'profile': doctor,
             'doctor': doctor,
             'schedules': doctor.get_schedule_on_day(day=date),
-            'date': date
+            'date': date,
         }
 
         return render(request, 'neo/doctor_profiles/home/home.html', context)
