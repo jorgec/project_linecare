@@ -1,4 +1,5 @@
 import pytest
+from django.test import TransactionTestCase
 from faker import Faker
 
 from accounts.models import Account
@@ -9,7 +10,7 @@ pytestmark = pytest.mark.django_db
 fake = Faker()
 
 
-class TestDoctorQuestionnaire:
+class TestDoctorQuestionnaire(TransactionTestCase):
     doctor = None
     doctor2 = None
     receptionist = None

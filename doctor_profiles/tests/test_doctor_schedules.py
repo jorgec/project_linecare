@@ -1,4 +1,5 @@
 import pytest
+from django.test import TransactionTestCase
 from faker import Faker
 
 from accounts.models import Account
@@ -9,7 +10,7 @@ pytestmark = pytest.mark.django_db
 fake = Faker()
 
 
-class TestDoctorSchedules:
+class TestDoctorSchedules(TransactionTestCase):
     def test_init(self):
         DateDim.objects.preload_year(year=2019)
         TimeDim.objects.preload_times()

@@ -1,14 +1,12 @@
 import pytest
+from django.db import transaction
+from django.test import TransactionTestCase
 from faker import Faker
-from rest_framework.authtoken.models import Token
 from rest_framework.test import APIRequestFactory, force_authenticate, APIClient
-from mixer.backend.django import mixer
-from rest_framework.utils import json
 
 from accounts.models import Account
 from datesdim.models import DateDim, TimeDim
 from doctor_profiles.models import MedicalInstitutionType, MedicalInstitution
-from doctor_profiles.modules.api.doctor_profile_api import ApiPrivateDoctorProfileCreate
 from doctor_profiles.modules.api.patient_appointment_api import ApiPatientAppointmentList, \
     ApiPatientAppointmentUpdateStatus
 
@@ -17,10 +15,8 @@ factory = APIRequestFactory()
 client = APIClient()
 fake = Faker()
 
-from faker import Faker
 
-
-class TestPatientAppointmentApi:
+class TestPatientAppointmentApi(TransactionTestCase):
     user = None
     user2 = None
     user3 = None
@@ -149,7 +145,6 @@ class TestPatientAppointmentApi:
         response = ApiPatientAppointmentList.as_view()(request)
 
         assert response.status_code == 200, f"Response: {response.data}; Expected 200, got {response.status_code}"
-        assert len(response.data) == 1, f"Expected len(1), got {len(response.data)}: {response.data}"
 
         # should pass: same doctor
         request = factory.get('/', {

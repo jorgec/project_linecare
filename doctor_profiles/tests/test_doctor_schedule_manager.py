@@ -1,4 +1,5 @@
 import pytest
+from django.test import TransactionTestCase
 from faker import Faker
 
 from accounts.models import Account
@@ -8,7 +9,8 @@ from doctor_profiles.models import MedicalInstitutionType, MedicalInstitution
 pytestmark = pytest.mark.django_db
 fake = Faker()
 
-class TestDoctorScheduleManager:
+
+class TestDoctorScheduleManager(TransactionTestCase):
     def test_create_schedule(self):
         DateDim.objects.preload_year(year=2019)
         TimeDim.objects.preload_times()
@@ -101,6 +103,3 @@ class TestDoctorScheduleManager:
         )
 
         assert a1, f"{a1status}: {user5} appointment with {doctor} at {mi} on 2019-12-02 not created: {a1}"
-
-
-

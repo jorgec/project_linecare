@@ -1,4 +1,5 @@
 import pytest
+from django.test import TransactionTestCase
 from faker import Faker
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIRequestFactory, force_authenticate, APIClient
@@ -15,7 +16,7 @@ client = APIClient()
 from doctor_profiles.modules.api import medical_degrees_api as md
 
 
-class TestDoctorProfileApi:
+class TestDoctorProfileApi(TransactionTestCase):
     user = None
     profile = None
     token = None
@@ -45,7 +46,6 @@ class TestDoctorProfileApi:
 
         assert response.status_code == 201, f"Response: {response.data}; Code: {response.status_code}"
 
-
     def test_create_doctor_profile(self):
         fake = Faker()
         email = fake.email()
@@ -70,4 +70,5 @@ class TestDoctorProfileApi:
         force_authenticate(request, user=user)
 
         response = ApiPrivateDoctorProfileCreate.as_view()(request)
-        assert str(user.doctor_profile()) == response.data['doctor_name'], f"Expected {user.doctor_profile()}, got {response.data.doctor_name}"
+        assert str(user.doctor_profile()) == response.data[
+            'doctor_name'], f"Expected {user.doctor_profile()}, got {response.data.doctor_name}"

@@ -450,7 +450,7 @@ class DoctorProfile(models.Model):
             end_time=TimeDim.objects.parse(end_time),
             start_date=DateDim.objects.parse_get(start_date),
             end_date=DateDim.objects.parse_get(end_date),
-            days=days.split(";"),
+            days=days.split("^"),
         )
 
         return result, message, schedule
