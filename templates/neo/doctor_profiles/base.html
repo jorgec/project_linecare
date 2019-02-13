@@ -104,7 +104,7 @@
                 if (event.type === "notification.alert") {
                     var a = event.appointment;
                     $("#badgeNotificationAlert").removeClass('hide');
-                    var count = countAppointments();
+                    countAppointments();
                     if (typeof updateQueueTitle === "function") {
                         updateQueueTitle(count);
                     }
@@ -124,7 +124,7 @@
                     var title = "(" + result + ") Linecare - Doctor Profile - {{ page_title }}";
                     document.title = title;
                 });
-            return result;
+
         }
 
         window.onscroll = function () {
