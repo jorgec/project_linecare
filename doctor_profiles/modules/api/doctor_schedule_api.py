@@ -255,7 +255,7 @@ class ApiDoctorScheduleDayList(APIView):
     """
     Get days of particular schedule
     <br>
-    <strong>GET PARAMS</STRONG>:
+    <strong>GET PARAMS</strong>:
     - id: int (schedule_id)
 
     <br>
@@ -390,31 +390,34 @@ class ApiDoctorScheduleDelete(APIView):
 class ApiDoctorScheduleAppointmentCreate(APIView):
     """
     Create an appointment for doctor
-    ?doctor_id=doctor_id&medical_institution_id=medical_institution_id
+    <br>
+    <strong>POST PARAMS</strong>:
+    - doctor_id: int
+    - medical_institution_id: int
+    - profile_id: int (patient base_profile id)
+    - appointment_day: str (YYYY-MM-DD)
+    - appointment_type: "checkup"|"followup"|"lab_result"|"consultation"
+    [[ optional ]]
+    - force_schedule: "true"|"false" (doctor or receptionist only)
+    - schedule_choice: "first_available"|"user_select" (default: first available)
+    - appointment_time_start: str (HH:mm)
+    - appointment_time_end: str (HH:mm)
+    - schedule_day_id: int (used if force_schedule == "true")
+
+    <br>
+    <strong>RESPONSE</strong>:
+    - <em>SUCCESS</em>: status code: 201
     """
 
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        result, profile_type = is_doctor_or_receptionist(request.user)
-        if not result:
-            return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
-
         doctor_id = request.data.get('doctor_id', None)
         doctor = get_object_or_404(DoctorProfile, id=doctor_id)
         medical_institution = get_object_or_404(MedicalInstitution, id=request.data.get('medical_institution_id', None))
 
         mi_connection = get_object_or_404(MedicalInstitutionDoctor, doctor=doctor,
                                           medical_institution=medical_institution, is_approved=True)
-        if type(profile_type) != DoctorProfile:
-            """ person adding isn't the doctor, so check if receptionist is allowed """
-            connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
-                                                    medical_institution=medical_institution)
-            if not connection:
-                return Response("Receptionist is not authorized by this doctor for this medical institution",
-                                status=status.HTTP_403_FORBIDDEN)
-        elif profile_type.id != doctor.id:
-            return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
 
         """ kwargs """
         patient_id = request.data.get("profile_id", None)
@@ -428,13 +431,27 @@ class ApiDoctorScheduleAppointmentCreate(APIView):
         """ /kwargs """
 
         if force_schedule == 'true':
+            result, profile_type = is_doctor_or_receptionist(request.user)
+            if not result:
+                return Response("Incompatible user profile", status=status.HTTP_403_FORBIDDEN)
+
+            if type(profile_type) != DoctorProfile:
+                """ person adding isn't the doctor, so check if receptionist is allowed """
+                connection = doctor.verify_receptionist(receptionist=request.user.receptionistprofile,
+                                                        medical_institution=medical_institution)
+                if not connection:
+                    return Response("Receptionist is not authorized by this doctor for this medical institution",
+                                    status=status.HTTP_403_FORBIDDEN)
+            elif profile_type.id != doctor.id:
+                return Response("This is not your schedule", status=status.HTTP_401_UNAUTHORIZED)
+
             force_schedule = True
         else:
             force_schedule = False
 
         create_result, appointment, status_code = PatientAppointment.objects.create(
             patient_id=patient_id,
-            doctor_id=doctor_id,
+            doctor_id=doctor.id,
             medical_institution_id=medical_institution.id,
             appointment_day=preferred_day,
             preferred_time_start=preferred_time_start,
@@ -560,14 +577,141 @@ class ApiPublicDummyScheduleQueueList(APIView):
 class ApiPrivateDoctorScheduleQueueList(APIView):
     """
     Queue of doctor at medical institution on day
-    ?doctor_id=doctor_id
+    <strong>GET PARAMS</strong>:
+    - doctor_id: int
     [optional]
-    date=YYYY-MM-DD
-    count=n
+    date: str (YYYY-MM-DD)
+    count: int
     [[ mutually exclusive ]]
-    medical_institution_id=medical_institution_id
+    medical_institution_id: int
     - or -
-    schedule_id=schedule_id (overrides medical_institution_id)
+    schedule_id: int (overrides medical_institution_id)
+
+    <strong>RESPONSE</strong>:
+    - <em>SUCCESS</em>: status code: 200
+    <pre>
+    {
+        id: int,
+        metadata: json,
+        status: str,
+        schedule_day: DateDim{
+            id: int
+            year: int
+            month: int
+            day: int
+            date_obj: datetime
+            day_name: str
+            week_day: int
+            week_month: int
+            week_year: int
+            month_name: str
+            month_name_short: str
+            day_name_short: str
+        },
+        time_start: TimeDim{
+            hour: int,
+            minute: int,
+            minutes_since: int,
+            format_24: str,
+            format_12: str
+        },
+        time_end: TimeDim{
+            hour: int,
+            minute: int,
+            minutes_since: int,
+            format_24: str,
+            format_12: str
+        },
+        patient: BaseProfile{
+            id: int,
+            first_name: str,
+            last_name: str,
+            gender: Gender{
+                name: str,
+                slug: str
+            }
+            date_of_birth: str (YYYY-MM-DD),
+            profile_photo: str (url)
+            profile_photo_css: str (css rule: background-img: url()),
+            full_name: str,
+            patient_detail_url: str (url)
+        },
+        doctor: int,
+        medical_institution: MedicalInstitution{
+            id: int,
+            slug: str,
+            name: str,
+            type: MedicalInstitutionType{
+                id: int,
+                name: str,
+                slug: str,
+                created: datetime,
+                last_updated: datetime,
+                metadata: json,
+                is_approved: bool
+            },
+            coords: MedicalInstitutionCoordinate{
+                lat: decimal,
+                lon: decimal,
+                created: datetime,
+                last_updated: datetime,
+                metadata: json,
+                is_approved: bool,
+                medical_institution: int,
+                suggested_by: int (Account id),
+                address: {
+                       id: int,
+                       zip_code: int,
+                       country: Country{
+                            id: int,
+                            iso: str,
+                            name: str,
+                            slug: str,
+                            nicename: str,
+                            iso3: str,
+                            numcode: int,
+                            phonecode: int
+                       },
+                       region: Region{
+                            id: int,
+                            slug: str,
+                            name: str
+                       },
+                       province: Province{
+                            id: int,
+                            slug: str,
+                            name: str
+                       },
+                       city: City{
+                            id: int,
+                            slug: str,
+                            name: str
+                       },
+                       address: str
+                },
+            }
+        },
+        schedule_day_object: int,
+        prior_visits: int,
+        type: str,
+        queue_status: str,
+        queue_number: int,
+        status_display: str,
+        last_visit: {
+            date: str (YYYY-MM-DD),
+            id: int (visit id),
+            url: str (url)
+        },
+        patient_url: str (url),
+        schedule: int or None,
+        biometrics: Biometric{
+            height: float,
+            weight: float,
+            blood_type: str
+
+        }
+    }
+    </pre>
     """
 
     permission_classes = [permissions.IsAuthenticated]

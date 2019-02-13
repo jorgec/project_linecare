@@ -115,7 +115,7 @@ class TestPatientAppointmentApi(TransactionTestCase):
             end_time='11:00',
             start_date='2019-12-01',
             end_date='2019-12-31',
-            days='Monday;Tuesday'
+            days='Monday^Tuesday'
         )
         assert self.s1r, f"Schedule not created for {self.doctor} at {self.mi}"
 
@@ -140,7 +140,7 @@ class TestPatientAppointmentApi(TransactionTestCase):
         force_authenticate(request, user=self.user)
         response = ApiPatientAppointmentList.as_view()(request)
         assert len(response.data) == 1, f"Expected len(1), got {len(response.data)}: {response.data}"
-        assert response.status_code == 200, f"Response: {response.data}; Expected 200, got {response.status_code}"
+        assert response.status_code == 200, f"Response: {response.data}^ Expected 200, got {response.status_code}"
 
         # should pass: same doctor
         request = factory.get('/', {
@@ -149,7 +149,7 @@ class TestPatientAppointmentApi(TransactionTestCase):
         force_authenticate(request, user=self.user)
         response = ApiPatientAppointmentList.as_view()(request)
 
-        assert response.status_code == 200, f"Response: {response.data}; Expected 200, got {response.status_code}"
+        assert response.status_code == 200, f"Response: {response.data}^ Expected 200, got {response.status_code}"
         assert len(response.data) == 1, f"Expected len(1), got {len(response.data)}: {response.data}"
 
         # should pass: valid receptionist for doctor
@@ -161,7 +161,7 @@ class TestPatientAppointmentApi(TransactionTestCase):
         force_authenticate(request, user=self.receptionist.user)
         response = ApiPatientAppointmentList.as_view()(request)
 
-        assert response.status_code == 200, f"Response: {response.data}; Expected 200, got {response.status_code}"
+        assert response.status_code == 200, f"Response: {response.data}^ Expected 200, got {response.status_code}"
         assert len(response.data) == 1, f"Expected len(1), got {len(response.data)}: {response.data}"
 
         # should fail: invalid receptionist for doctor
@@ -173,7 +173,7 @@ class TestPatientAppointmentApi(TransactionTestCase):
         force_authenticate(request, user=self.receptionist2.user)
         response = ApiPatientAppointmentList.as_view()(request)
 
-        assert response.status_code == 403, f"Response: {response.data}; Expected 403, got {response.status_code}"
+        assert response.status_code == 403, f"Response: {response.data}^ Expected 403, got {response.status_code}"
 
         # should fail: different doctor
         request = factory.get('/', {
@@ -184,7 +184,7 @@ class TestPatientAppointmentApi(TransactionTestCase):
         force_authenticate(request, user=self.user)
         response = ApiPatientAppointmentList.as_view()(request)
 
-        assert response.status_code == 401, f"Response: {response.data}; Expected 401, got {response.status_code}"
+        assert response.status_code == 401, f"Response: {response.data}^ Expected 401, got {response.status_code}"
 
         # should fail: not a doctor
         request = factory.get('/', {
@@ -195,7 +195,7 @@ class TestPatientAppointmentApi(TransactionTestCase):
         force_authenticate(request, user=self.user)
         response = ApiPatientAppointmentList.as_view()(request)
 
-        assert response.status_code == 404, f"Response: {response.data}; Expected 404, got {response.status_code}"
+        assert response.status_code == 404, f"Response: {response.data}^ Expected 404, got {response.status_code}"
 
         # should fail: wrong mi
         request = factory.get('/', {
@@ -207,7 +207,7 @@ class TestPatientAppointmentApi(TransactionTestCase):
         force_authenticate(request, user=self.user)
         response = ApiPatientAppointmentList.as_view()(request)
 
-        assert response.status_code == 404, f"Response: {response.data}; Expected 404, got {response.status_code}"
+        assert response.status_code == 404, f"Response: {response.data}^ Expected 404, got {response.status_code}"
 
         # should fail: wrong mi
         request = factory.get('/', {
@@ -219,7 +219,7 @@ class TestPatientAppointmentApi(TransactionTestCase):
         force_authenticate(request, user=self.user)
         response = ApiPatientAppointmentList.as_view()(request)
 
-        assert response.status_code == 404, f"Response: {response.data}; Expected 404, got {response.status_code}"
+        assert response.status_code == 404, f"Response: {response.data}^ Expected 404, got {response.status_code}"
 
         # should pass: doctor -> pending
         request = factory.get('/', {

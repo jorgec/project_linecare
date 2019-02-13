@@ -46,6 +46,16 @@ class ReceptionistProfile(models.Model):
         connections = self.receptionist_connections.filter(doctor__isnull=False)
         return connections
 
+    def create_connection(self, *, doctor=None, medical_institution=None):
+        if not doctor and not medical_institution:
+            return False
+
+        return ReceptionistConnection.objects.create(
+            receptionist=self,
+            doctor=doctor,
+            medical_institution=medical_institution
+        )
+
 
 class ReceptionistConnection(models.Model):
     """
@@ -87,5 +97,3 @@ class ReceptionistConnection(models.Model):
 
     def get_doctor_receptionists(self):
         return
-
-
