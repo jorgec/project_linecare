@@ -167,7 +167,6 @@ class ApiPatientAppointmentHistory(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
 class ApiPatientAppointmentList(APIView):
     """
     Get list of appointments by doctor
