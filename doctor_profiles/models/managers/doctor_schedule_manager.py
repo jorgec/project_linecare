@@ -203,13 +203,16 @@ class PatientAppointmentManager(models.Manager):
             )
 
             if not first_available_result:
-                return False, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}, "We couldn't find an available slot; you can try manually setting your appointment times if you wish"
+                return False, {'schedule_time_start': schedule_time_start,
+                               'schedule_time_end': schedule_time_end}, "We couldn't find an available slot; you can try manually setting your appointment times if you wish"
 
         if not schedule_time_start:
-            return False, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}, f"{schedule_time_start} is not a valid time"
+            return False, {'schedule_time_start': schedule_time_start,
+                           'schedule_time_end': schedule_time_end}, f"{schedule_time_start} is not a valid time"
 
         if not schedule_time_end:
-            return False, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}, f"{schedule_time_end} is not a valid time"
+            return False, {'schedule_time_start': schedule_time_start,
+                           'schedule_time_end': schedule_time_end}, f"{schedule_time_end} is not a valid time"
 
         return True, {'schedule_time_start': schedule_time_start, 'schedule_time_end': schedule_time_end}, ""
 
@@ -497,6 +500,3 @@ class DoctorScheduleManager(models.Manager):
             return False, "Schedule Conflict", collision_days
 
         return True, "Schedule Created", super(DoctorScheduleManager, self).create(*args, **kwargs)
-
-
-		

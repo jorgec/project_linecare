@@ -1,11 +1,9 @@
 import operator
 from django.apps import apps
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
-from functools import reduce
-
 from django.contrib.postgres.fields import JSONField
 from django.db import models as models, IntegrityError
+from django.db.models import Q
+from functools import reduce
 
 from doctor_profiles.constants import QUEUE_NOT_CANCELLED_CODES
 from doctor_profiles.models.managers.doctor_profile_manager import DoctorProfileManager
@@ -340,6 +338,65 @@ class DoctorProfile(models.Model):
             patients_query = search.get_query(s, ['patient__first_name', 'patient__last_name'])
             return self.doctor_patients.filter(patients_query).order_by('patient__last_name')
         return self.doctor_patients.all()
+
+    def find_earliest_active_schedule(self, exclude_day=None, grab=1):
+        DateDim = apps.get_model('datesdim.DateDim')
+        TimeDim = apps.get_model('datesdim.TimeDim')
+
+        if exclude_day:
+            today = exclude_day
+        else:
+            today = DateDim.objects.today()
+
+        earliest_day = self.doctor_schedule_days.filter(
+            day__date_obj__gte=today.date_obj
+        ).order_by('day__date_obj', '-schedule__start_time__minutes_since')
+
+        if earliest_day.count() > 0:
+            return earliest_day[:grab]
+        return None
+
+    def create_appointment(
+            self, *,
+            patient,
+            appointment_type='checkup',
+            earliest_available=True,
+            **kwargs
+    ):
+        PatientAppointment = apps.get_model('doctor_profiles.PatientAppointment')
+        if earliest_available:
+            schedule_day = self.find_earliest_active_schedule()
+            if schedule_day:
+                create_result, appointment, create_status = PatientAppointment.objects.create(
+                    doctor_id=self.id,
+                    patient_id=patient.id,
+                    schedule_choice='first_available',
+                    preferred_day=str(schedule_day[0].day),
+                    medical_institution_id=schedule_day[0].medical_institution.id,
+                    appointment_type=appointment_type
+                )
+
+                if create_result:
+                    return appointment
+
+                while not create_result:
+                    schedule_day = self.find_earliest_active_schedule(exclude_day=schedule_day[0].day)
+                    if schedule_day:
+                        create_result, appointment, create_status = PatientAppointment.objects.create(
+                            doctor_id=self.id,
+                            patient_id=patient.id,
+                            schedule_choice='first_available',
+                            preferred_day=str(schedule_day.day),
+                            medical_institution_id=schedule_day[0].medical_institution.id,
+                            appointment_type=appointment_type
+                        )
+                        if create_result:
+                            return appointment
+                return False
+            else:
+                return False
+        else:
+            pass
 
     def get_patient_appointments(
             self, *,

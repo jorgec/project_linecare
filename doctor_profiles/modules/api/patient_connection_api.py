@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from doctor_profiles.models import DoctorProfile, PatientConnection
+from doctor_profiles.serializers.patient_connection_serializers import PatientConnectionDoctorViewSerializer
 from profiles.serializers import BaseProfilePrivateSerializerFull
 from receptionist_profiles.models import ReceptionistProfile
 
@@ -70,13 +71,14 @@ class ApiPrivatePatientConnectionSearchList(APIView):
                 Q(patient__last_name__icontains=s)
                 | Q(patient__first_name__icontains=s)
                 | Q(fullname__icontains=s)
-            ).order_by("patient__last_name")
+            ).order_by("patient__fullname")
         else:
             connections = PatientConnection.objects.filter(**filters).order_by(
-                "patient__last_name"
+                "patient__fullname"
             )
 
-        patients = {c.patient for c in connections}
-        serializer = BaseProfilePrivateSerializerFull(patients, many=True)
+        serializer = PatientConnectionDoctorViewSerializer(connections, many=True)
+        # patients = {c.patient for c in connections}
+        # serializer = BaseProfilePrivateSerializerFull(patients, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

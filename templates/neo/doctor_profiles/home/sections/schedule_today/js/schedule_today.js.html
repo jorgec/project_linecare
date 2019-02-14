@@ -7,13 +7,13 @@
     var templatePatientPreview = $("#template-patient-detail");
     var containerPatientHistoryList = $("#container-patient-appointments-list");
     var templatePatientHistoryList = $("#template-patient-appointments-list");
+
     $(document).ready(function () {
         getQueue('{{ date }}');
         modalPatientPreview.popup({
             autozindex: true,
             scrolllock: true
         });
-
 
         var webSocketBridge = new channels.WebSocketBridge();
         webSocketBridge.connect('/notifications/doctor/queue/status_update/');
@@ -25,6 +25,7 @@
         });
     });
 
+
     function updateQueueTitle(count) {
         var title = "";
         if (count === 1) {
@@ -32,6 +33,8 @@
         } else {
             title = "Today's patients <small>{{ date }}</small>: " + count;
         }
+
+        $("#headerPatientQueue").html = title;
     }
 
     function getQueue() {
@@ -52,6 +55,7 @@
             .done(function (result) {
                 var queue = [];
                 var q_number = 1;
+                updateQueueTitle(result.length);
                 for (var r in result) {
                     var q = result[r];
                     // console.log(q)

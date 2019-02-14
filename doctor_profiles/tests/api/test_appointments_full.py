@@ -85,6 +85,9 @@ class TestCreateScheduleAndAppointment(TransactionTestCase):
         receptionist2.create_connection(doctor=doctor2, medical_institution=mi)
 
         patient = UserFactory(email=fake.email())
+        patient2 = UserFactory(email=fake.email())
+        patient3 = UserFactory(email=fake.email())
+        patient4 = UserFactory(email=fake.email())
 
         TimeDim.objects.preload_times()
         DateDim.objects.preload_year(year=2018)
@@ -238,7 +241,6 @@ class TestCreateScheduleAndAppointment(TransactionTestCase):
         force_authenticate(request, doctor.user)
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
         assert response.status_code == 201, f"Expected 201, got {response.status_code}: {response.data}: {appointment_data}: {schedule1.get_schedule_days()}"
-        """ delete schedule """
 
         appointment_data = {
             'doctor_id': doctor.id,
@@ -255,6 +257,8 @@ class TestCreateScheduleAndAppointment(TransactionTestCase):
         force_authenticate(request, receptionist.user)
         response = ApiDoctorScheduleAppointmentCreate.as_view()(request)
         assert response.status_code == 201, f"Expected 201, got {response.status_code}: {response.data}: {appointment_data}: {schedule1.get_schedule_days()}"
+
+        """ delete schedule """
 
         request = apifactory.post('/', {'id': schedule.id})
         force_authenticate(request, doctor2.user)

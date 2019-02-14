@@ -52,7 +52,7 @@ class BaseProfile(models.Model):
     objects = BaseProfileManager()
 
     class Meta:
-        ordering = ('user', '-created')
+        ordering = ('last_name', 'first_name', '-created')
 
     def __str__(self):
         return self.get_full_name()

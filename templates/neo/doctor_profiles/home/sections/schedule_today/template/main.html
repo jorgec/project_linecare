@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header bg-primary">
-        <h4 class="card-title text-white" id="headerPatientQueue">Today's Patient(s) {{ date }}</h4>
+        <h4 class="card-title text-white" id="headerPatientQueue">Today's Patients: {{ date.nice_name }}</h4>
     </div>
     <div class="card-body">
 
@@ -27,10 +27,18 @@
         </div>
     </div>
     <div class="card-footer">
-        <div class="btn-group">
-            <a href="{% url 'doctor_profile_calendar' %}">
-                <i class="fa fa-calendar"></i> Calendar
-            </a>
+        <div class="row">
+            <div class="col">
+                <div class="btn-group">
+                    <a href="{% url 'doctor_profile_calendar' %}">
+                        <i class="fa fa-calendar"></i> Calendar
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="btn-group-sm float-right">
+                </div>
+            </div>
         </div>
     </div>
 </div>

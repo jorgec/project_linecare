@@ -101,7 +101,7 @@ class DoctorSchedule(models.Model):
         return f"{self.doctor} schedule in {self.medical_institution} ({days})"
 
     class Meta:
-        ordering = ("start_date",)
+        ordering = ("start_date__date_obj",)
 
     def split_days(self):
         return ", ".join(self.days)
