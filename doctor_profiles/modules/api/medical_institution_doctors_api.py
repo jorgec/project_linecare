@@ -50,8 +50,15 @@ class ApiMedicalInstitutionDoctorList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        doctor_id = request.data.get('doctor_id', None)
+        if doctor_id:
+            doctor = get_object_or_404(DoctorProfile, id=doctor_id)
+        else:
+            doctor = request.user.doctor_profile()
+            if not doctor:
+                return Response("Invalid doctor!", status=status.HTTP_400_BAD_REQUEST)
         filters = {
-            'doctor': request.user.doctor_profile(),
+            'doctor': doctor,
             'is_approved': True
         }
 
