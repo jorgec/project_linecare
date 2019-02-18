@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import serializers
 
 from datesdim.serializers import DateDimSerializer, TimeDimSerializer
-from doctor_profiles.constants import QUEUE_INACTIVE, QUEUE_ACTIVE
+from doctor_profiles.constants import QUEUE_INACTIVE, QUEUE_ACTIVE, QUEUE_NOT_CANCELLED_CODES
 from doctor_profiles.models import PatientAppointment
 from doctor_profiles.serializers import MedicalInstitutionSerializer
 from profiles.serializers import BaseProfilePrivateSerializerFull
@@ -120,6 +120,7 @@ class PatientQueuePrivateSerializer(serializers.ModelSerializer):
             doctor=obj.doctor,
             patient=obj.patient,
             schedule_day__date_obj__lte=obj.schedule_day.date_obj,
+            status__in=QUEUE_NOT_CANCELLED_CODES
         ).exclude(
             id=obj.id
         ).order_by('-schedule_day__date_obj').first()
