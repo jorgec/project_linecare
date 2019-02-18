@@ -1,5 +1,5 @@
 from rest_framework import status, permissions, parsers
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -44,6 +44,21 @@ class ApiMedicalInstitutionDoctorCreate(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ApiMedicalInstitutionDoctorList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        filters = {
+            'doctor': request.user.doctor_profile(),
+            'is_approved': True
+        }
+
+        rel = MedicalInstitutionDoctor.objects.filter(**filters)
+        serializer = MedicalInstitutionDoctorPrivateSerializer(rel, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ApiMedicalInstitutionDoctorMetaList(APIView):

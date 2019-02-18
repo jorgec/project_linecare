@@ -324,6 +324,9 @@ urlpatterns += [
          name='api_private_medical_institution_create'),
 
     # connection meta
+    path(f'{version}/private/medical_institution_doctor/list',
+         medical_institution_doctors_api.ApiMedicalInstitutionDoctorList.as_view(),
+         name='api_private_medical_institution_doctor_list'),
     path(f'{version}/private/medical_institution_doctor/connection/create',
          medical_institution_doctors_api.ApiMedicalInstitutionDoctorCreate.as_view(),
          name='api_private_medical_institution_doctor_connection_create'),
