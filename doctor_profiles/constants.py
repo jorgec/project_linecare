@@ -105,3 +105,7 @@ APPOINTMENT_TYPES = (
     ('lab_result', 'Lab Result'),
     ('consultation', 'Consultation'),
 )
+
+QUESTION_TYPES = (
+
+)

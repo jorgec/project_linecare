@@ -136,15 +136,43 @@ class TestDoctorQuestionnaire(TransactionTestCase):
         self.test_init()
         result, self.questionnaire1, message = self.doctor.create_questionnaire()
 
-        self.questionnaire1.add_section()
+        section1 = self.questionnaire1.add_section(
+            name='test section'
+        )
         assert len(self.questionnaire1.get_sections()) == 1, \
             f"Expected 1, got {len(self.questionnaire1.get_sections())}"
+        assert self.questionnaire1.section(
+            0).name == 'test section', f"Expected 'test section', got {self.questionnaire1.section().name}"
 
-        self.questionnaire1.add_section(
+        section2 = self.questionnaire1.add_section(
             order=0,
             name='General History'
         )
         assert len(self.questionnaire1.get_sections()) == 2, \
             f"Expected 2, got {len(self.questionnaire1.get_sections())}"
-        assert self.questionnaire1.get_section()[0].name == 'General History', \
-            f"Expected 'General History', got {self.questionnaire1.get_section()[0].name}"
+        assert self.questionnaire1.section(0).name == 'General History', \
+            f"Expected 'General History', got {self.questionnaire1.section(0).name}"
+
+        question1 = Question.objects.create(
+            name='question 1',
+            text='question text'
+        )
+        question2 = self.questionnaire1.section(0).create_question(
+            name='question 2',
+            text='this is question 2',
+            order=0
+        )
+
+        question3 = self.questionnaire1.create_question(
+            name='question 3',
+            text='this is question 3'
+        )
+
+        assert self.questionnaire1.section(0).add_question(
+            question2) is False, "Was able to add a question to the same section twice"
+
+        assert self.questionnaire1.section(0).add_question(
+            question2) is True, "Could not add a new question to the section"
+
+        question2.reorder(0)
+        assert question2.order == 0, f"Expected 0, got {question2.order}"
