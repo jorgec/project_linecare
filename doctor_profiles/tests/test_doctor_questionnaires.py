@@ -5,6 +5,9 @@ from faker import Faker
 from accounts.models import Account
 from datesdim.models import DateDim, TimeDim
 from doctor_profiles.models import MedicalInstitutionType, MedicalInstitution
+from doctor_profiles.models import Questionnaire, QuestionnaireSection, Question, ChoiceGroup, Choice
+
+from doctor_profiles.constants import ANSWER_DATA_TYPES, ANSWER_SELECTION_TYPES, ANSWER_TYPES
 
 pytestmark = pytest.mark.django_db
 fake = Faker()
@@ -274,4 +277,3 @@ class TestDoctorQuestionnaire(TransactionTestCase):
         assert len(self.questionnaire4.get_sections()) == 2, f"Expected 2, got {len(self.questionnaire4.get_sections())}"
         assert self.questionnaire4.section(0).name == "Questionnaire 4 Section 1", f"Expected 'Questionnaire 4 Section 1', got {self.questionnaire4.section(2).name} instead"
         assert len(self.questionnaire4.section(0).get_questions()) == 2, f"Expected 2, got {len(self.questionnaire4.section(0).get_questions())} instead"
-        
