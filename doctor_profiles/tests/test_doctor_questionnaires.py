@@ -21,6 +21,7 @@ class TestDoctorQuestionnaire(TransactionTestCase):
     questionnaire1 = None
     questionnaire2 = None
     questionnaire3 = None
+    questionnaire4 = None
 
     def test_init(self):
         email = fake.email()
@@ -176,3 +177,101 @@ class TestDoctorQuestionnaire(TransactionTestCase):
 
         question2.reorder(0)
         assert question2.order == 0, f"Expected 0, got {question2.order}"
+
+        question4 = self.questionnaire1.section(0).create_question(
+            name='question4',
+            text='question text',
+            answer_type='multiple_choice',
+            answer_selection_type='single_answer',
+            answer_data_type='numeric'
+        )
+
+        question1.next_question(question=question3)
+
+        choice_group_1 = ChoiceGroup.objects.create(
+            name='choice group 1',
+            choices=[
+                {
+                    "name": "choice 1",
+                    "text": "choice 1 text",
+                    "value": 5,
+                    "order": 0,
+                },
+                {
+                    "name": "choice 2",
+                    "text": "choice 2 text",
+                    "value": 4,
+                    "order": 5
+                },
+                {
+                    "name": "choice 3",
+                    "text": "choice 3 text",
+                    "value": 3
+                },
+                {
+                    "name": "choice 4",
+                    "text": "choice 4 text",
+                    "value": 2
+                },
+                {
+                    "name": "choice 5",
+                    "text": "choice 5 text",
+                    "value": 1
+                },
+            ]
+        )
+
+        question4.add_choice_group(choice_group_1)
+        assert question4.get_choice(0).name == 'choice 1', f"Expected choice 1, got {question4.get_choice(0).name} instead"
+        assert question4.get_choice(4).name == 'choice 2', f"Expected choice 2, got {question4.get_choice(4).name} instead"
+        assert len(question4.get_choices()) == 5, f"Expected 5, got {len(question4.get_choices())} instead"
+
+    def test_shortcuts(self):
+        result, self.questionnaire4, message = Questionnaire.objects.create_full(
+            {
+                "name": "Questionnaire 4",
+                "restriction": "public",
+                "is_required": True,
+                "description": "This is also a tribute to the greatest questionnaire in the world"
+                "sections": [
+                    {
+                        "name": "Questionnaire 4 Section 1",
+                        "order": 0,
+                        "questions": [
+                            {
+                                "name": "q1",
+                                "text": "q1 text",
+                                "answer_type": "free_text",
+                                "answer_selection_type": "single_answer",
+                                "answer_data_type": "text",
+                                "order": 0,
+                                "choices": [
+                                    {
+                                        "text": "q1 c1",
+                                        "value": 1
+                                    },
+                                    {
+                                        "text": "q1 c2",
+                                        "value": 2
+                                    },
+                                ]
+                            },
+                            {
+                                "name": "q2",
+                                "text": "q2 text",
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Questionnaire 4 Section 2",
+                        "questions": []
+                    }
+                ]
+            }
+        )
+
+        assert result, "Questionnaire was not created"
+        assert len(self.questionnaire4.get_sections()) == 2, f"Expected 2, got {len(self.questionnaire4.get_sections())}"
+        assert self.questionnaire4.section(0).name == "Questionnaire 4 Section 1", f"Expected 'Questionnaire 4 Section 1', got {self.questionnaire4.section(2).name} instead"
+        assert len(self.questionnaire4.section(0).get_questions()) == 2, f"Expected 2, got {len(self.questionnaire4.section(0).get_questions())} instead"
+        

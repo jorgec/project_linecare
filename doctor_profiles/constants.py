@@ -106,6 +106,21 @@ APPOINTMENT_TYPES = (
     ('consultation', 'Consultation'),
 )
 
-QUESTION_TYPES = (
+ANSWER_TYPES = (
+    ('free_text', 'Free Text'),
+    ('free_numeric', 'Free Numeric'),
+    ('multiple_choice', 'Multiple Choice'),
+    ('multiple_choice_with_free_text', 'Multiple Choice with Free Text'),
+    ('multiple_choice_with_free_numeric', 'Multiple Choice with Free Numeric'),
+)
 
+ANSWER_SELECTION_TYPES = (
+    ('single_answer', 'Single Answer'),
+    ('multiple_answers', 'Multiple Answers'),
+)
+
+ANSWER_DATA_TYPES = (
+    ('boolean', 'Boolean'),
+    ('numeric', 'Numeric'),
+    ('text', 'Text')
 )
