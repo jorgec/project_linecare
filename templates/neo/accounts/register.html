@@ -44,7 +44,7 @@
             <label for="primary_profile">Select your primary profile</label>
             <select name="primary_profile" id="primary_profile" class="form-control">
                 <option value="1">I'm a Doctor</option>
-                <option value="2">I'm a Patient</option>
+                <!-- <option value="2">I'm a Patient</option> -->
                 <!--<option value="2">Auto-create my Patient/User Profile</option>-->
                 <option value="3">I'm a Receptionists</option>
             </select>
@@ -54,9 +54,8 @@
             <small>Note: You can activate any/all of the profiles above later if you want.</small>
             <br>
             <span class="small"><input type="checkbox" required> By creating an account, you agree to the Terms
-                and Conditions of the <a href="{% url 'terms' %}">User
-                    Agreement</a>
-                and <a href="{% url 'policy' %}">Privacy
+                and Conditions of the <a data-toggle="modal" data-target="#termsOfService" href="{% url 'terms' %}">Terms of Service</a>
+                and <a data-toggle="modal" data-target="#privacyPolicy" href="{% url 'policy' %}">Privacy
                     Policy</a>.</span>
         </div>
 
@@ -67,8 +66,1509 @@
                             Facebook</a>
                         -->
         <!--<button class="btn btn-light btn-block" type="submit"><i class="fab fa-google"></i>Sign up with Google</button>-->
+
     </form>
 </div>
+<!-- Modals -->
+<div class="modal fade" id="termsOfService" tabindex="-1" role="dialog" aria-labelledby="termsOfServiceTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsOfServiceTitle">Terms of Service</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card-subtitle">
+                        <h6>Terms of Service</h6>
+                    </div>
+                    <p class="card-text">
+                        Welcome to https://www.linecare.ph. These Terms of Service contain
+                        the terms and conditions that govern all use of our Platform (as
+                        defined below) and Services (as defined below) and all content,
+                        services and/or products available on or through the Platform
+                        (collectively, the “Linecare Services”).
+                    </p>
+                    <p class="card-text">
+                        The Linecare Services are offered to you subject to your
+                        acceptance, without modification (other than Special Terms (as
+                        defined below) agreed by the parties pursuant to these Terms of
+                        Service), of all of the terms and conditions contained herein and
+                        all other operating rules, policies (including, without
+                        limitation, our Privacy Policy at www.linecare.ph/legal), the
+                        Guidelines (as defined below) and any future modifications
+                        thereof, and procedures that may be published from time to time on
+                        the Platform or made available to you on or through the Linecare
+                        Services (collectively, the “Terms”). When accepted by you (as
+                        defined below), these Terms form a legally binding contract
+                        between you and Supplier (as defined below). If you are entering
+                        into these Terms on behalf of an entity, such as your employer or
+                        the company you work for, you represent that you have the legal
+                        authority to bind that entity.
+                    </p>
+                    <p class="card-text">
+                        PLEASE READ THESE TERMS CAREFULLY. BY REGISTERING FOR, ACCESSING,
+                        BROWSING, AND/OR OTHERWISE USING THE LINECARE SERVICES, YOU
+                        ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND
+                        BY THESE TERMS. IF YOU DO NOT AGREE TO BE BOUND BY THESE TERMS, DO
+                        NOT ACCESS, BROWSE OR OTHERWISE USE THE PLATFORM OR THE LINECARE
+                        SERVICES.
+                    </p>
+                    <p class="card-text">
+                        Supplier may, in its sole discretion, elect to suspend or
+                        terminate access to, or use of the Linecare Services to anyone who
+                        violates these Terms.
+                    </p>
+                    <p class="card-text">
+                        The original language of these Terms is English. Supplier may make
+                        available translations for convenience. In case of conflicts
+                        between the original English version and any translation, the
+                        English version shall prevail.
+                    </p>
+                    <ol>
+                        <li>Definitions</li>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Account</th>
+                                    <th scope="col">
+                                        The primary means for accessing and using the Linecare
+                                        Services;
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Activity</th>
+                                    <td>
+                                        appointments, patient records, billing, queue, messages or
+                                        any activity done inside the app and on the website;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Authorization</th>
+                                    <td>
+                                        the set of rights and privileges on the Website assigned
+                                        to a User or Sub-User by a Client;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Client</th>
+                                    <td>
+                                        a natural or legal person who has accepted these Terms
+                                        with the Supplier;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Client Data</th>
+                                    <td>
+                                        files and any other digital data and information, which is
+                                        subjected to the Linecare Services or otherwise inserted
+                                        to the System by the Client (including the specific Users,
+                                        Patients, persons, Organizations, Patient information,
+                                        Patient Health Records, Patient Notes, Appointments,
+                                        Billings, Messages associated with the Client);
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Content</th>
+                                    <td>
+                                        any data and information available through Linecare
+                                        Services or contained within the structure of the System,
+                                        articles, documents, brochures, presentations, pictures,
+                                        images, audiovisual works, other informational materials
+                                        and any comments;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Files</th>
+                                    <td>
+                                        documents of any kind(images, spreadsheets, text files,
+                                        etc.) that are inserted to the System by the Client, and
+                                        usually associated with a particular Deal, Person or
+                                        Organization;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Free Trial</th>
+                                    <td>
+                                        temporary access for the purposes of trying out the
+                                        Website and Linecare Services in accordance with any
+                                        selected Plan without paying a Fee;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Guidelines</th>
+                                    <td>
+                                        additional guidelines or rules applicable to specific
+                                        features, applications, products, or services which may be
+                                        posted from time to time on the Platform or otherwise made
+                                        available on or through the Linecare Services;
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Linecare</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Linecare Materials</th>
+                                    <td>
+                                        the visual interfaces, graphics, design, system, methods,
+                                        information, computer code, software, services, “look and
+                                        feel”, organization, compilation of the content, code,
+                                        data, and all other elements of the Linecare Services;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Linecare Services</th>
+                                    <td>
+                                        the Website, Services, System, Content, Platform and all
+                                        content, services and/or products available on or through
+                                        the Platform;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Special Terms</th>
+                                    <td>
+                                        any particulars, specifications and conditions by which
+                                        the parties have agreed to deviate from these Terms;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Supplier</th>
+                                    <td>
+                                        as the context requires, Linecare and collectively the
+                                        “Suppliers”;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">System</th>
+                                    <td>
+                                        the integrated cloud computing solution for providing the
+                                        Linecare Services, including applications, software,
+                                        hardware, databases, interfaces, associated media,
+                                        documentation, updates, new releases and other components
+                                        or materials provided therewith;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">User</th>
+                                    <td>
+                                        a natural person granted with Authorization to use the
+                                        Account on behalf of a Client;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Website</th>
+                                    <td>
+                                        the compilation of all web documents (including images,
+                                        scripts, django and html files) made available via
+                                        www.linecare.ph or its sub domains or domains with
+                                        identical names under other top domains and owned by
+                                        Supplier.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <li>Authority to Enter into These Terms with Supplier</li>
+                        <p class="card-text">
+                            The use of the Linecare Services is subject to acceptance of
+                            these Terms. To accept these Terms for itself or on behalf of a
+                            Client, a person must have the legal capacity to do so. In the
+                            case of an individual, the individual must be at least 18 years
+                            of age or have valid authorization from his/her legal
+                            representative or custodian. In the case of a legal entity, the
+                            entity must be duly incorporated and in good standing.
+                        </p>
+                        <p class="card-text">
+                            The Terms are accepted as soon as one of the following occurs
+                            first:
+                        </p>
+                        <ul>
+                            <li>
+                                the person has received the confirmation of the creation of
+                                the Account and necessary credentials from Supplier in order
+                                to log in to his/her/its Account; or
+                            </li>
+                            <li>
+                                for those Linecare Services and parts of the Web Site the use
+                                of which is not dependent on creating an Account, upon the
+                                moment of gaining access to such services.
+                            </li>
+                        </ul>
+                        <p class="card-text">
+                            You may not, without Supplier’s prior written consent, access
+                            the Linecare Services (i) for production purposes, (ii) if you
+                            are a competitor of Linecare, (iii) to monitor the availability,
+                            performance or functionality of the Linecare Services or (iv)
+                            for other benchmarking or competitive purposes.
+                        </p>
+                        <p class="card-text">
+                            Once accepted, these Terms remain effective until terminated as
+                            provided for herein.
+                        </p>
+                        <li>Modification of Terms</li>
+                        <p class="card-text">
+                            Supplier reserves the right, at its sole discretion, to change,
+                            modify, add, or remove portions of the Terms at any time by
+                            posting such changes on or through the Platform or the Linecare
+                            Services. Please check these Terms periodically for changes.
+                            Your continued use of the Linecare Services after such changes
+                            have been posted as provided above constitutes your binding
+                            acceptance of such changes. Such amended Terms will
+                            automatically be effective upon the earlier of (i) your
+                            continued use of the Linecare Services, or (ii) 30 days from
+                            posting of such modified Terms on or through the Platform.
+                            Notwithstanding the foregoing, the resolution of any dispute
+                            that arises between you and Supplier will be governed by the
+                            Terms in effect at the time such dispute arose.
+                        </p>
+                        <li>Our Responsibilities</li>
+                        <div class="card-subtitle">
+                            4.1 Provision of Linecare Services.
+                        </div>
+                        <p class="card-text">
+                            Supplier will (a) make the Linecare Services, Content and Client
+                            Data available to a Client pursuant to these Terms, (b) provide
+                            applicable standard support for the Linecare Services to Client
+                            at no additional charge, and/or upgraded support (for an
+                            additional charge, if applicable), (c) use commercially
+                            reasonable efforts to make the Linecare Services available 24
+                            hours a day, 7 days a week, except for: (i) planned downtime (of
+                            which Supplier shall give advance electronic notice as provided
+                            in the Guidelines), and (ii) any unavailability caused by
+                            circumstances beyond Supplier’s reasonable control, including,
+                            for example, an act of God, act of government, flood, fire,
+                            earthquake, civil unrest, act of terror, strike or other labor
+                            problem, Internet service provider failure or delay, or denial
+                            of service attack.
+                        </p>
+                        <div class="card-subtitle">4.2 Protection of Client Data.</div>
+                        <p class="card-text">
+                            Supplier will maintain administrative, physical, and technical
+                            safeguards for protection of the security, confidentiality and
+                            integrity of Client Data, as described in the Guidelines. Those
+                            safeguards will include, but will not be limited to, measures
+                            for preventing access, use, modification or disclosure of Client
+                            Data by Supplier personnel except (a) to provide the Linecare
+                            Services and prevent or address service or technical problems,
+                            (b) as compelled by law in accordance with Section 7.5
+                            (Compelled Disclosure) below, or (c) as a Client or User
+                            expressly permit in writing.
+                        </p>
+                        <p class="card-text">
+                            The Services may be performed using equipment or facilities
+                            located in the United States and Singapore.
+                        </p>
+                        <li>Using the Linecare Services</li>
+                        <div class="card-subtitle">5.1 Establishing an Account.</div>
+                        <p class="card-text">
+                            Certain features, functions, parts or elements of the Linecare
+                            Services can be used or accessed only by holders of an Account.
+                            The person who wishes to create an Account must:
+                        </p>
+                        <ul>
+                            <li>complete the sign-up form on the Website; and</li>
+                            <li>
+                                accept these Terms by clicking “Sign up” or other similar
+                                button
+                            </li>
+                        </ul>
+                        <p class="card-text">
+                            Each Client may have only one Account. If several persons need
+                            to use an Account on behalf of Client, Client must designate
+                            such persons as Users or Sub-Users. Each such User or Sub-User
+                            shall be subject to the restrictions set forth in these Terms.
+                        </p>
+                        <p class="card-text">
+                            If Client has designated Users or Sub-Users and granted them
+                            Authorization, such Users or Sub-Users will be deemed to be
+                            authorized to act on behalf of Client when using the Account.
+                            Supplier is not responsible for verifying the right of
+                            representation or validity of Authorization of any User or
+                            Sub-Users. However, Supplier may ask additional information or
+                            proof of the person’s credentials.
+                        </p>
+                        <p class="card-text">
+                            A User or Sub-Users may be associated with multiple Clients and
+                            Accounts. Deleting a User or Sub-Users from one Account will not
+                            remove the User or Sub-Users from the Platform if he/she is
+                            connected to multiple Accounts.
+                        </p>
+                        <p class="card-text">
+                            The Client and any User or Sub-Users associated with an Account
+                            must provide Supplier with true, accurate, current, and complete
+                            information about the Client, Users, Sub-Users or Account and
+                            keep it up to date.
+                        </p>
+                        <li>Client Data</li>
+                        <div class="card-subtitle">6.1 Uploading Client Data to Platform. </div>
+                        <p class="card-text">If the Client uploads Client Data to the Platform, such Client Data and
+                            any processing of such Client Data must be in compliance with these Terms and applicable
+                            law. All rights, title and interest in and to the Client Data belong to the Client or third
+                            persons (including Users, Sub-Users, persons and Organizations) whether posted and/or
+                            uploaded by you or made available on or through the Linecare Services by Supplier. By
+                            uploading Client Data to the Platform, Client authorizes Supplier to process the Client
+                            Data. The Client is responsible for ensuring that: </p>
+                        <ul>
+                            <li>the Client and any of the Users associated with the Account do not create, transmit,
+                                display or make otherwise available any Client Data that violates the terms of these
+                                Terms, the rights of Supplier, other Clients or Users, persons or Organizations or is
+                                harmful (for example viruses, worms, malware and other destructive codes), offensive,
+                                threatening, abusive, harassing, tortuous, defamatory, vulgar, pornographic, obscene,
+                                invasive of another’s privacy, defamatory, hateful or otherwise unlawful; and </li>
+                            <li>the Client and all of the Users associated with the Account have the necessary rights
+                                to use the Client Data, including to insert it into the Platform and process it by
+                                means of the Account. </li>
+                        </ul>
+                        <div class="card-subtitle">6.2 No Guarantee of Accuracy.</div>
+                        <p class="card-text">Supplier does not guarantee any accuracy with respect to any information
+                            contained in any Client Data, and strongly recommends that you think carefully about what
+                            you transmit, submit or post to or through the Linecare Services. You understand that all
+                            information contained in Client Data is the sole responsibility of the person from whom
+                            such Client Data originated. This means that Client, and not Supplier, is entirely
+                            responsible for all Client Data that is uploaded, posted, transmitted, or otherwise made
+                            available through the Linecare Services, as well as for any actions taken by the Suppliers
+                            or other Clients or Users as a result of such Client Data. </p>
+                        <div class="card-subtitle">6.3 Exposure to Other Client’s Client Data. </div>
+                        <p class="card-text">A Client may, in certain circumstances, allow Supplier to expose their
+                            Client Data to other Clients or Users for training and marketing purposes. You understand
+                            that Supplier cannot, and does not, review all Client Data and does not endorse any Client
+                            Data. You further understand and acknowledge that you may be exposed to other Client’s
+                            Client Data that is inaccurate, misleading, offensive, indecent, or objectionable. Supplier
+                            shall not be responsible for any Client Data, including, without limitation for the
+                            accuracy, completeness, relevancy, content of any Client Data.</p>
+                        <div class="card-subtitle">6.4 Unlawful Client Data. </div>
+                        <p class="card-text">Supplier is not obliged to pre-screen, monitor or filter any Client Data
+                            or acts of its processing by the Client in order to discover any unlawful nature therein.
+                            However, if such unlawful Client Data or the action of its unlawful processing is
+                            discovered or brought to the attention of Supplier or if there is reason to believe that
+                            certain Client Data is unlawful, Supplier has the right to: </p>
+                        <ul>
+                            <li>notify the Client of such unlawful Client Data; </li>
+                            <li>deny its publication on the Web Site or its insertion to the System; </li>
+                            <li>demand that the Client bring the unlawful Client Data into compliance with these Terms
+                                and applicable law;</li>
+                            <li>temporarily or permanently remove the unlawful Client Data from the Web Site or
+                                Account, restrict access to it or delete it. </li>
+                        </ul>
+                        <p class="card-text">If Supplier is presented convincing evidence that the Client Data is not
+                            unlawful, Supplier may, at its sole discretion, restore such Client Data, which was removed
+                            from the Website or Account or access to which was restricted. </p>
+                        <p class="card-text">In addition, in the event Supplier believes in its sole discretion Client
+                            Data violates applicable laws, rules or regulations or these Terms, Supplier may (but has
+                            no obligation), to remove such Client Data at any time with or without notice. </p>
+                        <p class="card-text">Without limiting the generality of the preceding sentence, Linecare
+                            complies with the Digital Millennium Copyright Act, and will remove Client Data from the
+                            Platform upon receipt of a compliant takedown notice. </p>
+                        <div class="card-subtitle">6.5 Compelled Disclosure. </div>
+                        <p class="card-text">Supplier may disclose a Client’s confidential information to the extent
+                            compelled by law to do so. In such instance, Supplier will use commercially reasonable
+                            efforts to provide Client with prior notice of the compelled disclosure (to the extent
+                            legally permitted) and Client shall provide reasonable assistance, at its cost, if Client
+                            wishes to contest the disclosure. If Supplier is compelled by law to disclose Client’s
+                            confidential information as part of a civil proceeding to which Supplier is a party, and
+                            Client is not contesting the disclosure, Client will reimburse Supplier for its reasonable
+                            cost of compiling and providing secure access to that confidential information. </p>
+                        <li>Services</li>
+                        <div class="card-subtitle">7.1 Use of the Linecare Services. </div>
+                        <p class="card-text">Subject to these Terms, Supplier grants Client and its authorized users a
+                            non-exclusive, non-transferable, non-sub-licensable license to use the Linecare Services
+                            to: </p>
+                        <ul>
+                            <li>collect, store and organize Client Data, such as add new Patients, create Appointments,
+                                create Vitals, Health Records, Doctor’s Notes, Messages; add new Users and Sub-Users
+                                and grant them Authorizations; </li>
+                            <li>modify Client Data; </li>
+                            <li>customize the standard features of the Linecare Services; </li>
+                            <li>receive reasonable help and guidance and from Supplier regarding the use of the
+                                Linecare Services. </li>
+                        </ul>
+                        <div class="card-subtitle">7.2 Technical Support. </div>
+                        <p class="card-text">Supplier shall provide reasonable technical support to Client and its
+                            authorized User or Sub-User at the reasonable request of the Client. Supplier shall respond
+                            to enquiries of support from a Client utilizing the contacts set forth below as soon as
+                            reasonably possible. Responding to enquiries of Clients and Users who have accepted these
+                            Terms but do not have an Account may be less expedient, or may not occur at all. </p>
+                        <p class="card-text">The contacts for all enquiries of support are: </p>
+                        <ul>
+                            <li>instant messaging, </li>
+                            <li>built-in notification application on the Web Page, </li>
+                            <li>e-mail: support@linecare.ph </li>
+                        </ul>
+                        <div class="card-subtitle">7.3 Modifications to Service. </div>
+                        <p class="card-text">Supplier reserves the right to modify the Linecare Services or any part or
+                            element thereof from time to time without prior notice, including, without limitation: </p>
+                        <ul>
+                            <li>rebranding the Linecare Services at its sole discretion; </li>
+                            <li>ceasing providing or discontinuing the development any particular Linecare Service or
+                                part or element of the Platform temporarily or permanently; </li>
+                            <li>taking such action as is necessary to preserve Supplier’s rights upon any use of the
+                                Linecare Services that may be reasonably interpreted as violation of Supplier’s
+                                intellectual property rights, distribution of Internet viruses, worms, Trojan horses,
+                                malware, and other destructive activities or illegal activity. </li>
+                        </ul>
+                        <p class="card-text">As applicable, Client may be notified of such modifications when logging
+                            in to the Account. Modifications will become effective thirty (30) days before the
+                            effective date of such modification. </p>
+                        <p class="card-text">If the Client does not accept the modification, the Client shall notify
+                            Supplier before the effective date of the modification, and these Terms will terminate on
+                            the effective date of the modification. The Client’s continued use of the Linecare
+                            Services, or any part or element thereof, after effective date of modifications shall
+                            indicate its consent to the modifications. Supplier shall not be liable to the Client or to
+                            any third person for any modification, suspension or discontinuance of the Linecare
+                            Services, or any part or element thereof. </p>
+                        <li>Restrictions</li>
+                        <div class="card-subtitle">8.1 Prohibited Activities. </div>
+                        <p class="card-text">Client and its authorized Users may use the Linecare Services and any part
+                            or element thereof only in the scope, with the means and for purposes as identified in
+                            these Terms and applicable law. By way of example, neither the Client nor any User may: </p>
+                        <ul>
+                            <li>use the Linecare Services or any part or element thereof to commit a crime, breach any
+                                applicable law or entice or invite others to carry out such illegal actions; </li>
+                            <li>copy, duplicate, distribute, modify, adapt, hack, create derivative works, reverse
+                                engineer or decompile the Linecare Services or any part or element thereof, or attempt
+                                to extract the source code thereof, unless (i) it is expressly allowed under applicable
+                                law, and (ii) to the extent that the Supplier is not permitted by that applicable law
+                                to exclude or limit the foregoing rights; </li>
+                            <li>use the Linecare Services or any part or element thereof unless it has agreed to these
+                                Terms. </li>
+                        </ul>
+                        <div class="card-subtitle">8.2 Certain Uses Require Supplier Consent.</div>
+                        <p class="card-text">The Client or any User may not, without Supplier’s prior express written
+                            consent (e-mail, fax, Skype, etc.): </p>
+                        <ul>
+                            <li>sell, resell, lease, license, sublicense, distribute, provide, disclose, divulge,
+                                exploit or otherwise grant Access or make the Linecare Services available in whole or
+                                in part to any third persons, unless such third person is another authorized User of
+                                the same Client; </li>
+                            <li>use the Linecare Services or any part or element thereof in a scope, with means or for
+                                purposes other than those for which their functionality was created; </li>
+                            <li>use the Linecare Services or any part or element thereof by means of programs that send
+                                them automatic enquiries or requests, unless such program has been made available by
+                                Supplier; </li>
+                        </ul>
+                        <li>Privacy</li>
+                        <p class="card-text">Supplier takes the privacy of its Clients and Users very seriously.
+                            Supplier’s Privacy Policy at www.linecare.ph/legal is hereby incorporated into these Terms
+                            by reference. Please read the Privacy Policy carefully as it governs Supplier’s collection,
+                            use, and disclosure of Client’s or User’s personal information.</p>
+                        <li>Intellectual Property Rights</li>
+                        <div class="card-subtitle">10.1 Linecare’s Intellectual Property Rights in the Linecare
+                            Services. </div>
+                        <p class="card-text">The Linecare Services, Linecare Materials, Linecare trade names and
+                            trademarks, and any parts or elements thereof are solely and exclusively owned and operated
+                            by Supplier and its third party vendors and hosting partners. Linecare Materials are
+                            protected by copyright, trade dress, patent, trade secrets, and trademark laws,
+                            international conventions and treaties, and all other relevant intellectual property and
+                            proprietary rights laws. Supplier, its affiliates and licensors retains all right, title
+                            and interest in such Linecare Services, Linecare Materials, Linecare trade names and
+                            trademarks, and any parts or elements. Your use of the Linecare Services and Linecare
+                            Materials, and any parts or elements does not grant to you any ownership right or
+                            intellectual property rights therein. Any commercial or promotional distribution,
+                            publishing or exploitation of the Linecare Materials is strictly prohibited unless you have
+                            received the express prior written permission from Supplier or the otherwise applicable
+                            rights holder. Supplier reserves all rights to the Linecare Services, Linecare Materials
+                            and Linecare trade names and trademarks not expressly granted in the Terms. </p>
+                        <div class="card-subtitle">10.2 Content Owned by Linecare. </div>
+                        <p class="card-text">Subject to these Terms and the payment of the applicable service Fee,
+                            Supplier grants Client and its authorized users a non-exclusive, non-transferable,
+                            non-sub-licensable license to download a single copy of any part of the Content solely for
+                            your personal, non-commercial use if you retain all copyright and proprietary notices that
+                            are contained in such part of the Content. You expressly acknowledge that you do not
+                            acquire any ownership rights by downloading any copyrighted material from or through the
+                            Platform or the Linecare Services. You shall not copy, distribute or publish any Content or
+                            any information obtained or derived therefrom except as permitted on or through the
+                            Linecare Services or as otherwise permitted by applicable law. </p>
+                        <div class="card-subtitle">10.3 Client data.</div>
+                        <ul>
+                            <li>Supplier may use Client Data in an aggregated and anonymized format for research,
+                                educational and other similar purposes. Supplier may not otherwise use or display
+                                Client Data without Client’s written consent. Supplier respects your right to exclusive
+                                ownership of your Client Data. Unless specifically permitted by you, your use of the
+                                Linecare Services does not grant Supplier the license to use, reproduce, adapt, modify,
+                                publish or distribute the Client Data created by you or stored in your Account for
+                                Supplier’s commercial, marketing or any similar purpose. Client expressly grants
+                                Supplier the right to use and analyze aggregate system activity data associated with
+                                use of the Linecare Services by Client and its Users for the purposes of optimizing,
+                                improving or enhancing the way the Linecare Services operate, and to create new
+                                features and functionality in connection with the Linecare Services in the sole
+                                discretion of Supplier. </li>
+                            <li>Client is solely responsible for its own Client Data and the consequences of posting or
+                                publishing them on or through the Linecare Service. In connection with Client Data,
+                                Client affirms, represents, and warrants that: (i) Client either owns its Client Data
+                                or has the necessary licenses, rights, consents, and permissions to use and authorize
+                                the Suppliers to display or otherwise use the Client Data under all patent, trademark,
+                                copyright, trade secrets, or other proprietary rights in and to your Client Data in a
+                                manner consistent with the intended features of the Linecare Services and these Terms,
+                                and to grant the rights and license set forth in Section 11.3(a), and (ii) Client Data,
+                                Supplier’s or any Linecare Licensee’s use of such Client Data pursuant to these Terms,
+                                and Supplier’s or any Linecare Licensee’s exercise of the license rights set forth in
+                                Section 11.3(a), do not and will not: (a) infringe, violate, or misappropriate any
+                                third-party right, including any copyright, trademark, patent, trade secret, moral
+                                right, privacy right, right of publicity, or any other intellectual property or
+                                proprietary right; (b) violate any applicable law or regulation anywhere in the world;
+                                or (c) require obtaining a license from or paying any fees and/or royalties by Supplier
+                                to any third party for the performance of any Linecare Services Client has chosen to be
+                                performed by Supplier or for the exercise of any rights granted in these Terms, unless
+                                Client and Supplier otherwise agree. </li>
+                        </ul>
+                        <div class="card-subtitle">10.4 Feedback. </div>
+                        <p class="card-text">If Client or a User provides Suppliers with any comments, bug reports,
+                            feedback, or modifications for the Linecare Services (“Feedback”), Supplier shall have the
+                            right to use such Feedback at its discretion, including, but not limited to the
+                            incorporation of such suggested changes into the Linecare Services. Client or User (as
+                            applicable) hereby grants Supplier a perpetual, irrevocable, nonexclusive, royalty free
+                            license under all rights necessary to incorporate, publish, reproduce, distribute, modify,
+                            adapt, prepare derivative works of, publicly display, publicly perform, exploit and use
+                            your Feedback for any purpose. </p>
+                        <li>Third-Party Sites, Products and Services</li>
+                        <p class="card-text">The Linecare Services may include links to other websites or services
+                            (“Linked Sites”) solely as a convenience to Clients. Supplier does not endorse any such
+                            Linked Sites or the information, material, products, or services contained on or accessible
+                            through Linked Sites. Furthermore, Supplier makes no express or implied warranties with
+                            regard to the information, material, products, or services that are contained on or
+                            accessible through Linked Sites. ACCESS AND USE OF LINKED SITES, INCLUDING THE INFORMATION,
+                            MATERIAL, PRODUCTS, AND SERVICES ON LINKED SITES OR AVAILABLE THROUGH LINKED SITES, IS
+                            SOLELY AT YOUR OWN RISK. </p>
+                        <p class="card-tex">Any content referred to as community provided is provided by third parties
+                            and not developed or maintained by Linecare. By using any community marked code or
+                            libraries in your software development, you acknowledge and agree that Linecare is not in
+                            any way responsible for the performance or damages caused by such community provided code
+                            or library. </p>
+                        <li>Disclaimers; No Warranty</li>
+                        <p class="card-text">UNLESS OTHERWISE EXPRESSLY STATED BY SUPPLIER, THE LINECARE SERVICES,
+                            LINECARE MATERIAL, AND ANY CONTENT, SERVICES, OR FEATURES MADE AVAILABLE IN CONJUNCTION
+                            WITH OR THROUGH THE LINECARE SERVICES ARE PROVIDED “AS IS” AND “AS AVAILABLE” WITHOUT
+                            WARRANTIES OF ANY KIND EITHER EXPRESS OR IMPLIED. TO THE FULLEST EXTENT PERMISSIBLE
+                            PURSUANT TO APPLICABLE LAW, SUPPLIER AND ITS AFFILIATES DISCLAIM ALL WARRANTIES, STATUTORY,
+                            EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY,
+                            FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT OF PROPRIETARY RIGHTS, CORRECTNESS,
+                            ACCURACY, AND RELIABILITY. </p>
+                        <p class="card-text">UNLESS OTHERWISE EXPRESSLY STATED BY SUPPLIER, SUPPLIER AND ITS AFFILIATES
+                            DO NOT WARRANT THAT THE LINECARE SERVICES AND ANY CONTENT, CLIENT DATA SERVICES, OR
+                            FEATURES MADE AVAILABLE IN CONJUNCTION WITH OR THROUGH THE LINECARE SERVICES WILL BE
+                            UNINTERRUPTED OR ERROR-FREE, THAT DEFECTS WILL BE CORRECTED, OR THAT THE LINECARE SERVICES
+                            AND ANY CONTENT, CLIENT DATA, SERVICES, OR FEATURES MADE AVAILABLE IN CONJUNCTION WITH OR
+                            THROUGH THE LINECARE SERVICES OR THE SERVER THAT MAKES THEM AVAILABLE ARE FREE OF VIRUSES
+                            OR OTHER HARMFUL COMPONENTS. </p>
+                        <p class="card-text">UNLESS OTHERWISE EXPRESSLY STATED BY SUPPLIER, SUPPLIER AND ITS AFFILIATES
+                            DO NOT WARRANT OR MAKE ANY REPRESENTATIONS REGARDING THE USE OR THE RESULTS OF THE USE OF
+                            THE PLATFORM, THE LINECARE SERVICES, LINECARE MATERIAL OR ANY LINKED SITES, IN TERMS OF
+                            CORRECTNESS, ACCURACY, RELIABILITY, OR OTHERWISE. </p>
+                        <p class="card-text">THE LAWS OF CERTAIN COUNTRIES AND STATES DO NOT ALLOW LIMITATIONS ON
+                            IMPLIED WARRANTIES OR THE EXCLUSION OR LIMITATION OF CERTAIN DAMAGES. IF THESE LAWS APPLY
+                            TO YOU, SOME OR ALL OF THE ABOVE DISCLAIMERS, EXCLUSIONS, OR LIMITATIONS MAY NOT APPLY TO
+                            YOU, AND YOU MIGHT HAVE ADDITIONAL RIGHTS. </p>
+                        <li>Indemnification</li>
+                        <p class="card-text">You agree to defend, indemnify and hold harmless Supplier and its
+                            affiliates, and their respective directors, officers, employees and agents, from any
+                            claims, losses, damages, liabilities, including attorney’s fees, arising out of your use or
+                            misuse of the Linecare Services, Linecare Materials, representations made to the Supplier,
+                            its affiliates and/or third parties, violation of these Terms, violation of the rights of
+                            any other person or entity, or any breach of the foregoing representations, warranties, and
+                            covenants. Supplier reserves the right, at its own expense, to assume the exclusive defense
+                            and control of any matter for which you are required to indemnify Supplier, and you agree
+                            to cooperate with such defense of these claims.</p>
+                        <li>Limitation of Liability</li>
+                        <div class="card-subtitle">14.1 No Liability: </div>
+                        <p class="card-text">Supplier shall not be liable to the Client or User or Sub-User for any
+                            consequences resulting from: </p>
+                        <ul>
+                            <li>any modifications in these Terms, calculation and rates of Fees, the Linecare Services,
+                                Linecare Material, or any part or element thereof (including but not limited to
+                                Account), including any error, permanent or temporary interruption, discontinuance,
+                                suspension or other type of unavailability of the Linecare Services or Linecare
+                                Material; </li>
+                            <li>deletion of, corruption of, or failure to store any Client Data; </li>
+                            <li>use of Client Data by the Client or any of the Users associated with the Account; </li>
+                            <li>upgrading or downgrading the current Plan; </li>
+                            <li>any disclosure, loss or unauthorized use of the login credentials of Client or any
+                                authorized User or Sub-User due to Client’s failure to keep them confidential; </li>
+                            <li>the Client’s use of the Account or the Linecare Services by means of browsers other
+                                than those accepted or supported by the Supplier; </li>
+                            <li>the application of any remedies against the Client or authorized Users by the Supplier,
+                                for example if the Client or User has committed a crime or conducted a breach of
+                                applicable law by using the Linecare Services or any part or element thereof; </li>
+                            <li>the differences between technologies and platforms used for access, for example if
+                                certain features, functions, parts or elements of the Linecare Services are designed
+                                for use on a personal computer or laptop and do not function on a mobile platform or a
+                                tablet; </li>
+                            <li>. the Supplier’s application of the remedies described in these Terms, even if the
+                                reasonable grounds or legal basis for the application of these remedies turned out to
+                                be unfounded or invalid afterwards. </li>
+                        </ul>
+                        <p class="card-text">In addition, Supplier and its affiliates shall not be liable to the Client
+                            for any claim by any User, person, Organization or third persons against the Client arising
+                            out of the Client’s failure to: </p>
+                        <ul>
+                            <li>provide Supplier with accurate information about the Client, Users, Sub-User or
+                                Account; </li>
+                            <li>notify Supplier of any reasons due to which a User does not have the right to use the
+                                Account on behalf of the Client; </li>
+                            <li>provide any Products which it has agreed to provide to such a person or Organization
+                                (whether such failure arises as a result of Supplier’s negligence, breach if these
+                                Terms or otherwise); </li>
+                            <li>ensure the lawfulness of the Client Data; </li>
+                            <li>obtain the necessary rights to use the Client Data; or </li>
+                            <li>abide by any of the restrictions described in these Terms. </li>
+                        </ul>
+                        <div class="card-subtitle">14.2 Limitation of Liability. </div>
+                        <p class="card-text">IN NO EVENT SHALL THE AGGREGATE LIABILITY OF LINECARE AND ITS AFFILIATES
+                            ARISING OUT OF OR RELATED TO THESE TERMS EXCEED THE TOTAL AMOUNT PAID BY CLIENT HEREUNDER
+                            FOR THE LINECARE SERVICES GIVING RISE TO THE LIABILITY IN THE SIX MONTHS PRECEDING THE
+                            FIRST INCIDENT OUT OF WHICH THE LIABILITY AROSE. THE FOREGOING LIMITATION WILL APPLY
+                            WHETHER AN ACTION IS IN CONTRACT OR TORT AND REGARDLESS OF THE THEORY OF LIABILITY, BUT
+                            WILL NOT LIMIT CLIENT’S PAYMENT OBLIGATIONS UNDER THE “PAYMENT” SECTION ABOVE. </p>
+                        <div class="card-subtitle">14.3 Exclusion of Consequential and Related Damages. </div>
+                        <p class="card-text">IN NO EVENT WILL EITHER PARTY OR ITS AFFILIATES HAVE ANY LIABILITY ARISING
+                            OUT OF OR RELATED TO THESE TERMS FOR ANY LOST PROFITS, REVENUES, GOODWILL, OR INDIRECT,
+                            SPECIAL, INCIDENTAL, CONSEQUENTIAL, COVER, BUSINESS INTERRUPTION OR PUNITIVE DAMAGES,
+                            WHETHER AN ACTION IS IN CONTRACT OR TORT AND REGARDLESS OF THE THEORY OF LIABILITY, EVEN IF
+                            A PARTY OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES OR IF A
+                            PARTY’S OR ITS AFFILIATES’ REMEDY OTHERWISE FAILS OF ITS ESSENTIAL PURPOSE. THE FOREGOING
+                            DISCLAIMER WILL NOT APPLY TO THE EXTENT PROHIBITED BY LAW. </p>
+                        <li>Governing Law and Dispute Mechanism</li>
+                        <p class="card-text">This Agreement contains the final and entire agreement between Linecare
+                            Services regarding Client use of the Application, the Linecare Services and our website for
+                            the Client, a member of the household or for any minor for whom you are responsible, and
+                            supersedes all previous and contemporaneous oral or written agreements regarding your use
+                            of the foregoing. The provisions of this Agreement shall be severable, and if any provision
+                            of this Agreement is held to be invalid or unenforceable, it shall be construed to have the
+                            broadest interpretation, which would render it valid and enforceable. We may discontinue or
+                            change the Application, Services and/or our website, or its/their availability to the
+                            Client, at any time. This Agreement is personal to the Client, which means that it may not
+                            assign the rights or obligations under this Agreement to anyone. Clients agree that this
+                            agreement, as well as any and all claims arising from this Agreement will be governed by
+                            and construed in accordance with the laws of the Philippines, without regard to any
+                            conflict or choice of law principles.</p>
+                        <p class="card-text">The Client agree that any dispute, claim or controversy arising out of or
+                            relating to these terms or the breach, termination, enforcement, interpretation or validity
+                            thereof or the use of the Services (collectively, "Disputes") will be settled by binding
+                            arbitration, except that each party retains the right to bring an individual action in
+                            small claims court and the right to seek injunctive or other equitable relief in a court of
+                            competent jurisdiction to prevent the actual or threatened infringement, misappropriation
+                            or violation of a party's copyrights, trademarks, trade secrets, patents or other
+                            intellectual property rights.</p>
+                        <p class="card-text">The arbitration will be administered by the Philippine Dispute Resolution
+                            Center, Inc. (PDRCI) in accordance with the ARBITRATION RULES OF THE PDRCI (the "PDRCI
+                            Rules") then in effect, except as modified by this "Dispute Resolution" section.</p>
+                        <p class="card-text">A party who desires to initiate arbitration must provide the other party
+                            with a written Demand for Arbitration as specified in the PDRCI Rules. The arbitrator will
+                            be selected by the parties from the PDRCI's roster of consumer dispute arbitrators. If the
+                            parties are unable to agree upon an arbitrator within seven (7) days of delivery of the
+                            Demand for Arbitration, then the PDRCI will appoint the arbitrator in accordance with the
+                            PDRCI Rules.</p>
+                        <p class="card-text">The Client’s responsibility to pay any PDRCI filing, administrative and
+                            arbitrator fees will be solely as set forth in the PDRCI Rules. </p>
+                        <li>Assignments</li>
+                        <p class="card-text">Linecare may assign its rights and obligations under this Agreement. This
+                            Agreement will inure to the benefit of Linecare’s successors, assigns and licensees. The
+                            failure of either party to insist upon or enforce the strict performance of the other party
+                            with respect to any provision of this Agreement, or to exercise any right under the
+                            Agreement, will not be construed as a waiver or relinquishment to any extent of such
+                            party’s right to assert or rely upon any such provision or right in that or any other
+                            instance; rather, the same will be and remain in full force and effect.</p>
+                    </ol>
+            </div>
+            <div class="modal-footer">
+                &nbsp;
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="privacyPolicy" tabindex="-1" role="dialog" aria-labelledby="privacyPolicy" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="privacyPolicy">Privacy Policy</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="card-subtitle">
+                <h6>Privacy Statement</h6>
+            </div>
+            <p class="card-text">
+                Welcome, and thank you for your interest in Linecare(“Linecare”,
+                “we”, or “us”), our website at https://www.linecare.ph(the
+                “Site”), and all related websites, downloadable software, mobile
+                applications (including tablet application), and other services
+                provided by us on which a link to this Privacy Policy is
+                displayed, and all other communications with individuals though
+                from written or oral means, such as email or phone(collectively,
+                together with the Site, our “Service”)
+            </p>
+            <div class="card-subtitle">
+                <h6>Collection of Personal Information</h6>
+            </div>
+            <p>
+                Linecare collects personal information from or about you in the
+                following manner.
+            </p>
+
+            <ol>
+                <li>
+                    When you create an account in Linecare manually or by using
+                    other sources, i.e. social media accounts;
+                </li>
+                <li>
+                    When a Client or User register your personal information; and
+                </li>
+                <li>When you use the Linecare Service.</li>
+            </ol>
+
+            <p class="card-text">
+                We process Personal Information to fulfill our contractual
+                obligations to you, comply with legal obligations and regulatory
+                requirements, or as may be reasonably necessary to conduct our
+                business. In all cases where we process Personal Information, we
+                will uphold your rights under Republic Act no. 10173, its
+                Implementing Rules and Regulations and other issuance of the
+                National Privacy Commission (the “law”).
+            </p>
+            <div class="card-subtitle">
+                <h6 class="card-text">Consent Form</h6>
+            </div>
+            <p class="card-text">
+                By using our Service and indicating your personal information herein, you authorize LINECARE to
+                collect and store any personal information such as but not limited to, your name, address,
+                mobile phone number, age, gender, birthdate, marital status, email address, phone number,
+                profile picture, medical records, professional details, accreditations, employment records,
+                hospital affiliation (if any), or any other details relative to the practice of your
+                profession, or any other information necessary to create or modify your account, request
+                medical services, contact customer support, or otherwise communicate with us through electronic
+                or automated means, for the period allowed under the applicable law and regulations. It may
+                also refer to any other information whether recorded in a material form or not, from which your
+                identity is apparent or can be reasonably and directly ascertained by us, or when put together
+                with other information would directly and certainly identify you.
+            </p>
+            <p class="card-text">
+                You are aware of your rights under the Data Privacy Act, including the right to be informed, to
+                access, to object, to erasure or blocking, to damages, to file a complaint, to rectify and to
+                data portability and understand that there are procedures, conditions and exceptions to be
+                complied with in order to exercise or invoke such rights.
+            </p>
+            <div class="card-subtitle">
+                <h6>User of Personal Information</h6>
+            </div>
+            <p class="card-text">
+                We use the information that we collect in a variety of ways in
+                providing the Service and operating our business, including the
+                following:
+            </p>
+            <div class="card-subtitle">
+                <h6>Operations</h6>
+            </div>
+            <p class="card-text">
+                We use the information - other than Client Data - to operate,
+                maintain, enhance and provide all features of the Service, to
+                provide the services and information that you request, to respond
+                to comments and questions and to provide support to users of the
+                Service. We process Client Data solely in accordance with the
+                directions provided by the applicable Client or User.
+            </p>
+            <div class="card-subtitle">
+                <h6>Improvements</h6>
+            </div>
+            <p class="card-text">
+                We use the information to understand and analyze the usage trends
+                and preferences of our Visitors and Users, to improve the Service,
+                and to develop new products, services, feature, and functionality.
+            </p>
+            <div class="card-subtitle">
+                <h6>Communications</h6>
+            </div>
+            <p class="card-text">
+                We may use a Visitor’s or User’s email address or other
+                information – other than Client Data – to contact that Visitor or
+                User (i) for administrative purposes such as customer service, to
+                address intellectual property infringement, right of privacy
+                violations or defamation issues related to the Client Data or
+                Personal Data posted on the Service or (ii) with updates on
+                promotions and events, relating to products and services offered
+                by us and by third parties we work with. You have the ability to
+                opt-out of receiving any promotional communications.
+            </p>
+            <div class="card-subtitle">
+                <h6>Cookies and Tracking Technologies</h6>
+            </div>
+            <p class="card-text">
+                We use automatically collected information and other information
+                collected on the Service through cookies and similar technologies
+                to: (i) personalize our Service, such as remembering a User’s or
+                Visitor’s information so that the User or Visitor will not have to
+                re-enter it during a visit or on subsequent visits; (ii) provide
+                customized advertisements, content, and information; (iii) monitor
+                and analyze the effectiveness of Service and third-party marketing
+                activities; (iv) monitor aggregate site usage metrics such as
+                total number of visitors and pages viewed; and (v) track your
+                entries, submissions, and status in any promotions or other
+                activities on the Service. You can obtain more information about
+                cookies by visiting http://www.allaboutcookies.org.
+            </p>
+            <div class="card-subtitle">
+                <h6>Analytics</h6>
+            </div>
+            <p class="card-text">
+                We use Google Analytics to measure and evaluate access to and
+                traffic on the Public Area of the Site, and create user navigation
+                reports for our Site administrators. Google operates independently
+                from us and has its own privacy policy, which we strongly suggest
+                you review. Google may use the information collected through
+                Google Analytics to evaluate Users' and Visitors’ activity on our
+                Site. We take measures to protect the technical information
+                collected by our use of Google Analytics. The data collected will
+                only be used on a need to know basis to resolve technical issues,
+                administer the Site and identify visitor preferences; but in this
+                case, the data will be in non-identifiable form. We do not use any
+                of this information to identify Visitors or Users.
+            </p>
+            <div class="card-subtitle">
+                <h6>
+                    WE WILL NEVER SELL OR SHARE YOUR INFORMATION THAT IDENTIFIES YOU
+                </h6>
+            </div>
+            <p class="card-text">
+                We will never sell, publish or share information that identifies
+                you or many person without your permission.
+            </p>
+            <p class="card-text">
+                There is certain information that we collect and require in order
+                for us to give you support, grant you access to Linecare and
+                improve Linecare experience.
+            </p>
+            <ul>
+                <li>
+                    Information about the business such as business name, billing
+                    address, e-mail, phone, website, sector and user information
+                    like name and email.
+                </li>
+                <li>Your username and password to allow access to Linecare</li>
+                <li>
+                    Your usage details such as time, frequency, duration and pattern
+                    of use, features used and the amount of storage used will be
+                    recorded by us in order to enhance your experience with
+                    Linecare.
+                </li>
+            </ul>
+            <p class="card-text">
+                We may disclose information to third parties if you consent to us
+                doing so, as well as in the following circumstances:
+            </p>
+            <div class="card-subtitle">
+                <h6>Unrestricted Information</h6>
+            </div>
+            <p class="card-text">
+                Any information that you voluntarily choose to include in a Public
+                Area of the Service, such as a public profile page, will be
+                available to any Visitor or User who has access to that content.
+            </p>
+            <div class="card-subtitle">
+                <h6>Service Providers</h6>
+            </div>
+            <p class="card-text">
+                We work with third party service providers who provide website,
+                application development, hosting, maintenance, and other services
+                for us. These third parties may have access to, or process
+                Personal Data or Client Data as part of providing those services
+                for us. We limit the information provided to these service
+                providers to that which is reasonably necessary for them to
+                perform their functions, and our contracts with them require them
+                to maintain the confidentiality of such information.
+            </p>
+            <div class="card-subtitle">
+                <h6>Non Personally Identifiable Information</h6>
+            </div>
+            <p class="card-text">
+                We may make certain automatically-collected, aggregated, or
+                otherwise non-personally-identifiable information available to
+                third parties for various purposes, including (i) compliance with
+                various reporting obligations; (ii) for business or marketing
+                purposes; or (iii) to assist such parties in understanding our
+                Clients’, Users’ and Visitors’ interests, habits, and usage
+                patterns for certain programs, content, services, and/or
+                functionality available through the Service.
+            </p>
+            <div class="card-subtitle">
+                <h6>Law Enforcement, Legal Process and Compliance</h6>
+            </div>
+            <p class="card-text">
+                We may disclose Personal Data or other information if required to
+                do so by law or in the good-faith belief that such action is
+                necessary to comply with applicable laws, in response to a
+                facially valid court order, judicial or other government subpoena
+                or warrant, or to otherwise cooperate with law enforcement or
+                other governmental agencies.
+            </p>
+            <p class="card-text">
+                We also reserve the right to disclose Personal Data or other
+                information that we believe, in good faith, is appropriate or
+                necessary to (i) take precautions against liability, (ii) protect
+                ourselves or others from fraudulent, abusive, or unlawful uses or
+                activity, (iii) investigate and defend ourselves against any
+                third-party claims or allegations, (iv) protect the security or
+                integrity of the Service and any facilities or equipment used to
+                make the Service available, or (v) protect our property or other
+                legal rights, enforce our contracts, or protect the rights,
+                property, or safety of others.
+            </p>
+            <div class="card-subtitle">
+                <h6>Change of Ownership</h6>
+            </div>
+            <p class="card-text">
+                Information about Users and Visitors, including Personal Data, may
+                be disclosed and otherwise transferred to an acquirer, successor
+                or assignee as part of any merger, acquisition, debt financing,
+                sale of assets, or similar transaction, as well as in the event of
+                an insolvency, bankruptcy, or receivership in which information is
+                transferred to one or more third parties as one of our business
+                assets and only if the recipient of the User or Visitor Data
+                commits to a Privacy Policy that has terms substantially
+                consistent with this Privacy Policy. Client Data may be physically
+                or electronically transferred to an acquirer, or successor or
+                assignee as part of any merger, acquisition, debt financing, sale
+                of assets, or similar transaction, as well as in the event of an
+                insolvency, bankruptcy, or receivership in which information is
+                transferred to one or more third parties as one of our business
+                assets, for the sole purpose of continuing the operation of the
+                Service, and only if the recipient of the Client Data commits to a
+                Privacy Policy that has terms substantially consistent with this
+                Privacy Policy.
+            </p>
+            <div class="card-subtitle">
+                <h6>Rights of the Data Subject</h6>
+            </div>
+            <p class="card-text">Access, Correction, Deletion</p>
+            <p class="card-text">
+                Under the Data Privacy Act of 2012, data subject refers to an individual whose personal
+                information is collected and processed. We are duly bound to observe and respect your privacy
+                rights, including your right to information, right to access, right to correct, right to
+                remove, right to damages, and right to data portability.
+            </p>
+            <p class="card-text">
+                We respect your privacy rights and provide you with reasonable
+                access to the Personal Data that you may have provided through
+                your use of the Services. If you wish to access or amend any other
+                Personal Data we hold about you, or to request that we delete any
+                information about you that we have obtained from an Integrated
+                Service, you may contact us as set forth in the “How to Contact
+                Us” section. At your request, we will have any reference to you
+                deleted or blocked in our database.
+            </p>
+            <p class="card-text">
+                You may update, correct, or delete your Account information and
+                preferences at any time by accessing your Account settings page on
+                the Service. Please note that while any changes you make will be
+                reflected in active user databases instantly or within a
+                reasonable period of time, we may retain all information you
+                submit for backups, archiving, prevention of fraud and abuse,
+                analytics, satisfaction of legal obligations, or where we
+                otherwise reasonably believe that we have a legitimate reason to
+                do so. You may decline to share certain Personal Data with us, in
+                which case we may not be able to provide to you some of the
+                features and functionality of the Service.
+            </p>
+            <p class="card-text">
+                At any time, you may object to the processing of your Personal
+                Data, on legitimate grounds, except if otherwise permitted by
+                applicable law.
+            </p>
+            <p class="card-text">
+                This provision does not apply to Personal Data that is part of
+                Client Data. In this case, the management of the Client Data is
+                subject to the Client’s own Privacy Policy, and any request for
+                access, correction or deletion should be made to the Client
+                responsible for the uploading and storage of such data into the
+                Service.
+            </p>
+            <div class="card-subtitle">
+                <h6>Opting out from Commercial Communications</h6>
+            </div>
+            <p class="card-text">
+                If you receive commercial emails from us, you may unsubscribe at
+                any time by following the instructions contained within the email
+                or by sending an email to the address provided in the “How to
+                Contact Us” section.
+            </p>
+            <p class="card-text">
+                Users are able to view and modify settings relating to the nature
+                and frequency of promotional communications that they receive from
+                us by accessing the “Account functionality” tab on the Service.
+                Please be aware that if you opt-out of receiving commercial email
+                from us or otherwise modify the nature or frequency of promotional
+                communications you receive from us, it may take up to ten (10)
+                business days for us to process your request. Additionally, even
+                after you opt-out from receiving commercial messages from us, you
+                will continue to receive administrative messages from us regarding
+                the Service.
+            </p>
+            <p class="card-text">
+                Linecare has no direct relationship with the Client’s customers or
+                third party whose Personal Data it may process on behalf of a
+                Client. An individual who seeks access, or who seeks to correct,
+                amend, delete inaccurate data or withdraw consent for further
+                contact should direct his or her query to the Client or User they
+                deal with directly. If the Client requests Linecare to remove the
+                data, we will respond to its request within thirty (30) days. We
+                will delete, amend or block access to any Personal Data that we
+                are storing only if we receive a written request to do so from the
+                Client who is responsible for such Personal Data, unless we have a
+                legal right to retain such Personal Data. We reserve the right to
+                retain a copy of such data for archiving purposes, or to defend
+                our rights in litigation. Any such request regarding Client Data
+                should be addressed as indicated in the “How to Contact Us”
+                section, and include sufficient information for Linecare to
+                identify the Client or its customer or third party and the
+                information to delete or amend.
+            </p>
+            <div class="card-subtitle">
+                <h6>Third-Party Services</h6>
+            </div>
+            <p class="card-text">
+                The Service may contain features or links to web sites and
+                services provided by third parties. Any information you provide on
+                third-party sites or services is provided directly to the
+                operators of such services and is subject to those operators’
+                policies, if any, governing privacy and security, even if accessed
+                through the Service. We are not responsible for the content or
+                privacy and security practices and policies of third-party sites
+                or services to which links or access are provided through the
+                Service. We encourage you to learn about third parties’ privacy
+                and security policies before providing them with information.
+            </p>
+            <div class="card-subtitle">
+                <h6>Your Philippines Privacy Rights</h6>
+            </div>
+            <p class="card-text">
+                Under RA10173, otherwise known as the “Data Privacy Act of 2012, people whose personal
+                information is collected,
+                stored, and processed are called data subjects. Organizations who
+                deal with your personal details, whereabouts, and preferences are
+                duty bound to observe and respect your data privacy rights.
+            </p>
+            <div class="card-subtitle">
+                <h6>Your Philippines Privacy Rights</h6>
+            </div>
+            <p class="card-text">
+                Under RA10173, people whose personal information is collected,
+                stored, and processed are called data subjects. Organizations who
+                deal with your personal details, whereabouts, and preferences are
+                duty bound to observe and respect your data privacy rights.
+            </p>
+            <div class="card-subtitle">
+                <h6>Interest Based Advertising</h6>
+            </div>
+            <p class="card-text">
+                Interest based advertising is the collection of data from
+                different sources and across different platforms in order to
+                predict an individual’s preferences or interest and to deliver to
+                that individual, or his/her computer, smart phone or tablet,
+                advertising based on his/her assumed preference or interest
+                inferred from the collection of data pertaining to that individual
+                or others who may have a similar profile or similar interests.
+            </p>
+            <p class="card-text">
+                We work with a variety of third parties to attempt to understand
+                the profiles of the individuals who are most likely to be
+                interested in the Linecare products or services so that we can
+                send them promotional emails, or serve our advertisements to them
+                on the websites and mobile apps of other entities.
+            </p>
+            <p class="card-text">
+                These third parties include: (a) advertising networks, which
+                collect information about a person’s interests when that person
+                views or interacts with one of their advertisements; (2)
+                attribution partners, which measure the effectiveness of certain
+                advertisements; and (3) business partners, which collect
+                information when a person views or interacts with one of their
+                advertisements.
+            </p>
+            <p class="card-text">
+                In collaboration with these third parties, we collect information
+                about our customers, prospects and other individuals over time and
+                across different platforms when they use these platforms or
+                interact with them. Individuals may submit information directly on
+                our Sites or on platforms run by third parties, or by interacting
+                with us, our advertisements, or emails they receive from us or
+                from third parties. We may use special tools that are commonly
+                used for this purpose, such as cookies, beacons, pixels, tags,
+                mobile advertising IDs, flash cookies, and similar technologies.
+                We may have access to databases of information collected by our
+                business partners.
+            </p>
+            <p class="card-text">
+                The information we or third party collect enables us to learn what
+                purchases the person made, what ads or content the person sees, on
+                which ads or links the person clicks, and other actions that the
+                person takes on our Sites, or in response to our emails, or when
+                visiting or using third parties’ platforms.
+            </p>
+            <p class="card-text">
+                We, or the third parties with which we work, use the information
+                collected as described above to understand the various activities
+                and behaviors of our customers, Site visitors and others. We, or
+                these third parties, do this for many reasons, including: to
+                recognize new or past visitors to our Sites; to present more
+                personalized content; to provide more useful and relevant ads -
+                for example, if we know what ads you are shown we can try not to
+                show you the same ones repeatedly; to identify visitors across
+                devices, sales channels, third party websites and Sites, or to
+                display or send personalized or targeted ads and other custom
+                content that is more focused on a person’s perceived interest in
+                products or services similar to those that we offer.
+            </p>
+            <p class="card-text">
+                Our interest-based ads may be served to you in emails or on
+                third-party platforms. We may serve these ads about our products
+                or services or send commercial communications directly ourselves
+                or through these third parties.
+            </p>
+            <p class="card-text">
+                Visitors may opt out of receiving interest based advertising by
+                advertising networks that may be delivered to them on our platform
+                and other websites by visiting the following websites:
+                http://www.aboutads.info/consumers; and
+                http://www.networkadvertising.org. These features will opt a
+                Visitor out of many – but not all - of the interest-based
+                advertising activities in which we or third parties engage.
+            </p>
+            <div class="card-subtitle">
+                <h6>Do Not Track Policy</h6>
+            </div>
+            <p class="card-text">
+                Philippines law requires that operators of websites and online
+                services disclose how they respond to a Do Not Track signal. Some
+                browsers have incorporated “Do Not Track” features. Most of these
+                features, when turned on, send a signal or preference to the
+                website or online service that a user visits, indicating that the
+                user does not wish to be tracked. Because there is not yet a
+                common understanding of how to interpret Do Not Track signals, we
+                do not currently respond to Do Not Track signal. We continue to
+                work with the online industry to define a common understanding of
+                how to treat Do Not Track signals.
+            </p>
+            <p class="card-text">
+                In the meantime, you may opt out of receiving interest based
+                advertising from advertising networks that may be delivered on our
+                platform and other websites by visiting the following websites. If
+                you want to opt out of this online behavioral advertising, visit
+                the following sites: http://www.aboutads.info/consumers and
+                http://www.networkadvertising.org.
+            </p>
+            <p class="card-text">
+                This will opt you out of many – but not all - of the
+                interest-based advertising activities in which we or third parties
+                engage. Choices you make may be browser and device specific. If
+                you delete your cookies or use a different browser or a different
+                computer or device, you may need to update your opt-out choices.
+                Other third-party Sites provide visitors with the ability to
+                opt-out of receiving interest-based ads on their Sites that you
+                need to control through your settings on that Site. For example,
+                to opt out of Google’s use of your online behavior for advertising
+                purposes, visit Google’s Ad Settings page.
+            </p>
+            <div class="card-subtitle">
+                <h6>Third Party Cookies</h6>
+            </div>
+            <p class="card-text">
+                Philippines law requires that operators of websites and online
+                services disclose whether other third parties may collect
+                personally identifiable information about an individual's online
+                activities from their site or service. We allow third parties with
+                which we have a separate agreement to use cookies and other
+                technologies to collect information about your use of the Site.
+                These third parties include (1) business partners, which collect
+                information when you view or interact with one of their
+                advertisements on the Site; and (2) advertising networks, which
+                collect information about your interests when you view or interact
+                with one of their advertisements.
+            </p>
+            <p class="card-text">
+                The information gathered by these third parties is used to make
+                predictions about your interests or preferences so that they can
+                display advertisements or promotional material on this Site and on
+                other sites across the Internet tailored to your apparent
+                interests.
+            </p>
+            <p class="card-text">
+                The business partners and advertising networks that serve
+                interest-based advertisements on the Services have limited access
+                to a small amount of information about your profile and your
+                device, which is necessary to serve you advertisements that are
+                tailored to your apparent interests. It is possible that they may
+                reuse this small amount of information on other sites or services.
+            </p>
+            <p class="card-text">
+                We do not share with these third parties any information that
+                would readily identify you (such as email address); however, these
+                third parties may have access to information about your device
+                (such as IP or MAC address). We do not have access to, or control
+                over, the technologies that these third parties may use to collect
+                information about your interests, and the information practices of
+                these third parties are not covered by this Privacy Notice. Other
+                than as discussed in this document, we have no control over these
+                third parties.
+            </p>
+            <div class="card-subtitle">
+                <h6>The Following Types of Cookies Are Used in the Site:</h6>
+            </div>
+            <ul>
+                <li>
+                    Strictly necessary/essential cookies - These cookies are
+                    essential in order to enable you to move around the website and
+                    use its features, such as accessing secure areas of the website.
+                    Without these cookies services you have asked for cannot be
+                    provided. These cookies don’t collect information that
+                    identifies a visitor.
+                </li>
+                <li>
+                    Collect information that identifies a visitor. All information
+                    these cookies collect is aggregated and therefore anonymous. It
+                    is only used to improve how a website works.
+                </li>
+                <li>
+                    Functionality cookies - These cookies allow the website to
+                    remember choices you make (such as your user name, language or
+                    the region you are in) and provide enhanced, more personal
+                    features. For instance, a website may be able to provide you
+                    with local weather reports or traffic news by storing in a
+                    cookie the region in which you are currently located. These
+                    cookies can also be used to remember changes you have made to
+                    text size, fonts and other parts of web pages that you can
+                    customize. They may also be used to provide services you have
+                    asked for such as watching a video or commenting on a blog. The
+                    information these cookies collect may be anonymized and they
+                    cannot track your browsing activity on other websites.
+                </li>
+                <li>
+                    Behaviorally targeted advertising cookies - These cookies are
+                    used to deliver adverts more relevant to you and your interests
+                    They are also used to limit the number of times you see an
+                    advertisement as well as help measure the effectiveness of the
+                    advertising campaigns. They are usually placed by advertising
+                    networks with the website operator’s permission. They remember
+                    that you have visited a website and this information is shared
+                    with other organizations such as advertisers. Quite often
+                    targeting or advertising cookies will be linked to site
+                    functionality provided by the other organization.
+                </li>
+            </ul>
+            <div class="card-subtitle">
+                <h6>Minors and Children’s Privacy</h6>
+            </div>
+            <p class="card-text">
+                Protecting the privacy of young children is especially important.
+                Our Service is not directed to children under the age of 18, and
+                we do not knowingly collect Personal Data from children under the
+                age of 18 without obtaining parental consent. If you are under 18
+                years of age, then please do not use or access the Service at any
+                time or in any manner. If we learn that Personal Data has been
+                collected on the Service from persons under 18 years of age and
+                without verifiable parental consent, then we will take the
+                appropriate steps to delete this information. If you are a parent
+                or guardian and discover that your child under 18 years of age has
+                obtained an Account on the Service, then you may alert us at
+                jakelee@linecare.net and request that we delete that child’s
+                Personal Data from our systems.
+            </p>
+            <p class="card-text">
+                The Service is not intended to be used by minors, and is not
+                intended to be used to post content to share publicly or with
+                friends. To the extent that a minor has posted such content on the
+                Service, the minor has the right to have this content deleted or
+                removed using the deletion or removal options detailed in this
+                Privacy Policy. If you have any question regarding this topic,
+                please contact us as indicated in the “How to Contact Us” section.
+                Please be aware that, although we offer this deletion capability,
+                the removal of content may not ensure complete or comprehensive
+                removal of that content or information.
+            </p>
+            <div class="card-subtitle">
+                <h6>Data Security</h6>
+            </div>
+            <p class="card-text">
+                We follow generally accepted industry standards to protect the
+                information submitted to us, both during transmission and once we
+                receive it. We maintain appropriate administrative, technical and
+                physical safeguards to protect Personal Data against accidental or
+                unlawful destruction, accidental loss, unauthorized alteration,
+                unauthorized disclosure or access, misuse, and any other unlawful
+                form of processing of the Personal Data in our possession. This
+                includes, for example, firewalls, password protection and other
+                access and authentication controls. We use SSL technology to
+                encrypt data during transmission through public internet, and we
+                also employ application-layer security features to further
+                anonymize Personal Data.
+            </p>
+            <p class="card-text">
+                However, no method of transmission over the Internet, or method of
+                electronic storage, is 100% secure. We cannot ensure or warrant
+                the security of any information you transmit to us or store on the
+                Service, and you do so at your own risk. We also cannot guarantee
+                that such information may not be accessed, disclosed, altered, or
+                destroyed by breach of any of our physical, technical, or
+                managerial safeguards. If you believe your Personal Data has been
+                compromised, please contact us as set forth in the “How to Contact
+                Us” section.
+            </p>
+            <p class="card-text">
+                If we learn of a security systems breach, we will inform you of
+                the occurrence of the breach in accordance with applicable law.
+            </p>
+            <div class="card-subtitle">
+                <h6>Data Retention</h6>
+            </div>
+            <p class="card-text">
+                We only retain the Personal Data collected from a User for as long
+                as the User’s account is active or otherwise for a limited period
+                of time as long as we need it to fulfill the purposes for which we
+                have initially collected it, unless otherwise required by law. We
+                will retain and use information as necessary to comply with our
+                legal obligations, resolve disputes, and enforce our agreements as
+                follows:
+            </p>
+            <ul>
+                <li>
+                    the contents of closed accounts are deleted within 6 months of
+                    the date of closure.
+                </li>
+                <li>backups are kept for 12 months.</li>
+                <li>
+                    information on legal transactions between Client and Linecare is
+                    retained for a period of 10 years.
+                </li>
+            </ul>
+            <div class="card-subtitle">
+                <h6>Privacy Settings</h6>
+            </div>
+            <p class="card-text">
+                Although we may allow you to adjust your privacy settings to limit
+                access to certain Personal Data, please be aware that no security
+                measures are perfect or impenetrable. We are not responsible for
+                circumvention of any privacy settings or security measures on the
+                Service. Additionally, we cannot control the actions of other
+                users with whom you may choose to share your information. Further,
+                even after information posted on the Service is removed, caching
+                and archiving services may have saved that information, and other
+                users or third parties may have copied or stored the information
+                available on the Service. We cannot and do not guarantee that
+                information you post on or transmit to the Service will not be
+                viewed by unauthorized persons.
+            </p>
+            <div class="card-subtitle">
+                <h6>Data Transfer</h6>
+            </div>
+            <p class="card-text">
+                We may transfer, process and store Personal Data we collect
+                through the Services in centralized databases located in the U.S.
+                and Singapore. The U.S. and Singapore may not have the same data
+                protection framework as the country from which you may be using
+                the Services. When we transfer Personal Data to the U.S. or
+                Singapore, we will protect it as described in this Privacy Policy.
+                We will comply with applicable legal requirements providing
+                adequate protection for the transfer of personal information from
+                Europe to the U.S.
+            </p>
+            <div class="card-subtitle">
+                <h6>Foreign Visitors</h6>
+            </div>
+            <p class="card-text">
+                The Service is hosted in the United States. If you choose to use
+                the Service from the European Union or other regions of the world
+                with laws governing data collection and use that may differ from
+                U.S. law, then please note that you are transferring your Client
+                Data and Personal Data outside of those regions to the United
+                States for storage and processing. Also, we may transfer your data
+                from the U.S. to other countries or regions in connection with
+                storage and processing of data, fulfilling your requests, and
+                operating the Service. By providing any information, including
+                Client Data and Personal Data, on or to the Service, you consent
+                to such transfer, storage, and processing.
+            </p>
+            <div class="card-subtitle">
+                <h6>Data Controller and Data Processor</h6>
+            </div>
+            <p class="card-text">
+                Linecare does not own, control or direct the use of any of the
+                Client Data stored or processed by a Client or User via the
+                Service. Only the Client or Users are entitled to access, retrieve
+                and direct the use of such Client Data. Linecare is largely
+                unaware of what Client Data is actually being stored or made
+                available by a Client or User to the Service and does not directly
+                access such Client Data except as authorized by the Client, or as
+                necessary to provide Services to the Client and its Users.
+            </p>
+            <p class="card-text">
+                Because Linecare does not collect or determine the use of any
+                Personal Data contained in the Client Data and because it does not
+                determine the purposes for which such Personal Data is collected,
+                the means of collecting such Personal Data, or the uses of such
+                Personal Data, Linecare is not acting in the capacity of data
+                controller in terms of Philippines Republic Act 10173 on data
+                privacy or the Data Privacy Act of 2012 and does not have the
+                associated responsibilities under PH Law. Linecare should be
+                considered only as a processor on behalf of its Clients and Users
+                as to any Client Data containing Personal Data that is subject to
+                the requirements of PH Law. Except as provided in this Privacy
+                Policy, Linecare does not independently cause Client Data
+                containing Personal Data stored in connection with the Services to
+                be transferred or otherwise made available to third parties,
+                except to third party subcontractors who may process such data on
+                behalf of Linecare in connection with Linecare’s provision of
+                Services to Clients. Such actions are performed or authorized only
+                by the applicable Client or User.
+            </p>
+            <p class="card-text">
+                The Client or the User is the data controller under the Directive
+                for any Client Data containing Personal Data, meaning that such
+                party controls the manner such Personal Data is collected and used
+                as well as the determination of the purposes and means of the
+                processing of such Personal Data.
+            </p>
+            <p class="card-text">
+                Linecare is not responsible for the content of the Personal Data
+                contained in the Client Data or other information stored on its
+                servers (or its subcontractors’ servers) at the discretion of the
+                Client or User nor is Linecare responsible for the manner in which
+                the Client or User collects, handles disclosure, distributes or
+                otherwise processes such information.
+            </p>
+            <div class="card-subtitle">
+                <h6>Changes and Updates to this Policy</h6>
+            </div>
+            <p class="card-text">
+                Please revisit this page periodically to stay aware of any changes
+                to this Policy, which we may update from time to time. If we
+                modify the Policy, we will make it available through the Service,
+                and indicate the date of the latest revision, and will comply with
+                applicable law. Your continued use of the Service after the
+                revised Policy has become effective indicates that you have read,
+                understood and agreed to the current version of the Policy.
+            </p>
+            <div class="card-subtitle">
+                <h6>How to Contact Us</h6>
+            </div>
+            <p class="card-text">
+                Please contact us with any questions or comments about this
+                Policy, your Personal Data, our use and disclosure practices, or
+                your consent choices by email at jakelee@linecare.net.
+            </p>
+        </div>
+        <div class="modal-footer">
+            &nbsp;
+        </div>
+        </div>
+    </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
