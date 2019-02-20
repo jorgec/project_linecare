@@ -1,9 +1,5 @@
 {% load static %}
 <ul class="sidebar-nav mt-5">
-    <!-- <li class="sidebar-nav-item">
-        <a {% if sublocation == 'home' %}class="active"{% endif %} href="{% url 'doctor_profile_home' %}">Home</a>
-    </li>
-    <li class="sidebar-nav-separator"></li> -->
     <li class="sidebar-nav-item">
         <a {% if location == 'doctor_profile_patients' %}class="active"{% endif %} href="{% url 'doctor_profile_patient_list' %}">Patients</a>
     </li>
