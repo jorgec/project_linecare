@@ -124,3 +124,10 @@ ANSWER_DATA_TYPES = (
     ('numeric', 'Numeric'),
     ('text', 'Text')
 )
+
+
+QUESTIONNAIRE_RESTRICTION_CHOICES = (
+    ('private', 'Private'), # accessible only to creator
+    ('internal', 'Internal'), # accessible to doctors in same medical institution
+    ('public', 'Public') # accessible to all doctors
+)

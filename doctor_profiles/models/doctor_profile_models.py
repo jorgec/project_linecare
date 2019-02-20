@@ -5,7 +5,7 @@ from django.db import models as models, IntegrityError
 from django.db.models import Q
 from functools import reduce
 
-from doctor_profiles.constants import QUEUE_NOT_CANCELLED_CODES
+from doctor_profiles.constants import QUEUE_NOT_CANCELLED_CODES, QUESTIONNAIRE_RESTRICTION_CHOICES
 from doctor_profiles.models.managers.doctor_profile_manager import DoctorProfileManager
 from helpers import search
 
@@ -511,6 +511,34 @@ class DoctorProfile(models.Model):
         )
 
         return result, message, schedule
+
+    """ questionaires """
+    def create_questionnaire(self, **kwargs):
+        """
+        kwargs:
+        - medical_institution: MedicalInstitution
+        - restriction: QUESTIONNAIRE_RESTRICTION_CHOICES
+        - is_required: boolean
+        - name: str
+        - description: str
+        - created_by: BaseProfile
+
+        Returns:
+        result: bool, object: Questionnaire or None, message: str
+        """
+        Questionnaire = apps.get_model('doctor_profiles.Questionnaire')
+
+        result, obj, message = Questionnaire.objects.create_by_user(
+            name=kwargs.get('name'),
+            description=kwargs.get('description', None),
+            medical_institution=kwargs.get('medical_institution', None),
+            is_required=kwargs.get('is_required', False),
+            created_by=self.user.base_profile()
+        )
+
+        return result, obj, message
+
+    """ /questionnaires """
 
     def name_indexing(self):
         return self.__str__()

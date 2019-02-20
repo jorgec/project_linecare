@@ -235,7 +235,7 @@ class TestDoctorQuestionnaire(TransactionTestCase):
                 "name": "Questionnaire 4",
                 "restriction": "public",
                 "is_required": True,
-                "description": "This is also a tribute to the greatest questionnaire in the world"
+                "description": "This is also a tribute to the greatest questionnaire in the world",
                 "sections": [
                     {
                         "name": "Questionnaire 4 Section 1",
