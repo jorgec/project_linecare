@@ -98,6 +98,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'datesdim',
     'appglobals',
+    'taggit',
 
     # search
     'django_elasticsearch_dsl',
