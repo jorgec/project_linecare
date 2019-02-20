@@ -13,4 +13,4 @@ from .patient_checkup_models import Symptom, PatientSymptom, PatientCheckupRecor
     PatientFinding, Diagnosis, PatientDiagnosis, CheckupNote, LabTest, PatientLabTestRequest
 from .medical_institution_doctor_models import MedicalInstitutionDoctor
 
-from .questionnaire_models import Questionnaire, DoctorQuestionnaire
+from .questionnaire_models import Questionnaire, DoctorQuestionnaire, QuestionnaireSection, Question, SectionQuestion, Choice, ChoiceGroup

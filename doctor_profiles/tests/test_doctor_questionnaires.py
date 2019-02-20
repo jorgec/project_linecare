@@ -230,6 +230,7 @@ class TestDoctorQuestionnaire(TransactionTestCase):
         assert len(question4.get_choices()) == 5, f"Expected 5, got {len(question4.get_choices())} instead"
 
     def test_shortcuts(self):
+        self.test_init()
         result, self.questionnaire4, message = Questionnaire.objects.create_full(
             {
                 "name": "Questionnaire 4",

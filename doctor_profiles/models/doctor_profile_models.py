@@ -538,6 +538,39 @@ class DoctorProfile(models.Model):
 
         return result, obj, message
 
+    def get_questionnaires_rel(self, **kwargs):
+        """
+        kwargs:
+        - medical_institution: MedicalInstitution
+        """
+        DoctorQuestionnaire = apps.get_model('doctor_profiles.DoctorQuestionnaire')
+        filters = {
+            'is_approved': True,
+            'doctor': self
+        }
+
+        if kwargs.get('medical_instituttion', None):
+            filters['medical_institution'] = kwargs.get('medical_institution', None)
+
+        return DoctorQuestionnaire.objects.filter(**filters)
+
+    def get_questionnaires(self, **kwargs):
+        """
+        kwargs:
+        - medical_institution: MedicalInstitution
+        """
+        Questionnaire = apps.get_model('doctor_profiles.Questionnaire')
+        filters = {
+            'is_approved': True,
+            'doctor': self
+        }
+
+        if kwargs.get('medical_instituttion', None):
+            filters['medical_institution'] = kwargs.get('medical_institution', None)
+
+        rel = self.get_questionnaires_rel(**filters)
+
+        return Questionnaire.objects.filter(id__in=rel)
     """ /questionnaires """
 
     def name_indexing(self):
