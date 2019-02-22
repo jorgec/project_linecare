@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 
 from doctor_profiles.modules.api import doctor_notifications_api
 from .modules.views import home as home_views
@@ -26,8 +27,20 @@ from .modules.api import diagnosis_api
 from .modules.api import checkup_api
 from .modules.api import labtest_api
 from .modules.api import prescriptions_api
+from .modules.api import questionnaire_api
 
 from .modules.analytics_api import patient_analytics_api
+
+router = routers.DefaultRouter()
+router.register(r'questionnaire', questionnaire_api.QuestionnaireViewSet)
+router.register(r'doctorquestionnaire', questionnaire_api.DoctorQuestionnaireViewSet)
+router.register(r'questionnairesection', questionnaire_api.QuestionnaireSectionViewSet)
+router.register(r'question', questionnaire_api.QuestionViewSet)
+router.register(r'sectionquestion', questionnaire_api.SectionQuestionViewSet)
+router.register(r'choice', questionnaire_api.ChoiceViewSet)
+router.register(r'choicegroup', questionnaire_api.ChoiceGroupViewSet)
+router.register(r'choicegroupitem', questionnaire_api.ChoiceGroupItemViewSet)
+router.register(r'questionchoicegroup', questionnaire_api.QuestionChoiceGroupViewSet)
 
 #############################################################################
 # Views
@@ -596,4 +609,9 @@ urlpatterns += [
     path(f'{version}/analytics/agg/labtests/by_checkup/counts',
          patient_analytics_api.ApiAnalyticsPatientByCheckupLabtestsAggregateCounts.as_view(),
          name='api_private_doctor_patient_analytics_by_labtests_aggregate_counts'),
+
+    #############################################################################
+    # Questionnaire
+    #############################################################################
+    path(f'{version}/questionnaires/', include(router.urls)),
 ]

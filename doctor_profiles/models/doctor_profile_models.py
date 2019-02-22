@@ -106,7 +106,13 @@ class DoctorProfile(models.Model):
         return self.medical_institutions_joined.filter(is_approved=True)
 
     def get_medical_institutions(self):
-        return [mi.medical_institution for mi in self.get_medical_institutions_rel()]
+        return {mi.medical_institution for mi in self.get_medical_institutions_rel()}
+
+    def verify_medical_institution_membership(self, medical_institution):
+        try:
+            return self.medical_institutions_joined.get(medical_institution=medical_institution)
+        except:
+            return False
 
     def verify_receptionist(self, *, receptionist, medical_institution=None):
         filters = {
@@ -533,10 +539,36 @@ class DoctorProfile(models.Model):
             description=kwargs.get('description', None),
             medical_institution=kwargs.get('medical_institution', None),
             is_required=kwargs.get('is_required', False),
-            created_by=self.user.base_profile()
+            created_by=self.user.base_profile(),
+            restriction=kwargs.get('restriction', 'private')
         )
 
         return result, obj, message
+
+    def add_questionnaire(self, **kwargs):
+        """
+        kwargs:
+        - questionnaire: Questionnaire
+        - medical_institution: MedicalInstitution
+        """
+        DoctorQuestionnaire = apps.get_model('doctor_profiles.DoctorQuestionnaire')
+
+        questionnaire = kwargs.get('questionnaire', None)
+        if not questionnaire:
+            return False, "No questionnaire specified"
+
+        if questionnaire.restriction == 'private' and questionnaire.created_by != self.user.base_profile():
+            return False, "Cannot add a private questionnaire"
+
+        if questionnaire.restriction == 'internal' and not self.verify_medical_institution_membership(medical_institution=kwargs.get('medical_institution', None)):
+            return False, f"Cannot add an internal questionnaire when not a member of {kwargs.get('medical_institution')}"
+
+        return DoctorQuestionnaire.objects.create(
+            doctor=self,
+            questionnaire=questionnaire,
+            medical_institution=kwargs.get('medical_institution', None)
+        ), "Success"
+
 
     def get_questionnaires_rel(self, **kwargs):
         """
@@ -550,7 +582,7 @@ class DoctorProfile(models.Model):
         }
 
         if kwargs.get('medical_instituttion', None):
-            filters['medical_institution'] = kwargs.get('medical_institution', None)
+            filters['medical_institution'] = kwargs.get('medical_institution')
 
         return DoctorQuestionnaire.objects.filter(**filters)
 
@@ -566,11 +598,11 @@ class DoctorProfile(models.Model):
         }
 
         if kwargs.get('medical_instituttion', None):
-            filters['medical_institution'] = kwargs.get('medical_institution', None)
+            filters['medical_institution'] = kwargs.get('medical_institution')
 
-        rel = self.get_questionnaires_rel(**filters)
+        relids = {i.get('questionnaire_id') for i in self.get_questionnaires_rel(**filters).values('questionnaire_id')}
 
-        return Questionnaire.objects.filter(id__in=rel)
+        return Questionnaire.objects.filter(id__in=relids)
     """ /questionnaires """
 
     def name_indexing(self):

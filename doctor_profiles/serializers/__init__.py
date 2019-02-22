@@ -32,3 +32,7 @@ from .doctor_schedule_serializer import DoctorScheduleCollisionSerializer, Docto
 from .patient_queue_serializers import PatientQueuePrivateSerializer, PatientAppointmentHistoryListSerializer
 
 from .medical_institution_doctor_serializers import MedicalInstitutionDoctorPrivateSerializer
+
+from .questionnaire_serializers import Questionnaire, DoctorQuestionnaireSerializer, \
+    QuestionnaireSectionSerializer, QuestionSerializer, SectionQuestionSerializer, ChoiceSerializer, \
+    ChoiceGroupSerializer, ChoiceGroupItemSerializer, QuestionChoiceGroupSerializer, QuestionnaireSerializer

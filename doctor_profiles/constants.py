@@ -108,10 +108,8 @@ APPOINTMENT_TYPES = (
 
 ANSWER_TYPES = (
     ('free_text', 'Free Text'),
-    ('free_numeric', 'Free Numeric'),
-    ('multiple_choice', 'Multiple Choice'),
-    ('multiple_choice_with_free_text', 'Multiple Choice with Free Text'),
-    ('multiple_choice_with_free_numeric', 'Multiple Choice with Free Numeric'),
+    ('choices', 'Choices'),
+    ('choices_with_free_answer', 'Choices with free answer')
 )
 
 ANSWER_SELECTION_TYPES = (
@@ -125,8 +123,28 @@ ANSWER_DATA_TYPES = (
     ('text', 'Text')
 )
 
+QUESTION_FLOW = (
+    ('linear', 'Linear'),
+    ('fork', 'Fork')
+)
+
+FORK_OPERATORS = (
+    ('>', 'is greater than'),
+    ('<', 'is less than'),
+    ('>=', 'is greater than or equal to'),
+    ('<=', 'is less than or equal to'),
+    ('==', 'is equal to'),
+    ('!-', 'not equal to')
+)
+
 QUESTIONNAIRE_RESTRICTION_CHOICES = (
     ('private', 'Private'), # accessible only to creator
     ('internal', 'Internal'), # accessible to doctors in same medical institution
     ('public', 'Public') # accessible to all doctors
+)
+
+QUESTIONNAIRE_HOOKS = (
+    ('pre_appointment', 'Before the appointment'),
+    ('post_appointment', 'After the appointment'),
+    ('during_appointment', 'During the Appointment')
 )

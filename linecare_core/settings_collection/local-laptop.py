@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     'datesdim',
     'appglobals',
     'taggit',
+    'taggit_serializer',
 
     # search
     'django_elasticsearch_dsl',
@@ -192,7 +193,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            '/linecare/linecare-backend/templates',
+            '/home/jorge/projects/linecare/app/linecare-backend/templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
