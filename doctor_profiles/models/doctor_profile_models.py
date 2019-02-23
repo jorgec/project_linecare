@@ -563,12 +563,16 @@ class DoctorProfile(models.Model):
         if questionnaire.restriction == 'internal' and not self.verify_medical_institution_membership(medical_institution=kwargs.get('medical_institution', None)):
             return False, f"Cannot add an internal questionnaire when not a member of {kwargs.get('medical_institution')}"
 
+        medical_institution = kwargs.get('medical_institution', None)
+        if medical_institution:
+            if not self.verify_medical_institution_membership(medical_institution=kwargs.get('medical_institution')):
+                return False, f"{self} is not connected to {medical_institution}"
+
         return DoctorQuestionnaire.objects.create(
             doctor=self,
             questionnaire=questionnaire,
-            medical_institution=kwargs.get('medical_institution', None)
+            medical_institution=medical_institution
         ), "Success"
-
 
     def get_questionnaires_rel(self, **kwargs):
         """

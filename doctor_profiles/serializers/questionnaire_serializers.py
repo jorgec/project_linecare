@@ -5,15 +5,29 @@ from doctor_profiles.models import DoctorQuestionnaire, QuestionnaireSection, Qu
     Choice, ChoiceGroup, ChoiceGroupItem, QuestionChoiceGroup, Questionnaire
 
 
-class QuestionnaireSerializer(serializers.ModelSerializer):
+class QuestionnaireSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = Questionnaire
         fields = (
+            'id',
             'slug',
             'created',
             'last_updated',
             'metadata',
             'is_approved',
+            'name',
+            'description',
+            'instructions',
+            'restriction',
+        )
+
+
+class QuestionnairePublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Questionnaire
+        fields = (
+            'id',
+            'slug',
             'name',
             'description',
             'instructions',
@@ -33,6 +47,20 @@ class DoctorQuestionnaireSerializer(serializers.ModelSerializer):
             'is_creator',
             'is_required',
             'hook_location',
+            'doctor',
+            'questionnaire',
+            'medical_institution'
+        )
+
+
+class DoctorQuestionnairePublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DoctorQuestionnaire
+        fields = (
+            'id',
+            'doctor',
+            'questionnaire',
+            'medical_institution'
         )
 
 
@@ -45,6 +73,18 @@ class QuestionnaireSectionSerializer(serializers.ModelSerializer):
             'last_updated',
             'metadata',
             'is_approved',
+            'order',
+            'name',
+            'description',
+            'instructions',
+        )
+
+
+class QuestionnaireSectionPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionnaireSection
+        fields = (
+            'id',
             'order',
             'name',
             'description',

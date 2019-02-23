@@ -9,7 +9,7 @@ from taggit.managers import TaggableManager
 from doctor_profiles.models.managers.questionnaire_managers import QuestionnaireManager, DoctorQuestionnaireManager, \
     QuestionnaireSectionManager, QuestionManager, SectionQuestionManager, ChoiceGroupManager, QuestionChoiceGroupManager
 from doctor_profiles.constants import ANSWER_DATA_TYPES, ANSWER_SELECTION_TYPES, ANSWER_TYPES, \
-    QUESTIONNAIRE_RESTRICTION_CHOICES, QUESTION_FLOW, FORK_OPERATORS
+    QUESTIONNAIRE_RESTRICTION_CHOICES, QUESTION_FLOW, FORK_OPERATORS, QUESTIONNAIRE_HOOKS
 
 
 def question_photo_upload_path(instance, filename):
@@ -97,7 +97,7 @@ class DoctorQuestionnaire(models.Model):
 
     # Fields
     is_required = models.BooleanField(default=False)
-    hook_location = models.CharField(max_length=30, default='pre_appointment')
+    hook_location = models.CharField(max_length=30, choices=QUESTIONNAIRE_HOOKS, default='pre_appointment')
 
     # Relationship Fields
     doctor = models.ForeignKey('doctor_profiles.DoctorProfile', related_name='doctor_questionnaires', null=True,

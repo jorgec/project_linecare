@@ -31,17 +31,6 @@ from .modules.api import questionnaire_api
 
 from .modules.analytics_api import patient_analytics_api
 
-router = routers.DefaultRouter()
-router.register(r'questionnaire', questionnaire_api.QuestionnaireViewSet)
-router.register(r'doctorquestionnaire', questionnaire_api.DoctorQuestionnaireViewSet)
-router.register(r'questionnairesection', questionnaire_api.QuestionnaireSectionViewSet)
-router.register(r'question', questionnaire_api.QuestionViewSet)
-router.register(r'sectionquestion', questionnaire_api.SectionQuestionViewSet)
-router.register(r'choice', questionnaire_api.ChoiceViewSet)
-router.register(r'choicegroup', questionnaire_api.ChoiceGroupViewSet)
-router.register(r'choicegroupitem', questionnaire_api.ChoiceGroupItemViewSet)
-router.register(r'questionchoicegroup', questionnaire_api.QuestionChoiceGroupViewSet)
-
 #############################################################################
 # Views
 #############################################################################
@@ -609,9 +598,110 @@ urlpatterns += [
     path(f'{version}/analytics/agg/labtests/by_checkup/counts',
          patient_analytics_api.ApiAnalyticsPatientByCheckupLabtestsAggregateCounts.as_view(),
          name='api_private_doctor_patient_analytics_by_labtests_aggregate_counts'),
+]
 
-    #############################################################################
-    # Questionnaire
-    #############################################################################
-    path(f'{version}/questionnaires/', include(router.urls)),
+#############################################################################
+# Questionnaire
+#############################################################################
+questionnaire_admin_router = routers.DefaultRouter()
+questionnaire_admin_router.register(r'q', questionnaire_api.QuestionnaireViewSet)
+questionnaire_admin_router.register(r'dq', questionnaire_api.DoctorQuestionnaireViewSet)
+questionnaire_admin_router.register(r'qs', questionnaire_api.QuestionnaireSectionViewSet)
+questionnaire_admin_router.register(r'qq', questionnaire_api.QuestionViewSet)
+questionnaire_admin_router.register(r'sq', questionnaire_api.SectionQuestionViewSet)
+questionnaire_admin_router.register(r'c', questionnaire_api.ChoiceViewSet)
+questionnaire_admin_router.register(r'cg', questionnaire_api.ChoiceGroupViewSet)
+questionnaire_admin_router.register(r'cgi', questionnaire_api.ChoiceGroupItemViewSet)
+questionnaire_admin_router.register(r'qcg', questionnaire_api.QuestionChoiceGroupViewSet)
+
+READ_ONLY = {
+    'get': 'list'
+}
+
+DETAIL = {
+    'get': 'retrieve'
+}
+
+CREATE = {
+    'get': 'list',
+    'post': 'create',
+}
+
+UPDATE = {
+    'get': 'retrieve',
+    'put': 'update',
+    # 'patch': 'update_partial'
+}
+
+DELETE = {
+    'get': 'retrieve',
+    'delete': 'destroy'
+}
+
+# admin
+urlpatterns += [
+    path(f'{version}/admin/questionnaires/', include(questionnaire_admin_router.urls)),
+
+]
+
+# public
+urlpatterns += [
+    path(f'{version}/public/questionnaires/',
+         questionnaire_api.ApiQuestionnairePublicViewSet.as_view(READ_ONLY),
+         name='api_public_questionnaires'
+         ),
+    path(f'{version}/public/questionnaires/<pk>/detail',
+         questionnaire_api.ApiQuestionnairePublicViewSet.as_view(DETAIL),
+         name='api_public_questionnaires_detail'
+         ),
+
+    path(f'{version}/public/doctor_questionnaires/',
+         questionnaire_api.ApiDoctorQuestionnairePublicViewSet.as_view(READ_ONLY),
+         name='api_public_doctor_questionnaires'
+         ),
+    path(f'{version}/public/doctor_questionnaires/<pk>/detail',
+         questionnaire_api.ApiDoctorQuestionnairePublicViewSet.as_view(DETAIL),
+         name='api_public_doctor_questionnaires_detail'
+         ),
+
+    path(f'{version}/public/questionnaire/<questionnaire_id>/sections',
+         questionnaire_api.ApiQuestionnaireSectionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_questionnaire_sections'),
+]
+
+# private
+urlpatterns += [
+    path(f'{version}/private/questionnaires/',
+         questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(CREATE),
+         name='api_private_questionnaires'
+         ),
+    path(f'{version}/private/questionnaires/<pk>/detail',
+         questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(DETAIL),
+         name='api_private_questionnaires_detail'
+         ),
+    path(f'{version}/private/questionnaires/<pk>/update',
+         questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(UPDATE),
+         name='api_private_questionnaires_update'
+         ),
+    path(f'{version}/private/questionnaires/<pk>/delete',
+         questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(DELETE),
+         name='api_private_questionnaires_detail'
+         ),
+
+    path(f'{version}/private/doctor_questionnaires/<doctor_id>/list',
+         questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(CREATE),
+         name='api_private_doctor_questionnaires'
+         ),
+    path(f'{version}/private/doctor_questionnaires/<doctor_id>/<pk>/detail',
+         questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(DETAIL),
+         name='api_private_doctor_questionnaires_detail'
+         ),
+    path(f'{version}/private/doctor_questionnaires/<doctor_id>/<pk>/update',
+         questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(UPDATE),
+         name='api_private_doctor_questionnaires_update'
+         ),
+    path(f'{version}/private/doctor_questionnaires/<doctor_id>/<pk>/delete',
+         questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(DELETE),
+         name='api_private_doctor_questionnaires_detail'
+         ),
 ]

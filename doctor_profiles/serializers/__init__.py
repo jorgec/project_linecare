@@ -35,4 +35,5 @@ from .medical_institution_doctor_serializers import MedicalInstitutionDoctorPriv
 
 from .questionnaire_serializers import Questionnaire, DoctorQuestionnaireSerializer, \
     QuestionnaireSectionSerializer, QuestionSerializer, SectionQuestionSerializer, ChoiceSerializer, \
-    ChoiceGroupSerializer, ChoiceGroupItemSerializer, QuestionChoiceGroupSerializer, QuestionnaireSerializer
+    ChoiceGroupSerializer, ChoiceGroupItemSerializer, QuestionChoiceGroupSerializer, QuestionnaireSerializer, \
+    QuestionnairePublicSerializer, DoctorQuestionnairePublicSerializer, QuestionnaireSectionPublicSerializer

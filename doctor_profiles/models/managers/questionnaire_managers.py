@@ -3,6 +3,7 @@ from django.apps import apps
 from django.db.models import F
 from django.db import IntegrityError
 
+
 class QuestionnaireManager(models.Manager):
     def create(self, *args, **kwargs):
         QuestionnaireSection = apps.get_model('doctor_profiles.QuestionnaireSection')
@@ -117,8 +118,6 @@ class QuestionnaireManager(models.Manager):
         return True, questionnaire, f"{questionnaire.name} created!"
 
 
-
-
 class DoctorQuestionnaireManager(models.Manager):
     def create(self, *args, **kwargs):
         try:
@@ -130,9 +129,16 @@ class DoctorQuestionnaireManager(models.Manager):
                 questionnaire=kwargs.get('questionnaire')
             )
 
+    def update(self, *args, **kwargs):
+        doctor = kwargs.get('doctor')
+        if kwargs.get('medical_institution', None):
+            if not doctor.verify_medical_institution_membership(medical_institution=kwargs.get('medical_institution')):
+                return False
+        return super(DoctorQuestionnaireManager, self).update(*args, **kwargs)
+
 
 class QuestionnaireSectionManager(models.Manager):
-    
+
     def create(self, *args, **kwargs):
         __order = kwargs.get('order', None)
         section = None
