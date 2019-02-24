@@ -646,6 +646,7 @@ urlpatterns += [
 
 # public
 urlpatterns += [
+    # Questionnaire
     path(f'{version}/public/questionnaires/',
          questionnaire_api.ApiQuestionnairePublicViewSet.as_view(READ_ONLY),
          name='api_public_questionnaires'
@@ -655,22 +656,36 @@ urlpatterns += [
          name='api_public_questionnaires_detail'
          ),
 
-    path(f'{version}/public/doctor_questionnaires/',
+    # Doctor Questionnaire
+    path(f'{version}/public/doctor_questionnaires/<doctor_id>/list',
          questionnaire_api.ApiDoctorQuestionnairePublicViewSet.as_view(READ_ONLY),
          name='api_public_doctor_questionnaires'
          ),
-    path(f'{version}/public/doctor_questionnaires/<pk>/detail',
+    path(f'{version}/public/doctor_questionnaires/<doctor_id>/<pk>/detail',
          questionnaire_api.ApiDoctorQuestionnairePublicViewSet.as_view(DETAIL),
          name='api_public_doctor_questionnaires_detail'
          ),
 
-    path(f'{version}/public/questionnaire/<questionnaire_id>/sections',
+    # Questionnaire Section
+    path(f'{version}/public/questionnaires/<questionnaire_id>/sections/list',
          questionnaire_api.ApiQuestionnaireSectionPublicViewSet.as_view(READ_ONLY),
          name='api_public_questionnaire_sections'),
+    path(f'{version}/public/questionnaires/<questionnaire_id>/sections/<index>/detail',
+         questionnaire_api.ApiQuestionnaireSectionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_questionnaire_sections_detail'),
+
+    # Question
+    path(f'{version}/public/questions/list',
+         questionnaire_api.ApiQuestionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_questions'),
+    path(f'{version}/public/questions/<pk>/detail',
+         questionnaire_api.ApiQuestionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_questions_detail'),
 ]
 
 # private
 urlpatterns += [
+    # Questionnaire
     path(f'{version}/private/questionnaires/',
          questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(CREATE),
          name='api_private_questionnaires'
@@ -688,6 +703,7 @@ urlpatterns += [
          name='api_private_questionnaires_detail'
          ),
 
+    # Doctor Questionnaire
     path(f'{version}/private/doctor_questionnaires/<doctor_id>/list',
          questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(CREATE),
          name='api_private_doctor_questionnaires'
@@ -704,4 +720,35 @@ urlpatterns += [
          questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(DELETE),
          name='api_private_doctor_questionnaires_detail'
          ),
+
+    # Questionnaire Section
+    path(f'{version}/private/questionnaires/<questionnaire_id>/sections/list',
+         questionnaire_api.ApiQuestionnaireSectionPrivateViewSet.as_view(CREATE),
+         name='api_private_questionnaire_sections'),
+    path(f'{version}/private/questionnaires/<questionnaire_id>/sections/<index>/detail',
+         questionnaire_api.ApiQuestionnaireSectionPrivateViewSet.as_view(DETAIL),
+         name='api_private_questionnaire_section_detail'),
+    path(f'{version}/private/questionnaires/<questionnaire_id>/sections/<index>/update',
+         questionnaire_api.ApiQuestionnaireSectionPrivateViewSet.as_view(UPDATE),
+         name='api_private_questionnaire_section_update'),
+    path(f'{version}/private/questionnaires/<questionnaire_id>/sections/<index>/delete',
+         questionnaire_api.ApiQuestionnaireSectionPrivateViewSet.as_view(DELETE),
+         name='api_private_questionnaire_section_delete'),
+
+    # Question
+    path(f'{version}/private/questions/list',
+         questionnaire_api.ApiQuestionPrivateViewSet.as_view(CREATE),
+         name='api_private_questions'),
+    path(f'{version}/private/questions/<pk>/detail',
+         questionnaire_api.ApiQuestionPrivateViewSet.as_view(DETAIL),
+         name='api_private_questions_detail'),
+    path(f'{version}/private/questions/<pk>/update',
+         questionnaire_api.ApiQuestionPrivateViewSet.as_view(UPDATE),
+         name='api_private_questions_update'),
+    path(f'{version}/private/questions/<pk>/delete',
+         questionnaire_api.ApiQuestionPrivateViewSet.as_view(DELETE),
+         name='api_private_questions_delete'),
+    path(f'{version}/private/questions/search',
+         questionnaire_api.ApiQuestionSearchPrivateView.as_view(),
+         name='api_private_questions_search'),
 ]

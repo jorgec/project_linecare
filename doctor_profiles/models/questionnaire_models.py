@@ -75,10 +75,14 @@ class Questionnaire(models.Model):
         return QuestionnaireSection.objects.filter(questionnaire=self)
 
     def section(self, index: int = 0):
+        index = int(index)
         try:
             return self.get_sections()[index]
         except KeyError:
-            return False
+            return None
+
+    def get_doctors(self):
+        return self.doctor_questionnaires.filter(is_approved=True)
 
 
 class DoctorQuestionnaire(models.Model):
@@ -100,8 +104,8 @@ class DoctorQuestionnaire(models.Model):
     hook_location = models.CharField(max_length=30, choices=QUESTIONNAIRE_HOOKS, default='pre_appointment')
 
     # Relationship Fields
-    doctor = models.ForeignKey('doctor_profiles.DoctorProfile', related_name='doctor_questionnaires', null=True,
-                               blank=True, default=None, on_delete=models.SET_NULL)
+    doctor = models.ForeignKey('doctor_profiles.DoctorProfile', related_name='doctor_questionnaires',
+                               on_delete=models.CASCADE)
     medical_institution = models.ForeignKey('doctor_profiles.MedicalInstitution', related_name='mi_questionnaires',
                                             null=True, blank=True, default=None, on_delete=models.SET_NULL)
     questionnaire = models.ForeignKey(Questionnaire, related_name='questionnaire_relations', on_delete=models.CASCADE)
@@ -143,7 +147,7 @@ class QuestionnaireSection(models.Model):
 
     class Meta:
         ordering = ('questionnaire__name', 'order', 'name')
-        unique_together = ('questionnaire', 'order')
+        # unique_together = ('questionnaire', 'order')
 
     def __str__(self):
         return f"[{self.order}] {self.name} - {self.questionnaire}"
@@ -172,19 +176,20 @@ class QuestionnaireSection(models.Model):
         Question = apps.get_model('doctor_profiles.Question')
         SectionQuestion = apps.get_model('doctor_profiles.SectionQuestion')
         question = Question.objects.create(
-            fork_map=kwargs.get('fork_map', None),
             name=kwargs.get('name', None),
             text=kwargs.get('text'),
             answer_type=kwargs.get('answer_type', None),
             answer_selection_type=kwargs.get('answer_selection_type', None),
             answer_data_type=kwargs.get('answer_data_Type', None),
-            question_flow=kwargs.get('question_flow', None)
+            created_by=self.questionnaire.created_by
         )
         try:
             sq = SectionQuestion.objects.create(
                 order=kwargs.get('order', 0),
                 section=self,
-                question=question
+                question=question,
+                fork_map=kwargs.get('fork_map', None),
+                question_flow=kwargs.get('question_flow', 'linear'),
             )
             return True, sq, f"Question added to {self}"
         except SectionQuestion.DoesNotExist:
@@ -214,7 +219,6 @@ class Question(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     metadata = JSONField(default=dict, null=True, blank=True)
-    fork_map = JSONField(default=dict, null=True, blank=True)
 
     # Admin Fields
     is_approved = models.BooleanField(default=True)
@@ -227,7 +231,11 @@ class Question(models.Model):
     answer_type = models.CharField(max_length=60, choices=ANSWER_TYPES, default='free_text')
     answer_selection_type = models.CharField(max_length=60, choices=ANSWER_SELECTION_TYPES, default='single_answer')
     answer_data_type = models.CharField(max_length=60, choices=ANSWER_DATA_TYPES, default='text')
-    question_flow = models.CharField(max_length=30, choices=QUESTION_FLOW, default='linear')
+    restriction = models.CharField(max_length=60, choices=QUESTIONNAIRE_RESTRICTION_CHOICES, default='private')
+
+    # Relationship Fields
+    created_by = models.ForeignKey('profiles.BaseProfile', related_name='created_questions',
+                                   on_delete=models.SET_NULL, null=True, blank=True, default=None)
 
     objects = QuestionManager()
     tags = TaggableManager()
@@ -288,7 +296,11 @@ class SectionQuestion(models.Model):
 
     # Admin Fields
     is_approved = models.BooleanField(default=True)
+
+    # Fields
     order = models.PositiveSmallIntegerField(default=0)
+    fork_map = JSONField(default=dict, null=True, blank=True)
+    question_flow = models.CharField(max_length=30, choices=QUESTION_FLOW, default='linear')
 
     # Related Fields
     question = models.ForeignKey(Question, related_name='section_questions', on_delete=models.CASCADE)
@@ -363,6 +375,10 @@ class ChoiceGroup(models.Model):
 
     # Fields
     name = models.CharField(max_length=120, null=True, blank=True, default='Unnamed Choice Group')
+    restriction = models.CharField(max_length=60, choices=QUESTIONNAIRE_RESTRICTION_CHOICES, default='private')
+
+    created_by = models.ForeignKey('profiles.BaseProfile', related_name='created_choicegroups',
+                                   on_delete=models.SET_NULL, null=True, blank=True, default=None)
 
     objects = ChoiceGroupManager()
     tags = TaggableManager()

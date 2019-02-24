@@ -36,6 +36,30 @@ class QuestionnairePublicSerializer(serializers.ModelSerializer):
 
 
 class DoctorQuestionnaireSerializer(serializers.ModelSerializer):
+    questionnaire_object = serializers.SerializerMethodField('repr_questionnaire')
+
+    def repr_questionnaire(self, obj):
+        return QuestionnaireSerializer(obj.questionnaire).data
+
+    class Meta:
+        model = DoctorQuestionnaire
+        fields = (
+            'id',
+            'created',
+            'last_updated',
+            'metadata',
+            'is_approved',
+            'is_creator',
+            'is_required',
+            'hook_location',
+            'doctor',
+            'questionnaire',
+            'medical_institution',
+            'questionnaire_object'
+        )
+
+
+class DoctorQuestionnaireCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorQuestionnaire
         fields = (
@@ -53,14 +77,26 @@ class DoctorQuestionnaireSerializer(serializers.ModelSerializer):
         )
 
 
+class DoctorQuestionnaireDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DoctorQuestionnaire
+        fields = ('id',)
+
+
 class DoctorQuestionnairePublicSerializer(serializers.ModelSerializer):
+    questionnaire_object = serializers.SerializerMethodField('repr_questionnaire')
+
+    def repr_questionnaire(self, obj):
+        return QuestionnairePublicSerializer(obj.questionnaire).data
+
     class Meta:
         model = DoctorQuestionnaire
         fields = (
             'id',
             'doctor',
             'questionnaire',
-            'medical_institution'
+            'medical_institution',
+            'questionnaire_object'
         )
 
 
@@ -77,6 +113,7 @@ class QuestionnaireSectionSerializer(serializers.ModelSerializer):
             'name',
             'description',
             'instructions',
+            'questionnaire'
         )
 
 
@@ -89,6 +126,7 @@ class QuestionnaireSectionPublicSerializer(serializers.ModelSerializer):
             'name',
             'description',
             'instructions',
+            'questionnaire'
         )
 
 
@@ -96,19 +134,64 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = (
+            'id',
             'slug',
             'created',
             'last_updated',
             'metadata',
-            'fork_map',
-            'is_approved',
             'name',
             'text',
             'img',
             'answer_type',
             'answer_selection_type',
             'answer_data_type',
-            'question_flow',
+            'restriction',
+            'created_by'
+        )
+
+
+class QuestionPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'slug',
+            'name',
+            'text',
+            'img',
+        )
+
+
+class QuestionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'metadata',
+            'name',
+            'text',
+            'img',
+            'answer_type',
+            'answer_selection_type',
+            'answer_data_type',
+            'restriction',
+            'created_by'
+        )
+
+
+class QuestionUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'metadata',
+            'name',
+            'text',
+            'img',
+            'answer_type',
+            'answer_selection_type',
+            'answer_data_type',
+            'restriction',
+            'created_by'
         )
 
 
@@ -122,6 +205,8 @@ class SectionQuestionSerializer(serializers.ModelSerializer):
             'metadata',
             'is_approved',
             'order',
+            'fork_map',
+            'question_flow',
         )
 
 

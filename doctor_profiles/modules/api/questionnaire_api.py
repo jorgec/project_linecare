@@ -1,13 +1,14 @@
-from django.db import IntegrityError
+from django.core.exceptions import PermissionDenied
+from django.db.models import Q
+from rest_framework import viewsets, permissions, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from doctor_profiles import models
 from doctor_profiles import serializers
-from rest_framework import viewsets, permissions, status
-
-from doctor_profiles.models import DoctorProfile, MedicalInstitution, DoctorQuestionnaire, Questionnaire
+from doctor_profiles.models import DoctorProfile, MedicalInstitution, DoctorQuestionnaire, Questionnaire, Question
+from doctor_profiles.permissions import is_doctor_or_receptionist, user_is_authorized
 
 
 class QuestionnaireWritePermissionsMixin(object):
@@ -18,6 +19,24 @@ class QuestionnaireWritePermissionsMixin(object):
         queryset = queryset.filter(created_by=user.base_profile())
 
         return queryset
+
+
+class DoctorQuestionnaireAuthCheckMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        if "pk" in kwargs:
+            rel = get_object_or_404(DoctorQuestionnaire, pk=kwargs.get('pk'))
+            doctor = rel.doctor
+        else:
+            doctor = get_object_or_404(DoctorProfile, pk=kwargs.get('doctor_id', None))
+
+        is_valid_profile, request_profile = is_doctor_or_receptionist(request.user)
+        if not is_valid_profile:
+            raise PermissionDenied
+
+        is_authorized = user_is_authorized(user=request.user, doctor=doctor, allowed_types=['doctor', 'receptionist'])
+        if not is_authorized:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
 
 #############################################################################
@@ -42,13 +61,19 @@ class ApiDoctorQuestionnairePublicViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         doctor = get_object_or_404(DoctorProfile, pk=self.kwargs.get('doctor_id', None))
-        if "medical_institution_id" in self.kwargs:
-            medical_institution = get_object_or_404(MedicalInstitution, pk=self.kwargs.get('medical_institution'))
-            return doctor.get_questionnaires(medical_institution=medical_institution)
-        return doctor.get_questionnaires()
+        pk = self.kwargs.get('pk', None)
+        filters = {
+            'questionnaire__restriction': 'public'
+        }
+        if pk:
+            filters["pk"] = pk
+        if "medical_institution_id" in self.request.GET:
+            medical_institution = get_object_or_404(MedicalInstitution, pk=self.request.GET.get('medical_institution'))
+            filters["medical_institution"] = medical_institution
+        return doctor.get_questionnaires_rel(**filters)
 
 
-class ApiDoctorQuestionnairePrivateViewSet(viewsets.ModelViewSet):
+class ApiDoctorQuestionnairePrivateViewSet(DoctorQuestionnaireAuthCheckMixin, viewsets.ModelViewSet):
     serializer_class = serializers.DoctorQuestionnaireSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -65,7 +90,8 @@ class ApiDoctorQuestionnairePrivateViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         doctor = get_object_or_404(DoctorProfile, pk=self.kwargs.get('doctor_id', None))
-        serializer = self.serializer_class(data=request.data)
+
+        serializer = serializers.DoctorQuestionnaireCreateSerializer(data=request.data)
         if serializer.is_valid():
             result, message = doctor.add_questionnaire(
                 **serializer.validated_data
@@ -78,14 +104,23 @@ class ApiDoctorQuestionnairePrivateViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         rel = get_object_or_404(DoctorQuestionnaire, pk=kwargs.get('pk'))
+
         serializer = self.serializer_class(instance=rel, data=request.data)
         if serializer.is_valid():
-            obj = DoctorQuestionnaire.objects.update(
-                **serializer.validated_data
-            )
+            obj = serializer.save()
             if obj:
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response("Oops", status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        rel = get_object_or_404(DoctorQuestionnaire, pk=kwargs.get('pk'))
+
+        serializer = serializers.DoctorQuestionnaireDeleteSerializer(instance=rel, data=request.data)
+
+        if serializer.is_valid():
+            rel.delete()
+            return Response(f"{rel} deleted", status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -94,12 +129,135 @@ class ApiQuestionnaireSectionPublicViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        questionnaire = get_object_or_404(Questionnaire, pk=self.kwargs.get('questionnaire_id', None), restriction='public')
-        return questionnaire.get_sections()
+        questionnaire = get_object_or_404(Questionnaire, pk=self.kwargs.get('questionnaire_id', None),
+                                          restriction='public')
+        index = self.kwargs.get('index', None)
+        if index:
+            return questionnaire.section(index)
+        else:
+            return questionnaire.get_sections()
+
+
+class ApiQuestionnaireSectionPrivateViewSet(QuestionnaireWritePermissionsMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.QuestionnaireSectionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        questionnaire = get_object_or_404(Questionnaire, pk=self.kwargs.get('questionnaire_id', None),
+                                          created_by=self.request.user.base_profile())
+
+        is_valid_profile, request_profile = is_doctor_or_receptionist(self.request.user)
+        if not is_valid_profile:
+            return None
+
+        index = self.kwargs.get('index', None)
+        if index:
+            return questionnaire.section(index)
+        else:
+            return questionnaire.get_sections()
+
+    def retrieve(self, request, *args, **kwargs):
+        index = self.kwargs.get('index', None)
+        questionnaire = get_object_or_404(Questionnaire, pk=kwargs.get('questionnaire_id', None),
+                                          restriction='public')
+        if not index:
+            return Response("No index supplied", status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            section = questionnaire.section(index)
+            return Response(self.serializer_class(section).data, status=status.HTTP_200_OK)
+        except IndexError:
+            return Response("Out of bounds", status=status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, *args, **kwargs):
+        index = self.kwargs.get('index', None)
+        questionnaire = get_object_or_404(Questionnaire, pk=kwargs.get('questionnaire_id', None),
+                                          restriction='public')
+        if not index:
+            return Response("No index supplied", status=status.HTTP_400_BAD_REQUEST)
+
+        section = questionnaire.section(index)
+
+        serializer = self.serializer_class(instance=section, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        index = self.kwargs.get('index', None)
+        questionnaire = get_object_or_404(Questionnaire, pk=kwargs.get('questionnaire_id', None),
+                                          restriction='public')
+        if not index:
+            return Response("No index supplied", status=status.HTTP_400_BAD_REQUEST)
+
+        section = questionnaire.section(index)
+
+        section.delete()
+        return Response("Delete successful", status=status.HTTP_200_OK)
+
+
+class ApiQuestionPublicViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.QuestionPublicSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        pk = self.kwargs.get('pk', None)
+        filters = {
+            'restriction': 'public',
+            'is_approved': True
+        }
+        if pk:
+            filters["pk"] = pk
+        return Question.objects.filter(**filters)
+
+
+class ApiQuestionPrivateViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.QuestionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        pk = self.kwargs.get('pk', None)
+        filters = {
+            'created_by': self.request.user.base_profile(),
+            'is_approved': True
+        }
+        if pk:
+            filters["pk"] = pk
+        return Question.objects.filter(**filters)
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user.base_profile())
+
+    def perform_update(self, serializer):
+        serializer.save(created_by=self.request.user.base_profile())
+
+
+class ApiQuestionSearchPrivateView(APIView):
+    serializer_class = serializers.QuestionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        s = request.GET.get('s', None)
+        if s:
+            result = Question.objects.filter(
+                Q(
+                    Q(name__icontains=s) |
+                    Q(text__icontains=s) |
+                    Q(tags__name__in=[s])
+                ) &
+                Q(
+                    Q(restriction='public') |
+                    Q(created_by=request.user.base_profile())
+                )
+            )
+
+            return Response(self.serializer_class(result, many=True).data, status=status.HTTP_200_OK)
+        return Response(None, status=status.HTTP_404_NOT_FOUND)
 
 
 #############################################################################
-# Viewsets
+# Admin ViewSets
 #############################################################################
 
 class QuestionnaireViewSet(viewsets.ModelViewSet):

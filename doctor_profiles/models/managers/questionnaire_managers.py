@@ -85,7 +85,6 @@ class QuestionnaireManager(models.Manager):
         questionnaire = self.create(
             is_approved=kwargs.get('is_approved', True),
             name=kwargs.get('name'),
-            is_required=kwargs.get('is_required', False),
             description=kwargs.get('description', None),
             created_by=created_by,
             restriction=kwargs.get('restriction', 'private')

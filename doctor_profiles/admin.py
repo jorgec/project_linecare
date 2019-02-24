@@ -70,8 +70,6 @@ admin.site.register(LabTest, LabTestAdmin)
 class QuestionnaireAdmin(admin.ModelAdmin):
     list_display = ['created', 'last_updated', 'metadata', 'is_approved', 'name', 'slug', 'description', 'instructions',
                     'restriction']
-    readonly_fields = ['created', 'last_updated', 'metadata', 'is_approved', 'name', 'slug', 'description',
-                       'instructions', 'restriction']
 
 
 admin.site.register(Questionnaire, QuestionnaireAdmin)
@@ -79,8 +77,6 @@ admin.site.register(Questionnaire, QuestionnaireAdmin)
 
 class DoctorQuestionnaireAdmin(admin.ModelAdmin):
     list_display = ['created', 'last_updated', 'metadata', 'is_approved', 'is_creator', 'is_required', 'hook_location']
-    readonly_fields = ['created', 'last_updated', 'metadata', 'is_approved', 'is_creator', 'is_required',
-                       'hook_location']
 
 
 admin.site.register(DoctorQuestionnaire, DoctorQuestionnaireAdmin)
@@ -89,18 +85,13 @@ admin.site.register(DoctorQuestionnaire, DoctorQuestionnaireAdmin)
 class QuestionnaireSectionAdmin(admin.ModelAdmin):
     list_display = ['created', 'last_updated', 'metadata', 'is_approved', 'order', 'name', 'description',
                     'instructions']
-    readonly_fields = ['created', 'last_updated', 'metadata', 'is_approved', 'order', 'name', 'description',
-                       'instructions']
 
 
 admin.site.register(QuestionnaireSection, QuestionnaireSectionAdmin)
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['created', 'last_updated', 'metadata', 'fork_map', 'is_approved', 'name', 'slug', 'text', 'img',
-                    'answer_type', 'answer_selection_type', 'answer_data_type', 'question_flow']
-    readonly_fields = ['created', 'last_updated', 'metadata', 'fork_map', 'is_approved', 'name', 'slug', 'text', 'img',
-                       'answer_type', 'answer_selection_type', 'answer_data_type', 'question_flow']
+    list_display = ['name', 'slug', 'answer_type', 'answer_selection_type', 'answer_data_type']
 
 
 admin.site.register(Question, QuestionAdmin)
@@ -108,7 +99,6 @@ admin.site.register(Question, QuestionAdmin)
 
 class SectionQuestionAdmin(admin.ModelAdmin):
     list_display = ['created', 'last_updated', 'metadata', 'is_approved', 'order']
-    readonly_fields = ['created', 'last_updated', 'metadata', 'is_approved', 'order']
 
 
 admin.site.register(SectionQuestion, SectionQuestionAdmin)
@@ -116,7 +106,6 @@ admin.site.register(SectionQuestion, SectionQuestionAdmin)
 
 class ChoiceAdmin(admin.ModelAdmin):
     list_display = ['created', 'last_updated', 'metadata', 'is_approved', 'name', 'text', 'img', 'value']
-    readonly_fields = ['created', 'last_updated', 'metadata', 'is_approved', 'name', 'text', 'img', 'value']
 
 
 admin.site.register(Choice, ChoiceAdmin)
@@ -124,7 +113,6 @@ admin.site.register(Choice, ChoiceAdmin)
 
 class ChoiceGroupAdmin(admin.ModelAdmin):
     list_display = ['created', 'last_updated', 'metadata', 'is_approved', 'name']
-    readonly_fields = ['created', 'last_updated', 'metadata', 'is_approved', 'name']
 
 
 admin.site.register(ChoiceGroup, ChoiceGroupAdmin)
@@ -132,7 +120,6 @@ admin.site.register(ChoiceGroup, ChoiceGroupAdmin)
 
 class ChoiceGroupItemAdmin(admin.ModelAdmin):
     list_display = ['created', 'last_updated', 'metadata', 'is_approved', 'order']
-    readonly_fields = ['created', 'last_updated', 'metadata', 'is_approved', 'order']
 
 
 admin.site.register(ChoiceGroupItem, ChoiceGroupItemAdmin)
@@ -140,7 +127,6 @@ admin.site.register(ChoiceGroupItem, ChoiceGroupItemAdmin)
 
 class QuestionChoiceGroupAdmin(admin.ModelAdmin):
     list_display = ['created', 'last_updated', 'metadata', 'is_approved']
-    readonly_fields = ['created', 'last_updated', 'metadata', 'is_approved']
 
 
 admin.site.register(QuestionChoiceGroup, QuestionChoiceGroupAdmin)

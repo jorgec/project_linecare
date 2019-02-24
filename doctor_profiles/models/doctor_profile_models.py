@@ -519,6 +519,7 @@ class DoctorProfile(models.Model):
         return result, message, schedule
 
     """ questionaires """
+
     def create_questionnaire(self, **kwargs):
         """
         kwargs:
@@ -538,7 +539,6 @@ class DoctorProfile(models.Model):
             name=kwargs.get('name'),
             description=kwargs.get('description', None),
             medical_institution=kwargs.get('medical_institution', None),
-            is_required=kwargs.get('is_required', False),
             created_by=self.user.base_profile(),
             restriction=kwargs.get('restriction', 'private')
         )
@@ -560,7 +560,8 @@ class DoctorProfile(models.Model):
         if questionnaire.restriction == 'private' and questionnaire.created_by != self.user.base_profile():
             return False, "Cannot add a private questionnaire"
 
-        if questionnaire.restriction == 'internal' and not self.verify_medical_institution_membership(medical_institution=kwargs.get('medical_institution', None)):
+        if questionnaire.restriction == 'internal' and not self.verify_medical_institution_membership(
+                medical_institution=kwargs.get('medical_institution', None)):
             return False, f"Cannot add an internal questionnaire when not a member of {kwargs.get('medical_institution')}"
 
         medical_institution = kwargs.get('medical_institution', None)
@@ -607,6 +608,7 @@ class DoctorProfile(models.Model):
         relids = {i.get('questionnaire_id') for i in self.get_questionnaires_rel(**filters).values('questionnaire_id')}
 
         return Questionnaire.objects.filter(id__in=relids)
+
     """ /questionnaires """
 
     def name_indexing(self):
