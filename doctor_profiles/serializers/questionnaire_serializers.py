@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
 from doctor_profiles.models import DoctorQuestionnaire, QuestionnaireSection, Question, SectionQuestion, \
@@ -196,6 +197,15 @@ class QuestionUpdateSerializer(serializers.ModelSerializer):
 
 
 class SectionQuestionSerializer(serializers.ModelSerializer):
+    question_object = serializers.SerializerMethodField('repr_question')
+    section_object = serializers.SerializerMethodField('repr_section')
+
+    def repr_question(self, obj):
+        return QuestionSerializer(obj.question).data
+
+    def repr_section(self, obj):
+        return QuestionnaireSectionSerializer(obj.section).data
+
     class Meta:
         model = SectionQuestion
         fields = (
@@ -207,6 +217,46 @@ class SectionQuestionSerializer(serializers.ModelSerializer):
             'order',
             'fork_map',
             'question_flow',
+            'question',
+            'section',
+            'question_object',
+            'section_object',
+        )
+
+
+class SectionQuestionPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SectionQuestion
+        fields = (
+            'id',
+            'order',
+            'section',
+            'question'
+        )
+
+
+class SectionQuestionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SectionQuestion
+        fields = (
+            'order',
+            'fork_map',
+            'question_flow',
+            'question',
+            'section'
+        )
+
+
+class SectionQuestionUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SectionQuestion
+        fields = (
+            'id',
+            'order',
+            'fork_map',
+            'question_flow',
+            'question',
+            'section'
         )
 
 

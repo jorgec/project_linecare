@@ -7,8 +7,47 @@ from rest_framework.views import APIView
 
 from doctor_profiles import models
 from doctor_profiles import serializers
-from doctor_profiles.models import DoctorProfile, MedicalInstitution, DoctorQuestionnaire, Questionnaire, Question
+from doctor_profiles.models import DoctorProfile, MedicalInstitution, DoctorQuestionnaire, Questionnaire, Question, \
+    SectionQuestion
 from doctor_profiles.permissions import is_doctor_or_receptionist, user_is_authorized
+
+
+def section_question_permissions_check(user, question, section):
+    """
+    check if question is either public, or:
+        - if internal, request.user.doctor or request.user.receptionist is a member of medical institution
+        - if private, owned by request.user.profile
+    """
+    question_allowed = False
+    if question.restriction == 'public':
+        question_allowed = question
+    elif question.restriction == 'internal':
+        mi_question_membership = []
+        mi_user_membership = []
+        if question.created_by.doctor_profile():
+            mi_question_membership = question.created_by.doctor_profile().get_medical_institutions()
+        elif question.created_by.receptionist_profile():
+            mi_question_membership = question.created_by.receptionist_profile().get_medical_institutions_rel()
+
+        if user.doctor_profile():
+            mi_user_membership = user.doctor_profile().get_medical_institutions()
+        elif user.receptionist_profile():
+            mi_user_membership = user.receptionist_profile().get_medical_institutions_rel()
+
+        if set(mi_question_membership).intersection(set(mi_user_membership)):
+            question_allowed = question
+    elif question.restriction == 'private':
+        if question.created_by == user.base_profile():
+            question_allowed = question
+
+    """
+    check if user is allowed to mess with the section
+    """
+    section_allowed = False
+    if section.questionnaire.created_by == user.base_profile():
+        section_allowed = section
+
+    return section_allowed, question_allowed
 
 
 class QuestionnaireWritePermissionsMixin(object):
@@ -254,6 +293,67 @@ class ApiQuestionSearchPrivateView(APIView):
 
             return Response(self.serializer_class(result, many=True).data, status=status.HTTP_200_OK)
         return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+
+class ApiSectionQuestionPublicViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.SectionQuestionPublicSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = models.SectionQuestion.objects.filter(section__questionnaire__restriction='public')
+
+
+class ApiSectionQuestionPrivateViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.SectionQuestionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = models.SectionQuestion.objects.filter(
+            section__questionnaire__created_by=self.request.user.base_profile()
+        )
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        serializer = serializers.SectionQuestionCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            section_allowed, question_allowed = section_question_permissions_check(request.user,
+                                                                                   serializer.validated_data.get(
+                                                                                       'question'),
+                                                                                   serializer.validated_data.get(
+                                                                                       'section'))
+            if question_allowed and section_allowed:
+                section_question = SectionQuestion.objects.create(
+                    order=serializer.validated_data.get('order'),
+                    fork_map=serializer.validated_data.get('fork_map'),
+                    question_flow=serializer.validated_data.get('question_flow'),
+                    question=question_allowed,
+                    section=section_allowed
+                )
+                created = self.serializer_class(section_question)
+                return Response(created.data, status=status.HTTP_201_CREATED)
+
+            return Response(f"Action forbidden; question: {question_allowed}; section: {section_allowed}", status=status.HTTP_403_FORBIDDEN)
+
+    def update(self, request, *args, **kwargs):
+        section_question = SectionQuestion.objects.get(pk=kwargs.get('pk'))
+        serializer = serializers.SectionQuestionUpdateSerializer(instance=section_question, data=request.data)
+        if serializer.is_valid():
+            section_allowed, question_allowed = section_question_permissions_check(request.user,
+                                                                                   serializer.validated_data.get(
+                                                                                       'question'),
+                                                                                   serializer.validated_data.get(
+                                                                                       'section'))
+            if question_allowed and section_allowed:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response("Action forbidden", status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        section_question = SectionQuestion.objects.get(pk=kwargs.get('pk'))
+        section_allowed, question_allowed = section_question_permissions_check(request.user, section_question.question,
+                                                                               section_question.section)
+        if section_allowed:
+            section_question.delete()
+            return Response("Section question deleted!", status=status.HTTP_200_OK)
+        return Response("Action forbidden", status=status.HTTP_403_FORBIDDEN)
 
 
 #############################################################################

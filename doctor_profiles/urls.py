@@ -681,6 +681,14 @@ urlpatterns += [
     path(f'{version}/public/questions/<pk>/detail',
          questionnaire_api.ApiQuestionPublicViewSet.as_view(READ_ONLY),
          name='api_public_questions_detail'),
+
+    # Section Question
+    path(f'{version}/public/section_questions/list',
+         questionnaire_api.ApiSectionQuestionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_section_questions'),
+    path(f'{version}/public/section_questions/<pk>/detail',
+         questionnaire_api.ApiSectionQuestionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_section_questions_detail'),
 ]
 
 # private
@@ -751,4 +759,18 @@ urlpatterns += [
     path(f'{version}/private/questions/search',
          questionnaire_api.ApiQuestionSearchPrivateView.as_view(),
          name='api_private_questions_search'),
+
+    # Section Questions
+    path(f'{version}/private/section_questions/list',
+         questionnaire_api.ApiSectionQuestionPrivateViewSet.as_view(CREATE),
+         name='api_private_section_questions'),
+    path(f'{version}/private/section_questions/<pk>/detail',
+         questionnaire_api.ApiSectionQuestionPrivateViewSet.as_view(DETAIL),
+         name='api_private_section_questions_detail'),
+    path(f'{version}/private/section_questions/<pk>/update',
+         questionnaire_api.ApiSectionQuestionPrivateViewSet.as_view(UPDATE),
+         name='api_private_section_questions_update'),
+    path(f'{version}/private/section_questions/<pk>/delete',
+         questionnaire_api.ApiSectionQuestionPrivateViewSet.as_view(DELETE),
+         name='api_private_section_questions_delete'),
 ]

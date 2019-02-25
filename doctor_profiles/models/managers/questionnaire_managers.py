@@ -194,7 +194,7 @@ class SectionQuestionManager(models.Manager):
             kwargs['order'] = order
             section_question = super(SectionQuestionManager, self).create(*args, **kwargs)
 
-        return section_question.question
+        return section_question
 
 
 class ChoiceGroupItemManager(models.Manager):
