@@ -55,8 +55,24 @@ class QuestionnaireWritePermissionsMixin(object):
         queryset = super(QuestionnaireWritePermissionsMixin, self).get_queryset()
         user = self.request.user
 
-        queryset = queryset.filter(created_by=user.base_profile())
+        queryset = queryset.filter(created_by=user.base_profile(), is_approved=True)
 
+        return queryset
+
+
+class ChoiceGroupWritePermissionsMixin(object):
+    def get_queryset(self):
+        queryset = super(ChoiceGroupWritePermissionsMixin, self).get_queryset()
+        user = self.request.user
+        queryset = queryset.filter(choice_group__created_by=user.base_profile(), is_approved=True)
+        return queryset
+
+
+class QuestionChoiceGroupWritePermissionsMixin(object):
+    def get_queryset(self):
+        queryset = super(QuestionChoiceGroupWritePermissionsMixin, self).get_queryset()
+        user = self.request.user
+        queryset = queryset.filter(question__created_by=user.base_profile(), is_approved=True)
         return queryset
 
 
@@ -102,7 +118,8 @@ class ApiDoctorQuestionnairePublicViewSet(viewsets.ReadOnlyModelViewSet):
         doctor = get_object_or_404(DoctorProfile, pk=self.kwargs.get('doctor_id', None))
         pk = self.kwargs.get('pk', None)
         filters = {
-            'questionnaire__restriction': 'public'
+            'questionnaire__restriction': 'public',
+            'is_approved': True
         }
         if pk:
             filters["pk"] = pk
@@ -119,7 +136,9 @@ class ApiDoctorQuestionnairePrivateViewSet(DoctorQuestionnaireAuthCheckMixin, vi
     def get_queryset(self):
         doctor = get_object_or_404(DoctorProfile, pk=self.kwargs.get('doctor_id', None))
         pk = self.kwargs.get('pk', None)
-        filters = {}
+        filters = {
+            'is_approved': True
+        }
         if pk:
             filters["pk"] = pk
         if "medical_institution_id" in self.request.GET:
@@ -169,7 +188,7 @@ class ApiQuestionnaireSectionPublicViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         questionnaire = get_object_or_404(Questionnaire, pk=self.kwargs.get('questionnaire_id', None),
-                                          restriction='public')
+                                          restriction='public', is_approved=True)
         index = self.kwargs.get('index', None)
         if index:
             return questionnaire.section(index)
@@ -183,7 +202,7 @@ class ApiQuestionnaireSectionPrivateViewSet(QuestionnaireWritePermissionsMixin, 
 
     def get_queryset(self):
         questionnaire = get_object_or_404(Questionnaire, pk=self.kwargs.get('questionnaire_id', None),
-                                          created_by=self.request.user.base_profile())
+                                          created_by=self.request.user.base_profile(), is_approved=True)
 
         is_valid_profile, request_profile = is_doctor_or_receptionist(self.request.user)
         if not is_valid_profile:
@@ -251,7 +270,7 @@ class ApiQuestionPublicViewSet(viewsets.ReadOnlyModelViewSet):
         return Question.objects.filter(**filters)
 
 
-class ApiQuestionPrivateViewSet(viewsets.ModelViewSet):
+class ApiQuestionPrivateViewSet(QuestionnaireWritePermissionsMixin, viewsets.ModelViewSet):
     serializer_class = serializers.QuestionSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -289,6 +308,8 @@ class ApiQuestionSearchPrivateView(APIView):
                     Q(restriction='public') |
                     Q(created_by=request.user.base_profile())
                 )
+            ).filter(
+                is_approved=True
             )
 
             return Response(self.serializer_class(result, many=True).data, status=status.HTTP_200_OK)
@@ -298,7 +319,7 @@ class ApiQuestionSearchPrivateView(APIView):
 class ApiSectionQuestionPublicViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.SectionQuestionPublicSerializer
     permission_classes = [permissions.AllowAny]
-    queryset = models.SectionQuestion.objects.filter(section__questionnaire__restriction='public')
+    queryset = models.SectionQuestion.objects.filter(section__questionnaire__restriction='public', is_approved=True)
 
 
 class ApiSectionQuestionPrivateViewSet(viewsets.ModelViewSet):
@@ -330,7 +351,8 @@ class ApiSectionQuestionPrivateViewSet(viewsets.ModelViewSet):
                 created = self.serializer_class(section_question)
                 return Response(created.data, status=status.HTTP_201_CREATED)
 
-            return Response(f"Action forbidden; question: {question_allowed}; section: {section_allowed}", status=status.HTTP_403_FORBIDDEN)
+            return Response(f"Action forbidden; question: {question_allowed}; section: {section_allowed}",
+                            status=status.HTTP_403_FORBIDDEN)
 
     def update(self, request, *args, **kwargs):
         section_question = SectionQuestion.objects.get(pk=kwargs.get('pk'))
@@ -354,6 +376,54 @@ class ApiSectionQuestionPrivateViewSet(viewsets.ModelViewSet):
             section_question.delete()
             return Response("Section question deleted!", status=status.HTTP_200_OK)
         return Response("Action forbidden", status=status.HTTP_403_FORBIDDEN)
+
+
+class ApiChoicePublicViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.ChoicePublicSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = models.Choice.objects.filter(is_approved=True)
+
+
+class ApiChoicePrivateViewSet(QuestionnaireWritePermissionsMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.ChoiceSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = models.Choice.objects.all()
+
+
+class ApiChoiceGroupPublicViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.ChoiceGroupPublicSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = models.Choice.objects.filter(is_approved=True)
+
+
+class ApiChoiceGroupPrivateViewSet(QuestionnaireWritePermissionsMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.ChoiceGroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = models.Choice.objects.all()
+
+
+class ApiChoiceGroupItemPublicViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.ChoiceGroupItemPublicSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = models.ChoiceGroupItem.objects.filter(is_approved=True)
+
+
+class ApiChoiceGroupItemPrivateViewSet(ChoiceGroupWritePermissionsMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.ChoiceGroupItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = models.ChoiceGroupItem.objects.all()
+
+
+class ApiQuestionChoiceGroupPublicViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.QuestionChoiceGroupPublicSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = models.QuestionChoiceGroup.objects.filter(is_approved=True, question__restriction='public')
+
+
+class ApiQuestionChoiceGroupPrivateViewSet(QuestionChoiceGroupWritePermissionsMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.QuestionChoiceGroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = models.QuestionChoiceGroup.objects.all()
 
 
 #############################################################################

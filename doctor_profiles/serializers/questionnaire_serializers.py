@@ -15,7 +15,6 @@ class QuestionnaireSerializer(TaggitSerializer, serializers.ModelSerializer):
             'created',
             'last_updated',
             'metadata',
-            'is_approved',
             'name',
             'description',
             'instructions',
@@ -49,7 +48,6 @@ class DoctorQuestionnaireSerializer(serializers.ModelSerializer):
             'created',
             'last_updated',
             'metadata',
-            'is_approved',
             'is_creator',
             'is_required',
             'hook_location',
@@ -68,7 +66,6 @@ class DoctorQuestionnaireCreateSerializer(serializers.ModelSerializer):
             'created',
             'last_updated',
             'metadata',
-            'is_approved',
             'is_creator',
             'is_required',
             'hook_location',
@@ -109,7 +106,6 @@ class QuestionnaireSectionSerializer(serializers.ModelSerializer):
             'created',
             'last_updated',
             'metadata',
-            'is_approved',
             'order',
             'name',
             'description',
@@ -213,7 +209,6 @@ class SectionQuestionSerializer(serializers.ModelSerializer):
             'created',
             'last_updated',
             'metadata',
-            'is_approved',
             'order',
             'fork_map',
             'question_flow',
@@ -268,7 +263,43 @@ class ChoiceSerializer(serializers.ModelSerializer):
             'created',
             'last_updated',
             'metadata',
-            'is_approved',
+            'name',
+            'text',
+            'img',
+            'value',
+        )
+
+
+class ChoicePublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Choice
+        fields = (
+            'id',
+            'name',
+            'text',
+            'img',
+            'value',
+        )
+
+
+class ChoiceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Choice
+        fields = (
+            'metadata',
+            'name',
+            'text',
+            'img',
+            'value',
+        )
+
+
+class ChoiceUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Choice
+        fields = (
+            'id',
+            'metadata',
             'name',
             'text',
             'img',
@@ -281,10 +312,16 @@ class ChoiceGroupSerializer(serializers.ModelSerializer):
         model = ChoiceGroup
         fields = (
             'id',
-            'created',
-            'last_updated',
             'metadata',
-            'is_approved',
+            'name',
+        )
+
+
+class ChoiceGroupPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChoiceGroup
+        fields = (
+            'id',
             'name',
         )
 
@@ -297,7 +334,15 @@ class ChoiceGroupItemSerializer(serializers.ModelSerializer):
             'created',
             'last_updated',
             'metadata',
-            'is_approved',
+            'order',
+        )
+
+
+class ChoiceGroupItemPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChoiceGroupItem
+        fields = (
+            'id',
             'order',
         )
 
@@ -310,5 +355,14 @@ class QuestionChoiceGroupSerializer(serializers.ModelSerializer):
             'created',
             'last_updated',
             'metadata',
-            'is_approved',
+            'question'
+        )
+
+
+class QuestionChoiceGroupPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionChoiceGroup
+        fields = (
+            'id',
+            'question'
         )

@@ -39,4 +39,6 @@ from .questionnaire_serializers import Questionnaire, DoctorQuestionnaireSeriali
     QuestionnairePublicSerializer, DoctorQuestionnairePublicSerializer, QuestionnaireSectionPublicSerializer, \
     DoctorQuestionnaireDeleteSerializer, DoctorQuestionnaireCreateSerializer, QuestionPublicSerializer, \
     QuestionCreateSerializer, QuestionUpdateSerializer, SectionQuestionPublicSerializer, \
-    SectionQuestionCreateSerializer, SectionQuestionUpdateSerializer
+    SectionQuestionCreateSerializer, SectionQuestionUpdateSerializer, ChoicePublicSerializer, ChoiceCreateSerializer, \
+    ChoiceUpdateSerializer, ChoiceGroupPublicSerializer, ChoiceGroupItemPublicSerializer, \
+    QuestionChoiceGroupPublicSerializer

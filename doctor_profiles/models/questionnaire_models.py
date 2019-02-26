@@ -349,6 +349,10 @@ class Choice(models.Model):
     img = models.ImageField(upload_to=choice_photo_upload_path, max_length=1024, null=True, blank=True, default=None)
     value = models.CharField(max_length=255)
 
+    # Relationship Fields
+    created_by = models.ForeignKey('profiles.BaseProfile', related_name='created_choices',
+                                   on_delete=models.SET_NULL, null=True, blank=True, default=None)
+
     tags = TaggableManager()
 
     class Meta:

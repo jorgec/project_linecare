@@ -689,6 +689,38 @@ urlpatterns += [
     path(f'{version}/public/section_questions/<pk>/detail',
          questionnaire_api.ApiSectionQuestionPublicViewSet.as_view(READ_ONLY),
          name='api_public_section_questions_detail'),
+
+    # Choice
+    path(f'{version}/public/choices/list',
+         questionnaire_api.ApiChoicePublicViewSet.as_view(READ_ONLY),
+         name='api_public_choices'),
+    path(f'{version}/private/choices/<pk>/detail',
+         questionnaire_api.ApiChoicePublicViewSet.as_view(READ_ONLY),
+         name='api_public_choices_detail'),
+
+    # Choice Group
+    path(f'{version}/public/choice_groups/list',
+         questionnaire_api.ApiChoiceGroupPublicViewSet.as_view(READ_ONLY),
+         name='api_public_choice_groups'),
+    path(f'{version}/private/choice_groups/<pk>/detail',
+         questionnaire_api.ApiChoiceGroupPublicViewSet.as_view(READ_ONLY),
+         name='api_public_choice_groups_detail'),
+
+    # Choice Group Item
+    path(f'{version}/public/choice_group_item/list',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(READ_ONLY),
+         name='api_public_choice_group_item'),
+    path(f'{version}/private/choice_group_item/<pk>/detail',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(READ_ONLY),
+         name='api_public_choice_group_item_detail'),
+
+    # Question Choice Group
+    path(f'{version}/public/question_choice_group/list',
+         questionnaire_api.ApiQuestionChoiceGroupPublicViewSet.as_view(READ_ONLY),
+         name='api_public_question_choice_group'),
+    path(f'{version}/private/question_choice_group/<pk>/detail',
+         questionnaire_api.ApiQuestionChoiceGroupPublicViewSet.as_view(READ_ONLY),
+         name='api_public_question_choice_group_detail'),
 ]
 
 # private
@@ -773,4 +805,60 @@ urlpatterns += [
     path(f'{version}/private/section_questions/<pk>/delete',
          questionnaire_api.ApiSectionQuestionPrivateViewSet.as_view(DELETE),
          name='api_private_section_questions_delete'),
+
+    # Choices
+    path(f'{version}/private/choices/list',
+         questionnaire_api.ApiChoicePrivateViewSet.as_view(CREATE),
+         name='api_private_choices'),
+    path(f'{version}/private/choices/<pk>/detail',
+         questionnaire_api.ApiChoicePrivateViewSet.as_view(DETAIL),
+         name='api_private_choices_detail'),
+    path(f'{version}/private/choices/<pk>/update',
+         questionnaire_api.ApiChoicePrivateViewSet.as_view(UPDATE),
+         name='api_private_choices_update'),
+    path(f'{version}/private/choices/<pk>/delete',
+         questionnaire_api.ApiChoicePrivateViewSet.as_view(DELETE),
+         name='api_private_choices_delete'),
+
+    # Choice Groups
+    path(f'{version}/private/choice_groups/list',
+         questionnaire_api.ApiChoiceGroupPrivateViewSet.as_view(CREATE),
+         name='api_private_choice_groups'),
+    path(f'{version}/private/choice_groups/<pk>/detail',
+         questionnaire_api.ApiChoiceGroupPrivateViewSet.as_view(DETAIL),
+         name='api_private_choice_groups_detail'),
+    path(f'{version}/private/choice_groups/<pk>/update',
+         questionnaire_api.ApiChoiceGroupPrivateViewSet.as_view(UPDATE),
+         name='api_private_choice_groups_update'),
+    path(f'{version}/private/choice_groups/<pk>/delete',
+         questionnaire_api.ApiChoiceGroupPrivateViewSet.as_view(DELETE),
+         name='api_private_choice_groups_delete'),
+
+    # Choice Group Items
+    path(f'{version}/private/choice_group_items/list',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(CREATE),
+         name='api_private_choice_group_items'),
+    path(f'{version}/private/choice_group_items/<pk>/detail',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(DETAIL),
+         name='api_private_choice_group_items_detail'),
+    path(f'{version}/private/choice_group_items/<pk>/update',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(UPDATE),
+         name='api_private_choice_group_items_update'),
+    path(f'{version}/private/choice_group_items/<pk>/delete',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(DELETE),
+         name='api_private_choice_group_items_delete'),
+
+    # Question Choice Group
+    path(f'{version}/private/question_choice/list',
+         questionnaire_api.ApiQuestionChoiceGroupPrivateViewSet.as_view(CREATE),
+         name='api_private_question_choice'),
+    path(f'{version}/private/question_choice/<pk>/detail',
+         questionnaire_api.ApiQuestionChoiceGroupPrivateViewSet.as_view(DETAIL),
+         name='api_private_question_choice_detail'),
+    path(f'{version}/private/question_choice/<pk>/update',
+         questionnaire_api.ApiQuestionChoiceGroupPrivateViewSet.as_view(UPDATE),
+         name='api_private_question_choice_update'),
+    path(f'{version}/private/question_choice/<pk>/delete',
+         questionnaire_api.ApiQuestionChoiceGroupPrivateViewSet.as_view(DELETE),
+         name='api_private_question_choice_delete'),
 ]
