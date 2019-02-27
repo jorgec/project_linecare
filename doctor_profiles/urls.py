@@ -655,6 +655,9 @@ urlpatterns += [
          questionnaire_api.ApiQuestionnairePublicViewSet.as_view(DETAIL),
          name='api_public_questionnaires_detail'
          ),
+    path(f'{version}/public/questionnaires/<pk>/questions/list',
+         questionnaire_api.ApiQuestionsInQuestionnairePublicView.as_view(),
+         name='api_public_questionnaires_questions_list'),
 
     # Doctor Questionnaire
     path(f'{version}/public/doctor_questionnaires/<doctor_id>/list',
@@ -737,6 +740,9 @@ urlpatterns += [
          questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(DETAIL),
          name='api_private_questionnaires_detail'
          ),
+    path(f'{version}/private/questionnaires/<pk>/questions/list',
+         questionnaire_api.ApiQuestionsInQuestionnairePrivateView.as_view(),
+         name='api_private_questionnaires_questions_list'),
     path(f'{version}/private/questionnaires/<pk>/update',
          questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(UPDATE),
          name='api_private_questionnaires_update'

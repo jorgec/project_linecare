@@ -12,7 +12,33 @@ from doctor_profiles.models import DoctorProfile, MedicalInstitution, DoctorQues
 from doctor_profiles.permissions import is_doctor_or_receptionist, user_is_authorized
 
 
-def section_question_permissions_check(user, question, section):
+def user_can_interact_with_questionnaire(user, questionnaire):
+    questionnaire_allowed = False
+    if questionnaire.restriction == 'public':
+        questionnaire_allowed = questionnaire
+    elif questionnaire.restriction == 'internal':
+        mi_question_membership = []
+        mi_user_membership = []
+        if questionnaire.created_by.doctor_profile():
+            mi_question_membership = questionnaire.created_by.doctor_profile().get_medical_institutions()
+        elif questionnaire.created_by.receptionist_profile():
+            mi_question_membership = questionnaire.created_by.receptionist_profile().get_medical_institutions_rel()
+
+        if user.doctor_profile():
+            mi_user_membership = user.doctor_profile().get_medical_institutions()
+        elif user.receptionist_profile():
+            mi_user_membership = user.receptionist_profile().get_medical_institutions_rel()
+
+        if set(mi_question_membership).intersection(set(mi_user_membership)):
+            questionnaire_allowed = questionnaire
+    elif questionnaire.restriction == 'private':
+        if questionnaire.created_by == user.base_profile():
+            questionnaire_allowed = questionnaire
+
+    return questionnaire_allowed
+
+
+def user_can_interact_with_questions(user, question, section):
     """
     check if question is either public, or:
         - if internal, request.user.doctor or request.user.receptionist is a member of medical institution
@@ -281,6 +307,31 @@ class ApiQuestionPublicViewSet(viewsets.ReadOnlyModelViewSet):
         return Question.objects.filter(**filters)
 
 
+class ApiQuestionsInQuestionnairePublicView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        questionnaire = get_object_or_404(Questionnaire, pk=kwargs.get('pk', None), restriction='public')
+
+        serializer = serializers.QuestionSerializer(questionnaire.get_questions(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiQuestionsInQuestionnairePrivateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        __questionnaire = get_object_or_404(Questionnaire, pk=kwargs.get('pk', None))
+
+        questionnaire = user_can_interact_with_questionnaire(request.user, __questionnaire)
+        if questionnaire:
+            questions = questionnaire.get_questions()
+            serializer = serializers.QuestionSerializer(questions, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(None, status=status.HTTP_403_FORBIDDEN)
+
+
 class ApiQuestionPrivateViewSet(QuestionnaireWritePermissionsMixin, viewsets.ModelViewSet):
     serializer_class = serializers.QuestionSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -346,11 +397,11 @@ class ApiSectionQuestionPrivateViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = serializers.SectionQuestionCreateSerializer(data=request.data)
         if serializer.is_valid():
-            section_allowed, question_allowed = section_question_permissions_check(request.user,
-                                                                                   serializer.validated_data.get(
-                                                                                       'question'),
-                                                                                   serializer.validated_data.get(
-                                                                                       'section'))
+            section_allowed, question_allowed = user_can_interact_with_questions(request.user,
+                                                                                 serializer.validated_data.get(
+                                                                                     'question'),
+                                                                                 serializer.validated_data.get(
+                                                                                     'section'))
             if question_allowed and section_allowed:
                 section_question = SectionQuestion.objects.create(
                     order=serializer.validated_data.get('order'),
@@ -371,11 +422,11 @@ class ApiSectionQuestionPrivateViewSet(viewsets.ModelViewSet):
         section_question = SectionQuestion.objects.get(pk=kwargs.get('pk'))
         serializer = serializers.SectionQuestionUpdateSerializer(instance=section_question, data=request.data)
         if serializer.is_valid():
-            section_allowed, question_allowed = section_question_permissions_check(request.user,
-                                                                                   serializer.validated_data.get(
-                                                                                       'question'),
-                                                                                   serializer.validated_data.get(
-                                                                                       'section'))
+            section_allowed, question_allowed = user_can_interact_with_questions(request.user,
+                                                                                 serializer.validated_data.get(
+                                                                                     'question'),
+                                                                                 serializer.validated_data.get(
+                                                                                     'section'))
             if question_allowed and section_allowed:
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -383,8 +434,8 @@ class ApiSectionQuestionPrivateViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         section_question = SectionQuestion.objects.get(pk=kwargs.get('pk'))
-        section_allowed, question_allowed = section_question_permissions_check(request.user, section_question.question,
-                                                                               section_question.section)
+        section_allowed, question_allowed = user_can_interact_with_questions(request.user, section_question.question,
+                                                                             section_question.section)
         if section_allowed:
             section_question.delete()
             return Response("Section question deleted!", status=status.HTTP_200_OK)

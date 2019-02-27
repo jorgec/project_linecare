@@ -72,7 +72,15 @@ class Questionnaire(models.Model):
 
     def get_sections(self):
         QuestionnaireSection = apps.get_model('doctor_profiles.QuestionnaireSection')
-        return QuestionnaireSection.objects.filter(questionnaire=self)
+        return QuestionnaireSection.objects.filter(questionnaire=self, is_approved=True)
+
+    def get_questions(self):
+        sections = self.get_sections()
+        questions = []
+        for section in sections:
+            questions = questions + section.get_questions()
+
+        return questions
 
     def section(self, index: int = 0):
         index = int(index)
