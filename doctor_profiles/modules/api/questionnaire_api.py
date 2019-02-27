@@ -109,6 +109,9 @@ class ApiQuestionnairePrivateViewSet(QuestionnaireWritePermissionsMixin, viewset
     serializer_class = serializers.QuestionnaireSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user.base_profile())
+
 
 class ApiDoctorQuestionnairePublicViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.DoctorQuestionnairePublicSerializer

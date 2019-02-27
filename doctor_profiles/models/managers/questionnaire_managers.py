@@ -6,15 +6,10 @@ from django.db import IntegrityError
 
 class QuestionnaireManager(models.Manager):
     def create(self, *args, **kwargs):
-        QuestionnaireSection = apps.get_model('doctor_profiles.QuestionnaireSection')
-
         if not kwargs.get('name', None):
             kwargs['name'] = f"Patient Questionnaire"
-        questionnaire = super(QuestionnaireManager, self).create(*args, **kwargs)
-        # if kwargs.get('auto_add_section', True):
-        #    QuestionnaireSection.objects.create(
-        #        questionnaire=questionnaire
-        #    )
+        # questionnaire = super(QuestionnaireManager, self).create(*args, **kwargs)
+        questionnaire = self.create_by_user(*args, **kwargs)
         return questionnaire
 
     def create_raw(self, tree: dict):
