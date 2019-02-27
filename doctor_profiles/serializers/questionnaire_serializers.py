@@ -19,6 +19,7 @@ class QuestionnaireSerializer(TaggitSerializer, serializers.ModelSerializer):
             'description',
             'instructions',
             'restriction',
+            'created_by'
         )
 
 
@@ -95,22 +96,6 @@ class DoctorQuestionnairePublicSerializer(serializers.ModelSerializer):
             'questionnaire',
             'medical_institution',
             'questionnaire_object'
-        )
-
-
-class QuestionnaireSectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = QuestionnaireSection
-        fields = (
-            'id',
-            'created',
-            'last_updated',
-            'metadata',
-            'order',
-            'name',
-            'description',
-            'instructions',
-            'questionnaire'
         )
 
 
@@ -194,13 +179,13 @@ class QuestionUpdateSerializer(serializers.ModelSerializer):
 
 class SectionQuestionSerializer(serializers.ModelSerializer):
     question_object = serializers.SerializerMethodField('repr_question')
-    section_object = serializers.SerializerMethodField('repr_section')
+    questionnaire = serializers.SerializerMethodField('repr_questionnaire')
 
     def repr_question(self, obj):
         return QuestionSerializer(obj.question).data
 
-    def repr_section(self, obj):
-        return QuestionnaireSectionSerializer(obj.section).data
+    def repr_questionnaire(self, obj):
+        return obj.section.questionnaire.id
 
     class Meta:
         model = SectionQuestion
@@ -215,7 +200,7 @@ class SectionQuestionSerializer(serializers.ModelSerializer):
             'question',
             'section',
             'question_object',
-            'section_object',
+            'questionnaire'
         )
 
 
@@ -227,6 +212,31 @@ class SectionQuestionPublicSerializer(serializers.ModelSerializer):
             'order',
             'section',
             'question'
+        )
+
+
+class QuestionnaireSectionSerializer(serializers.ModelSerializer):
+    questions = serializers.SerializerMethodField('repr_questions')
+
+    def repr_questions(self, obj):
+        questions = obj.get_questions_rel()
+        if questions.count() > 0:
+            return SectionQuestionSerializer(questions, many=True).data
+        return None
+
+    class Meta:
+        model = QuestionnaireSection
+        fields = (
+            'id',
+            'created',
+            'last_updated',
+            'metadata',
+            'order',
+            'name',
+            'description',
+            'instructions',
+            'questionnaire',
+            'questions'
         )
 
 

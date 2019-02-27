@@ -153,9 +153,12 @@ class QuestionnaireSection(models.Model):
         return f"[{self.order}] {self.name} - {self.questionnaire}"
 
     def get_questions(self):
-        rel = self.question_sections.all()
+        rel = self.section_questions.filter(is_approved=True)
         questions = [r.question for r in rel]
         return questions
+
+    def get_questions_rel(self):
+        return self.section_questions.filter(is_approved=True)
 
     def question(self, index: int):
         questions = self.get_questions()
@@ -303,8 +306,8 @@ class SectionQuestion(models.Model):
     question_flow = models.CharField(max_length=30, choices=QUESTION_FLOW, default='linear')
 
     # Related Fields
-    question = models.ForeignKey(Question, related_name='section_questions', on_delete=models.CASCADE)
-    section = models.ForeignKey(QuestionnaireSection, related_name='question_sections', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='question_sections', on_delete=models.CASCADE)
+    section = models.ForeignKey(QuestionnaireSection, related_name='section_questions', on_delete=models.CASCADE)
 
     objects = SectionQuestionManager()
 

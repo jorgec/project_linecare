@@ -9,8 +9,10 @@ class QuestionnaireManager(models.Manager):
         if not kwargs.get('name', None):
             kwargs['name'] = f"Patient Questionnaire"
         # questionnaire = super(QuestionnaireManager, self).create(*args, **kwargs)
-        questionnaire = self.create_by_user(*args, **kwargs)
-        return questionnaire
+        result, questionnaire, message = self.create_by_user(*args, **kwargs)
+        if result:
+            return questionnaire
+        return result
 
     def create_raw(self, tree: dict):
         questionnaire = self.create(
@@ -77,23 +79,27 @@ class QuestionnaireManager(models.Manager):
         if not kwargs.get('name', None):
             kwargs['name'] = f"{created_by.user.doctor_profile()} Patient Questionnaire"
 
-        questionnaire = self.create(
+        questionnaire = self.model(
             is_approved=kwargs.get('is_approved', True),
             name=kwargs.get('name'),
             description=kwargs.get('description', None),
             created_by=created_by,
-            restriction=kwargs.get('restriction', 'private')
+            restriction=kwargs.get('restriction')
         )
+        questionnaire.save()
 
         if created_by.user.doctor_profile() or created_by.user.receptionist_profile():
             if created_by.user.doctor_profile():
                 doctor = created_by.user.doctor_profile()
             else:
+                if kwargs.get('restriction') == 'private':
+                    # receptionists can't have private questionnaires
+                    kwargs['restriction'] = 'internal'
                 doctor = None
 
             mi = kwargs.get('medical_institution', None)
             medical_institution = None
-            if kwargs.get('restriction', 'private') == 'internal' and not mi:
+            if kwargs.get('restriction') == 'internal' and not mi:
                 questionnaire.restriction = 'private'
                 questionnaire.save()
                 return False, questionnaire, "Questionnaire restriction set to 'internal' but no Medical Institution was provided; reverting to 'private'"

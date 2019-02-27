@@ -109,8 +109,14 @@ class ApiQuestionnairePrivateViewSet(QuestionnaireWritePermissionsMixin, viewset
     serializer_class = serializers.QuestionnaireSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user.base_profile())
+    def create(self, request, *args, **kwargs):
+        serializer = serializers.QuestionnaireSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            data['created_by'] = self.request.user.base_profile()
+            questionnaire = Questionnaire.objects.create_by_user(**data)
+            return Response(self.serializer_class(questionnaire).data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ApiDoctorQuestionnairePublicViewSet(viewsets.ReadOnlyModelViewSet):
@@ -356,6 +362,8 @@ class ApiSectionQuestionPrivateViewSet(viewsets.ModelViewSet):
 
             return Response(f"Action forbidden; question: {question_allowed}; section: {section_allowed}",
                             status=status.HTTP_403_FORBIDDEN)
+        else:
+            return Response(f"Duplicate question", status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         section_question = SectionQuestion.objects.get(pk=kwargs.get('pk'))
