@@ -7,6 +7,7 @@ from doctor_profiles.models import DoctorQuestionnaire, QuestionnaireSection, Qu
 
 
 class QuestionnaireSerializer(TaggitSerializer, serializers.ModelSerializer):
+
     class Meta:
         model = Questionnaire
         fields = (
@@ -19,7 +20,6 @@ class QuestionnaireSerializer(TaggitSerializer, serializers.ModelSerializer):
             'description',
             'instructions',
             'restriction',
-            'created_by'
         )
 
 

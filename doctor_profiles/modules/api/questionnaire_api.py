@@ -114,8 +114,10 @@ class ApiQuestionnairePrivateViewSet(QuestionnaireWritePermissionsMixin, viewset
         if serializer.is_valid():
             data = serializer.validated_data
             data['created_by'] = self.request.user.base_profile()
-            questionnaire = Questionnaire.objects.create_by_user(**data)
-            return Response(self.serializer_class(questionnaire).data, status=status.HTTP_200_OK)
+            result, questionnaire, msg = Questionnaire.objects.create_by_user(**data)
+            if result:
+                return Response(self.serializer_class(questionnaire).data, status=status.HTTP_200_OK)
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
