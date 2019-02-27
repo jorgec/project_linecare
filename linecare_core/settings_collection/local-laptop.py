@@ -11,10 +11,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from os.path import abspath, basename, dirname, join, normpath
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from os.path import abspath, dirname, basename
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
@@ -32,9 +31,35 @@ DEBUG = True
 
 SITE_ID = 1
 # SITE_URL = 'https://192.168.10.245'
-SITE_URL = 'https://192.168.33.110'
+SITE_URL = 'http://127.0.0.1'
 
 ALLOWED_HOSTS = ['*']
+
+# DEBUG TOOLBAR
+INTERNAL_IPS = [
+    '127.0.0.1',
+    '0.0.0.0',
+
+    # Vagrant
+    '192.168.33.70',
+
+    # Local
+    '192.168.10.245',
+    '192.168.10.189,'
+    '127.0.0.1',
+    '192.168.50.1',
+
+    # VirtualBox Adapters
+    '192.168.30.1',
+    '192.168.33.1',
+    '192.168.35.1',
+
+    # Host IP
+    '192.168.10.115'
+]
+
+
+# /DEBUG TOOLBAR
 
 # Application definition
 
@@ -51,6 +76,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'debug_toolbar',
+    # 'channels_panel',
 
     'allauth',
     'allauth.account',
@@ -73,6 +99,7 @@ INSTALLED_APPS = [
     'datesdim',
     'appglobals',
     'taggit',
+    'taggit_serializer',
 
     # search
     'django_elasticsearch_dsl',
@@ -87,9 +114,29 @@ INSTALLED_APPS = [
     'receptionist_profiles',
     'drug_information',
     'search_indexes'
+
 ]
 
-# User Model
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    # 'channels_panel.panel.ChannelsDebugPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+]
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
+
+
 # User Model
 AUTH_USER_MODEL = 'accounts.Account'
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
@@ -146,7 +193,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            '/linecare/templates'
+            '/home/jorge/projects/linecare/app/linecare-backend/templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -166,7 +213,6 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
-
 WSGI_APPLICATION = 'linecare_core.wsgi.application'
 ASGI_APPLICATION = "linecare_core.routing.application"
 
@@ -174,7 +220,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("redis-server-name", 6379)],
+            "hosts": [("localhost", 6379)],
         },
     },
 }
@@ -185,15 +231,13 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'linecare_test',
+        'NAME': 'linecare_core',
         'USER': 'linecare_user',
         'PASSWORD': 'asdf1234',
         'HOST': 'localhost',
         'PORT': '',
     }
 }
-
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -260,6 +304,7 @@ CORS_ORIGIN_WHITELIST = (
     'linecare.local',
     '192.168.10.189',
     '192.168.33.1',
+    '127.0.0.1'
 )
 
 GRAPHENE = {
@@ -268,7 +313,6 @@ GRAPHENE = {
         'graphene_django.debug.DjangoDebugMiddleware',
     )
 }
-
 
 ELASTICSEARCH_DSL = {
     'default': {

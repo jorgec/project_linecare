@@ -1,7 +1,8 @@
 from os import path
 from split_settings.tools import optional, include
-
-if path.isfile("/home/ubuntu/envars/neo"):
+if path.isfile("/home/jorge/projects/local"):
+    include("settings_collection/local-laptop.py")
+elif path.isfile("/home/ubuntu/envars/neo"):
     include("settings_collection/neo.py")
 elif path.isfile("/home/vagrant/local-jorge"):
     include("settings_collection/local-jorge.py")
