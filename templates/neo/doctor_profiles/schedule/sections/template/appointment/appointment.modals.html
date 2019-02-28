@@ -12,8 +12,8 @@
             <div class="modal-body">
                 <form method="post" id="frmScheduleAppointment">
                     {% csrf_token %}
-                    <div class="form-group row">
-                        <label class="col">Time:</label>
+                    <div class="form-group row align-items-baseline">
+                        <label class="col">Time</label>
                         <div class="col-8">
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" id="scheduleOptionFirstAvailable" name="scheduleOption"
@@ -45,9 +45,10 @@
 
                         <label for="forceSchedule" class="col-4">Force Schedule</label>
                         <div class="col-8">
-                            <div class="custom-control">
+                            <div class="custom-control d-flex flex-column">
                                 <input type="checkbox" name="forceSchedule" id="forceSchedule" class="form-check-input" style="width: 24px !important;">
                             </div>
+                            <small class="my-4">Note: This will bypass date and time conflict checking.</small>
                         </div>
 
                         <label for="scheduleDaySelect" class="col-4">Schedule Select</label>
