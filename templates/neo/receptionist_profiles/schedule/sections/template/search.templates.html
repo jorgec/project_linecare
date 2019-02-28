@@ -1,13 +1,13 @@
 <script type="text/html" id="template_patients_serp">
     <div class="item">
-        <div class="image" data-template-bind='[{"attribute": "style", "value": "profile_photo_css"}]'></div>
+        <div class="image" data-template-bind='[{"attribute": "style", "value": "patient.profile_photo_css"}]'></div>
         <div class="info">
             <p class="info-name">
-                <span data-content="first_name"></span>
-                <span data-content="last_name"></span>
+                <span data-content="patient.first_name"></span>
+                <span data-content="patient.last_name"></span>
             </p>
             <div class="btn-group btn-group-sm">
-                <a href="#!" class="btn btn-sm btn-outline-primary btnCreateSchedule" data-template-bind='[{"attribute": "data-profile-id", "value": "id"}, {"attribute": "data-profile-name", "value": "full_name"}]'>
+                <a href="#!" class="btn btn-sm btn-outline-primary btnCreateSchedule" data-template-bind='[{"attribute": "data-profile-id", "value": "patient.id"}, {"attribute": "data-profile-name", "value": "patient.full_name"}]'>
                     <i class="fa fa-calendar"></i> Set Appointment
                 </a>
             </div>
