@@ -46,7 +46,9 @@
                         var arrived_url = base_url + "&queue_status=queueing";
 
                         btnAction += "<a class='btn btn-info btn-sm action-button mark-arrived' href='" + arrived_url + "' data-id='" + q.id + "'>Mark arrived</a>";
-                        btnAction += "<a class='btn btn-danger btn-sm action-button cancel-appointment' href=" + cancel_url + " data-id='" + q["id"] +"'>Cancel</a>";
+                        // btnAction += "<a class='btn btn-danger btn-sm action-button cancel-appointment' href=" + cancel_url + " data-id='" + q["id"] +"'>Cancel</a>";
+                        // btnAction += "<a class='btn btn-danger btn-sm btnConfirmCancel' href='javascript:void(0)' data-toggle='modal' data-target='#cancelAppointmentModal'>Cancel</a>";
+                        btnAction += `<a class="btn btn-danger btn-sm btnConfirmCancel" href="javascript:void(0)" data-url="${cancel_url}" data-id="${q['id']}" data-toggle="modal" data-target="#cancelAppointmentModal">Cancel</a>`;
                         subAction += '<a href="' + reschedule_url + '">Reschedule Appointment</a>';
                     }
                     else if(q["status"] === "queueing"){
@@ -67,7 +69,7 @@
                         // btnAction += "<a class='btn btn-success btn-sm action-button mark-done' href='" + mark_done_url + "'>Done</a>";
                     }
 
-                    subAction += '<br><a href="' + patient_appointment_url + '">View appointment details</a>';
+                    //subAction += '<br><a href="' + patient_appointment_url + '">View appointment details</a>';
 
                     q["button_action"] = btnAction;
                     q["subactions"] = subAction;
@@ -77,6 +79,39 @@
                     queue.push(q);
                 }
                 $("#container-queue").loadTemplate($("#template-queue"), queue);
+
+                $(".btnConfirmCancel").on('click', function(e){
+                    e.preventDefault();
+                    var url = $(this).attr("data-url");
+                    var id = $(this).attr("data-id");
+                    
+                    $("#btnConfirmCancelAppointment").attr("href", url);
+                    $("#btnConfirmCancelAppointment").attr("data-id", id);
+                });
+
+                $("#btnConfirmCancelAppointment").on('click', function(e) {
+                    e.preventDefault();
+                    var action_url = $(this).attr("href");
+
+                    $.get(action_url)
+                        .done(function(result){
+                            $.notify({
+                                message: result
+                            }, {
+                                type: 'success'
+                            });
+                            getQueue('{{ date }}');
+                            $('#cancelAppointmentModal').modal('toggle')
+                        })
+                        .fail(function(result){
+                            $.notify({
+                                message: result.responseJSON
+                            }, {
+                                type: 'danger'
+                            });
+                            $('#cancelAppointmentModal').modal('toggle')
+                        });
+                })
 
                 $(".queue-action-buttons .action-button").on('click', function(e){
                     e.preventDefault();
