@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-from os.path import abspath, basename, dirname, join, normpath
+from os.path import abspath, basename, dirname, join, normpath, isfile
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,13 +27,15 @@ SITE_NAME = basename(DJANGO_ROOT)
 SECRET_KEY = 'yy740q+h$_n(swcuws^f(z5-^3svk=895b-x8b$d=a3@h+ac4c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if isfile("/home/kbeflo/DEBUG"):
+    DEBUG = True
+else:
+    DEBUG = False
 
 SITE_ID = 1
 SITE_URL = 'https://linecare.ph'
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     'allauth',
     'allauth.account',
@@ -65,6 +68,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'datesdim',
     'appglobals',
+    'taggit',
+    'taggit_serializer',
 
     # search
     'django_elasticsearch_dsl',
@@ -136,7 +141,7 @@ ROOT_URLCONF = 'linecare_core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/linecare/app/templates'],
+        'DIRS': ['/home/kbeflo/linecare/app/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -286,10 +291,10 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_URL = f'{SITE_URL}/static/'
-STATIC_ROOT = '/linecare/www/html/static/'
+STATIC_ROOT = '/home/kbeflo/linecare/www/html/static/'
 
 MEDIA_URL = f'{SITE_URL}/media/'
-MEDIA_ROOT = '/linecare/www/html/media/'
+MEDIA_ROOT = '/home/kbeflo/linecare/www/html/media/'
 TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

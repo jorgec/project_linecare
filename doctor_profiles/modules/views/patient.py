@@ -1,11 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import View
 
 from doctor_profiles.models import PatientAppointment, PatientCheckupRecord, PatientConnection, \
-    PatientCheckupRecordAccess, PatientSymptom, PatientFinding
+    PatientCheckupRecordAccess, PatientSymptom, PatientFinding, DoctorProfile
 from profiles.models import BaseProfile
 
 
@@ -27,35 +28,48 @@ class DoctorProfilePatientList(LoginRequiredMixin, UserPassesTestMixin, View):
 
 class DoctorProfilePatientDetail(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
-        doctor = request.user.doctor_profile()
         patient = get_object_or_404(BaseProfile, id=kwargs['patient_id'])
-        connection = get_object_or_404(PatientConnection, doctor=doctor, patient=patient)
+        if request.user.doctor_profile():
+            doctor = request.user.doctor_profile()
+            connection = get_object_or_404(PatientConnection, doctor=doctor, patient=patient)
 
-        checkups = PatientCheckupRecordAccess.objects.filter(
-            doctor=doctor,
-            checkup__appointment__patient=patient,
-            is_approved=True
-        ).order_by(
-            '-checkup__appointment__schedule_day__date_obj'
-        )
+            checkups = PatientCheckupRecordAccess.objects.filter(
+                doctor=doctor,
+                checkup__appointment__patient=patient,
+                is_approved=True
+            ).order_by(
+                '-checkup__appointment__schedule_day__date_obj'
+            )
 
-        context = {
-            'page_title': f'Patient profile for {patient}',
-            'location': 'doctor_profile_patients',
-            'sublocation': 'detail_home',
-            'doctor': doctor,
-            'patient': patient,
-            'checkups': checkups
-        }
+            context = {
+                'page_title': f'Patient profile for {patient}',
+                'location': 'doctor_profile_patients',
+                'sublocation': 'detail_home',
+                'doctor': doctor,
+                'patient': patient,
+                'checkups': checkups
+            }
 
-        return render(request, 'neo/doctor_profiles/patient/patient_detail.html', context)
+            return render(request, 'neo/doctor_profiles/patient/patient_detail.html', context)
+        elif request.user.receptionist_profile():
+            return HttpResponseRedirect(reverse(
+                'receptionist_profile_patient_detail',
+                kwargs={
+                    'patient_id': patient.id
+                }
+            ))
+
+        else:
+            pass
 
     def test_func(self):
-        return self.request.user.doctor_profile()
+        return self.request.user.doctor_profile() or self.request.user.receptionist_profile()
 
-class DoctorProfilePatientQSDetail(LoginRequiredMixin, UserPassesTestMixin, View):
+
+class DoctorProfilePatientQSDetail(View):
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('doctor_profile_patient_detail', kwargs={'patient_id': request.GET.get('patient_id', None)}))
+        return HttpResponseRedirect(
+            reverse('doctor_profile_patient_detail', kwargs={'patient_id': request.GET.get('patient_id', None)}))
 
 
 class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -68,7 +82,10 @@ class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMi
                 f"{reverse('doctor_profile_patient_appointment_history_detail')}?appointment={appointment.id}"
             )
 
-        checkup = appointment.appointment_checkup
+        try:
+            checkup = appointment.appointment_checkup
+        except PatientCheckupRecord.DoesNotExist:
+            checkup = PatientCheckupRecord.objects.create(appointment=appointment)
 
         if not checkup.doctor_has_access(doctor):
             return HttpResponseRedirect('/403/Forbidden')
@@ -96,7 +113,8 @@ class DoctorProfilePatientAppointmentDetail(LoginRequiredMixin, UserPassesTestMi
         appointment.status = 'done'
         appointment.save()
 
-        return_url = reverse('doctor_profile_schedule_detail', kwargs={'medical_institution': appointment.medical_institution.slug})
+        return_url = reverse('doctor_profile_schedule_detail',
+                             kwargs={'medical_institution': appointment.medical_institution.slug})
 
         return HttpResponseRedirect(
             f'{return_url}?date={str(appointment.schedule_day)}'

@@ -59,7 +59,7 @@
     });
 
     function scheduleAppointment(profile_id, appointment_time_start, appointment_time_end, appointment_type){
-        var url = "{% url 'api_private_appointment_create' %}?doctor_id={{ doctor.id }}&medical_institution_id={{ medical_institution.id }}";
+        var url = "{% url 'api_private_appointment_create' %}";
 
         var formData = {
             csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -70,7 +70,9 @@
             profile_id: profile_id,
             appointment_type: appointment_type,
             force_schedule: $("#forceSchedule").is(':checked'),
-            schedule_day_id: $("#scheduleDaySelect").val()
+            schedule_day_id: $("#scheduleDaySelect").val(),
+            doctor_id: '{{ doctor.id }}',
+            medical_institution_id: '{{ medical_institution.id }}'
         };
 
         $.post(url, formData)

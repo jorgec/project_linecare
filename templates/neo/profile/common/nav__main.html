@@ -1,51 +1,50 @@
 {% load static %}
 
-<div class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="navbar navbar-expand-lg navbar-light bg-light position-relative">
     <div class="container">
         {% if request.user.doctor_profile %}
-            <a href="{% url 'doctor_profile_home' %}" class="navbar-brand"><img src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
+            <a href="{% url 'doctor_profile_home' %}" class="navbar-brand"><img
+                    src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
         {% elif request.user.receptionist_profile %}
-            <a href="{% url 'receptionist_profile_home' %}" class="navbar-brand"><img src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
+            <a href="{% url 'receptionist_profile_home' %}" class="navbar-brand"><img
+                    src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
         {% else %}
             <a href="/" class="navbar-brand"><img src="{% static 'neo/images/LineCare-Logo-022.png' %}" alt="LineCare"></a>
         {% endif %}
 
-        <div class="profile__container">
+        <div class="menu__container">
+            {% if request.user.doctor_profile %}
+            {% include 'neo/doctor_profiles/common/main_menu.html' %}
+            {% elif request.user.receptionist_profile  %}
+            {% include 'neo/receptionist_profiles/common/main_menu.html' %}
+            {% endif %}
+        </div>
+
+        <div class="profile__container position-relative">
+            <div title="Change Language" id="google_translate_element" class="position-absolute align-items-center justify-content-center" style="height:44.8px;width:56px;top:-8px;right:170px;"></div>
             <div class="profile__notif">
-                <i class="fas fa-bell"></i>
+                <a id="notification_bell" href="javascript:void(0)"><i class="fas fa-bell"></i><span id="badgeNotificationAlert" class="badge badge-success hide">New</span></a>
             </div>
             <div class="profile__photo">
                 <img src="{{ request.user.base_profile.get_profile_photo }}" alt="{{ request.user.base_profile }}">
             </div>
             <div class="profile__name">
 
-                <a id="dropdownMenuButton2" data-toggle="dropdown" href="#">{{ request.user.base_profile }} <i class="fas fa-caret-down"></i></a>
+                <a id="dropdownMenuButton2" data-toggle="dropdown" href="#">{{ request.user.base_profile }} <i
+                        class="fas fa-caret-down"></i></a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
-
-                    <div id="google_translate_element"></div>
-                    <script type="text/javascript">
-                        function googleTranslateElementInit() {
-                            new google.translate.TranslateElement({
-                                pageLanguage: 'en',
-                                includedLanguages: 'ceb,tl',
-                                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-                            }, 'google_translate_element');
-                        }
-                    </script>
-                    <script type="text/javascript"
-                            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-
                     <hr>
-                    <a class="dropdown-item" href="{% url 'base_profile_home_view' %}">My Personal Profile</a>
+<!--                <a class="dropdown-item" href="{% url 'base_profile_home_view' %}">My Personal Profile</a> -->
                     <hr>
                     {% if request.user.doctorprofile %}
-                        <a class="dropdown-item" href="{% url 'doctor_profile_home' %}" data-toggle="tooltip" data-placement="top" title="My Doctor Profile">
+                        <a class="dropdown-item" href="{% url 'doctor_profile_settings_home' %}" data-toggle="tooltip"
+                           data-placement="top" title="My Doctor Profile">
                             My Doctor Profile
                         </a>
                     {% endif %}
                     {% if request.user.receptionistprofile %}
-                        <a class="dropdown-item" href="{% url 'receptionist_profile_home' %}" data-toggle="tooltip" data-placement="top" title="My Receptionist Profile">
+                        <a class="dropdown-item" href="{% url 'receptionist_profile_home' %}" data-toggle="tooltip"
+                           data-placement="top" title="My Receptionist Profile">
                             My Receptionist Profile
                         </a>
                     {% endif %}
@@ -55,4 +54,23 @@
             </div>
         </div>
     </div>
+    <div id="appointment-lists-container" class="position-absolute bg-light" style="top:60px;right:115px;max-width:500px;min-width:500px;height:auto;border: 1px solid rgba(0,0,0,.15);z-index:999;padding:1rem;display:none;">
+        <div id="appointment-lists-section">
+            <div class="donut-spinner"></div>
+        </div>
+        <a id="clear_notifications" href="javascript:void(0)">Clear notifications</a>
+    </div>
 </div>
+
+
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'ceb,tl',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    }
+</script>
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>

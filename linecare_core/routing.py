@@ -7,7 +7,7 @@ from profiles.consumers.patient_appointment_consumers import PatientAppointmentN
 from receptionist_profiles.consumers import ReceptionistAppointmentNotificationConsumer
 
 application = ProtocolTypeRouter({
-    "websocket" : AuthMiddlewareStack(
+    "websocket": AuthMiddlewareStack(
         URLRouter([
             path("notifications/receptionist/appointments/", ReceptionistAppointmentNotificationConsumer),
             path('notifications/patient/appointment/status/', PatientAppointmentNotificationConsumer),

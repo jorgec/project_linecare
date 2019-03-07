@@ -38,12 +38,10 @@
         var url = "{% url 'api_private_appointment_finding_list' %}?checkup_id={{ checkup.id }}";
         $.get(url)
             .done(function(result){
-                console.log(result);
                 $("#findings-container").loadTemplate($("#findings-template"), result);
 
                 $(".finding-detail").on('click', function(e){
                     e.preventDefault();
-                    console.log($(this).attr("data-finding-name"));
                     $("#modalFindingDetailTitle").html($(this).attr("data-finding-name"));
                     $("#modalFindingDetailDescription").html($(this).attr("data-finding-description"));
                 });
@@ -59,6 +57,11 @@
         $.get(dismissed_url)
             .done(function(result){
                 $("#dismissed-findings-container").loadTemplate($("#dismissed-findings-template"), result);
+                $(".undismiss-finding").on('click', function(e){
+                    e.preventDefault();
+                    var finding_id = $(this).attr("data-finding-id");
+                    undismissFinding(finding_id);
+                });
             })
     }
 
@@ -131,6 +134,22 @@
                 loadFindings();
                 $.notify({
                     message: "Finding removed!"
+                }, {
+                    type: 'success'
+                });
+            });
+    }
+    function undismissFinding(finding_id){
+        var url = "{% url 'api_private_appointment_finding_undismiss' %}?id=" + finding_id + "&checkup_id={{ checkup.id }}";
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        };
+
+        $.post(url, formData)
+            .done(function (result) {
+                loadFindings();
+                $.notify({
+                    message: "Finding returned!"
                 }, {
                     type: 'success'
                 });

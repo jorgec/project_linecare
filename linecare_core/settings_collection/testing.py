@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     'debug_toolbar',
 
@@ -98,6 +99,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'datesdim',
     'appglobals',
+    'taggit',
+    'taggit_serializer',
 
     # search
     'django_elasticsearch_dsl',
@@ -280,6 +283,8 @@ CORS_ORIGIN_WHITELIST = (
     'linecare.local',
     '192.168.10.189',
     '192.168.33.1',
+    'localhost:3000',
+    '192.168.10.189:3000'
 )
 
 ELASTICSEARCH_DSL = {

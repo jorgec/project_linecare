@@ -21,7 +21,7 @@
                 {% endfor %}
             {% endif %}
 
-            <div class="gallery-container">
+            <div class="gallery-container" style="min-height: 50px;">
                 {% for p in album.album_photos.all %}
                     <a href="#!" data-url="{{ p.get_photo }}" data-id="{{ p.id }}" class="photo-detail">
                         <div class="gallery-item" style="background-image: url({{ p.get_photo }})">

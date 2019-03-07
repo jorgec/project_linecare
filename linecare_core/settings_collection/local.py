@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 from os.path import abspath, basename, dirname, join, normpath
 
+
+def ret_true(request):
+    return True
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,7 +36,7 @@ DEBUG = True
 
 SITE_ID = 1
 # SITE_URL = 'https://192.168.10.245'
-SITE_URL = 'https://192.168.33.110'
+SITE_URL = 'https://192.168.50.11'
 
 ALLOWED_HOSTS = ['*']
 
@@ -42,15 +47,19 @@ INTERNAL_IPS = [
 
     # Vagrant
     '192.168.33.70',
+    '192.168.50.11',
+    '192.168.50.1',
 
     # Local
     '192.168.10.245',
     '192.168.10.189,'
+    '192.168.10.42,'
 
     # VirtualBox Adapters
     '192.168.30.1',
     '192.168.33.1',
     '192.168.35.1',
+    '192.168.2.15',
 
     # Host IP
     '192.168.10.115'
@@ -58,6 +67,7 @@ INTERNAL_IPS = [
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
+    'channels_panel.panel.ChannelsDebugPanel',
     'debug_toolbar.panels.timer.TimerPanel',
     'debug_toolbar.panels.settings.SettingsPanel',
     'debug_toolbar.panels.headers.HeadersPanel',
@@ -72,6 +82,7 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
+    'SHOW_TOOLBAR_CALLBACK': lambda x: True,
 }
 
 # /DEBUG TOOLBAR
@@ -88,8 +99,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'django.contrib.humanize',
 
     'debug_toolbar',
+    'channels_panel',
 
     'allauth',
     'allauth.account',
@@ -303,7 +316,6 @@ GRAPHENE = {
         'graphene_django.debug.DjangoDebugMiddleware',
     )
 }
-
 
 ELASTICSEARCH_DSL = {
     'default': {

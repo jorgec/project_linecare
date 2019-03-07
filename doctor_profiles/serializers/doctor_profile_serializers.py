@@ -10,6 +10,7 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
 
     def repr_doctor_name(self, obj):
         return str(obj)
+
     class Meta:
         model = models.DoctorProfile
         fields = (
@@ -28,6 +29,7 @@ class DoctorProfilePublicSerializer(serializers.ModelSerializer):
 
     def repr_doctor_name(self, obj):
         return str(obj)
+
     class Meta:
         model = models.DoctorProfile
         fields = (

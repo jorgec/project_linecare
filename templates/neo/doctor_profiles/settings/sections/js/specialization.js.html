@@ -136,6 +136,11 @@
         e.preventDefault();
         addBaseEntity();
     });
+    $("#btnRelatedEntityAddNext").click(function(e){
+        e.preventDefault();
+        addRelatedEntity();
+        window.location.replace('/doctor/settings/association');
+    });
 
     $("#btnRelatedEntityReset").click(function(e){
         e.preventDefault();

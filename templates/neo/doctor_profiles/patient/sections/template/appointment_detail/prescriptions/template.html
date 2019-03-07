@@ -59,11 +59,12 @@
             <i class="fa fa-times"></i>
         </a>
     </span>
+
 </script>
 
 <script type="text/html" id="dismissed-prescriptions-template">
     <li class="list-group-item">
-        <span data-content="diagnosis.name"></span> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
+        <a href="#!" class="undismiss-prescription" data-template-bind='[{"attribute": "data-prescription-id", "value": "id"}]'><span data-content="drug.name"></span></a> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
     </li>
 </script>
 

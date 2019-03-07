@@ -1,55 +1,191 @@
 {% load static %}
 
 <script type="text/javascript">
+    var modalPatientPreview = $("#modalPatientPreview");
+    var btnPatientPreview = $(".modalPatientPreview_open");
+    var containerPatientPreview = $("#container-patient-detail");
+    var templatePatientPreview = $("#template-patient-detail");
+    var containerPatientHistoryList = $("#container-patient-appointments-list");
+    var templatePatientHistoryList = $("#template-patient-appointments-list");
 
-    $(document).ready(function(){
+    $(document).ready(function () {
         getQueue('{{ date }}');
+        modalPatientPreview.popup({
+            autozindex: true,
+            scrolllock: true
+        });
 
         var webSocketBridge = new channels.WebSocketBridge();
         webSocketBridge.connect('/notifications/doctor/queue/status_update/');
         webSocketBridge.listen(function (event) {
-            console.log(event);
-            if(event.type === "queue.update"){
+
+            if (event.type === "queue.update") {
                 getQueue('{{ date }}');
             }
         });
     });
 
-    function getQueue(){
 
-        var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0]: null;
+    function updateQueueTitle(count) {
+        var title = "";
+        if (count === 1) {
+            title = "Today's patient <small>{{ date }}</small>: " + count;
+        } else {
+            title = "Today's patients <small>{{ date }}</small>: " + count;
+        }
 
-        if( !date ){
+        $("#headerPatientQueue").html = title;
+    }
+
+    function getQueue() {
+
+        var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+        if (!date) {
             date = new Date().toISOString().split("T")[0];
         }
-        var url = "{% url 'api_private_queue_list' %}?doctor_id={{ doctor.id }}&date=" + date + "&count=1";
-
+        var url = "{% url 'api_private_queue_list' %}?doctor_id={{ doctor.id }}&date=" + date;
+        var queue = [];
+        var previewState = {
+            current: 0,
+            next: 0,
+            prev: 0
+        };
         $.get(url)
-            .done(function(result){
+            .done(function (result) {
                 var queue = [];
-                for(var r in result){
+                var q_number = 1;
+                updateQueueTitle(result.length);
+                for (var r in result) {
                     var q = result[r];
+                    // console.log(q)
                     var btnAction = "";
                     var subAction = "";
-                    var patient_appointment_url = "{% url 'doctor_profile_patient_appointment_detail' %}?appointment=" + q.id;
-                    var mi_url = "{% url 'doctor_profile_schedule_detail_urlstring' %}?medical_institution=" + q.medical_institution.slug + "&date={{ date }}";
+                    var base_url = "{% url 'api_private_patient_appointment_status_update' %}?appointment_id=" + q.id;
+                    var patient_appointment_url =
+                        "{% url 'doctor_profile_patient_appointment_detail' %}?appointment=" + q.id;
+                    var mi_url = "{% url 'doctor_profile_schedule_detail_urlstring' %}?medical_institution=" + q.medical_institution
+                        .slug + "&date={{ date }}&schedule_id=" + q.schedule;
+                    var reschedule_url = "";
+                    var cancel_url = base_url + "&queue_status=cancelled_by_doctor";
+                    q["patient_url"] = "{% url 'doctor_profile_patient_qs_detail' %}?patient_id=" + q.patient.id;
 
-                    subAction += '<a href="' + patient_appointment_url + '">View appointment details</a>';
+                    if (q["status"] === "pending") {
+                        var arrived_url = base_url + "&queue_status=queueing";
+
+                        btnAction += "<a class='mb-1 btn btn-info btn-sm action-button mark-arrived' href='" +
+                            arrived_url + "' data-id='" + q.id + "'>Mark arrived</a>";
+                        btnAction += "<a class='btn btn-danger btn-sm action-button cancel-appointment' href=" +
+                            cancel_url + " data-id='" + q["id"] + "'>Cancel</a>";
+                    } else if (q["status"] === "queueing") {
+                        var pending_url = base_url + "&queue_status=pending";
+                        var in_progress_url = base_url + "&queue_status=in_progress";
+
+
+                        btnAction +=
+                            "<a class='mb-1 btn btn-primary btn-sm action-button receive-appointment' href='" +
+                            in_progress_url + "' data-id='" + q["id"] + "'>Come in</a>";
+                        btnAction += "<a class='mb-1 btn btn-secondary btn-sm action-button mark-pending' href='" +
+                            pending_url + "' data-id='" + q["id"] + "'>Mark pending</a>";
+                        btnAction += "<a class='btn btn-danger btn-sm action-button cancel-appointment' href=" +
+                            cancel_url + " data-id='" + q["id"] + "'>Cancel</a>";
+                    } else if (q["status"] === "in_progress") {
+                        var back_to_queue_url = base_url + "&queue_status=queueing";
+
+                        btnAction += "<a class='mb-1 btn btn-info btn-sm' href='" + patient_appointment_url +
+                            "'>Load Medical Chart</a>";
+                        btnAction += "<a class='btn btn-secondary btn-sm action-button' href='" + back_to_queue_url +
+                            "'>Back to queue</a>";
+                        // btnAction += "<a class='btn btn-success btn-sm action-button mark-done' href='" + mark_done_url + "'>Done</a>";
+                    }
+                    q["appointment_url"] = patient_appointment_url;
 
                     q["button_action"] = btnAction;
-                    q["subactions"] = subAction;
                     q["mi_url"] = mi_url;
-
+                    q["q_number"] = q_number;
+                    q["index"] = q_number - 1;
+                    q_number++;
                     queue.push(q);
                 }
                 $("#container-queue").loadTemplate($("#template-queue"), queue);
 
-                $(".queue-action-buttons .action-button").on('click', function(e){
+                $(".modalPatientPreview_open").on('click', function (e) {
+                    var q = $(this).attr("data-patient-id");
+
+                    updatePreviewState(q);
+                    loadPatientPreview(previewState.current);
+                });
+
+                $("#btnPreviewPatientPrevious").on('click', function (e) {
+                    e.preventDefault();
+                    prev();
+                });
+
+                $("#btnPreviewPatientNext").on('click', function(e) {
+                    e.preventDefault();
+                    next();
+                });
+
+                $("#modalPatientPreview").keydown(function(e){
+                    if((e.keyCode || e.which) === 37){
+                        prev();
+                    }else if((e.keyCode || e.which) === 39){
+                        next();
+                    }
+                });
+
+                function prev(){
+                    var current = previewState.current - 1;
+                    updatePreviewState(current);
+                    loadPatientPreview(previewState.current);
+                }
+
+                function next(){
+                    var current = previewState.current + 1;
+                    if (current >= queue.length) {
+                        current = current - 1;
+                    }
+                    updatePreviewState(current);
+                    loadPatientPreview(previewState.current);
+                }
+
+                function updatePreviewState(q){
+                    q = parseInt(q);
+                    if (q < 0) {
+                        previewState.prev = 0;
+                        previewState.current = 0;
+                        previewState.next = 1;
+                    } else if (q >= queue.length) {
+                        previewState.prev = queue.length - 1;
+                        previewState.current = queue.length;
+                        previewState.next = queue.length;
+                    } else {
+                        previewState.prev = q - 1;
+                        previewState.current = q;
+                        previewState.next = q + 1;
+                    }
+
+                }
+
+                function loadPatientPreview(current){
+                    $("#container-patient-appointments-list").html('<div class="donut-spinner"></div>');
+                    containerPatientPreview.loadTemplate(templatePatientPreview, queue[current]);
+                    var url = "{% url 'api_private_patient_appointments_history' %}?patient_id=" + queue[current].patient
+                        .id;
+
+                    $.get(url)
+                        .done(function (result) {
+                            containerPatientHistoryList.loadTemplate(templatePatientHistoryList, result);
+                        });
+                }
+
+
+                $(".queue-action-buttons .action-button").on('click', function (e) {
                     e.preventDefault();
                     var action_url = $(this).attr("href");
 
                     $.get(action_url)
-                        .done(function(result){
+                        .done(function (result) {
                             $.notify({
                                 message: result
                             }, {
@@ -57,7 +193,7 @@
                             });
                             getQueue('{{ date }}');
                         })
-                        .fail(function(result){
+                        .fail(function (result) {
                             $.notify({
                                 message: result.responseJSON
                             }, {
@@ -66,9 +202,8 @@
                         });
                 });
             })
-            .fail(function(result){
+            .fail(function (result) {
                 console.log(result);
             });
     }
-
 </script>

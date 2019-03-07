@@ -19,6 +19,6 @@
 
 <script type="text/html" id="dismissed-symptoms-template">
     <li class="list-group-item">
-        <span data-content="symptom.name"></span> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
+        <a href="#!" class="undismiss-symptom" data-template-bind='[{"attribute": "data-symptom-id", "value": "symptom.id"}]'><span data-content="symptom.name"></span></a> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
     </li>
 </script>

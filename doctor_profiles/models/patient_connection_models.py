@@ -23,13 +23,9 @@ class PatientConnection(models.Model):
     patient = models.ForeignKey('profiles.BaseProfile', on_delete=models.SET_NULL, null=True, blank=True,
                                 related_name='patient_doctors')
 
-
     class Meta:
-        ordering = ('patient', 'doctor')
+        ordering = ('patient__last_name', 'patient__first_name', 'doctor')
         unique_together = ('patient', 'doctor')
-
 
     def __str__(self):
         return f'{self.patient} - {self.doctor}'
-
-

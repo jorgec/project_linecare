@@ -1,25 +1,46 @@
 <div id="modalAddLabTest" class="popup-modal popup-modal card">
+    <div class="card-header">
+        <a class="float-right close modalAddLabTest_close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </a>
+        <h5 class="modal-title">Request Lab Tests</h5>
+    </div>
     <div class="card-body">
         <div class="row">
             <div class="col-sm-12 col-md-4">
                 <div class="form-group mb-2">
                     <input type="text" class="form-control" placeholder="Search..." name="txtLabTestsearch" id="txtLabTestsearch">
                 </div>
-                <div style="height: 70vh; overflow: scroll">
-                    <ul class="list-group list-group-flush" id="labtests-container"></ul>
+                <div style="height: 60vh; overflow: scroll">
+                    <div class="container-fluid" id="labtests-container"></div>
                 </div>
+                <a id="btnAddLabTestPatientSelected" class="btn btn-primary btn-sm mt-1" href="#!">
+                    Request selected tests
+                </a>
             </div>
             <div class="col-sm-12 col-md-8 hide" id="modalAddLabTestDescriptionPane">
                 <h4 id="modalAddLabTest_title" class="h4"></h4>
                 <hr>
                 <h5 class="h5">Description</h5>
-                <p id="modalAddLabTest_description"></p>
+                <div id="modalAddLabTest_description_wrapper">
+                    <p><span id="modalAddLabTest_description"></span> <a href="#!" class="modalAddLabTest_description_full_open">Read mode &raquo;</a></p>
+                    <div id="modalAddLabTest_description_full" class="popup-modal card card-body" style="width: 50vw"></div>
+                </div>
                 <h5 class="h5">Purpose</h5>
-                <p id="modalAddLabTest_purpose"></p>
+                <div id="modalAddLabTest_purpose_wrapper">
+                    <p><span id="modalAddLabTest_purpose"></span> <a href="#!" class="modalAddLabTest_purpose_full_open">Read mode &raquo;</a></p>
+                    <div id="modalAddLabTest_purpose_full" class="popup-modal card card-body" style="width: 50vw"></div>
+                </div>
                 <h5 class="h5">Indication</h5>
-                <p id="modalAddLabTest_indication"></p>
+                <div id="modalAddLabTest_indication_wrapper">
+                    <p><span id="modalAddLabTest_indication"></span> <a href="#!" class="modalAddLabTest_indication_full_open">Read mode &raquo;</a></p>
+                    <div id="modalAddLabTest_indication_full" class="popup-modal card card-body" style="width: 50vw"></div>
+                </div>
                 <h5 class="h5">Notes</h5>
-                <p id="modalAddLabTest_notes"></p>
+                <div id="modalAddLabTest_notes_wrapper">
+                    <p><span id="modalAddLabTest_notes"></span> <a href="#!" class="modalAddLabTest_notes_full_open">Read mode &raquo;</a></p>
+                    <div id="modalAddLabTest_notes_full" class="popup-modal card card-body" style="width: 50vw"></div>
+                </div>
                 <hr>
                 <a id="btnAddLabTestPatient" class="btn btn-primary" href="#!">
                     Request for this test
@@ -41,5 +62,12 @@
                 Lab test results placeholder. Note that you won't be able to remove tests with results
             </div>
         </div>
+    </div>
+</div>
+
+<div id="modalDismissedLabtests" class="popup-modal card">
+    <div class="card-body">
+        <h5 class="h5">Dismissed Lab Test Requests</h5>
+        <ul id="dismissed-labtests-container" class="list-group list-group-flush"></ul>
     </div>
 </div>

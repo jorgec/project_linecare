@@ -119,9 +119,61 @@
                     var id = $(this).attr("data-prescription-id");
                     loadPrescription(id)
                 });
+
+                $(".remove-prescription").on('click', function(e){
+                    e.preventDefault();
+                    var id = $(this).attr("data-prescription-id");
+                    removePrescription(id)
+                });
             })
             .fail(function(result){
                 console.log(result);
+            });
+
+        var dismissed_url = "{% url 'api_private_patient_prescription_dismissed_list' %}?checkup_id={{ checkup.id }}";
+        $.get(dismissed_url)
+            .done(function(result){
+                $("#dismissed-prescriptions-container").loadTemplate($("#dismissed-prescriptions-template"), result);
+
+                $(".undismiss-prescription").on('click', function(e){
+                    e.preventDefault();
+                    var prescription_id = $(this).attr("data-prescription-id");
+                    undismissPrescription(prescription_id);
+                });
+            })
+    }
+
+    function removePrescription(id){
+        var url = "{% url 'api_private_appointment_prescription_delete' %}?id=" + id + "&checkup_id={{ checkup.id }}";
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        };
+
+        $.post(url, formData)
+            .done(function (result) {
+                loadPrescriptions();
+                $.notify({
+                    message: "Prescription removed!"
+                }, {
+                    type: 'success'
+                });
+            });
+    }
+
+    function undismissPrescription(id){
+        var url = "{% url 'api_private_appointment_prescription_undismiss' %}?id=" + id + "&checkup_id={{ checkup.id }}";
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        };
+
+        $.post(url, formData)
+            .done(function (result) {
+                loadPrescriptions();
+                $.notify({
+                    message: "Prescription returned!"
+                }, {
+                    type: 'success'
+                });
             });
     }
 

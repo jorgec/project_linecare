@@ -18,6 +18,6 @@
 
 <script type="text/html" id="dismissed-findings-template">
     <li class="list-group-item">
-        <span data-content="finding.name"></span> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
+        <a href="#!" class="undismiss-finding" data-template-bind='[{"attribute": "data-finding-id", "value": "finding.id"}]'><span data-content="finding.name"></span></a> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
     </li>
 </script>

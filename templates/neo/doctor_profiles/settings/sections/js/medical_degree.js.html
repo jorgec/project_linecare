@@ -143,6 +143,12 @@
         addBaseEntity();
     });
 
+    $("#btnRelatedEntityAddNext").click(function(e){
+        e.preventDefault();
+        addRelatedEntity();
+        window.location.replace('/doctor/settings/specialization');
+    });
+
     $("#btnRelatedEntityReset").click(function(e){
         e.preventDefault();
         resetForm(model.relatedEntity.objectDetail.fields);

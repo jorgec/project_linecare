@@ -132,6 +132,44 @@ class ApiPrivatePhotoUpdate(APIView):
         return Response(retval, status=retstatus)
 
 
+class ApiPrivateUnsetPrimaryPhoto(APIView):
+    """
+    Unset photo as primary for album
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        photo = request.user.base_profile().get_profile_photo(return_null=True)
+
+        if photo:
+            # auth check
+            if not photo.album.verify_ownership(request.user):
+                return Response("Unauthorized access", status=status.HTTP_401_UNAUTHORIZED)
+            # /auth check
+
+            result = photo.unset_primary_photo()
+            if result:
+                retstatus = status.HTTP_200_OK
+                result = PhotoSerializer(result).data
+            else:
+                retstatus = status.HTTP_500_INTERNAL_SERVER_ERROR
+            retval = photo_save_template(**{
+                'as_json': False,
+                'status': retstatus,
+                'result': "Primary photo unset",
+                'request': request
+            })
+
+            return Response(retval, status=retstatus)
+
+        return Response(photo_save_template(**{
+            'as_json': False,
+            'status': status.HTTP_404_NOT_FOUND,
+            'result': "No photo set",
+            'request': request
+        }))
+
+
 class ApiPrivateSetPrimaryPhoto(APIView):
     """
     Set photo as primary for album

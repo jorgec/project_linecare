@@ -1,10 +1,13 @@
 import phonenumbers
+from django.apps import apps
+from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_extensions.db import fields as extension_fields
 from phonenumber_field.modelfields import PhoneNumberField
+from django.conf import settings
 
 from albums.constants import PROFILE_PHOTO_ALBUM, COVER_PHOTO_ALBUM
 from albums.models import Album
@@ -44,18 +47,20 @@ class BaseProfile(models.Model):
     is_fresh = models.BooleanField(default=True)
     is_primary = models.BooleanField(default=False)
 
+    metadata = JSONField(default=dict, null=True, blank=True)
+
     objects = BaseProfileManager()
 
     class Meta:
-        ordering = ('user', '-created')
+        ordering = ('last_name', 'first_name', '-created')
 
     def __str__(self):
         return self.get_full_name()
 
     def as_html(self):
         html = f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Full Name</span><span class='kv-value'>{self.get_full_name()}</p>" \
-               f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Sex</span><span class='kv-value'>{self.gender}</p>" \
-               f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Date of Birth</span><span class='kv-value'>{self.date_of_birth}</p>"
+            f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Sex</span><span class='kv-value'>{self.gender}</p>" \
+            f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Date of Birth</span><span class='kv-value'>{self.date_of_birth}</p>"
         return html
 
     def get_casual_name(self):
@@ -160,11 +165,17 @@ class BaseProfile(models.Model):
         except:
             return None
 
-    def get_profile_photo(self):
+    def get_profile_photo(self, return_null=False):
         album = self.get_profile_album()
         if album:
-            return album.get_primary_photo()
+            return album.get_primary_photo(return_null)
         return None
+
+    def get_profile_photo_url(self):
+        photo = self.get_profile_photo(return_null=True)
+        if photo:
+            return photo.photo.url
+        return f"{settings.STATIC_URL}neo/images/profile-dummy.png"
 
     def get_cover_photo(self):
         album = self.get_cover_album()
@@ -178,6 +189,60 @@ class BaseProfile(models.Model):
             return self.profile_biometrics
         except ObjectDoesNotExist:
             return None
+
+    """ appointments """
+
+    def appointment_notifications(self):
+        try:
+            return self.metadata['notifiers']
+        except KeyError:
+            self.metadata['notifiers'] = []
+            return []
+
+    def update_appointment_notifications(self, data):
+        notifs = self.appointment_notifications()
+        notifs.append(data)
+        notifs.reverse()
+        self.metadata['notifiers'] = notifs
+        self.save(update_fields=['metadata'])
+        return self.appointment_notifications()
+
+    def clear_appointment_notifications(self):
+        self.metadata['notifiers'] = []
+        self.save(update_fields=['metadata'])
+        return []
+
+    def create_appointment(
+            self,
+            *,
+            doctor_id,
+            medical_institution_id,
+            day,
+            time_start,
+            time_end,
+            schedule_choice='first_available',
+            appointment_type='checkup',
+            force_schedule=False
+
+    ):
+        PatientAppointment = apps.get_model('doctor_profiles.PatientAppointment')
+
+        result, appointment, status_code = PatientAppointment.objects.create(
+            patient_id=self.id,
+            doctor_id=doctor_id,
+            medical_institution_id=medical_institution_id,
+            appointment_day=day,
+            preferred_time_start=time_start,
+            preferred_time_end=time_end,
+            schedule_choice=schedule_choice,
+            force_schedule=force_schedule,
+            appointment_type=appointment_type
+        )
+
+        return result, appointment, status_code
+
+
+""" /appointments """
 
 
 class ProfilePhone(models.Model):
@@ -211,14 +276,14 @@ class ProfilePhone(models.Model):
 def create_generic_albums(sender, instance=None, created=False, **kwargs):
     if created:
         Album.objects.create(**{
-            'name': '{} Profile Photos'.format(instance.user.username),
+            'name': 'Profile Photos',
             'description': 'Profile photos',
             'profile': instance,
             'album_type': PROFILE_PHOTO_ALBUM
         })
 
         Album.objects.create(**{
-            'name': '{} Cover Photos'.format(instance.user.username),
+            'name': 'Cover Photos',
             'description': 'Cover photos',
             'profile': instance,
             'album_type': COVER_PHOTO_ALBUM

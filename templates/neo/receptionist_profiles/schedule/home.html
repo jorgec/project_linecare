@@ -5,6 +5,7 @@
 {% block header_css %}
     <link rel="stylesheet" href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static '3rd-party/timepicki/css/timepicki.css' %}">
 {% endblock %}
 {% block header_js %}
 {% endblock %}
@@ -22,6 +23,7 @@
 <script type="text/javascript" src="{% static '3rd-party/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
 <script type="text/javascript" src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'neo/js/stateManager.js' %}"></script>
+<script type="text/javascript" src="{% static '3rd-party/timepicki/js/timepicki.js' %}"></script>
 <script type="text/javascript">
     var model = {};
 </script>
@@ -32,6 +34,16 @@
     $(document).ready(function () {
         bootUp(model);
     });
+    $('#myStartTime').timepicki({
+        step_size_minutes:5,
+        overflow_minutes:true,
+        reset: true
+    });
+    $('#myEndTime').timepicki({
+        step_size_minutes:5,
+        overflow_minutes:true,
+        reset: true
+    });  
 </script>
 {% endblock %}
 {% endblock %}

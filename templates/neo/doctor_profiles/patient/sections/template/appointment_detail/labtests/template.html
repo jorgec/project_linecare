@@ -1,7 +1,12 @@
 <script type="text/html" id="labtests-template">
-    <li class="list-group-item">
-        <a href="#!" class="labtest-item" data-content="name" data-template-bind='[{"attribute": "data-labtest-id", "value": "id"}]'></a>
-    </li>
+    <div class="row mb-2">
+        <div class="col-1">
+            <input type="checkbox" name="labtest_check" data-value="id">
+        </div>
+        <div class="col">
+            <a href="#!" class="labtest-item" data-content="name" data-template-bind='[{"attribute": "data-labtest-id", "value": "id"}]'></a>
+        </div>
+    </div>
 </script>
 
 <script type="text/html" id="patient-labtests-template">
@@ -11,4 +16,10 @@
             <i class="fa fa-times"></i>
         </a>
     </span>
+</script>
+
+<script type="text/html" id="dismissed-labtests-template">
+    <li class="list-group-item">
+        <a href="#!" class="undismiss-labtest" data-template-bind='[{"attribute": "data-labtest-id", "value": "lab_test.id"}]'><span data-content="lab_test.name"></span></a> <em>dismissed by <span data-content="removed_by.doctor_name"></span></em>
+    </li>
 </script>

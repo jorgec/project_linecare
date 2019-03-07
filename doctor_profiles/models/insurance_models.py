@@ -36,7 +36,7 @@ class DoctorInsurance(models.Model):
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    identifier = models.CharField(max_length=120)
+    identifier = models.CharField(max_length=120, blank=True, null=True, default=None)
 
     """
     admin

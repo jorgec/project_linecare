@@ -1,6 +1,6 @@
 {% extends 'neo/doctor_profiles/patient/base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
+{% load humanize %}
 
 {% block header_css %}
 
@@ -104,6 +104,15 @@
                                         <a href="#!" class="modalDrugDetail-{{ i.drug.id }}_open">
                                             {{ i.drug.name }}
                                         </a>
+                                        <hr >
+                                        <strong>{{ i.prescription_dosage }} {{ i.prescription_dosage_unit }}</strong>,
+                                        {{ i.prescription_amount }} {{ i.prescription_amount_unit }}<br >
+                                        {{ i.prescription_route }} <em>{{ i.prescription_frequency }}</em><br>
+                                        <small>Dispense: {{ i.prescription_dispense_qty }}</small>
+                                        <hr>
+                                        {{ i.prescription_notes }}
+                                        <br>
+                                        <small>Prescribed by: {{ i.doctor }}</small>
                                     </li>
 
                                     <div id="modalDrugDetail-{{ i.drug.id }}" class="popup-modal card">
@@ -154,16 +163,18 @@
                         </div>
                         <div class="card-body">
                             <ul class="list-group">
+
                                 {% for i in appointment.get_lab_tests %}
                                     <li class="list-group-item">
-                                        <a href="#!" class="modalLabTestResult-{{ i.appointment.lab_test.id }}_open">
-                                            {{ i.appointment.lab_test }}
+
+                                        <a href="#!" class="modalLabTestResult-{{ i.lab_test.id }}_open">
+                                            {{ i.lab_test.name }}
                                         </a>
                                     </li>
-                                    <div class="popup-modal card" id="modalLabTestResult-{{ i.appointment.lab_test.id }}">
+                                    <div class="popup-modal card" id="modalLabTestResult-{{ i.lab_test.id }}">
                                         <div class="card-header">
                                             <h6 class="card-title">
-                                                {{ i.appointment.lab_test.name }}
+                                                {{ i.lab_test.name }}
                                             </h6>
                                         </div>
                                         <div class="card-body">
@@ -173,6 +184,27 @@
                                 {% endfor %}
                             </ul>
                         </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for i in appointment.get_notes %}
+                        <div class="row">
+                            <div class="col-sm-2 col-md-1">
+                                <img class="img-thumbnail queue-img" src="{{ i.added_by.user.base_profile.get_profile_photo }}">
+                                <br>
+                                <small>{{ i.created|naturalday }}</small>
+                            </div>
+                            <div class="col-sm-10 col-md-11">
+                                <strong>{{ i.added_by }}</strong>
+                                <hr>
+                                {{ i.note }}
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

@@ -13,7 +13,13 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from os.path import abspath, dirname, basename
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+DJANGO_ROOT = dirname(dirname(abspath(__file__)))
+SITE_ROOT = dirname(DJANGO_ROOT)
+SITE_NAME = basename(DJANGO_ROOT)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -24,11 +30,16 @@ SECRET_KEY = 's90mk9&2pim-kzyo41abc5+igybj3ltzz84on0a_&def3!$b%*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SITE_ID = 1
+# SITE_URL = 'https://192.168.10.245'
+SITE_URL = 'https://192.168.33.110'
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -36,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
+    'django.contrib.humanize',
 
     'debug_toolbar',
 
@@ -43,31 +56,79 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
 
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'rest_framework_swagger',
+    'corsheaders',
+    'graphene_django',
 
     'django_extensions',
-    'channels',
 
     # utilities
     'phonenumber_field',
     'crispy_forms',
     'datesdim',
     'appglobals',
+    'taggit',
+
+    # search
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
 
     'accounts',
     'profiles',
     'albums',
     'doctor_profiles',
-    'biometrics'
+    'biometrics',
+    'locations',
+    'receptionist_profiles',
+    'drug_information',
+    'search_indexes'
 ]
 
 # User Model
+# User Model
 AUTH_USER_MODEL = 'accounts.Account'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
+LOGIN_REDIRECT_URL = '/accounts/postlogin'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile', 'user_friends'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': lambda request: 'en_US',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.12',
+    }
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,6 +136,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'linecare_core.urls'
@@ -82,7 +145,9 @@ ROOT_URLCONF = 'linecare_core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            '/linecare/templates'
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -90,10 +155,17 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+
 
 WSGI_APPLICATION = 'linecare_core.wsgi.application'
 ASGI_APPLICATION = "linecare_core.routing.application"
@@ -146,7 +218,67 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication'
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.JSONParser',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 50,
+    'ORDERING_PARAM': 'ordering',
+}
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
+CORS_ORIGIN_WHITELIST = (
+    '192.168.10.61:3000',
+    '192.168.10.245',
+    '192.168.33.111',
+    'linecare.local',
+    '192.168.10.189',
+    '192.168.33.1',
+)
+
+GRAPHENE = {
+    'SCHEMA': 'linecare_core.schema.schema',
+    'MIDDLEWARE': (
+        'graphene_django.debug.DjangoDebugMiddleware',
     )
+}
+
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': '0.0.0.0:9200'
+    },
+}
+
+ELASTICSEARCH_INDEX_NAMES = {
+    'search_indexes.documents.drug': 'drug',
+    'search_indexes.documents.doctor': 'doctor',
 }
 
 # Internationalization
@@ -154,7 +286,7 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Manila'
 
 USE_I18N = True
 
@@ -162,11 +294,23 @@ USE_L10N = True
 
 USE_TZ = True
 
+LANGUAGES = (
+    ('en', 'English'),
+    ('tl', 'Filipino')
+)
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+STATIC_URL = f'{SITE_URL}/static/'
+STATIC_ROOT = '/var/www/html/static/'
+
+MEDIA_URL = f'{SITE_URL}/media/'
+MEDIA_ROOT = '/var/www/html/media/'
+TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

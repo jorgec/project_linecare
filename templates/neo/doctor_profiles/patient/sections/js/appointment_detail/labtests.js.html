@@ -7,6 +7,12 @@
     var patient_labtests_container = $("#patient-labtests-container");
     var patient_labtests_template = $("#patient-labtests-template");
     var modalLabTestRequestDetail = $("#modalLabTestRequestDetail");
+    var modalDismissedLabtests = $("#modalDismissedLabtests");
+    var modalAddLabTest_description_full = $("#modalAddLabTest_description_full");
+    var modalAddLabTest_purpose_full = $("#modalAddLabTest_purpose_full");
+    var modalAddLabTest_indication_full = $("#modalAddLabTest_indication_full");
+    var modalAddLabTest_notes_full = $("#modalAddLabTest_notes_full");
+    var btnAddLabTestPatientSelected = $("#btnAddLabTestPatientSelected");
 
     var txtLabTestsearch = $("#txtLabTestsearch");
     $(document).ready(function () {
@@ -20,20 +26,61 @@
             autozindex: true,
             scrolllock: true
         });
+        modalDismissedLabtests.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+
+        modalAddLabTest_description_full.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+        modalAddLabTest_purpose_full.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+        modalAddLabTest_indication_full.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+        modalAddLabTest_notes_full.popup({
+            autozindex: true,
+            scrolllock: true
+        });
+
 
         txtLabTestsearch.on('keyup', function (e) {
             var term = $(this).val();
-            console.log(term);
             loadLabTests(term);
         });
 
-        btnAddLabTestPatient.on('click', function(e){
+        btnAddLabTestPatient.on('click', function (e) {
             var labtest_id = $(this).attr("data-labtest-id");
             addLabTest(labtest_id);
         });
+
+        btnAddLabTestPatientSelected.on('click', function(e){
+            e.preventDefault();
+            addSelectedLabTests();
+        });
     });
 
-    function addLabTest(labtest_id){
+    function addSelectedLabTests(){
+        $.notify({
+            message: "Requesting your lab tests..."
+        }, {
+            type: "info"
+        });
+        modalAddLabTest.popup('hide');
+        $('#labtests-container input:checked').each(function() {
+            var labtest_id = $(this).attr('value');
+            addLabTest(labtest_id);
+        });
+
+
+    }
+
+    function addLabTest(labtest_id) {
         var url = "{% url 'api_private_patient_labtest_create' %}";
         var formData = {
             csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -42,28 +89,58 @@
         };
 
         $.post(url, formData)
-            .done(function(result){
+            .done(function (result) {
                 loadPatientLabTests();
                 modalAddLabTest.popup('hide');
             })
-            .fail(function(result){
-                console.log(result);
-            });
+            .fail(function (result) {
+                modalAddLabTest.popup('hide');
+                if (result.status === 409) {
+                    $.notify({
+                        message: result.responseText
+                    }, {
+                        type: "danger"
+                    });
+                } else {
+                    $.notify({
+                        message: "That lab test has already been requested! If you don't see it, check the dismissed list."
+                    }, {
+                        type: "danger"
+                    });
+                }
+            })
     }
 
-    function loadPatientLabTests(){
+    function loadPatientLabTests() {
         var url = "{% url 'api_private_patient_labtest_list' %}?checkup_id={{ checkup.id }}";
         $.get(url)
-            .done(function(result){
+            .done(function (result) {
                 patient_labtests_container.loadTemplate(patient_labtests_template, result);
-                $(".patient-labtest-detail").on('click', function(e){
+                $(".patient-labtest-detail").on('click', function (e) {
                     e.preventDefault();
                     $("#modalLabTestRequestDetail_title").html($(this).attr("data-labtest-name"));
                     $("#modalLabTestRequestDetail_description").html($(this).attr("data-labtest-description"));
                 });
+
+                $(".remove-lab_test").on('click', function (e) {
+                    e.preventDefault();
+                    var labtest_id = $(this).attr("data-lab_test-id");
+                    removeLabTest(labtest_id);
+                })
             })
-            .fail(function(result){
+            .fail(function (result) {
                 console.log(fail);
+            });
+
+        var dismissed_url = "{% url 'api_private_patient_labtest_dismissed_list' %}?checkup_id={{ checkup.id }}";
+        $.get(dismissed_url)
+            .done(function (result) {
+                $("#dismissed-labtests-container").loadTemplate($("#dismissed-labtests-template"), result);
+                $(".undismiss-labtest").on('click', function (e) {
+                    e.preventDefault();
+                    var labtest_id = $(this).attr("data-labtest-id");
+                    undismissLabTest(labtest_id);
+                });
             })
     }
 
@@ -74,24 +151,27 @@
         if (term.length >= 2) {
             url = url + "?s=" + term;
         }
-        if(term.length >= 3 || term.length === 0){
+        if (term.length >= 3 || term.length === 0) {
             $.get(url)
                 .done(function (result) {
-                    console.log(result);
                     labtests_loader.addClass('hide');
                     labtests_container.loadTemplate(labtests_template, result);
 
-                    $('.labtest-item').on('click', function(e){
+                    $('.labtest-item').on('click', function (e) {
                         e.preventDefault();
                         var labtest_id = $(this).attr("data-labtest-id");
-                        $.each(result, function(i, item){
-                            if(parseInt(labtest_id) === item.id){
+                        $.each(result, function (i, item) {
+                            if (parseInt(labtest_id) === item.id) {
                                 $("#modalAddLabTestDescriptionPane").removeClass("hide");
                                 $("#modalAddLabTest_title").html(item.name);
-                                $("#modalAddLabTest_description").html(item.description);
-                                $("#modalAddLabTest_purpose").html(item.purpose);
-                                $("#modalAddLabTest_indication").html(item.indication);
-                                $("#modalAddLabTest_notes").html(item.notes);
+                                $("#modalAddLabTest_description").html(item.description_excerpt);
+                                $("#modalAddLabTest_purpose").html(item.purpose_excerpt);
+                                $("#modalAddLabTest_indication").html(item.indication_excerpt);
+                                $("#modalAddLabTest_notes").html(item.notes_excerpt);
+                                $("#modalAddLabTest_description_full").html(item.description);
+                                $("#modalAddLabTest_purpose_full").html(item.purpose);
+                                $("#modalAddLabTest_indication_full").html(item.indication);
+                                $("#modalAddLabTest_notes_full").html(item.notes);
                                 $("#btnAddLabTestPatient").attr("data-labtest-id", item.id);
                             }
 
@@ -103,5 +183,39 @@
                     console.log(result);
                 });
         }
+    }
+
+    function removeLabTest(labtest_id) {
+        var url = "{% url 'api_private_appointment_labtest_delete' %}?id=" + labtest_id + "&checkup_id={{ checkup.id }}";
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        };
+
+        $.post(url, formData)
+            .done(function (result) {
+                loadPatientLabTests();
+                $.notify({
+                    message: "Lab Test Request removed!"
+                }, {
+                    type: 'success'
+                });
+            });
+    }
+
+    function undismissLabTest(labtest_id) {
+        var url = "{% url 'api_private_appointment_labtest_undismiss' %}?id=" + labtest_id + "&checkup_id={{ checkup.id }}";
+        var formData = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        };
+
+        $.post(url, formData)
+            .done(function (result) {
+                loadPatientLabTests();
+                $.notify({
+                    message: "Lab Test Request returned!"
+                }, {
+                    type: 'success'
+                });
+            });
     }
 </script>

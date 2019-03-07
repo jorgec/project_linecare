@@ -68,6 +68,7 @@ class DoctorInsurancePublicSerializer(serializers.ModelSerializer):
 
 
 class DoctorInsuranceCreateSerializer(serializers.ModelSerializer):
+    identifier = serializers.CharField(max_length=120, required=False, allow_null=True, allow_blank=True)
     class Meta:
         model = models.DoctorInsurance
         fields = (

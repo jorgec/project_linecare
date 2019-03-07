@@ -1,17 +1,20 @@
 <script type="text/html" id="patients-template">
     <div class="item">
-        <div class="image" data-css="profile_photo_css"></div>
+        <div class="image" data-template-bind='[{
+                "attribute": "style",
+                "value": "patient.profile_photo_css"
+            }]'>
+        </div>
         <div class="info">
             <p>
-                <a data-href="patient_detail_url">
-                    <span class="info-name" data-content="full_name"></span>
+                <a data-href="patient.patient_detail_url">
+                    <span class="info-name" data-content="patient.full_name"></span>
                 </a>
                 <br>
-                <span data-content="gender.name"></span>
+                <span data-content="patient.gender.name"></span>
+                <span data-content="patient.date_of_birth"></span>
                 <br>
-                <span data-content="date_of_birth"></span>
-                <br>
-                Prior Visits: <span data-content="prior_visits"></span>
+                Last visit: <a data-href="last_visit.url" data-content="last_visit.date"></a>; Prior visits: <span data-content="prior_visits"></span>
             </p>
         </div>
     </div>

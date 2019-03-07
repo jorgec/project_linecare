@@ -5,7 +5,7 @@
                 <label for="fees_{{ at.0 }}">{{ at.1 }}</label>
             </div>
             <div class="col-sm-6 col-md-8">
-                <input class="form-control" type="number" id="fees_{{ at.0 }}" name="fees_{{ at.0 }}" data-value="{{ at.0 }}">
+                <input class="form-control" type="number" min="0" id="fees_{{ at.0 }}" name="fees_{{ at.0 }}" data-value="{{ at.0 }}">
             </div>
         </div>
     {% endfor %}

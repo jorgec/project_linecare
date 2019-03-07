@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
     crossorigin="" />
 <link rel="stylesheet" href="{% static '3rd-party/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
+<link rel="stylesheet" href="{% static '3rd-party/timepicki/css/timepicki.css' %}">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 {% endblock %}
@@ -21,7 +22,20 @@
 {% block scripts %}
 <script type="text/javascript" src="{% static '3rd-party/moment.js' %}"></script>
 <script type="text/javascript" src="{% static '3rd-party/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
+<script type="text/javascript" src="{% static '3rd-party/timepicki/js/timepicki.js' %}"></script>
 {% include 'neo/doctor_profiles/medical_institutions/sections/manage_connections/main.js.html' %}
+<script type="text/javascript">
+    $('#myStartTime').timepicki({
+        step_size_minutes:5,
+        overflow_minutes:true,
+        reset: true
+    });
+    $('#myEndTime').timepicki({
+        step_size_minutes:5,
+        overflow_minutes:true,
+        reset: true
+    });  
+</script>
 {% endblock %}
 {% block home_scripts %}
 

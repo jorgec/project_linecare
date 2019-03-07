@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import serializers
 
 from datesdim.serializers import TimeDimSerializer, DateDimSerializer
@@ -23,6 +24,12 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
     doctor = DoctorProfileSerializer()
     medical_institution = MedicalInstitutionPublicSerializer()
     days_split = serializers.SerializerMethodField('repr_days_split')
+    mi_queue = serializers.SerializerMethodField('repr_mi_queue')
+
+    def repr_mi_queue(self, obj):
+        return reverse('doctor_profile_schedule_detail', kwargs={
+            'medical_institution': obj.medical_institution.slug
+        })
 
     def repr_days_split(self, obj):
         return obj.split_days()
@@ -38,7 +45,8 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
             'doctor',
             'medical_institution',
             'days',
-            'days_split'
+            'days_split',
+            'mi_queue'
         )
 
 
@@ -66,7 +74,6 @@ class DoctorScheduleBasicSerializer(serializers.ModelSerializer):
         )
 
 
-
 class DoctorScheduleCollisionSerializer(serializers.Serializer):
     medical_institution = MedicalInstitutionSerializer()
     day = DateDimSerializer()
@@ -76,8 +83,12 @@ class DoctorScheduleCollisionSerializer(serializers.Serializer):
 
 
 class DoctorScheduleDaySerializer(serializers.ModelSerializer):
+    day = DateDimSerializer()
+    actual_start_time = TimeDimSerializer()
+    actual_end_time = TimeDimSerializer()
     schedule = DoctorScheduleBasicSerializer()
     medical_institution = MedicalInstitutionPublicSerializer()
+
     class Meta:
         model = DoctorScheduleDay
         fields = (
@@ -86,9 +97,35 @@ class DoctorScheduleDaySerializer(serializers.ModelSerializer):
             'doctor',
             'medical_institution',
             'schedule',
-            'doctor_id_in',
+            'doctor_is_in',
             'doctor_stepped_out',
             'actual_start_time',
             'actual_end_time'
         )
 
+
+class DoctorScheduleDayBasicSerializer(serializers.ModelSerializer):
+    day = DateDimSerializer()
+    actual_start_time = TimeDimSerializer()
+    actual_end_time = TimeDimSerializer()
+
+    class Meta:
+        model = DoctorScheduleDay
+        fields = (
+            'id',
+            'day',
+            'doctor',
+            'medical_institution',
+            'schedule',
+            'doctor_is_in',
+            'doctor_stepped_out',
+            'actual_start_time',
+            'actual_end_time'
+        )
+
+
+class DoctorScheduleListQueryParamsSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    medical_institution = serializers.IntegerField(required=False, allow_null=False)
+    include_past = serializers.CharField(default="no")
+    filter_days = serializers.CharField(required=False, default="")

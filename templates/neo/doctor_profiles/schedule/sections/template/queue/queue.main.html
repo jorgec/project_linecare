@@ -14,19 +14,28 @@
 <div class="connections__content">
     <div class="header">
         <h4 class="h6">
-            <a href="{% url 'doctor_profile_medical_institution_home' medical_institution.slug %}">{{ page_title }}</a>
+            {{ page_title }}
         </h4>
         {% if schedules %}
             <div class="row">
                 {% for schedule_day in schedules %}
                     <div class="col-sm-12 col-md-6 mb-1">
-                        <h4 class="h6">{{ schedule_day.schedule.split_days }}</h4>
-                        {{ schedule_day.schedule.start_time.format_12 }} to {{ schedule_day.schedule.end_time.format_12 }},
-                        <small>({{ schedule_day.schedule.start_date }} to {{ schedule_day.schedule.end_date }})</small>
+                        <h4 class="h6">
+                            <a href="{% url 'doctor_profile_medical_institution_home' medical_institution.slug %}">
+                                {{ medical_institution }}
+                            </a>
+                            {{ schedule_day.schedule.split_days }}
+                        </h4>
+                        <a href="?date={{ date }}&schedule_id={{ schedule_day.schedule.id }}">
+                            {{ schedule_day.schedule.start_time.format_12 }} to {{ schedule_day.schedule.end_time.format_12 }}
+                        </a>,
+                        ({{ schedule_day.schedule.start_date }} to {{ schedule_day.schedule.end_date }})
                     </div>
                     <div class="col-sm-6 col-md-3 text-center">
+                        <!--
                         The doctor is<br>
                         <div id="doctor_presence_container_{{ schedule_day.id }}" class="doctor_presence_container"></div>
+                        -->
                     </div>
                     <div class="col-sm-6 col-md-3 text-center">
 

@@ -9,6 +9,7 @@ from profiles.serializers import ProfileSerializer, BaseProfilePrivateSerializer
 class PatientConnectionSerializer(serializers.ModelSerializer):
     doctor = DoctorProfileSerializer()
     patient = ProfileSerializer()
+
     class Meta:
         model = PatientConnection
         fields = (
@@ -21,14 +22,8 @@ class PatientConnectionSerializer(serializers.ModelSerializer):
 
 class PatientConnectionDoctorViewSerializer(serializers.ModelSerializer):
     patient = BaseProfilePrivateSerializerFull()
-    patient_detail_url = serializers.SerializerMethodField('repr_patient_url')
     prior_visits = serializers.SerializerMethodField('repr_prior_visits')
-
-    def repr_patient_url(self, obj):
-        url = reverse('doctor_profile_patient_detail', kwargs={
-            'patient_id': obj.id
-        })
-        return url
+    last_visit = serializers.SerializerMethodField('repr_last_visit')
 
     def repr_prior_visits(self, obj):
         return PatientAppointment.objects.prior_visits(
@@ -36,6 +31,25 @@ class PatientConnectionDoctorViewSerializer(serializers.ModelSerializer):
             patient=obj.patient
         ).count()
 
+    def repr_last_visit(self, obj):
+        visit = PatientAppointment.objects.filter(
+            doctor=obj.doctor,
+            patient=obj.patient,
+        ).exclude(
+            id=obj.id
+        ).order_by('-schedule_day__date_obj').first()
+
+        if visit:
+            return {
+                'date': f'{visit.schedule_day}',
+                'id': visit.id,
+                'url': f"{reverse('doctor_profile_patient_appointment_detail')}?appointment={visit.id}"
+            }
+        return {
+            'date': None,
+            'id': None,
+            'url': ''
+        }
 
     class Meta:
         model = PatientConnection
@@ -44,6 +58,6 @@ class PatientConnectionDoctorViewSerializer(serializers.ModelSerializer):
             'created',
             'doctor',
             'patient',
-            'patient_detail_url',
-            'prior_visits'
+            'prior_visits',
+            'last_visit'
         )

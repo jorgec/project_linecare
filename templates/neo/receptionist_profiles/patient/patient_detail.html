@@ -1,0 +1,82 @@
+{% extends 'neo/receptionist_profiles/patient/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %}
+{% endblock %}
+{% block header_js %}
+{% endblock %}
+
+{% block subcontent %}
+    <div class="row">
+        <div class="col-sm-12 col-md-3">
+            <div class="two-column__left--nav">
+                {% include 'neo/doctor_profiles/patient/sections/template/patient_detail/sidebar/nav__side.html' %}
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-9">
+            <div class="two-column__right--settings connections__content">
+                {% include 'neo/doctor_profiles/patient/sections/template/basic_info/main.html' %}
+
+                <div class="row no-gutters">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="h4">Checkups</h4>
+                            </div>
+                            <div class="card-body">
+
+                                <table class="table table-responsive-md table-borderless">
+                                    <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Primary Physician</th>
+                                        <th>Diagnoses</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for c in checkups %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'doctor_profile_patient_appointment_detail' %}?appointment={{ c.checkup.appointment.id }}">
+                                                        {{ c.checkup.appointment }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    {{ c.checkup.appointment.doctor }}
+
+                                                </td>
+                                                <td>
+                                                    {{ c.checkup.get_diagnoses|join:", " }}
+                                                </td>
+                                                <td>
+                                                    {{ c.checkup.appointment.get_status_display }}
+                                                </td>
+                                            </tr>
+
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="4">
+                                                    {{ patient }} has no checkup records available to you
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block home_scripts %}
+    {% block inner_scripts %}
+        <script type="text/javascript"
+                src="{% static '3rd-party/jquery-template/jquery.loadTemplate.min.js' %}"></script>
+    {% endblock %}
+{% endblock %}

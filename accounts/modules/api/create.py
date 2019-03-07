@@ -1,5 +1,5 @@
 from django.utils.crypto import get_random_string
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -12,6 +12,8 @@ class ApiPatientSubAccountCreate(APIView):
     """
     Create a patient as a sub-account under the doctor or receptionist account
     """
+
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         """

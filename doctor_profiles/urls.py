@@ -1,5 +1,7 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 
+from doctor_profiles.modules.api import doctor_notifications_api
 from .modules.views import home as home_views
 from .modules.views import settings as setting_views
 from .modules.views import medical_institutions as institution_views
@@ -25,6 +27,7 @@ from .modules.api import diagnosis_api
 from .modules.api import checkup_api
 from .modules.api import labtest_api
 from .modules.api import prescriptions_api
+from .modules.api import questionnaire_api
 
 from .modules.analytics_api import patient_analytics_api
 
@@ -323,6 +326,12 @@ urlpatterns += [
          name='api_private_medical_institution_create'),
 
     # connection meta
+    path(f'{version}/private/medical_institution_doctor/list',
+         medical_institution_doctors_api.ApiMedicalInstitutionDoctorList.as_view(),
+         name='api_private_medical_institution_doctor_list'),
+    path(f'{version}/private/medical_institution_doctor/connection/create',
+         medical_institution_doctors_api.ApiMedicalInstitutionDoctorCreate.as_view(),
+         name='api_private_medical_institution_doctor_connection_create'),
     path(f'{version}/public/medical_institution_doctor/meta/list',
          medical_institution_doctors_api.ApiMedicalInstitutionDoctorMetaList.as_view(),
          name='api_public_medical_institution_doctor_meta_list'),
@@ -388,6 +397,9 @@ urlpatterns += [
     path(f'{version}/public/doctor/schedule/list',
          doctor_schedule_api.ApiDoctorScheduleList.as_view(),
          name='api_public_doctor_schedule_list'),
+    path(f'{version}/public/doctor/schedule/days',
+         doctor_schedule_api.ApiDoctorScheduleDayList.as_view(),
+         name='api_public_doctor_schedule_days_list'),
     path(f'{version}/private/doctor/schedule/delete',
          doctor_schedule_api.ApiDoctorScheduleDelete.as_view(),
          name='api_private_doctor_schedule_delete'),
@@ -397,6 +409,9 @@ urlpatterns += [
     path(f'{version}/private/doctor/schedule_day/presence/status',
          doctor_schedule_api.ApiPrivateDoctorScheduleDayPresenceStatus.as_view(),
          name='api_private_doctor_schedule_day_presence_status'),
+    path(f'{version}/private/doctor/schedule_day/delete',
+         doctor_schedule_api.ApiDoctorScheduleDayDelete.as_view(),
+         name='api_private_doctor_schedule_day_delete'),
 
     # patient connections
     path(f'{version}/private/patients/search',
@@ -410,12 +425,23 @@ urlpatterns += [
     path(f'{version}/private/queue/list',
          doctor_schedule_api.ApiPrivateDoctorScheduleQueueList.as_view(),
          name='api_private_queue_list'),
+    path(f'{version}/private/patient/appointments/history',
+         patient_appointment_api.ApiPatientAppointmentHistory.as_view(),
+         name='api_private_patient_appointments_history'),
+
+    path(f'{version}/public/queue/list',
+         doctor_schedule_api.ApiPublicDummyScheduleQueueList.as_view(),
+         name='api_public_queue_list'),
+
     path(f'{version}/private/appointment/status/update',
          patient_appointment_api.ApiPatientAppointmentUpdateStatus.as_view(),
          name='api_private_patient_appointment_status_update'),
     path(f'{version}/private/appointment/list',
          patient_appointment_api.ApiPatientAppointmentList.as_view(),
          name='api_private_patient_appointment_list'),
+    path(f'{version}/private/appointments/today/count',
+         patient_appointment_api.ApiPatientAppointmentCount.as_view(),
+         name='api_private_patient_appointment_count'),
 
     # calendar
     path(f'{version}/private/calendar/month',
@@ -441,6 +467,9 @@ urlpatterns += [
     path(f'{version}/private/appointment/symptom/delete',
          symptoms_api.ApiPrivatePatientSymptomRemove.as_view(),
          name='api_private_appointment_symptom_delete'),
+    path(f'{version}/private/appointment/symptom/undismiss',
+         symptoms_api.ApiPrivatePatientSymptomUndismiss.as_view(),
+         name='api_private_appointment_symptom_undismiss'),
 
     # findings
     path(f'{version}/private/finding/create',
@@ -461,6 +490,9 @@ urlpatterns += [
     path(f'{version}/private/appointment/finding/delete',
          findings_api.ApiPrivatePatientFindingRemove.as_view(),
          name='api_private_appointment_finding_delete'),
+    path(f'{version}/private/appointment/finding/undismiss',
+         findings_api.ApiPrivatePatientFindingUndismiss.as_view(),
+         name='api_private_appointment_finding_undismiss'),
 
     # diagnoses
     path(f'{version}/private/diagnosis/create',
@@ -481,6 +513,9 @@ urlpatterns += [
     path(f'{version}/private/appointment/diagnosis/delete',
          diagnosis_api.ApiPrivatePatientDiagnosisRemove.as_view(),
          name='api_private_appointment_diagnosis_delete'),
+    path(f'{version}/private/appointment/diagnosis/undismiss',
+         diagnosis_api.ApiPrivatePatientDiagnosisUndismiss.as_view(),
+         name='api_private_appointment_diagnosis_undismiss'),
 
     # notes
     path(f'{version}/private/appointment/note/list',
@@ -500,6 +535,15 @@ urlpatterns += [
     path(f'{version}/private/appointment/labtest/list',
          labtest_api.ApiPrivatePatientLabTestList.as_view(),
          name='api_private_patient_labtest_list'),
+    path(f'{version}/private/appointment/labtest/dismissed_list',
+         labtest_api.ApiPrivatePatientDismissedLabTestList.as_view(),
+         name='api_private_patient_labtest_dismissed_list'),
+    path(f'{version}/private/appointment/labtest/delete',
+         labtest_api.ApiPrivatePatientLabTestRemove.as_view(),
+         name='api_private_appointment_labtest_delete'),
+    path(f'{version}/private/appointment/labtest/undismiss',
+         labtest_api.ApiPrivatePatientLabTestUndismiss.as_view(),
+         name='api_private_appointment_labtest_undismiss'),
 
     # prescriptions
     path(f'{version}/private/appointment/prescription/create',
@@ -508,9 +552,28 @@ urlpatterns += [
     path(f'{version}/private/appointment/prescription/list',
          prescriptions_api.ApiPrivatePatientPrescriptionList.as_view(),
          name='api_private_patient_prescription_list'),
+    path(f'{version}/private/appointment/prescription/dismissed_list',
+         prescriptions_api.ApiPrivatePatientDismissedPrescriptionList.as_view(),
+         name='api_private_patient_prescription_dismissed_list'),
     path(f'{version}/private/prescription/detail',
          prescriptions_api.ApiPrivatePatientPrescriptionDetail.as_view(),
          name='api_private_prescription_detail'),
+    path(f'{version}/private/appointment/prescription/delete',
+         prescriptions_api.ApiPrivatePatientPrescriptionRemove.as_view(),
+         name='api_private_appointment_prescription_delete'),
+    path(f'{version}/private/appointment/prescription/undismiss',
+         prescriptions_api.ApiPrivatePatientPrescriptionUndismiss.as_view(),
+         name='api_private_appointment_prescription_undismiss'),
+
+    #############################################################################
+    # Notifications
+    #############################################################################
+    path(f'{version}/private/notifications/appointments/list',
+         doctor_notifications_api.ApiPrivateDoctorAppointmentNotificationsList.as_view(),
+         name='api_private_notifications_appointments_list'),
+    path(f'{version}/private/notifications/appointments/clear',
+         doctor_notifications_api.ApiPrivateDoctorAppointmentNotificationsDelete.as_view(),
+         name='api_private_notifications_appointments_clear'),
 
     #############################################################################
     # Analytics
@@ -535,4 +598,300 @@ urlpatterns += [
     path(f'{version}/analytics/agg/labtests/by_checkup/counts',
          patient_analytics_api.ApiAnalyticsPatientByCheckupLabtestsAggregateCounts.as_view(),
          name='api_private_doctor_patient_analytics_by_labtests_aggregate_counts'),
+]
+
+#############################################################################
+# Questionnaire
+#############################################################################
+questionnaire_admin_router = routers.DefaultRouter()
+questionnaire_admin_router.register(r'q', questionnaire_api.QuestionnaireViewSet)
+questionnaire_admin_router.register(r'dq', questionnaire_api.DoctorQuestionnaireViewSet)
+questionnaire_admin_router.register(r'qs', questionnaire_api.QuestionnaireSectionViewSet)
+questionnaire_admin_router.register(r'qq', questionnaire_api.QuestionViewSet)
+questionnaire_admin_router.register(r'sq', questionnaire_api.SectionQuestionViewSet)
+questionnaire_admin_router.register(r'c', questionnaire_api.ChoiceViewSet)
+questionnaire_admin_router.register(r'cg', questionnaire_api.ChoiceGroupViewSet)
+questionnaire_admin_router.register(r'cgi', questionnaire_api.ChoiceGroupItemViewSet)
+questionnaire_admin_router.register(r'qcg', questionnaire_api.QuestionChoiceGroupViewSet)
+
+READ_ONLY = {
+    'get': 'list'
+}
+
+DETAIL = {
+    'get': 'retrieve'
+}
+
+CREATE = {
+    'get': 'list',
+    'post': 'create',
+}
+
+UPDATE = {
+    'get': 'retrieve',
+    'put': 'update',
+    # 'patch': 'update_partial'
+}
+
+DELETE = {
+    'get': 'retrieve',
+    'delete': 'destroy'
+}
+
+# admin
+urlpatterns += [
+    path(f'{version}/admin/questionnaires/', include(questionnaire_admin_router.urls)),
+
+]
+
+# public
+urlpatterns += [
+    # Questionnaire
+    path(f'{version}/public/questionnaires/',
+         questionnaire_api.ApiQuestionnairePublicViewSet.as_view(READ_ONLY),
+         name='api_public_questionnaires'
+         ),
+    path(f'{version}/public/questionnaires/<pk>/detail',
+         questionnaire_api.ApiQuestionnairePublicViewSet.as_view(DETAIL),
+         name='api_public_questionnaires_detail'
+         ),
+    path(f'{version}/public/questionnaires/<pk>/questions/list',
+         questionnaire_api.ApiQuestionsInQuestionnairePublicView.as_view(),
+         name='api_public_questionnaires_questions_list'),
+
+    # Doctor Questionnaire
+    path(f'{version}/public/doctor_questionnaires/<doctor_id>/list',
+         questionnaire_api.ApiDoctorQuestionnairePublicViewSet.as_view(READ_ONLY),
+         name='api_public_doctor_questionnaires'
+         ),
+    path(f'{version}/public/doctor_questionnaires/<doctor_id>/<pk>/detail',
+         questionnaire_api.ApiDoctorQuestionnairePublicViewSet.as_view(DETAIL),
+         name='api_public_doctor_questionnaires_detail'
+         ),
+
+    # Questionnaire Section
+    path(f'{version}/public/questionnaires/<questionnaire_id>/sections/list',
+         questionnaire_api.ApiQuestionnaireSectionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_questionnaire_sections'),
+    path(f'{version}/public/questionnaires/<questionnaire_id>/sections/<index>/detail',
+         questionnaire_api.ApiQuestionnaireSectionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_questionnaire_sections_detail'),
+
+    # Question
+    path(f'{version}/public/questions/list',
+         questionnaire_api.ApiQuestionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_questions'),
+    path(f'{version}/public/questions/<pk>/detail',
+         questionnaire_api.ApiQuestionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_questions_detail'),
+
+    # Section Question
+    path(f'{version}/public/section_questions/list',
+         questionnaire_api.ApiSectionQuestionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_section_questions'),
+    path(f'{version}/public/section_questions/<pk>/detail',
+         questionnaire_api.ApiSectionQuestionPublicViewSet.as_view(READ_ONLY),
+         name='api_public_section_questions_detail'),
+
+    # Choice
+    path(f'{version}/public/choices/list',
+         questionnaire_api.ApiChoicePublicViewSet.as_view(READ_ONLY),
+         name='api_public_choices'),
+    path(f'{version}/private/choices/<pk>/detail',
+         questionnaire_api.ApiChoicePublicViewSet.as_view(READ_ONLY),
+         name='api_public_choices_detail'),
+
+    # Choice Group
+    path(f'{version}/public/choice_groups/list',
+         questionnaire_api.ApiChoiceGroupPublicViewSet.as_view(READ_ONLY),
+         name='api_public_choice_groups'),
+    path(f'{version}/private/choice_groups/<pk>/detail',
+         questionnaire_api.ApiChoiceGroupPublicViewSet.as_view(READ_ONLY),
+         name='api_public_choice_groups_detail'),
+
+    # Choice Group Item
+    path(f'{version}/public/choice_group_item/list',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(READ_ONLY),
+         name='api_public_choice_group_item'),
+    path(f'{version}/private/choice_group_item/<pk>/detail',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(READ_ONLY),
+         name='api_public_choice_group_item_detail'),
+
+    # Question Choice Group
+    path(f'{version}/public/question_choice_group/list',
+         questionnaire_api.ApiQuestionChoiceGroupPublicViewSet.as_view(READ_ONLY),
+         name='api_public_question_choice_group'),
+    path(f'{version}/private/question_choice_group/<pk>/detail',
+         questionnaire_api.ApiQuestionChoiceGroupPublicViewSet.as_view(READ_ONLY),
+         name='api_public_question_choice_group_detail'),
+]
+
+# private
+urlpatterns += [
+    # Questionnaire
+    path(f'{version}/private/questionnaires/list',
+         questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(CREATE),
+         name='api_private_questionnaires'),
+    path(f'{version}/private/questionnaires/create',
+         questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(CREATE),
+         name='api_private_questionnair_createes'
+         ),
+    path(f'{version}/private/questionnaires/<pk>/detail',
+         questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(DETAIL),
+         name='api_private_questionnaires_detail'
+         ),
+    path(f'{version}/private/questionnaires/<pk>/questions/list',
+         questionnaire_api.ApiQuestionsInQuestionnairePrivateView.as_view(),
+         name='api_private_questionnaires_questions_list'),
+    path(f'{version}/private/questionnaires/<pk>/update',
+         questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(UPDATE),
+         name='api_private_questionnaires_update'
+         ),
+    path(f'{version}/private/questionnaires/<pk>/delete',
+         questionnaire_api.ApiQuestionnairePrivateViewSet.as_view(DELETE),
+         name='api_private_questionnaires_detail'
+         ),
+
+    # Doctor Questionnaire
+    path(f'{version}/private/doctor_questionnaires/<doctor_id>/list',
+         questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(CREATE),
+         name='api_private_doctor_questionnaires'),
+    path(f'{version}/private/doctor_questionnaires/<doctor_id>/create',
+         questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(CREATE),
+         name='api_private_doctor_questionnaires_create'
+         ),
+    path(f'{version}/private/doctor_questionnaires/<doctor_id>/<pk>/detail',
+         questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(DETAIL),
+         name='api_private_doctor_questionnaires_detail'
+         ),
+    path(f'{version}/private/doctor_questionnaires/<doctor_id>/<pk>/update',
+         questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(UPDATE),
+         name='api_private_doctor_questionnaires_update'
+         ),
+    path(f'{version}/private/doctor_questionnaires/<doctor_id>/<pk>/delete',
+         questionnaire_api.ApiDoctorQuestionnairePrivateViewSet.as_view(DELETE),
+         name='api_private_doctor_questionnaires_detail'
+         ),
+
+    # Questionnaire Section
+    path(f'{version}/private/questionnaires/<questionnaire_id>/sections/list',
+         questionnaire_api.ApiQuestionnaireSectionPrivateViewSet.as_view(CREATE),
+         name='api_private_questionnaire_sections'),
+    path(f'{version}/private/questionnaires/<questionnaire_id>/sections/create',
+         questionnaire_api.ApiQuestionnaireSectionPrivateViewSet.as_view(CREATE),
+         name='api_private_questionnaire_sections_create'),
+    path(f'{version}/private/questionnaires/<questionnaire_id>/sections/<index>/detail',
+         questionnaire_api.ApiQuestionnaireSectionPrivateViewSet.as_view(DETAIL),
+         name='api_private_questionnaire_section_detail'),
+    path(f'{version}/private/questionnaires/<questionnaire_id>/sections/<index>/update',
+         questionnaire_api.ApiQuestionnaireSectionPrivateViewSet.as_view(UPDATE),
+         name='api_private_questionnaire_section_update'),
+    path(f'{version}/private/questionnaires/<questionnaire_id>/sections/<index>/delete',
+         questionnaire_api.ApiQuestionnaireSectionPrivateViewSet.as_view(DELETE),
+         name='api_private_questionnaire_section_delete'),
+
+    # Question
+    path(f'{version}/private/questions/list',
+         questionnaire_api.ApiQuestionPrivateViewSet.as_view(CREATE),
+         name='api_private_questions'),
+    path(f'{version}/private/questions/create',
+         questionnaire_api.ApiQuestionPrivateViewSet.as_view(CREATE),
+         name='api_private_questions_create'),
+    path(f'{version}/private/questions/<pk>/detail',
+         questionnaire_api.ApiQuestionPrivateViewSet.as_view(DETAIL),
+         name='api_private_questions_detail'),
+    path(f'{version}/private/questions/<pk>/update',
+         questionnaire_api.ApiQuestionPrivateViewSet.as_view(UPDATE),
+         name='api_private_questions_update'),
+    path(f'{version}/private/questions/<pk>/delete',
+         questionnaire_api.ApiQuestionPrivateViewSet.as_view(DELETE),
+         name='api_private_questions_delete'),
+    path(f'{version}/private/questions/search',
+         questionnaire_api.ApiQuestionSearchPrivateView.as_view(),
+         name='api_private_questions_search'),
+
+    # Section Questions
+    path(f'{version}/private/section_questions/list',
+         questionnaire_api.ApiSectionQuestionPrivateViewSet.as_view(CREATE),
+         name='api_private_section_questions'),
+    path(f'{version}/private/section_questions/create',
+         questionnaire_api.ApiSectionQuestionPrivateViewSet.as_view(CREATE),
+         name='api_private_section_questions_create'),
+    path(f'{version}/private/section_questions/<pk>/detail',
+         questionnaire_api.ApiSectionQuestionPrivateViewSet.as_view(DETAIL),
+         name='api_private_section_questions_detail'),
+    path(f'{version}/private/section_questions/<pk>/update',
+         questionnaire_api.ApiSectionQuestionPrivateViewSet.as_view(UPDATE),
+         name='api_private_section_questions_update'),
+    path(f'{version}/private/section_questions/<pk>/delete',
+         questionnaire_api.ApiSectionQuestionPrivateViewSet.as_view(DELETE),
+         name='api_private_section_questions_delete'),
+
+    # Choices
+    path(f'{version}/private/choices/list',
+         questionnaire_api.ApiChoicePrivateViewSet.as_view(CREATE),
+         name='api_private_choices'),
+    path(f'{version}/private/choices/create',
+         questionnaire_api.ApiChoicePrivateViewSet.as_view(CREATE),
+         name='api_private_choices_create'),
+    path(f'{version}/private/choices/<pk>/detail',
+         questionnaire_api.ApiChoicePrivateViewSet.as_view(DETAIL),
+         name='api_private_choices_detail'),
+    path(f'{version}/private/choices/<pk>/update',
+         questionnaire_api.ApiChoicePrivateViewSet.as_view(UPDATE),
+         name='api_private_choices_update'),
+    path(f'{version}/private/choices/<pk>/delete',
+         questionnaire_api.ApiChoicePrivateViewSet.as_view(DELETE),
+         name='api_private_choices_delete'),
+
+    # Choice Groups
+    path(f'{version}/private/choice_groups/list',
+         questionnaire_api.ApiChoiceGroupPrivateViewSet.as_view(CREATE),
+         name='api_private_choice_groups'),
+    path(f'{version}/private/choice_groups/create',
+         questionnaire_api.ApiChoiceGroupPrivateViewSet.as_view(CREATE),
+         name='api_private_choice_groups_create'),
+    path(f'{version}/private/choice_groups/<pk>/detail',
+         questionnaire_api.ApiChoiceGroupPrivateViewSet.as_view(DETAIL),
+         name='api_private_choice_groups_detail'),
+    path(f'{version}/private/choice_groups/<pk>/update',
+         questionnaire_api.ApiChoiceGroupPrivateViewSet.as_view(UPDATE),
+         name='api_private_choice_groups_update'),
+    path(f'{version}/private/choice_groups/<pk>/delete',
+         questionnaire_api.ApiChoiceGroupPrivateViewSet.as_view(DELETE),
+         name='api_private_choice_groups_delete'),
+
+    # Choice Group Items
+    path(f'{version}/private/choice_group_items/list',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(CREATE),
+         name='api_private_choice_group_items'),
+    path(f'{version}/private/choice_group_items/create',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(CREATE),
+         name='api_private_choice_group_items_create'),
+    path(f'{version}/private/choice_group_items/<pk>/detail',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(DETAIL),
+         name='api_private_choice_group_items_detail'),
+    path(f'{version}/private/choice_group_items/<pk>/update',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(UPDATE),
+         name='api_private_choice_group_items_update'),
+    path(f'{version}/private/choice_group_items/<pk>/delete',
+         questionnaire_api.ApiChoiceGroupItemPublicViewSet.as_view(DELETE),
+         name='api_private_choice_group_items_delete'),
+
+    # Question Choice Group
+    path(f'{version}/private/question_choice/list',
+         questionnaire_api.ApiQuestionChoiceGroupPrivateViewSet.as_view(CREATE),
+         name='api_private_question_choice'),
+    path(f'{version}/private/question_choice/create',
+         questionnaire_api.ApiQuestionChoiceGroupPrivateViewSet.as_view(CREATE),
+         name='api_private_question_choice_create'),
+    path(f'{version}/private/question_choice/<pk>/detail',
+         questionnaire_api.ApiQuestionChoiceGroupPrivateViewSet.as_view(DETAIL),
+         name='api_private_question_choice_detail'),
+    path(f'{version}/private/question_choice/<pk>/update',
+         questionnaire_api.ApiQuestionChoiceGroupPrivateViewSet.as_view(UPDATE),
+         name='api_private_question_choice_update'),
+    path(f'{version}/private/question_choice/<pk>/delete',
+         questionnaire_api.ApiQuestionChoiceGroupPrivateViewSet.as_view(DELETE),
+         name='api_private_question_choice_delete'),
 ]

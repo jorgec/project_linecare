@@ -17,7 +17,7 @@ class DoctorProfileMedicalInstitutionSettingsHomeView(LoginRequiredMixin, UserPa
         context = {
             'page_title': 'Medical Institutions',
             'location': 'doctor_profile_settings',
-            'sublocation': 'home',
+            'sublocation': 'institution',
             'medical_institutions': request.user.doctor_profile().get_medical_institutions_rel()
         }
 

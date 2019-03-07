@@ -27,7 +27,7 @@ class BaseProfileAlbumList(LoginRequiredMixin, View):
 class BaseProfileAlbumDetail(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         profile = request.user.base_profile()
-        album = get_object_or_404(Album, slug=kwargs['slug'], profile=profile)
+        album = get_object_or_404(Album, id=kwargs['id'], profile=profile)
 
         context = {
             'page_title': profile,
@@ -42,7 +42,7 @@ class BaseProfileAlbumDetail(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         profile = request.user.base_profile()
-        album = get_object_or_404(Album, slug=kwargs['slug'], profile=profile)
+        album = get_object_or_404(Album, id=kwargs['id'], profile=profile)
         form = PhotoUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
@@ -55,5 +55,5 @@ class BaseProfileAlbumDetail(LoginRequiredMixin, View):
             messages.error(request, form.errors, extra_tags='danger')
 
         return HttpResponseRedirect(reverse('profile_album_detail', kwargs={
-            'slug': album.slug
+            'id': album.id
         }))

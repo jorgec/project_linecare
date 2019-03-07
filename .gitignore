@@ -103,3 +103,6 @@ yarn\.lock
 drug_information/migrations/
 
 biometrics/migrations/
+
+serve-local\.sh
+\.vscode/settings\.json

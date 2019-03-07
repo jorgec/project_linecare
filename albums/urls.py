@@ -5,8 +5,14 @@ urlpatterns = [
     # api
 
     # create
+    path('api/private/create',
+         create.ApiPrivateAlbumCreate.as_view(),
+         name='api_private_album_create'),
+    # path('api/private/upload',
+    #      create.ApiPrivateAlbumPostUploadPhoto.as_view(),
+    #      name='api_private_album_post_upload_photo'),
     path('api/private/upload',
-         create.ApiPrivateAlbumPostUploadPhoto.as_view(),
+         create.ApiPrivatePhotoViewSet.as_view({'post': 'create'}),
          name='api_private_album_post_upload_photo'),
 
     # albums retrieve, public
@@ -16,9 +22,9 @@ urlpatterns = [
     path('api/public/get_album',
          retrieve.ApiPublicAlbumGetByPK.as_view(),
          name='api_public_album_get_by_pk'),
-     path('api/public/album/photos/all',
-          retrieve.ApiPublicGetPhotos.as_view(),
-          name='api_public_album_photos_all'),
+    path('api/public/album/photos/all',
+         retrieve.ApiPublicGetPhotos.as_view(),
+         name='api_public_album_photos_all'),
 
     # albums retrieve, private
     path('api/private/albums/all',
@@ -39,12 +45,19 @@ urlpatterns = [
     # photos update, private
     path('api/private/photo/set_primary',
          update.ApiPrivateSetPrimaryPhoto.as_view(),
-         name='api_private_photo_set_primary'
-         ),
+         name='api_private_photo_set_primary'),
     path('api/private/photo/toggle_privacy',
          update.ApiPrivatePhotoTogglePrivacy.as_view(),
          name='api_private_photo_toggle_privacy'),
     path('api/private/photo/update',
          update.ApiPrivatePhotoUpdate.as_view(),
          name='api_private_photo_update'),
+    path('api/private/photo/unset_primary',
+         update.ApiPrivateUnsetPrimaryPhoto.as_view(),
+         name='api_private_photo_unset_primary'),
+
+    # photos retrieve, private
+    path('api/private/photo/primary/detail',
+         retrieve.ApiPrivateGetProfilePhoto.as_view(),
+         name='api_private_profile_photo_detail'),
 ]

@@ -50,36 +50,22 @@
      * events
      */
 
-    $("#formCreateReceptionist").on('submit', function(e){
+    $("#formCreateReceptionist").on('submit', function (e) {
         e.preventDefault();
         createReceptionist();
     });
 
-    $("#btnCreateReceptionistSave").on('click', function(e){
+    $("#btnCreateReceptionistSave").on('click', function (e) {
         e.preventDefault();
         createReceptionist();
     });
 
-    $("#frmSearchAllReceptionists").on('submit', function(e){
+    $("#frmSearchAllReceptionists").on('submit', function (e) {
         e.preventDefault();
         var s = $("#txtSearchAllReceptionists").val();
-        if(s.length >= 3){
+        if (s.length >= 3) {
             fetchAllReceptionists(s);
-        }else{
-            $.notify({
-                message: "Search parameter is too short"
-            }, {
-                type: 'danger'
-            });
-        }
-    });
-    
-    $("#frmSearchMyReceptionists").on('submit', function(e){
-        e.preventDefault();
-        var s = $("#txtSearchMyReceptionists").val();
-        if(s.length >= 3){
-            fetchMyReceptionists(s);
-        }else{
+        } else {
             $.notify({
                 message: "Search parameter is too short"
             }, {
@@ -88,12 +74,26 @@
         }
     });
 
-    $("#btnClearAllReceptionists").on('click', function(e){
+    $("#frmSearchMyReceptionists").on('submit', function (e) {
+        e.preventDefault();
+        var s = $("#txtSearchMyReceptionists").val();
+        if (s.length >= 3) {
+            fetchMyReceptionists(s);
+        } else {
+            $.notify({
+                message: "Search parameter is too short"
+            }, {
+                type: 'danger'
+            });
+        }
+    });
+
+    $("#btnClearAllReceptionists").on('click', function (e) {
         e.preventDefault();
         fetchAllReceptionists();
     });
 
-    $("#btnClearMyReceptionists").on('click', function(e){
+    $("#btnClearMyReceptionists").on('click', function (e) {
         e.preventDefault();
         fetchMyReceptionists();
     });
@@ -102,18 +102,18 @@
      * methods
      */
 
-    function fetchAllReceptionists(s){
+    function fetchAllReceptionists(s) {
         var container = $("#all_receptionists_container");
         container.html("Loading...");
         var url = "{% url 'api_private_medical_institution_receptionist_not_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
-        if(s){
+        if (s) {
             url = url + "&s=" + s;
         }
         $.get(url)
-            .done(function(result){
+            .done(function (result) {
                 container.loadTemplate($("#all_receptionists_template"), result);
 
-                $(".connect-receptionist").on('click', function(e){
+                $(".connect-receptionist").on('click', function (e) {
                     e.preventDefault();
                     var doctor_id = $(this).attr("data-doctor-id");
                     var receptionist_id = $(this).attr("data-receptionist-id");
@@ -122,23 +122,23 @@
                     connectReceptionist(doctor_id, receptionist_id, institution_id);
                 });
             })
-            .fail(function(jqXHR){
+            .fail(function (jqXHR) {
                 console.log(jqXHR);
             });
     }
 
-    function fetchMyReceptionists(s){
+    function fetchMyReceptionists(s) {
         var container = $("#my_receptionists_container");
         container.html("Loading...");
         var url = "{% url 'api_private_medical_institution_receptionist_connected_list' %}?id={{ rel.medical_institution.id }}&doctor_id={{ rel.doctor.id }}&fmt=full";
-        if(s){
+        if (s) {
             url = url + "&s=" + s;
         }
         $.get(url)
-            .done(function(result){
+            .done(function (result) {
                 container.loadTemplate($("#my_receptionists_template"), result);
 
-                $(".remove-receptionist").on('click', function(e){
+                $(".remove-receptionist").on('click', function (e) {
                     e.preventDefault();
                     var doctor_id = $(this).attr("data-doctor-id");
                     var receptionist_id = $(this).attr("data-receptionist-id");
@@ -147,19 +147,22 @@
                     removeReceptionist(doctor_id, receptionist_id, institution_id);
                 });
             })
-            .fail(function(jqXHR){
+            .fail(function (jqXHR) {
                 console.log(jqXHR);
             });
     }
 
-    function connectReceptionist(doctor_id, receptionist_id, institution_id){
-        var url = "{% url 'api_private_receptionist_connection_create' %}?doctor_id=" + doctor_id + "&receptionist_id=" + receptionist_id + "&medical_institution_id=" + institution_id;
+    function connectReceptionist(doctor_id, receptionist_id, institution_id) {
+        var url = "{% url 'api_private_receptionist_connection_create' %}";
         var formData = {
-            csrfmiddlewaretoken: '{{ csrf_token }}'
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            doctor_id: doctor_id,
+            receptionist_id: receptionist_id,
+            medical_institution_id: institution_id
         };
 
         $.post(url, formData)
-            .done(function(result){
+            .done(function (result) {
                 $.notify({
                     message: "Receptionist connected!"
                 }, {
@@ -168,7 +171,7 @@
                 updateState(model.all_receptionists);
                 updateState(model.my_receptionists);
             })
-            .fail(function(jqXHR, textStatus, errorThrown) {
+            .fail(function (jqXHR, textStatus, errorThrown) {
                 $.notify({
                     message: jqXHR.responseJSON
                 }, {
@@ -177,14 +180,17 @@
             });
     }
 
-    function removeReceptionist(doctor_id, receptionist_id, institution_id){
-        var url = "{% url 'api_private_receptionist_connection_delete' %}?doctor_id=" + doctor_id + "&receptionist_id=" + receptionist_id + "&medical_institution_id=" + institution_id;
+    function removeReceptionist(doctor_id, receptionist_id, institution_id) {
+        var url = "{% url 'api_private_receptionist_connection_delete' %}";
         var formData = {
-            csrfmiddlewaretoken: '{{ csrf_token }}'
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            doctor_id: doctor_id,
+            receptionist_id: receptionist_id,
+            medical_institution_id: institution_id
         };
 
         $.post(url, formData)
-            .done(function(result){
+            .done(function (result) {
                 $.notify({
                     message: "Receptionist removed!"
                 }, {
@@ -193,7 +199,7 @@
                 updateState(model.all_receptionists);
                 updateState(model.my_receptionists);
             })
-            .fail(function(jqXHR, textStatus, errorThrown) {
+            .fail(function (jqXHR, textStatus, errorThrown) {
                 $.notify({
                     message: jqXHR.responseJSON
                 }, {
@@ -202,7 +208,7 @@
             });
     }
 
-    function createReceptionist(){
+    function createReceptionist() {
         var url = "{% url 'api_private_receptionist_profile_create_by_doctor' %}?doctor_id={{ rel.doctor.id }}&medical_institution_id={{ rel.medical_institution.id }}";
         var formData = {
             first_name: $("#receptionist_first_name").val(),
@@ -213,7 +219,7 @@
         };
 
         $.post(url, formData)
-            .done(function(result){
+            .done(function (result) {
                 $.notify({
                     message: "Receptionist added!"
                 }, {
@@ -223,7 +229,7 @@
                 updateState(model.my_receptionists);
                 $("#modalCreateReceptionist").modal('hide');
             })
-            .fail(function(jqXHR, textStatus, errorThrown) {
+            .fail(function (jqXHR, textStatus, errorThrown) {
                 $.notify({
                     message: jqXHR.responseJSON
                 }, {

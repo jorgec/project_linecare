@@ -2,16 +2,6 @@
     <div id="my_schedules_container"></div>
 </div>
 <h5 class="my-3 h6 ml-4">Create new Schedule</h5>
-<ul class="nav nav-tabs ml-2" id="tabScheduleTypes" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" id="regular-schedule-tab" data-toggle="tab" href="#regular-schedule" role="tab" aria-controls="regular-schedule"
-           aria-selected="true">I have a regular weekly schedule</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="flexible-schedule-tab" data-toggle="tab" href="#flexible-schedule" role="tab" aria-controls="flexible-schedule"
-           aria-selected="false">My schedule varies from week to week</a>
-    </li>
-</ul>
 <div id="schedule_errors_container"></div>
 <div class="tab-content" id="tabScheduleTypesContent">
     <div class="tab-pane fade show active" id="regular-schedule" role="tabpanel" aria-labelledby="regular-schedule-tab">
@@ -63,7 +53,7 @@
                                     <label>
                                         Start Time
                                     </label>
-                                    <input type="text" name="startTime" id="startTime" class="form-control startTime" required>
+                                    <input id='myStartTime' type='text'name='myStartTime' class="form-control" required/>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -71,7 +61,7 @@
                                     <label>
                                         End Time
                                     </label>
-                                    <input type="text" name="endTime" id="endTime" class="form-control endTime" required>
+                                    <input id='myEndTime' type='text'name='myEndTime' class="form-control" required/>
                                 </div>
                             </div>
                         </div>
@@ -92,17 +82,12 @@
                         <div class="form-group">
                             <button class="btn btn-primary btn-sm" type="submit">Save this schedule</button>
                         </div>
-                        <hr>
                     </form>
 
-                    <div id="divAddRegularSchedule"></div>
                 </div>
 
             </div>
         </div>
-
-    </div>
-    <div class="tab-pane fade" id="flexible-schedule" role="tabpanel" aria-labelledby="flexible-schedule-tab">
 
     </div>
 </div>

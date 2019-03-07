@@ -39,6 +39,9 @@ urlpatterns = [
      path('api/public/cover_photos/album',
           api_retrieve.ApiPublicProfileGetCoverPhotoAlbum.as_view(),
           name='api_public_cover_photo_album'),
+    path('api/private/albums',
+         api_retrieve.ApiPrivateProfileAlbums.as_view(),
+         name='api_private_albums'),
 ]
 
 # views
@@ -55,5 +58,5 @@ urlpatterns += [
     path('settings/biometrics/update', settings_view.BiometricsUpdateView.as_view(), name='profile_settings_biometrics_update'),
 
     path('albums/list', albums_view.BaseProfileAlbumList.as_view(), name='profile_album_list'),
-    path('albums/<slug>/detail', albums_view.BaseProfileAlbumDetail.as_view(), name='profile_album_detail'),
+    path('albums/<id>/detail', albums_view.BaseProfileAlbumDetail.as_view(), name='profile_album_detail'),
 ]

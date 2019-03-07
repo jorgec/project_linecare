@@ -49,11 +49,14 @@ class Album(models.Model):
         self.save()
         return self
 
-    def get_primary_photo(self):
+    def get_primary_photo(self, return_null=False):
         try:
             return self.album_photos.get(is_primary=True)
         except Photo.DoesNotExist:
-            return self.get_null_photo()
+            if return_null:
+                return None
+            else:
+                return self.get_null_photo()
 
     def get_public_photos(self):
         return self.album_photos.filter(is_public=True)
@@ -94,6 +97,11 @@ class Photo(models.Model):
         self.is_primary = True
         self.is_public = True
         self.save()
+        return self
+
+    def unset_primary_photo(self):
+        self.is_primary = False
+        self.save(update_fields=['is_primary'])
         return self
 
     def toggle_privacy(self):

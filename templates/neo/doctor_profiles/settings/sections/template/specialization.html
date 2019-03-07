@@ -30,7 +30,8 @@
     </div>
     <div class="btn-group  mt-4">
         <a id="btnRelatedEntityAdd" href="javascript:void(0)" class="btn btn-primary">Save</a>
-        <a id="btnRelatedEntityReset" href="#!" class="btn btn-secondary">Reset</a>
+        <a id="btnRelatedEntityAddNext" href="javascript:void(0)" class="btn btn-success">Save and next</a>
+        <!-- <a id="btnRelatedEntityReset" href="#!" class="btn btn-secondary">Reset</a> -->
     </div>
 
     <h6 class="h6 mt-3"><span class="relatedEntityDisplayNamePlural"></span></h6>
@@ -130,7 +131,7 @@
                     </div>
                     <div class="form-group">
                         <label for="specialization_practitioner_title" class="col-form-label requiredField">
-                            Practitioner Title<span class="asteriskField">*</span>
+                            Practitioner Title<span class="asteriskField">*</span> <small class="help-text">(ex: Anesthesiologist)</small>
                         </label>
                         <div>
                             <small class="help-text">What should a Doctor with this specialization be called?</small>
@@ -142,7 +143,7 @@
                     </div>
                     <div class="form-group">
                         <label for="specialization_practitioner_title_plural" class="col-form-label requiredField">
-                            Practitioner Title (plural form)<span class="asteriskField">*</span>
+                            Practitioner Title (plural form)<span class="asteriskField">*</span> <small class="help-text">(ex: Anesthesiologists)</small>
                         </label>
                         <div>
                             <input type="text" name="specialization_practitioner_title_plural" maxlength="60"

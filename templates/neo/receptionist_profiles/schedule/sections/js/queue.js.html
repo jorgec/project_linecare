@@ -2,6 +2,14 @@
 
     $(document).ready(function(){
         getQueue('{{ date }}');
+
+        var webSocketBridge = new channels.WebSocketBridge();
+        webSocketBridge.connect('/notifications/doctor/queue/status_update/');
+        webSocketBridge.listen(function (event) {
+            if(event.type === "queue.update"){
+                getQueue('{{ date }}');
+            }
+        });
     });
 
     function getQueue(){
@@ -16,16 +24,19 @@
         $.get(url)
             .done(function(result){
                 var queue = [];
+                var q_number = 1;
                 for(var r in result){
                     var q = result[r];
                     var btnAction = "";
+                    var subAction = "";
                     var base_url = "{% url 'api_private_patient_appointment_status_update' %}?appointment_id=" + q.id;
-
+                    var cancel_url = base_url + "&queue_status=cancelled_by_doctor";
+                    var reschedule_url = "";
                     if(q["status"] === "pending"){
                         var arrived_url = base_url + "&queue_status=queueing";
 
                         btnAction += "<a class='btn btn-info btn-sm action-button mark-arrived' href='" + arrived_url + "' data-id='" + q.id + "'>Mark arrived</a>";
-                        btnAction += "<a class='btn btn-danger btn-sm action-button cancel-appointment' href='#!' data-id='" + q["id"] +"'>Cancel</a>";
+                        btnAction += "<a class='btn btn-danger btn-sm action-button cancel-appointment' href=" + cancel_url + " data-id='" + q["id"] +"'>Cancel</a>";
                     }
                     else if(q["status"] === "queueing"){
                         var pending_url = base_url + "&queue_status=pending";
@@ -33,6 +44,8 @@
 
                         btnAction += "<a class='btn btn-primary btn-sm action-button receive-appointment' href='" + in_progress_url +"' data-id='" + q["id"] +"'>Come in</a>";
                         btnAction += "<a class='btn btn-secondary btn-sm action-button mark-pending' href='" + pending_url + "' data-id='" + q["id"] +"'>Mark pending</a>";
+                        btnAction += "<a class='btn btn-danger btn-sm action-button cancel-appointment' href=" + cancel_url + " data-id='" + q["id"] +"'>Cancel</a>";
+                        subAction += '<a href="' + reschedule_url + '">Reschedule Appointment</a>';
                     }
                     else if(q["status"] === "in_progress"){
                         var back_to_queue_url = base_url + "&queue_status=queueing";
@@ -43,7 +56,8 @@
                     }
 
                     q["button_action"] = btnAction;
-
+                    q["q_number"] = q_number;
+                    q_number++;
                     queue.push(q);
                 }
                 $("#container-queue").loadTemplate($("#template-queue"), queue);

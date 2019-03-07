@@ -29,4 +29,16 @@ from .medical_institution_serializers import MedicalInstitutionTypeSerializer, M
 
 from .doctor_schedule_serializer import DoctorScheduleCollisionSerializer, DoctorScheduleSerializer, \
     DoctorScheduleCreateRegularScheduleSerializer
-from .patient_queue_serializers import PatientQueuePrivateSerializer
+from .patient_queue_serializers import PatientQueuePrivateSerializer, PatientAppointmentHistoryListSerializer
+
+from .medical_institution_doctor_serializers import MedicalInstitutionDoctorPrivateSerializer
+
+from .questionnaire_serializers import Questionnaire, DoctorQuestionnaireSerializer, \
+    QuestionnaireSectionSerializer, QuestionSerializer, SectionQuestionSerializer, ChoiceSerializer, \
+    ChoiceGroupSerializer, ChoiceGroupItemSerializer, QuestionChoiceGroupSerializer, QuestionnaireSerializer, \
+    QuestionnairePublicSerializer, DoctorQuestionnairePublicSerializer, QuestionnaireSectionPublicSerializer, \
+    DoctorQuestionnaireDeleteSerializer, DoctorQuestionnaireCreateSerializer, QuestionPublicSerializer, \
+    QuestionCreateSerializer, QuestionUpdateSerializer, SectionQuestionPublicSerializer, \
+    SectionQuestionCreateSerializer, SectionQuestionUpdateSerializer, ChoicePublicSerializer, ChoiceCreateSerializer, \
+    ChoiceUpdateSerializer, ChoiceGroupPublicSerializer, ChoiceGroupItemPublicSerializer, \
+    QuestionChoiceGroupPublicSerializer

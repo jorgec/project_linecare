@@ -1,0 +1,37 @@
+{% load static %}
+
+<ul class="main-nav my-0 position-relative">
+		<li class="main-nav-item">
+				<a href="{% url 'doctor_profile_home' %}"
+					 class="nav-link {% if location == 'doctor_profile_home'%}active{% endif %}" title="Home">
+						<i class="fas fa-home fa-fw"></i>
+				</a>
+		</li>
+
+		<li class="main-nav-item">
+        <a href="{% url 'doctor_profile_calendar' %}"
+           class="nav-link {% if location == 'doctor_profile_manage_schedule' %}active{% endif %}" title="Schedule">
+            <i class="fas fa-calendar fa-fw"></i>
+        </a>
+    </li>
+    <li class="main-nav-item">
+        <a href="{% url 'doctor_profile_analytics_checkups_aggregate' %}"
+           class="nav-link {% if location == 'doctor_profile_analytics' %}active{% endif %}" title="Analytics">
+            <i class="far fa-chart-bar fa-fw"></i>
+        </a>
+    </li>
+    <li class="main-nav-item">
+        <a href="{% url 'doctor_profile_patient_list' %}"
+           class="nav-link {% if location == 'doctor_profile_patients' %}active{% endif %}" title="My Patients">
+            <i class="fas fa-notes-medical fa-fw"></i>
+        </a>
+    </li>
+    <li class="main-nav-item">
+        <a href="{% url 'doctor_profile_settings_home' %}"
+           class="nav-link {% if location == 'doctor_profile_settings' %}active{% endif %}" title="Settings">
+            <i class="fas fa-cogs fa-fw"></i>
+        </a>
+    </li>
+    
+</ul>
+

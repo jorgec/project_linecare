@@ -1,0 +1,14 @@
+<ul class="main-menu">
+    <li class="main-menu-item">
+        <a href="{% url 'receptionist_profile_home' %}"
+           class="nav-link {% if location == 'receptionist_profile_home' %}active{% endif %}">
+            <i class="fas fa-home"></i>
+        </a>
+    </li>
+    <li class="main-menu-item">
+        <a href="{% url 'receptionist_profile_settings_medical_institution' %}"
+           class="nav-link {% if location == 'medical_institutions' %}active{% endif %}">
+            <i class="far fa-hospital"></i>
+        </a>
+    </li>
+</ul>

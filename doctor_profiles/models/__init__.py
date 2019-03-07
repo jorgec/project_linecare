@@ -12,3 +12,6 @@ from .patient_connection_models import PatientConnection
 from .patient_checkup_models import Symptom, PatientSymptom, PatientCheckupRecord, PatientCheckupRecordAccess, Finding, \
     PatientFinding, Diagnosis, PatientDiagnosis, CheckupNote, LabTest, PatientLabTestRequest
 from .medical_institution_doctor_models import MedicalInstitutionDoctor
+
+from .questionnaire_models import Questionnaire, DoctorQuestionnaire, QuestionnaireSection, Question, SectionQuestion, \
+    Choice, ChoiceGroup, ChoiceGroupItem, QuestionChoiceGroup
