@@ -8,8 +8,11 @@ urlpatterns = [
     path('api/private/create',
          create.ApiPrivateAlbumCreate.as_view(),
          name='api_private_album_create'),
+    # path('api/private/upload',
+    #      create.ApiPrivateAlbumPostUploadPhoto.as_view(),
+    #      name='api_private_album_post_upload_photo'),
     path('api/private/upload',
-         create.ApiPrivateAlbumPostUploadPhoto.as_view(),
+         create.ApiPrivatePhotoViewSet.as_view({'post': 'create'}),
          name='api_private_album_post_upload_photo'),
 
     # albums retrieve, public

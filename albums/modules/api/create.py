@@ -1,11 +1,16 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
 from rest_framework import parsers, permissions, status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
+from accounts.models import Account
 from albums.models import Album
 from albums.modules.response_templates.photo import save_template
-from albums.serializers import PhotoUploadSerializer, PhotoSerializer, AlbumCreateSerializer, AlbumSerializer
+from albums.serializers import PhotoUploadSerializer, PhotoSerializer, AlbumCreateSerializer, AlbumSerializer, \
+    SinglePhotoSerializer
 
 
 class ApiPrivateAlbumCreate(APIView):
@@ -79,3 +84,23 @@ class ApiPrivateAlbumPostUploadPhoto(APIView):
                 'result': serializer.errors
             })
             return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ApiPrivatePhotoViewSet(UserPassesTestMixin, ModelViewSet):
+    parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PhotoSerializer
+
+    def test_func(self):
+        try:
+            album = Album.objects.get(pk=self.request.POST.get('album'))
+        except Album.DoesNotExist:
+            raise FileNotFoundError
+
+        token = self.request.META.get('HTTP_AUTHORIZATION').split(" ")[1]
+        user = Account.objects.get(auth_token__key=token)
+
+        if user.base_profile() != album.profile:
+            raise PermissionDenied
+
+        return True
