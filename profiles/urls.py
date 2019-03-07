@@ -39,6 +39,9 @@ urlpatterns = [
      path('api/public/cover_photos/album',
           api_retrieve.ApiPublicProfileGetCoverPhotoAlbum.as_view(),
           name='api_public_cover_photo_album'),
+    path('api/private/albums',
+         api_retrieve.ApiPrivateProfileAlbums.as_view(),
+         name='api_private_albums'),
 ]
 
 # views

@@ -158,7 +158,7 @@ class ApiPublicProfileGetProfilePhotoAlbum(APIView):
         profile = get_object_or_404(BaseProfile, id=request.GET.get('id', None))
         serializer = AlbumSerializer(profile.get_profile_album())
 
-        return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ApiPublicProfileGetCoverPhotoAlbum(APIView):
@@ -173,4 +173,16 @@ class ApiPublicProfileGetCoverPhotoAlbum(APIView):
         profile = get_object_or_404(BaseProfile, id=request.GET.get('id', None))
         serializer = AlbumSerializer(profile.get_cover_album())
 
-        return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApiPrivateProfileAlbums(APIView):
+    """
+    Get currently logged in user's albums
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        serializer = AlbumSerializer(request.user.base_profile().get_profile_album())
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
