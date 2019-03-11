@@ -15,6 +15,19 @@ class DoctorProfileManager(models.Manager):
             doctor = self.get(user=kwargs['user'])
             return doctor
         except self.model.DoesNotExist:
+            metadata = {
+                "doctor_progress": {},
+                "options": {},
+                "tutorial": {
+                    "basic": False,
+                    "medical_institution": False,
+                    "queue": False,
+                    "calendar": False
+                }
+            }
+
+            kwargs['metadata'] = metadata
+
             return super(DoctorProfileManager, self).create(*args, **kwargs)
 
 
