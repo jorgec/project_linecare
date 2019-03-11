@@ -65,6 +65,13 @@ class DoctorProfileMedicalInstitutionManageConnectionView(LoginRequiredMixin, Us
     def get(self, request, *args, **kwargs):
         rel = get_object_or_404(MedicalInstitutionDoctor, doctor=request.user.doctor_profile(),
                                 medical_institution__slug=kwargs['slug'])
+        tutorial = request.user.doctor_profile().metadata.get('tutorial')
+        basic_tutorial = tutorial['basic']
+
+        if basic_tutorial:
+            template = 'neo/doctor_profiles/medical_institutions/manage_connection.html'
+        else:
+            template = 'neo/doctor_profiles/medical_institutions/manage_connection_guide.html'
 
         context = {
             'page_title': f'Manage your connection to {rel.medical_institution}',
@@ -75,7 +82,7 @@ class DoctorProfileMedicalInstitutionManageConnectionView(LoginRequiredMixin, Us
             'appointment_types': APPOINTMENT_TYPES
         }
 
-        return render(request, 'neo/doctor_profiles/medical_institutions/manage_connection.html', context)
+        return render(request, template, context)
 
     def test_func(self):
         return self.request.user.doctor_profile()

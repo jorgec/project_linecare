@@ -189,6 +189,9 @@ class ApiDoctorScheduleCreate(APIView):
         doctor_id = request.data.get('doctor_id', None)
         try:
             doctor = DoctorProfile.objects.get(id=doctor_id)
+            doctor.metadata['tutorial']['basic'] = True
+            doctor.save()
+
         except DoctorProfile.DoesNotExist:
             return Response("Doctor does not exist!", status=status.HTTP_404_NOT_FOUND)
 

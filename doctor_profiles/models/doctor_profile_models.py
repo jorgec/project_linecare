@@ -58,6 +58,20 @@ class DoctorProfile(models.Model):
         title = f"{degrees} {fellowships} {diplomates}"
         return title
 
+    def initialize_metadata(self):
+        metadata = {
+            "doctor_progress": {},
+            "options": {},
+            "tutorial": {
+                "basic": False,
+                "medical_institution": False,
+                "queue": False,
+                "calendar": False
+            }
+        }
+        self.metadata = metadata
+        self.save(update_fields=['metadata'])
+
     def get_degrees_rel(self):
         return self.doctor_degrees.filter(degree__is_approved=True)
 

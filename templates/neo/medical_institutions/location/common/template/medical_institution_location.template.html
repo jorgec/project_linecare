@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 <div class="card mb-2">
     <div id="map" class="m-0"></div>
-    <div class="card-footer">
+    <div id="coordinates-opt" class="card-footer">
         <div class="row">
             <div class="col-sm-12"><small>Coordinates</small></div>
             <div id="top-coords-vote-container" class="col-sm-12"></div>
@@ -137,10 +137,10 @@
            data-template-bind='[{"attribute": "data-pk", "value": "coordinates.id"}]'>
             <i class="fa fa-thumbs-down"></i>
         </a>
-        <a data-toggle="collapse" href="#add-coordinate-form" class="btn btn-outline-info btn-sm">
+        <a id="add-coordinate" data-toggle="collapse" href="#add-coordinate-form" class="btn btn-outline-info btn-sm">
             <small>Submit new coordinates</small>
         </a>
-        <a class="btn btn-outline-info btn-sm" data-toggle="collapse" href="#all-coords-vote-container-collapse">
+        <a id="review-coordinate" class="btn btn-outline-info btn-sm" data-toggle="collapse" href="#all-coords-vote-container-collapse">
             <small>Review other suggested coordinates</small>
         </a>
     </div>
@@ -179,7 +179,7 @@
             data-content="address.zip_code"></span> <span
             data-content="address.province.name"></span> <span data-content="address.region.name"></span>
     </div>
-    <div class="card-footer">
+    <div id="address-opt" class="card-footer">
         <div class="row">
             <div class="col-sm-12">
                 <small>Address</small>
